@@ -59,6 +59,9 @@
 #include "GameClient/WinInstanceData.h"
 #include "GameClient/Color.h"
 
+// Define Float type for relative positioning and scaling otherwise include UTypes.h
+typedef float Float;
+
 ///////////////////////////////////////////////////////////////////////////////
 // FORWARD REFERENCES /////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
@@ -263,6 +266,19 @@ public:
 	Int winSetCursorPosition( Int x, Int y );  ///< set window cursor position                                 
 	Int winGetCursorPosition( Int *x, Int *y );  ///< get window cursor position
 
+	// Relative positioning and scaling methods
+	Int winSetRelativePosition( Float relX, Float relY );  ///< set window position as percentage of parent
+	Int winGetRelativePosition( Float *relX, Float *relY );  ///< get window position as percentage of parent
+	Int winEnableRelativePosition( Bool enable );  ///< enable/disable relative positioning
+	Bool winIsUsingRelativePosition( void );  ///< check if window is using relative positioning
+	
+	Int winSetRelativeSize( Float relWidth, Float relHeight );  ///< set window size as percentage of parent
+	Int winGetRelativeSize( Float *relWidth, Float *relHeight );  ///< get window size as percentage of parent
+	Int winEnableRelativeSize( Bool enable );  ///< enable/disable relative sizing
+	Bool winIsUsingRelativeSize( void );  ///< check if window is using relative sizing
+	
+	Int winUpdateRelativePositionAndSize( void );  ///< update position and size based on relative values
+	Int winEnableRelativeSystem( void );  ///< enable the relative positioning system function
 	// --------------------------------------------------------------------------
 	// new methods for setting images
 	Int winSetEnabledImage( Int index, const Image *image );

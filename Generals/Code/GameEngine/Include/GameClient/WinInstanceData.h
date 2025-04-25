@@ -55,6 +55,9 @@
 #include "GameClient/GameFont.h"
 #include "GameClient/Image.h"
 
+// Define Float type for relative positioning and scaling otherwise include UTypes.h
+typedef float Float;
+
 // FORWARD REFERENCES /////////////////////////////////////////////////////////
 class GameWindow;
 class VideoBuffer;
@@ -129,6 +132,18 @@ public:
 
 	void setVideoBuffer( VideoBuffer * videoBuffer );	///< set the videobuffer to display a video frame
 
+	// Relative positioning and scaling methods
+	Bool isUsingRelativePosition( void ) const { return m_useRelativePosition; }
+	void setUseRelativePosition( Bool useRelative ) { m_useRelativePosition = useRelative; }
+	Float getRelativeX( void ) const { return m_relativeX; }
+	Float getRelativeY( void ) const { return m_relativeY; }
+	void setRelativePosition( Float relX, Float relY ) { m_relativeX = relX; m_relativeY = relY; }
+	
+	Bool isUsingRelativeSize( void ) const { return m_useRelativeSize; }
+	void setUseRelativeSize( Bool useRelative ) { m_useRelativeSize = useRelative; }
+	Float getRelativeWidth( void ) const { return m_relativeWidth; }
+	Float getRelativeHeight( void ) const { return m_relativeHeight; }
+	void setRelativeSize( Float relWidth, Float relHeight ) { m_relativeWidth = relWidth; m_relativeHeight = relHeight; }
 // NOTE if you add data to this make sure you update winSetInstanceData()
 // NOTE if you add data to this make sure you update winSetInstanceData()
 // NOTE if you add data to this make sure you update winSetInstanceData()
@@ -172,6 +187,13 @@ public:
 	VideoBuffer *m_videoBuffer;			///< Each window can be made to play a video in it.
 	
 // NOTE if you add data to this make sure you update winSetInstanceData()
+	// Relative positioning and scaling
+	Bool m_useRelativePosition;                     ///< Whether to use relative positioning
+	Float m_relativeX;                              ///< X position as a percentage of parent (0.0-1.0)
+	Float m_relativeY;                              ///< Y position as a percentage of parent (0.0-1.0)
+	Bool m_useRelativeSize;                         ///< Whether to use relative sizing
+	Float m_relativeWidth;                          ///< Width as a percentage of parent (0.0-1.0)
+	Float m_relativeHeight;                         ///< Height as a percentage of parent (0.0-1.0)
 // NOTE if you add data to this make sure you update winSetInstanceData()
 // NOTE if you add data to this make sure you update winSetInstanceData()
 

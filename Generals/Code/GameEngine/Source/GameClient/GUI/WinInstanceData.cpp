@@ -129,6 +129,13 @@ void WinInstanceData::init( void )
 	m_hiliteText.color					= WIN_COLOR_UNDEFINED;
 	m_hiliteText.borderColor		= WIN_COLOR_UNDEFINED;
 
+	// Initialize relative positioning and scaling
+	m_useRelativePosition = FALSE;
+	m_relativeX = 0.0f;
+	m_relativeY = 0.0f;
+	m_useRelativeSize = FALSE;
+	m_relativeWidth = 0.0f;
+	m_relativeHeight = 0.0f;
 	m_id = 0;
 	m_state = 0;
 	m_style = 0;

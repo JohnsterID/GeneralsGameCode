@@ -77,6 +77,7 @@
 
 // PRIVATE PROTOTYPES /////////////////////////////////////////////////////////
 
+WindowMsgHandledType GameWinRelativeSystem( GameWindow *window, UnsignedInt msg, WindowMsgData mData1, WindowMsgData mData2 );
 // PRIVATE FUNCTIONS //////////////////////////////////////////////////////////
 
 // PUBLIC FUNCTIONS ///////////////////////////////////////////////////////////
@@ -1790,3 +1791,232 @@ GameWindowEditData *GameWindow::winGetEditData( void )
 	return m_editData;
 
 }  // end winGetEditData
+
+// GameWindow::winSetRelativePosition ==========================================
+/** Set the window's position as a percentage of parent window */
+//=============================================================================
+Int GameWindow::winSetRelativePosition( Float relX, Float relY )
+{
+
+        // Store the relative position values
+        m_instData.setRelativePosition(relX, relY);
+
+        // If we have a parent and relative positioning is enabled, update the actual position
+        if (m_parent && m_instData.isUsingRelativePosition()) 
+        {
+
+                Int parentWidth, parentHeight;
+                m_parent->winGetSize(&parentWidth, &parentHeight);
+
+                Int newX = (Int)(relX * parentWidth);
+                Int newY = (Int)(relY * parentHeight);
+
+                winSetPosition(newX, newY);
+
+        }  // end if
+
+        return WIN_ERR_OK;
+
+}  // end winSetRelativePosition
+
+// GameWindow::winGetRelativePosition ==========================================
+/** Get the window's position as a percentage of parent window */
+//=============================================================================
+Int GameWindow::winGetRelativePosition( Float *relX, Float *relY )
+{
+
+        if (relX == NULL || relY == NULL)
+                return WIN_ERR_INVALID_PARAMETER;
+
+        *relX = m_instData.getRelativeX();
+        *relY = m_instData.getRelativeY();
+
+        return WIN_ERR_OK;
+
+}  // end winGetRelativePosition
+
+// GameWindow::winEnableRelativePosition ======================================
+/** Enable or disable relative positioning */
+//=============================================================================
+Int GameWindow::winEnableRelativePosition( Bool enable )
+{
+
+        m_instData.setUseRelativePosition(enable);
+
+        // If enabling, update position based on relative values
+        if (enable)
+                winUpdateRelativePositionAndSize();
+
+        return WIN_ERR_OK;
+
+}  // end winEnableRelativePosition
+
+// GameWindow::winIsUsingRelativePosition =====================================
+/** Check if window is using relative positioning */
+//=============================================================================
+Bool GameWindow::winIsUsingRelativePosition( void )
+{
+
+        return m_instData.isUsingRelativePosition();
+
+}  // end winIsUsingRelativePosition
+
+// GameWindow::winSetRelativeSize ==============================================
+/** Set the window's size as a percentage of parent window */
+//=============================================================================
+Int GameWindow::winSetRelativeSize( Float relWidth, Float relHeight )
+{
+
+        // Store the relative size values
+        m_instData.setRelativeSize(relWidth, relHeight);
+
+        // If we have a parent and relative sizing is enabled, update the actual size
+        if (m_parent && m_instData.isUsingRelativeSize())
+        {
+
+                Int parentWidth, parentHeight;
+                m_parent->winGetSize(&parentWidth, &parentHeight);
+
+                Int newWidth = (Int)(relWidth * parentWidth);
+                Int newHeight = (Int)(relHeight * parentHeight);
+
+                winSetSize(newWidth, newHeight);
+
+        }  // end if
+
+        return WIN_ERR_OK;
+
+}  // end winSetRelativeSize
+
+// GameWindow::winGetRelativeSize ==============================================
+/** Get the window's size as a percentage of parent window */
+//=============================================================================
+Int GameWindow::winGetRelativeSize( Float *relWidth, Float *relHeight )
+{
+
+        if (relWidth == NULL || relHeight == NULL)
+                return WIN_ERR_INVALID_PARAMETER;
+
+        *relWidth = m_instData.getRelativeWidth();
+        *relHeight = m_instData.getRelativeHeight();
+
+        return WIN_ERR_OK;
+
+}  // end winGetRelativeSize
+
+// GameWindow::winEnableRelativeSize ==========================================
+/** Enable or disable relative sizing */
+//=============================================================================
+Int GameWindow::winEnableRelativeSize( Bool enable )
+{
+
+        m_instData.setUseRelativeSize(enable);
+
+        // If enabling, update size based on relative values
+        if (enable)
+                winUpdateRelativePositionAndSize();
+
+        return WIN_ERR_OK;
+
+}  // end winEnableRelativeSize
+
+// GameWindow::winIsUsingRelativeSize =========================================
+/** Check if window is using relative sizing */
+//=============================================================================
+Bool GameWindow::winIsUsingRelativeSize( void )
+{
+
+        return m_instData.isUsingRelativeSize();
+
+}  // end winIsUsingRelativeSize
+
+// GameWindow::winUpdateRelativePositionAndSize ===============================
+/** Update position and size based on relative values */
+//=============================================================================
+Int GameWindow::winUpdateRelativePositionAndSize( void )
+{
+
+        if (!m_parent)
+                return WIN_ERR_OK;
+
+        Int parentWidth, parentHeight;
+        m_parent->winGetSize(&parentWidth, &parentHeight);
+
+        // Update position if using relative positioning
+        if (m_instData.isUsingRelativePosition())
+        {
+
+                Float relX = m_instData.getRelativeX();
+                Float relY = m_instData.getRelativeY();
+
+                Int newX = (Int)(relX * parentWidth);
+                Int newY = (Int)(relY * parentHeight);
+
+                winSetPosition(newX, newY);
+
+        }  // end if
+
+        // Update size if using relative sizing
+        if (m_instData.isUsingRelativeSize())
+        {
+
+                Float relWidth = m_instData.getRelativeWidth();
+                Float relHeight = m_instData.getRelativeHeight();
+
+                Int newWidth = (Int)(relWidth * parentWidth);
+                Int newHeight = (Int)(relHeight * parentHeight);
+
+                winSetSize(newWidth, newHeight);
+
+        }  // end if
+
+        return WIN_ERR_OK;
+
+}  // end winUpdateRelativePositionAndSize
+
+// GameWinRelativeSystem ========================================================
+/** System callback that handles relative positioning and scaling */
+//=============================================================================
+WindowMsgHandledType GameWinRelativeSystem( GameWindow *window, UnsignedInt msg, WindowMsgData mData1, WindowMsgData mData2 )
+{
+
+        // First call the default system function
+        WindowMsgHandledType result = GameWinDefaultSystem(window, msg, mData1, mData2);
+
+        // Handle window resizing - update child windows with relative positioning
+        if (msg == GGM_RESIZED)
+        {
+
+                // Update all child windows that use relative positioning or sizing
+                GameWindow *child = window->winGetChild();
+                while (child)
+                {
+
+                        // Update the child's position and size if it uses relative values
+                        child->winUpdateRelativePositionAndSize();
+
+                        // Move to the next child
+                        child = child->winGetNext();
+
+                }  // end while
+
+                return MSG_HANDLED;
+
+        }  // end if
+
+        return result;
+
+}  // end GameWinRelativeSystem
+
+// GameWindow::winEnableRelativeSystem =========================================
+/** Enable the relative positioning system function */
+//=============================================================================
+Int GameWindow::winEnableRelativeSystem( void )
+{
+
+        // Set the system function to our custom relative system function
+        winSetSystemFunc(GameWinRelativeSystem);
+
+        return WIN_ERR_OK;
+
+}  // end winEnableRelativeSystem

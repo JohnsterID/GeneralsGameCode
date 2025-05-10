@@ -40,7 +40,7 @@ When using ASan with the Win32 version of the game, you may encounter several is
 
 3. **Memory Limitations**: After just a few level loads, ASan may run out of memory and crash in 32-bit mode.
 
-4. **Game Memory System**: You may need to disable `RTS_GAMEMEMORY_ENABLE` in CMake to start the game without running into issues found by ASan.
+4. **Game Memory System**: The game memory system is automatically disabled when ASan is enabled. This is necessary because the game memory system overrides new/delete operators which interferes with ASan's memory tracking.
 
 ## LibFuzzer
 

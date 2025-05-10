@@ -104,7 +104,27 @@ cmake --build build
 ./my_fuzzer_executable corpus_dir -workers=8 -jobs=8
 ```
 
-### Example Fuzz Target
+### Included Fuzz Targets
+
+The repository includes the following fuzz targets:
+
+#### BIG File Fuzzer
+
+Located at `Generals/Code/Fuzzers/BIGFileFuzzer.cpp`, this fuzzer tests the BIG file parser for potential vulnerabilities. BIG files are archive files used by the game to store assets, and parsing them involves reading binary data which can be a source of vulnerabilities.
+
+To build and run the BIG file fuzzer:
+
+```bash
+# Build with fuzzer and coverage instrumentation
+cmake -B build -DRTS_BUILD_OPTION_FUZZER=ON -DRTS_BUILD_OPTION_FUZZER_COVERAGE=ON
+cmake --build build
+
+# Run the fuzzer
+cd build/bin/fuzzers
+./big_file_fuzzer corpus/big_file
+```
+
+### Creating Your Own Fuzz Targets
 
 An example fuzz target template is provided in the repository at `cmake/fuzzer-example.cpp`. You can use this as a starting point for creating your own fuzz targets.
 

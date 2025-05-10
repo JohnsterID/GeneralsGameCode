@@ -45,3 +45,8 @@ add_subdirectory(Main)
 if (RTS_BUILD_GENERALS_TOOLS OR RTS_BUILD_GENERALS_EXTRAS)
     add_subdirectory(Tools)
 endif()
+
+# Add fuzzers if fuzzing is enabled
+if (RTS_BUILD_OPTION_FUZZER)
+    add_subdirectory(Fuzzers)
+endif()

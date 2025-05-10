@@ -58,3 +58,14 @@ if(RTS_BUILD_OPTION_FUZZER)
         add_link_options(-fsanitize=fuzzer)
     endif()
 endif()
+
+if(RTS_BUILD_OPTION_FUZZER_COVERAGE)
+    if(MSVC)
+        # MSVC coverage options for LibFuzzer
+        # trace-pc-guard is the most common coverage type for fuzzing
+        add_compile_options(/fsanitize-coverage=trace-pc-guard)
+    else()
+        # GCC/Clang coverage options for LibFuzzer
+        add_compile_options(-fsanitize-coverage=trace-pc-guard)
+    endif()
+endif()

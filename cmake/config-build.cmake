@@ -8,6 +8,7 @@ option(RTS_BUILD_OPTION_PROFILE "Build code with the \"Profile\" configuration."
 option(RTS_BUILD_OPTION_DEBUG "Build code with the \"Debug\" configuration." OFF)
 option(RTS_BUILD_OPTION_ASAN "Build code with Address Sanitizer." OFF)
 option(RTS_BUILD_OPTION_FUZZER "Build code with LibFuzzer support." OFF)
+option(RTS_BUILD_OPTION_FUZZER_COVERAGE "Enable coverage instrumentation for LibFuzzer." OFF)
 option(RTS_BUILD_OPTION_FFMPEG "Enable FFmpeg support" OFF)
 
 if(NOT RTS_BUILD_ZEROHOUR AND NOT RTS_BUILD_GENERALS)
@@ -24,6 +25,7 @@ add_feature_info(ProfileBuild RTS_BUILD_OPTION_PROFILE "Building as a \"Profile\
 add_feature_info(DebugBuild RTS_BUILD_OPTION_DEBUG "Building as a \"Debug\" build")
 add_feature_info(AddressSanitizer RTS_BUILD_OPTION_ASAN "Building with address sanitizer")
 add_feature_info(LibFuzzer RTS_BUILD_OPTION_FUZZER "Building with LibFuzzer support")
+add_feature_info(LibFuzzerCoverage RTS_BUILD_OPTION_FUZZER_COVERAGE "Building with LibFuzzer coverage instrumentation")
 add_feature_info(FFmpegSupport RTS_BUILD_OPTION_FFMPEG "Building with FFmpeg support")
 
 if(RTS_BUILD_ZEROHOUR)

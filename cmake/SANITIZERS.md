@@ -54,11 +54,13 @@ To enable LibFuzzer, set the `RTS_BUILD_OPTION_FUZZER` CMake option to `ON`:
 cmake -B build -DRTS_BUILD_OPTION_FUZZER=ON
 ```
 
-For best results, it's recommended to use LibFuzzer together with AddressSanitizer:
+For best results, it's recommended to use LibFuzzer with coverage instrumentation and AddressSanitizer:
 
 ```bash
-cmake -B build -DRTS_BUILD_OPTION_FUZZER=ON -DRTS_BUILD_OPTION_ASAN=ON
+cmake -B build -DRTS_BUILD_OPTION_FUZZER=ON -DRTS_BUILD_OPTION_FUZZER_COVERAGE=ON -DRTS_BUILD_OPTION_ASAN=ON
 ```
+
+The coverage instrumentation (`RTS_BUILD_OPTION_FUZZER_COVERAGE`) enables the compiler to track which parts of the code are executed during fuzzing, which helps LibFuzzer generate more effective test cases.
 
 ### Using LibFuzzer
 
@@ -76,7 +78,12 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size) {
 }
 ```
 
-2. Build your project with the fuzzer option enabled.
+2. Build your project with the fuzzer option enabled:
+
+```bash
+cmake -B build -DRTS_BUILD_OPTION_FUZZER=ON -DRTS_BUILD_OPTION_FUZZER_COVERAGE=ON
+cmake --build build
+```
 
 3. Run the resulting executable with a corpus directory:
 
@@ -84,11 +91,45 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size) {
 ./my_fuzzer_executable corpus_dir
 ```
 
+4. Additional LibFuzzer options can be passed as command-line arguments:
+
+```bash
+# Run with a memory limit of 8GB
+./my_fuzzer_executable corpus_dir -rss_limit_mb=8192
+
+# Run for a maximum of 60 seconds
+./my_fuzzer_executable corpus_dir -max_total_time=60
+
+# Use 8 worker threads
+./my_fuzzer_executable corpus_dir -workers=8 -jobs=8
+```
+
+### Example Fuzz Target
+
+An example fuzz target template is provided in the repository at `cmake/fuzzer-example.cpp`. You can use this as a starting point for creating your own fuzz targets.
+
+To create a new fuzz target:
+
+1. Copy the example file to your target directory
+2. Modify it to include and test your specific component
+3. Add it to your CMakeLists.txt as a new executable
+4. Build with the fuzzer options enabled
+
+Example CMakeLists.txt entry:
+
+```cmake
+if(RTS_BUILD_OPTION_FUZZER)
+    add_executable(my_component_fuzzer my_component_fuzzer.cpp)
+    target_link_libraries(my_component_fuzzer PRIVATE my_component_lib)
+endif()
+```
+
 ### Additional Resources
 
 - [LibFuzzer Documentation](https://llvm.org/docs/LibFuzzer.html)
 - [OneFuzz Documentation](https://www.microsoft.com/research/project/project-onefuzz/)
 - [OneFuzz GitHub Project](https://github.com/microsoft/onefuzz)
+- [Microsoft's OSS-Fuzz Integration Guide](https://github.com/microsoft/onefuzz/blob/main/docs/using-libfuzzer.md)
 
 ## Combining Sanitizers
 

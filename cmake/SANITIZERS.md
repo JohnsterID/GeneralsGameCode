@@ -98,4 +98,13 @@ When combining sanitizers (e.g., ASan and LibFuzzer), be aware that:
 2. Some sanitizers may conflict with each other
 3. The order of linking can matter
 
-For the GeneralsGameCode project, the recommended combination is ASan + LibFuzzer.
+For the GeneralsGameCode project, the recommended combination is ASan + LibFuzzer:
+
+```bash
+cmake -B build -DRTS_BUILD_OPTION_ASAN=ON -DRTS_BUILD_OPTION_FUZZER=ON
+```
+
+This will:
+- Enable both sanitizers
+- Automatically disable the game memory system (due to ASan)
+- Set up the necessary compiler and linker flags

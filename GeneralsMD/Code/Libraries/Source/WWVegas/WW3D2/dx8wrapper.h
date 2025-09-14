@@ -41,10 +41,15 @@
 
 #pragma once
 
-// TheSuperHackers @feature JohnsterID 14/09/2025 Migrate from DirectX 8 to DirectX 9 API while keeping existing class names
+// TheSuperHackers @feature JohnsterID 14/09/2025 Support both DirectX 8 and DirectX 9 with compile-time selection
 #include "always.h"
 #include "dllist.h"
+
+#if RTS_USE_DIRECTX9
 #include "d3d9.h"
+#else
+#include "d3d8.h"
+#endif
 #include "matrix4.h"
 #include "statistics.h"
 #include "wwstring.h"
@@ -58,6 +63,29 @@
 #include "dx8vertexbuffer.h"
 #include "dx8indexbuffer.h"
 #include "vertmaterial.h"
+
+// Type aliases for DirectX version compatibility
+#if RTS_USE_DIRECTX9
+typedef IDirect3D9 DXInterface;
+typedef IDirect3DDevice9 DXDevice;
+typedef IDirect3DSurface9 DXSurface;
+typedef IDirect3DTexture9 DXTexture;
+typedef IDirect3DBaseTexture9 DXBaseTexture;
+typedef D3DADAPTER_IDENTIFIER9 DXAdapterIdentifier;
+typedef IDirect3D9* (WINAPI *Direct3DCreateType) (UINT SDKVersion);
+#define DIRECT3D_CREATE_FUNC Direct3DCreate9
+#define DIRECT3D_SDK_VERSION D3D_SDK_VERSION
+#else
+typedef IDirect3D8 DXInterface;
+typedef IDirect3DDevice8 DXDevice;
+typedef IDirect3DSurface8 DXSurface;
+typedef IDirect3DTexture8 DXTexture;
+typedef IDirect3DBaseTexture8 DXBaseTexture;
+typedef D3DADAPTER_IDENTIFIER8 DXAdapterIdentifier;
+typedef IDirect3D8* (WINAPI *Direct3DCreateType) (UINT SDKVersion);
+#define DIRECT3D_CREATE_FUNC Direct3DCreate8
+#define DIRECT3D_SDK_VERSION D3D_SDK_VERSION
+#endif
 
 /*
 ** Registry value names
@@ -380,7 +408,7 @@ public:
 	);
 
 
-	static IDirect3DTexture9* _Create_DX8_ZTexture
+	static DXTexture* _Create_DX8_ZTexture
 	(
 		unsigned int width,
 		unsigned int height,
@@ -390,7 +418,7 @@ public:
 	);
 
 
-	static IDirect3DTexture9 * _Create_DX8_Texture
+	static DXTexture * _Create_DX8_Texture
 	(
 		unsigned int width,
 		unsigned int height,
@@ -399,19 +427,19 @@ public:
 		D3DPOOL pool=D3DPOOL_MANAGED,
 		bool rendertarget=false
 	);
-	static IDirect3DTexture9 * _Create_DX8_Texture(const char *filename, MipCountType mip_level_count);
-	static IDirect3DTexture9 * _Create_DX8_Texture(IDirect3DSurface9 *surface, MipCountType mip_level_count);
+	static DXTexture * _Create_DX8_Texture(const char *filename, MipCountType mip_level_count);
+	static DXTexture * _Create_DX8_Texture(DXSurface *surface, MipCountType mip_level_count);
 
-	static IDirect3DSurface9 * _Create_DX8_Surface(unsigned int width, unsigned int height, WW3DFormat format);
-	static IDirect3DSurface9 * _Create_DX8_Surface(const char *filename);
-	static IDirect3DSurface9 * _Get_DX8_Front_Buffer();
+	static DXSurface * _Create_DX8_Surface(unsigned int width, unsigned int height, WW3DFormat format);
+	static DXSurface * _Create_DX8_Surface(const char *filename);
+	static DXSurface * _Get_DX8_Front_Buffer();
 	static SurfaceClass * _Get_DX8_Back_Buffer(unsigned int num=0);
 
 	static void _Copy_DX8_Rects(
-			IDirect3DSurface9* pSourceSurface,
+			DXSurface* pSourceSurface,
 			CONST RECT* pSourceRectsArray,
 			UINT cRects,
-			IDirect3DSurface9* pDestinationSurface,
+			DXSurface* pDestinationSurface,
 			CONST POINT* pDestPointsArray
 	);
 
@@ -481,8 +509,8 @@ public:
 	*/
 	static TextureClass *	Create_Render_Target (int width, int height, WW3DFormat format = WW3D_FORMAT_UNKNOWN);
 
-	static void					Set_Render_Target (IDirect3DSurface9 *render_target, bool use_default_depth_buffer = false);
-	static void					Set_Render_Target (IDirect3DSurface9* render_target, IDirect3DSurface9* dpeth_buffer);
+	static void					Set_Render_Target (DXSurface *render_target, bool use_default_depth_buffer = false);
+	static void					Set_Render_Target (DXSurface* render_target, DXSurface* dpeth_buffer);
 
 	static void					Set_Render_Target (IDirect3DSwapChain9 *swap_chain);
 	static bool					Is_Render_To_Texture(void) { return IsRenderToTexture; }
@@ -522,8 +550,8 @@ public:
 
 
 
-	static IDirect3DDevice9* _Get_D3D_Device8() { return D3DDevice; }
-	static IDirect3D9* _Get_D3D8() { return D3DInterface; }
+	static DXDevice* _Get_D3D_Device8() { return D3DDevice; }
+	static DXInterface* _Get_D3D8() { return D3DInterface; }
 	/// Returns the display format - added by TR for video playback - not part of W3D
 	static WW3DFormat	getBackBufferFormat( void );
 	static bool Reset_Device(bool reload_assets=true);
@@ -686,15 +714,15 @@ protected:
 
 	static DX8Caps*						CurrentCaps;
 
-	static D3DADAPTER_IDENTIFIER9		CurrentAdapterIdentifier;
+	static DXAdapterIdentifier		CurrentAdapterIdentifier;
 
-	static IDirect3D9 *					D3DInterface;			//d3d8;
-	static IDirect3DDevice9 *			D3DDevice;				//d3ddevice8;
+	static DXInterface *					D3DInterface;			//d3d8;
+	static DXDevice *			D3DDevice;				//d3ddevice8;
 
-	static IDirect3DSurface9 *			CurrentRenderTarget;
-	static IDirect3DSurface9 *			CurrentDepthBuffer;
-	static IDirect3DSurface9 *			DefaultRenderTarget;
-	static IDirect3DSurface9 *			DefaultDepthBuffer;
+	static DXSurface *			CurrentRenderTarget;
+	static DXSurface *			CurrentDepthBuffer;
+	static DXSurface *			DefaultRenderTarget;
+	static DXSurface *			DefaultDepthBuffer;
 
 	static unsigned							DrawPolygonLowBoundLimit;
 
@@ -936,10 +964,10 @@ WWINLINE void DX8Wrapper::Set_DX8_Texture(unsigned int stage, IDirect3DBaseTextu
 }
 
 WWINLINE void DX8Wrapper::_Copy_DX8_Rects(
-  IDirect3DSurface9* pSourceSurface,
+  DXSurface* pSourceSurface,
   CONST RECT* pSourceRectsArray,
   UINT cRects,
-  IDirect3DSurface9* pDestinationSurface,
+  DXSurface* pDestinationSurface,
   CONST POINT* pDestPointsArray
 )
 {

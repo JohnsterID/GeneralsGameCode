@@ -42,7 +42,11 @@
 // TheSuperHackers @feature JohnsterID 14/09/2025 Migrate from DirectX 8 to DirectX 9 API while keeping existing class names
 #include "always.h"
 #include "ww3dformat.h"
+#if RTS_USE_DIRECTX9
 #include <d3d9.h>
+#else
+#include <d3d8.h>
+#endif
 
 class DX8Caps
 {

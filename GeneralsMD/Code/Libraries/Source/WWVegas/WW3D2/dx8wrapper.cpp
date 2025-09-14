@@ -75,9 +75,13 @@
 #include "textureloader.h"
 #include "missingtexture.h"
 #include "thread.h"
-// TheSuperHackers @feature JohnsterID 14/09/2025 Migrate from DirectX 8 to DirectX 9 API while keeping existing class names
+// TheSuperHackers @feature JohnsterID 14/09/2025 Support both DirectX 8 and DirectX 9 with compile-time selection
 #include <stdio.h>
+#if RTS_USE_DIRECTX9
 #include <d3dx9core.h>
+#else
+#include <d3dx8core.h>
+#endif
 #include "pot.h"
 #include "wwprofile.h"
 #include "ffactory.h"
@@ -140,19 +144,19 @@ Vector3							DX8Wrapper::Ambient_Color;
 bool								DX8Wrapper::world_identity;
 unsigned							DX8Wrapper::RenderStates[256];
 unsigned							DX8Wrapper::TextureStageStates[MAX_TEXTURE_STAGES][32];
-IDirect3DBaseTexture9 *		DX8Wrapper::Textures[MAX_TEXTURE_STAGES];
+DXBaseTexture *		DX8Wrapper::Textures[MAX_TEXTURE_STAGES];
 RenderStateStruct				DX8Wrapper::render_state;
 unsigned							DX8Wrapper::render_state_changed;
 
 bool								DX8Wrapper::FogEnable									= false;
 D3DCOLOR							DX8Wrapper::FogColor										= 0;
 
-IDirect3D9 *					DX8Wrapper::D3DInterface								= NULL;
-IDirect3DDevice9 *			DX8Wrapper::D3DDevice									= NULL;
-IDirect3DSurface9 *			DX8Wrapper::CurrentRenderTarget						= NULL;
-IDirect3DSurface9 *			DX8Wrapper::CurrentDepthBuffer						= NULL;
-IDirect3DSurface9 *			DX8Wrapper::DefaultRenderTarget						= NULL;
-IDirect3DSurface9 *			DX8Wrapper::DefaultDepthBuffer						= NULL;
+DXInterface *					DX8Wrapper::D3DInterface								= NULL;
+DXDevice *			DX8Wrapper::D3DDevice									= NULL;
+DXSurface *			DX8Wrapper::CurrentRenderTarget						= NULL;
+DXSurface *			DX8Wrapper::CurrentDepthBuffer						= NULL;
+DXSurface *			DX8Wrapper::DefaultRenderTarget						= NULL;
+DXSurface *			DX8Wrapper::DefaultDepthBuffer						= NULL;
 bool								DX8Wrapper::IsRenderToTexture							= false;
 
 unsigned							DX8Wrapper::matrix_changes								= 0;
@@ -204,9 +208,12 @@ static DynamicVectorClass<StringClass>					_RenderDeviceShortNameTable;
 static DynamicVectorClass<RenderDeviceDescClass>	_RenderDeviceDescriptionTable;
 
 
-typedef IDirect3D9* (WINAPI *Direct3DCreate9Type) (UINT SDKVersion);
-Direct3DCreate9Type	Direct3DCreate9Ptr = NULL;
+Direct3DCreateType	Direct3DCreatePtr = NULL;
+#if RTS_USE_DIRECTX9
 HINSTANCE D3D9Lib = NULL;
+#else
+HINSTANCE D3D8Lib = NULL;
+#endif
 
 DX8_CleanupHook	 *DX8Wrapper::m_pCleanupHook=NULL;
 #ifdef EXTENDED_STATS
@@ -276,7 +283,7 @@ bool DX8Wrapper::Init(void * hwnd, bool lite)
 	WWASSERT(!IsInitted);
 
 	// zero memory
-	memset(Textures,0,sizeof(IDirect3DBaseTexture9*)*MAX_TEXTURE_STAGES);
+	memset(Textures,0,sizeof(DXBaseTexture*)*MAX_TEXTURE_STAGES);
 	memset(RenderStates,0,sizeof(unsigned)*256);
 	memset(TextureStageStates,0,sizeof(unsigned)*32*MAX_TEXTURE_STAGES);
 	memset(Vertex_Shader_Constants,0,sizeof(Vector4)*MAX_VERTEX_SHADER_CONSTANTS);
@@ -321,23 +328,31 @@ bool DX8Wrapper::Init(void * hwnd, bool lite)
 	Invalidate_Cached_Render_States();
 
 	if (!lite) {
+#if RTS_USE_DIRECTX9
 		D3D9Lib = LoadLibrary("D3D9.DLL");
-
 		if (D3D9Lib == NULL) return false;	// Return false at this point if init failed
-
-		Direct3DCreate9Ptr = (Direct3DCreate9Type) GetProcAddress(D3D9Lib, "Direct3DCreate9");
-		if (Direct3DCreate9Ptr == NULL) return false;
+		Direct3DCreatePtr = (Direct3DCreateType) GetProcAddress(D3D9Lib, "Direct3DCreate9");
+#else
+		D3D8Lib = LoadLibrary("D3D8.DLL");
+		if (D3D8Lib == NULL) return false;	// Return false at this point if init failed
+		Direct3DCreatePtr = (Direct3DCreateType) GetProcAddress(D3D8Lib, "Direct3DCreate8");
+#endif
+		if (Direct3DCreatePtr == NULL) return false;
 
 		/*
 		** Create the D3D interface object
 		*/
+#if RTS_USE_DIRECTX9
 		WWDEBUG_SAY(("Create Direct3D9"));
+#else
+		WWDEBUG_SAY(("Create Direct3D8"));
+#endif
 		{
 			// TheSuperHackers @bugfix xezon 13/06/2025 Front load the system dbghelp.dll to prevent
 			// the graphics driver from potentially loading the old game dbghelp.dll and then crashing the game process.
 			DbgHelpGuard dbgHelpGuard;
 
-			D3DInterface = Direct3DCreate9Ptr(D3D_SDK_VERSION);		// TODO: handle failure cases...
+			D3DInterface = Direct3DCreatePtr(DIRECT3D_SDK_VERSION);		// TODO: handle failure cases...
 		}
 		if (D3DInterface == NULL) {
 			return(false);
@@ -387,10 +402,17 @@ void DX8Wrapper::Shutdown(void)
 		D3DInterface=NULL;
 	}
 
+#if RTS_USE_DIRECTX9
 	if (D3D9Lib) {
 		FreeLibrary(D3D9Lib);
 		D3D9Lib = NULL;
 	}
+#else
+	if (D3D8Lib) {
+		FreeLibrary(D3D8Lib);
+		D3D8Lib = NULL;
+	}
+#endif
 
 	_RenderDeviceNameTable.Clear();		 // note - Delete_All() resizes the vector, causing a reallocation.  Clear is better. jba.
 	_RenderDeviceShortNameTable.Clear();
@@ -434,7 +456,11 @@ void DX8Wrapper::Set_Default_Global_Render_States(void)
 	Set_DX8_Render_State(D3DRS_FOGVERTEXMODE, D3DFOG_LINEAR);
 	Set_DX8_Render_State(D3DRS_SPECULARMATERIALSOURCE, D3DMCS_MATERIAL);
 	Set_DX8_Render_State(D3DRS_COLORVERTEX, TRUE);
-	Set_DX8_Render_State(D3DRS_ZBIAS,0);
+#if RTS_USE_DIRECTX9
+	Set_DX8_Render_State(D3DRS_DEPTHBIAS, 0);
+#else
+	Set_DX8_Render_State(D3DRS_ZBIAS, 0);
+#endif
 	Set_DX8_Texture_Stage_State(1, D3DTSS_BUMPENVLSCALE, F2DW(1.0f));
 	Set_DX8_Texture_Stage_State(1, D3DTSS_BUMPENVLOFFSET, F2DW(0.0f));
 	Set_DX8_Texture_Stage_State(0, D3DTSS_BUMPENVMAT00,F2DW(1.0f));
@@ -559,8 +585,12 @@ bool DX8Wrapper::Create_Device(void)
 			D3DInterface->GetAdapterIdentifier
 			(
 				CurRenderDevice,
+#if RTS_USE_DIRECTX9
 				// TheSuperHackers @feature JohnsterID 14/09/2025 D3DENUM_NO_WHQL_LEVEL replaced with 0 in DX9
-			0,
+				0,
+#else
+				D3DENUM_NO_WHQL_LEVEL,
+#endif
 				&CurrentAdapterIdentifier
 			)
 			)
@@ -753,10 +783,14 @@ void DX8Wrapper::Enumerate_Devices()
 	int adapter_count = D3DInterface->GetAdapterCount();
 	for (int adapter_index=0; adapter_index<adapter_count; adapter_index++) {
 
-		D3DADAPTER_IDENTIFIER9 id;
-		::ZeroMemory(&id, sizeof(D3DADAPTER_IDENTIFIER9));
+		DXAdapterIdentifier id;
+		::ZeroMemory(&id, sizeof(DXAdapterIdentifier));
+#if RTS_USE_DIRECTX9
 		// TheSuperHackers @feature JohnsterID 14/09/2025 D3DENUM_NO_WHQL_LEVEL replaced with 0 in DX9
 		HRESULT res = D3DInterface->GetAdapterIdentifier(adapter_index, 0, &id);
+#else
+		HRESULT res = D3DInterface->GetAdapterIdentifier(adapter_index, D3DENUM_NO_WHQL_LEVEL, &id);
+#endif
 
 		if (res == D3D_OK) {
 
@@ -778,8 +812,12 @@ void DX8Wrapper::Enumerate_Devices()
 			desc.set_driver_version(buf);
 
 			D3DInterface->GetDeviceCaps(adapter_index,WW3D_DEVTYPE,&desc.Caps);
+#if RTS_USE_DIRECTX9
 			// TheSuperHackers @feature JohnsterID 14/09/2025 D3DENUM_NO_WHQL_LEVEL replaced with 0 in DX9
 			D3DInterface->GetAdapterIdentifier(adapter_index, 0, &desc.AdapterIdentifier);
+#else
+			D3DInterface->GetAdapterIdentifier(adapter_index, D3DENUM_NO_WHQL_LEVEL, &desc.AdapterIdentifier);
+#endif
 
 			DX8Caps dx8caps(D3DInterface,desc.Caps,WW3D_FORMAT_UNKNOWN,desc.AdapterIdentifier);
 
@@ -3685,8 +3723,12 @@ DX8Wrapper::Create_Additional_Swap_Chain (HWND render_window)
 void DX8Wrapper::Flush_DX8_Resource_Manager(unsigned int bytes)
 {
 	DX8_Assert();
+#if RTS_USE_DIRECTX9
 	// TheSuperHackers @feature JohnsterID 14/09/2025 ResourceManagerDiscardBytes removed in DX9
 	// DX8CALL(ResourceManagerDiscardBytes(bytes));
+#else
+	DX8CALL(ResourceManagerDiscardBytes(bytes));
+#endif
 }
 
 unsigned int DX8Wrapper::Get_Free_Texture_RAM()
@@ -3737,8 +3779,12 @@ void DX8Wrapper::Set_Gamma(float gamma,float bright,float contrast,bool calibrat
 	}
 
 	if (Get_Current_Caps()->Support_Gamma())	{
+#if RTS_USE_DIRECTX9
 		// TheSuperHackers @feature JohnsterID 14/09/2025 DX9 SetGammaRamp requires swapchain index
-			DX8Wrapper::_Get_D3D_Device8()->SetGammaRamp(0, flag, &ramp);
+		DX8Wrapper::_Get_D3D_Device8()->SetGammaRamp(0, flag, &ramp);
+#else
+		DX8Wrapper::_Get_D3D_Device8()->SetGammaRamp(flag, &ramp);
+#endif
 	} else {
 		HWND hwnd = GetDesktopWindow();
 		HDC hdc = GetDC(hwnd);
@@ -3785,8 +3831,12 @@ void DX8Wrapper::Apply_Default_State()
 //	Set_DX8_Render_State(D3DRS_FOGDENSITY, WWMath::Float_As_Int(1.0f));
 
 	//Set_DX8_Render_State(D3DRS_EDGEANTIALIAS, FALSE);
+#if RTS_USE_DIRECTX9
 	// TheSuperHackers @feature JohnsterID 14/09/2025 D3DRS_ZBIAS replaced with D3DRS_DEPTHBIAS in DX9
 	Set_DX8_Render_State(D3DRS_DEPTHBIAS, 0);
+#else
+	Set_DX8_Render_State(D3DRS_ZBIAS, 0);
+#endif
 //	Set_DX8_Render_State(D3DRS_RANGEFOGENABLE, FALSE);
 	Set_DX8_Render_State(D3DRS_STENCILENABLE, FALSE);
 	Set_DX8_Render_State(D3DRS_STENCILFAIL, D3DSTENCILOP_KEEP);
@@ -3862,10 +3912,16 @@ void DX8Wrapper::Apply_Default_State()
 		Set_DX8_Texture_Stage_State(i, D3DTSS_TEXCOORDINDEX, i);
 
 
+#if RTS_USE_DIRECTX9
 		// TheSuperHackers @feature JohnsterID 14/09/2025 Address/filter states moved to sampler states in DX9
 		DX8CALL(SetSamplerState(i, D3DSAMP_ADDRESSU, D3DTADDRESS_WRAP));
 		DX8CALL(SetSamplerState(i, D3DSAMP_ADDRESSV, D3DTADDRESS_WRAP));
 		DX8CALL(SetSamplerState(i, D3DSAMP_BORDERCOLOR, 0));
+#else
+		Set_DX8_Texture_Stage_State(i, D3DTSS_ADDRESSU, D3DTADDRESS_WRAP);
+		Set_DX8_Texture_Stage_State(i, D3DTSS_ADDRESSV, D3DTADDRESS_WRAP);
+		Set_DX8_Texture_Stage_State(i, D3DTSS_BORDERCOLOR, 0);
+#endif
 //		Set_DX8_Texture_Stage_State(i, D3DTSS_MAGFILTER, D3DTEXF_LINEAR);
 //		Set_DX8_Texture_Stage_State(i, D3DTSS_MINFILTER, D3DTEXF_LINEAR);
 //		Set_DX8_Texture_Stage_State(i, D3DTSS_MIPFILTER, D3DTEXF_LINEAR);
@@ -3925,17 +3981,25 @@ const char* DX8Wrapper::Get_DX8_Render_State_Name(D3DRENDERSTATETYPE state)
 	case D3DRS_ALPHABLENDENABLE              : return "D3DRS_ALPHABLENDENABLE";
 	case D3DRS_FOGENABLE                     : return "D3DRS_FOGENABLE";
 	case D3DRS_SPECULARENABLE                : return "D3DRS_SPECULARENABLE";
+#ifndef RTS_USE_DIRECTX9
 	// TheSuperHackers @feature JohnsterID 14/09/2025 D3DRS_ZVISIBLE removed in DX9
-	// case D3DRS_ZVISIBLE                      : return "D3DRS_ZVISIBLE";
+	case D3DRS_ZVISIBLE                      : return "D3DRS_ZVISIBLE";
+#endif
 	case D3DRS_FOGCOLOR                      : return "D3DRS_FOGCOLOR";
 	case D3DRS_FOGTABLEMODE                  : return "D3DRS_FOGTABLEMODE";
 	case D3DRS_FOGSTART                      : return "D3DRS_FOGSTART";
 	case D3DRS_FOGEND                        : return "D3DRS_FOGEND";
 	case D3DRS_FOGDENSITY                    : return "D3DRS_FOGDENSITY";
+#ifndef RTS_USE_DIRECTX9
 	// TheSuperHackers @feature JohnsterID 14/09/2025 D3DRS_EDGEANTIALIAS removed in DX9
-	// case D3DRS_EDGEANTIALIAS                 : return "D3DRS_EDGEANTIALIAS";
+	case D3DRS_EDGEANTIALIAS                 : return "D3DRS_EDGEANTIALIAS";
+#endif
+#if RTS_USE_DIRECTX9
 	// TheSuperHackers @feature JohnsterID 14/09/2025 D3DRS_ZBIAS replaced with D3DRS_DEPTHBIAS in DX9
 	case D3DRS_DEPTHBIAS                     : return "D3DRS_DEPTHBIAS";
+#else
+	case D3DRS_ZBIAS                         : return "D3DRS_ZBIAS";
+#endif
 	case D3DRS_RANGEFOGENABLE                : return "D3DRS_RANGEFOGENABLE";
 	case D3DRS_STENCILENABLE                 : return "D3DRS_STENCILENABLE";
 	case D3DRS_STENCILFAIL                   : return "D3DRS_STENCILFAIL";
@@ -4007,16 +4071,18 @@ const char* DX8Wrapper::Get_DX8_Texture_Stage_State_Name(D3DTEXTURESTAGESTATETYP
 	case D3DTSS_BUMPENVMAT10              : return "D3DTSS_BUMPENVMAT10";
 	case D3DTSS_BUMPENVMAT11              : return "D3DTSS_BUMPENVMAT11";
 	case D3DTSS_TEXCOORDINDEX             : return "D3DTSS_TEXCOORDINDEX";
+#ifndef RTS_USE_DIRECTX9
 	// TheSuperHackers @feature JohnsterID 14/09/2025 Address/filter states moved to sampler states in DX9
-	// case D3DTSS_ADDRESSU                  : return "D3DTSS_ADDRESSU";
-	// case D3DTSS_ADDRESSV                  : return "D3DTSS_ADDRESSV";
-	// case D3DTSS_BORDERCOLOR               : return "D3DTSS_BORDERCOLOR";
-	// case D3DTSS_MAGFILTER                 : return "D3DTSS_MAGFILTER";
-	// case D3DTSS_MINFILTER                 : return "D3DTSS_MINFILTER";
-	// case D3DTSS_MIPFILTER                 : return "D3DTSS_MIPFILTER";
-	// case D3DTSS_MIPMAPLODBIAS             : return "D3DTSS_MIPMAPLODBIAS";
-	// case D3DTSS_MAXMIPLEVEL               : return "D3DTSS_MAXMIPLEVEL";
-	// case D3DTSS_MAXANISOTROPY             : return "D3DTSS_MAXANISOTROPY";
+	case D3DTSS_ADDRESSU                  : return "D3DTSS_ADDRESSU";
+	case D3DTSS_ADDRESSV                  : return "D3DTSS_ADDRESSV";
+	case D3DTSS_BORDERCOLOR               : return "D3DTSS_BORDERCOLOR";
+	case D3DTSS_MAGFILTER                 : return "D3DTSS_MAGFILTER";
+	case D3DTSS_MINFILTER                 : return "D3DTSS_MINFILTER";
+	case D3DTSS_MIPFILTER                 : return "D3DTSS_MIPFILTER";
+	case D3DTSS_MIPMAPLODBIAS             : return "D3DTSS_MIPMAPLODBIAS";
+	case D3DTSS_MAXMIPLEVEL               : return "D3DTSS_MAXMIPLEVEL";
+	case D3DTSS_MAXANISOTROPY             : return "D3DTSS_MAXANISOTROPY";
+#endif
 	case D3DTSS_BUMPENVLSCALE             : return "D3DTSS_BUMPENVLSCALE";
 	case D3DTSS_BUMPENVLOFFSET            : return "D3DTSS_BUMPENVLOFFSET";
 	case D3DTSS_TEXTURETRANSFORMFLAGS     : return "D3DTSS_TEXTURETRANSFORMFLAGS";
@@ -4120,7 +4186,11 @@ void DX8Wrapper::Get_DX8_Render_State_Value_Name(StringClass& name, D3DRENDERSTA
 		name.Format("%f",*(float*)&value);
 		break;
 
+#if RTS_USE_DIRECTX9
+	case D3DRS_DEPTHBIAS:
+#else
 	case D3DRS_ZBIAS:
+#endif
 	case D3DRS_STENCILREF:
 		name.Format("%d",value);
 		break;

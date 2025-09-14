@@ -61,7 +61,6 @@ bool DbgWinApp::OnInit()
     res->AddHandler(new wxButtonXmlHandler);
     res->AddHandler(new wxToggleButtonXmlHandler);
     res->AddHandler(new wxListBoxXmlHandler);
-    res->AddHandler(new wxBoxSizerXmlHandler);
     InitXmlResource();
 
     return true;

@@ -1414,6 +1414,18 @@ static void parseCommandLine(const CommandLineParam* params, int numParams)
 	arg = 1;
 #endif // DEBUG_LOGGING
 
+	// TheSuperHackers @feature JohnsterID 20/09/2025 Print all command line arguments to console output.
+	if (argc > 1)
+	{
+		printf("Command-line args:");
+		for (arg=1; arg<argc; arg++)
+		{
+			printf(" %s", argv[arg]);
+		}
+		printf("\n");
+		arg = 1;
+	}
+
 	// To parse command-line parameters, we loop through a table holding arguments
 	// and functions to handle them.  Comparisons can be case-(in)sensitive, and
 	// can check the entire string (for testing the presence of a flag) or check

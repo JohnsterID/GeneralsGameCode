@@ -31,6 +31,8 @@ if(MINGW)
     # Note: MinGW already defines _cdecl and _stdcall correctly, so we only add __forceinline
     add_compile_definitions(
         __forceinline=inline\ __attribute__\(\(always_inline\)\)
+        __int64=long\ long
+        _int64=long\ long
     )
     
     # Ensure proper calling conventions are defined

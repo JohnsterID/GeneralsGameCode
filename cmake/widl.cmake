@@ -32,6 +32,9 @@ if(MINGW)
             COMMAND ${IDL_COMPILER}
                 --win32
                 -I${idl_dir}
+                -I/opt/wine-stable/include/wine/windows
+                -I/opt/wine-stable/include/wine
+                -I/opt/wine-stable/include
                 -I/usr/include/wine/wine/windows
                 -I/usr/include/wine/wine
                 -I/usr/include/wine
@@ -50,6 +53,9 @@ if(MINGW)
             COMMAND ${IDL_COMPILER}
                 --win32
                 -I${idl_dir}
+                -I/opt/wine-stable/include/wine/windows
+                -I/opt/wine-stable/include/wine
+                -I/opt/wine-stable/include
                 -I/usr/include/wine/wine/windows
                 -I/usr/include/wine/wine
                 -I/usr/include/wine

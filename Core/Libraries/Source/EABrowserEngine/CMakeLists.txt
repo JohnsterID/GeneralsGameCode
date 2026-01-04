@@ -4,7 +4,7 @@ if(WIN32 OR "${CMAKE_SYSTEM}" MATCHES "Windows")
     if(MINGW AND IDL_COMPILER_FOUND)
         # Use widl for MinGW builds
         add_idl_file(browserengine_idl "${CMAKE_CURRENT_LIST_DIR}/BrowserEngine.idl")
-        add_library(core_browserenginewin STATIC ${browserengine_idl_IID})
+        add_library(core_browserenginewin STATIC ${browserengine_idl_IID} ${browserengine_idl_HEADER})
     elseif(MSVC)
         # Use midl for MSVC builds
         add_custom_command(

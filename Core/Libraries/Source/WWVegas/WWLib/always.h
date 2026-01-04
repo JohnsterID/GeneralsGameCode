@@ -218,6 +218,7 @@ public:
 #undef max
 #endif
 
+#if defined(_MSC_VER)
 template <class T> T min(T a,T b)
 {
 	if (a<b) {
@@ -235,6 +236,7 @@ template <class T> T max(T a,T b)
 		return b;
 	}
 }
+#endif
 
 
 /*

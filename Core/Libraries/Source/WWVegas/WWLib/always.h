@@ -224,6 +224,12 @@ public:
 #ifndef _MIN_MAX_TEMPLATES_DEFINED_
 #define _MIN_MAX_TEMPLATES_DEFINED_
 
+#if defined(__MINGW32__) || defined(__MINGW64__)
+// For MinGW, use STL's min/max
+using std::min;
+using std::max;
+#else
+// For MSVC, provide custom templates
 template <class T> T min(T a,T b)
 {
 	if (a<b) {
@@ -241,6 +247,7 @@ template <class T> T max(T a,T b)
 		return b;
 	}
 }
+#endif
 
 #endif // _MIN_MAX_TEMPLATES_DEFINED_
 

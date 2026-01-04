@@ -235,7 +235,11 @@ StringClass::Free_String (void)
 //	Format
 //
 ///////////////////////////////////////////////////////////////////
+#ifdef _MSC_VER
 int _cdecl
+#else
+int
+#endif
 StringClass::Format_Args (const TCHAR *format, va_list arg_list )
 {
 	//
@@ -267,7 +271,11 @@ StringClass::Format_Args (const TCHAR *format, va_list arg_list )
 //	Format
 //
 ///////////////////////////////////////////////////////////////////
+#ifdef _MSC_VER
 int _cdecl
+#else
+int
+#endif
 StringClass::Format (const TCHAR *format, ...)
 {
 	va_list arg_list;

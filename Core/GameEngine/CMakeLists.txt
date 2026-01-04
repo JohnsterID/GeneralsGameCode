@@ -1199,4 +1199,5 @@ target_link_libraries(corei_gameengine_public INTERFACE
     d3d8lib
     gamespy::gamespy
     stlport
+    reactos_atl  # ReactOS ATL for MinGW-w64 (no-op on MSVC)
 )

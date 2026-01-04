@@ -8,6 +8,14 @@ if (DEFINED MSVC_VERSION)
     message(STATUS "MSVC_VERSION: ${MSVC_VERSION}")
 endif()
 
+# Detect MinGW-w64
+if(MINGW)
+    message(STATUS "MinGW-w64 detected")
+    set(IS_MINGW_BUILD TRUE)
+else()
+    set(IS_MINGW_BUILD FALSE)
+endif()
+
 # Set variable for VS6 to handle special cases.
 if (DEFINED MSVC_VERSION AND MSVC_VERSION LESS 1300)
     set(IS_VS6_BUILD TRUE)

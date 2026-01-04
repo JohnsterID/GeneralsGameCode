@@ -98,6 +98,11 @@
 //#define abs(x) (((x) < 0) ? -(x) : (x))
 //#endif
 
+// Define NOMINMAX to prevent Windows headers from defining min/max macros
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
+
 #ifndef min
 #define min(x,y) (((x)<(y)) ? (x) : (y))
 #endif

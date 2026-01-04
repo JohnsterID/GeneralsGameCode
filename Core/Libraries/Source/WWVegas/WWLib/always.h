@@ -200,7 +200,9 @@ public:
 ** I'm replacing all occurrences of 'min' and 'max with 'MIN' and 'MAX'.  For code which
 ** is out of our domain (e.g. Max sdk) I'm declaring template functions for 'min' and 'max'
 */
+#ifndef NOMINMAX
 #define NOMINMAX
+#endif
 
 #ifndef MAX
 #define MAX(a,b)            (((a) > (b)) ? (a) : (b))
@@ -219,6 +221,9 @@ public:
 #endif
 
 // Provide min/max template functions for compatibility with legacy code
+#ifndef _MIN_MAX_TEMPLATES_DEFINED_
+#define _MIN_MAX_TEMPLATES_DEFINED_
+
 template <class T> T min(T a,T b)
 {
 	if (a<b) {
@@ -236,6 +241,8 @@ template <class T> T max(T a,T b)
 		return b;
 	}
 }
+
+#endif // _MIN_MAX_TEMPLATES_DEFINED_
 
 
 /*

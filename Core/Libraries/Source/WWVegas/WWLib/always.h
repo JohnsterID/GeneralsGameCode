@@ -226,6 +226,7 @@ public:
 
 #if defined(__MINGW32__) || defined(__MINGW64__)
 // For MinGW, use STL's min/max
+#include <algorithm>
 using std::min;
 using std::max;
 #else

@@ -28,6 +28,7 @@ if(MINGW)
     )
     
     # MSVC compatibility macros for MinGW
+    # Note: MinGW already defines _cdecl and _stdcall correctly, so we only add __forceinline
     add_compile_definitions(
         __forceinline=inline\ __attribute__\(\(always_inline\)\)
     )

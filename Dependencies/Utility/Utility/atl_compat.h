@@ -2,8 +2,9 @@
  * @file atl_compat.h
  * @brief ATL compatibility layer for MinGW-w64 with ReactOS ATL
  *
- * Provides compatibility definitions and workarounds for using ReactOS ATL
- * headers with MinGW-w64 GCC compiler.
+ * Provides compatibility definitions for using ReactOS ATL headers
+ * with MinGW-w64 GCC compiler. ReactOS ATL headers will use MinGW-w64's
+ * PSEH implementation for exception handling.
  */
 
 #pragma once
@@ -13,7 +14,10 @@
 
 #ifdef __MINGW32__
 
-// Suppress PSEH-related warnings when using ReactOS ATL headers
+// Include PSEH compatibility first (uses MinGW-w64 PSEH)
+#include "pseh_compat.h"
+
+// Suppress additional warnings from ReactOS ATL headers
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunknown-pragmas"
 #pragma GCC diagnostic ignored "-Wattributes"
@@ -39,14 +43,12 @@
 #define ATL_NO_DEFAULT_LIBS
 #endif
 
-// MinGW-w64 specific ATL compatibility
-#ifndef __ATLBASE_H__
-// Provide minimal ATL base definitions if needed
-#endif
-
 // Restore compiler warnings after ATL includes
 #define ATL_COMPAT_RESTORE_WARNINGS() \
-    _Pragma("GCC diagnostic pop")
+    do { \
+        _Pragma("GCC diagnostic pop") \
+        PSEH_COMPAT_RESTORE_WARNINGS() \
+    } while(0)
 
 #else
 // Non-MinGW platforms don't need these workarounds

@@ -1,5 +1,6 @@
 # ReactOS ATL headers for MinGW-w64 builds
 # Provides ATL/COM support without MSVC dependencies
+# Uses MinGW-w64's PSEH implementation for exception handling
 
 if(MINGW)
     message(STATUS "Setting up ReactOS ATL for MinGW-w64")
@@ -20,7 +21,9 @@ if(MINGW)
         # Create interface library for ReactOS ATL headers
         add_library(reactos_atl INTERFACE)
         
-        # Add ATL include directory with SYSTEM to suppress PSEH warnings
+        # Add ONLY ReactOS ATL include directory with SYSTEM to suppress warnings
+        # Do NOT include ReactOS PSEH - MinGW-w64 provides its own PSEH at
+        # /usr/i686-w64-mingw32/include/pseh/ which will be found first
         target_include_directories(reactos_atl SYSTEM INTERFACE 
             "${reactos_atl_SOURCE_DIR}/sdk/lib/atl"
         )
@@ -35,6 +38,7 @@ if(MINGW)
         )
         
         message(STATUS "ReactOS ATL headers: ${reactos_atl_SOURCE_DIR}/sdk/lib/atl")
+        message(STATUS "Using MinGW-w64 PSEH (not ReactOS PSEH)")
     endif()
 else()
     # Create dummy target for non-MinGW builds

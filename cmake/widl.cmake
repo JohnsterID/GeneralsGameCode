@@ -25,25 +25,41 @@ if(MINGW)
         set(header_file "${CMAKE_CURRENT_BINARY_DIR}/${idl_basename}.h")
         set(iid_file "${CMAKE_CURRENT_BINARY_DIR}/${idl_basename}_i.c")
         
+        # Use widl with its own preprocessor but define DECLSPEC_ALIGN as empty
+        # This allows widl to handle Wine IDL imports correctly
         add_custom_command(
-            OUTPUT ${header_file} ${iid_file}
+            OUTPUT ${header_file}
             COMMAND ${IDL_COMPILER}
-                -D__GNUC__
-                -DWIN32
-                -D_WIN32
                 --win32
+                -I${idl_dir}
+                -I/usr/include/wine/wine/windows
+                -I/usr/include/wine/wine
+                -I/usr/include/wine
+                -D__WIDL__
+                -DDECLSPEC_ALIGN\(x\)=
                 -h -o ${header_file}
                 ${idl_file}
+            WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+            DEPENDS ${idl_file}
+            COMMENT "Compiling IDL to header with widl: ${idl_file}"
+            VERBATIM
+        )
+        
+        add_custom_command(
+            OUTPUT ${iid_file}
             COMMAND ${IDL_COMPILER}
-                -D__GNUC__
-                -DWIN32
-                -D_WIN32
                 --win32
+                -I${idl_dir}
+                -I/usr/include/wine/wine/windows
+                -I/usr/include/wine/wine
+                -I/usr/include/wine
+                -D__WIDL__
+                -DDECLSPEC_ALIGN\(x\)=
                 -u -o ${iid_file}
                 ${idl_file}
             WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
             DEPENDS ${idl_file}
-            COMMENT "Compiling IDL file ${idl_file} with widl"
+            COMMENT "Compiling IDL to IID with widl: ${idl_file}"
             VERBATIM
         )
         

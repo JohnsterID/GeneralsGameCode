@@ -20,8 +20,8 @@ if(MINGW)
         # Create interface library for ReactOS ATL headers
         add_library(reactos_atl INTERFACE)
         
-        # Add ATL include directory
-        target_include_directories(reactos_atl INTERFACE 
+        # Add ATL include directory with SYSTEM to suppress PSEH warnings
+        target_include_directories(reactos_atl SYSTEM INTERFACE 
             "${reactos_atl_SOURCE_DIR}/sdk/lib/atl"
         )
         

@@ -104,8 +104,13 @@ public:
 	bool			Is_Empty (void) const;
 
 	void			Erase (int start_index, int char_count);
+#ifdef _MSC_VER
 	int _cdecl  Format (const WCHAR *format, ...);
 	int _cdecl  Format_Args (const WCHAR *format, va_list arg_list );
+#else
+	int Format (const WCHAR *format, ...);
+	int Format_Args (const WCHAR *format, va_list arg_list );
+#endif
 	bool			Convert_From (const char *text);
 	bool			Convert_To (StringClass &string);
 	bool			Convert_To (StringClass &string) const;

@@ -29,18 +29,21 @@ if(MINGW)
         
         # Detect Wine include paths dynamically
         find_path(WINE_WINDOWS_INCLUDE_DIR
-            NAMES rpc.h
+            NAMES oaidl.idl
             PATHS
+                /usr/include/wine/wine/windows
                 /usr/include/wine/windows
                 /usr/include/wine-development/windows
                 /opt/wine-stable/include/wine/windows
                 /usr/local/include/wine/windows
+            NO_DEFAULT_PATH
+            NO_CMAKE_FIND_ROOT_PATH
             DOC "Wine Windows headers directory"
         )
         
         if(WINE_WINDOWS_INCLUDE_DIR)
             get_filename_component(WINE_BASE_INCLUDE_DIR "${WINE_WINDOWS_INCLUDE_DIR}/.." ABSOLUTE)
-            message(STATUS "Wine include directory: ${WINE_BASE_INCLUDE_DIR}")
+            message(STATUS "Wine include directory: ${WINE_WINDOWS_INCLUDE_DIR}")
             set(WIDL_INCLUDE_PATHS
                 -I${WINE_WINDOWS_INCLUDE_DIR}
                 -I${WINE_BASE_INCLUDE_DIR}

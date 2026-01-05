@@ -23,6 +23,7 @@
 #pragma GCC diagnostic ignored "-Wattributes"
 
 // ReactOS ATL compatibility definitions
+// TODO: Confirm if we shouldn't use _ATL_NO_AUTOMATIC_NAMESPACE and if this should be in mingw.cmake
 #ifndef _ATL_NO_AUTOMATIC_NAMESPACE
 #define _ATL_NO_AUTOMATIC_NAMESPACE
 #endif

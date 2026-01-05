@@ -1,6 +1,7 @@
 # ReactOS ATL headers for MinGW-w64 builds
 # Provides ATL/COM support without MSVC dependencies
-# Uses MinGW-w64's PSEH implementation for exception handling
+# Uses ReactOS PSEH in C++-compatible dummy mode (_USE_DUMMY_PSEH)
+# because MinGW-w64's PSEH uses GNU C nested functions which don't work in C++
 
 if(MINGW)
     message(STATUS "Setting up ReactOS ATL for MinGW-w64")
@@ -21,10 +22,11 @@ if(MINGW)
         # Create interface library for ReactOS ATL headers
         add_library(reactos_atl INTERFACE)
         
-        # Add ONLY ReactOS ATL include directory with SYSTEM to suppress warnings
-        # Do NOT include ReactOS PSEH - MinGW-w64 provides its own PSEH at
-        # /usr/i686-w64-mingw32/include/pseh/ which will be found first
+        # Add ReactOS ATL and PSEH include directories with SYSTEM to suppress warnings
+        # ReactOS PSEH must come BEFORE system includes to override MinGW's pseh2.h
+        # (MinGW's pseh2.h uses GNU C nested functions which don't work in C++)
         target_include_directories(reactos_atl SYSTEM INTERFACE 
+            "${reactos_atl_SOURCE_DIR}/sdk/lib/pseh/include"
             "${reactos_atl_SOURCE_DIR}/sdk/lib/atl"
         )
         
@@ -32,15 +34,20 @@ if(MINGW)
         # NOTE: Do NOT define _ATL_NO_AUTOMATIC_NAMESPACE
         # The codebase uses ATL types (CComModule, CComObject, CString, etc.)
         # without ATL:: qualification and relies on automatic 'using namespace ATL;'
+        #
+        # _USE_DUMMY_PSEH: Use ReactOS PSEH's C++-compatible "dummy" mode
+        # which provides simple macros instead of GNU C nested functions
         target_compile_definitions(reactos_atl INTERFACE
             _ATL_CSTRING_EXPLICIT_CONSTRUCTORS
             _ATL_NO_DEBUG_CRT
             ATL_NO_ASSERT_ON_DESTROY_NONEXISTENT_WINDOW
             ATL_NO_DEFAULT_LIBS
+            _USE_DUMMY_PSEH
         )
         
         message(STATUS "ReactOS ATL headers: ${reactos_atl_SOURCE_DIR}/sdk/lib/atl")
-        message(STATUS "Using MinGW-w64 PSEH (not ReactOS PSEH)")
+        message(STATUS "ReactOS PSEH headers: ${reactos_atl_SOURCE_DIR}/sdk/lib/pseh/include")
+        message(STATUS "Using ReactOS PSEH in C++-compatible dummy mode (_USE_DUMMY_PSEH)")
     endif()
 else()
     # Create dummy target for non-MinGW builds

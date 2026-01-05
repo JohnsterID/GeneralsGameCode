@@ -46,11 +46,22 @@ bool __DebugIncludeInLink1;
 // .CRT$XCZ. We jam in our own two functions at the very beginning
 // and end of this list (B and Y respectively since the A and Z segments
 // contain list delimiters).
+#if defined(_MSC_VER)
 #pragma data_seg(".CRT$XCB")
 void *Debug::PreStatic=&Debug::PreStaticInit;
 #pragma data_seg(".CRT$XCY")
 void *Debug::PostStatic=&Debug::PostStaticInit;
 #pragma data_seg()
+#elif defined(__GNUC__) && defined(_WIN32)
+// For GCC/MinGW-w64 targeting Windows, use constructor attributes
+// Use priority 101 for PreStatic (very early) and 65434 for PostStatic (very late)
+void __attribute__((constructor(101))) GccPreStaticInit() { Debug::PreStaticInit(); }
+void __attribute__((constructor(65434))) GccPostStaticInit() { Debug::PostStaticInit(); }
+void *Debug::PreStatic = nullptr;
+void *Debug::PostStatic = nullptr;
+#else
+#error "Unsupported compiler or platform. This code requires MSVC or GCC/MinGW-w64 targeting Windows."
+#endif
 
 Debug::LogDescription::LogDescription(const char *fileOrGroup, const char *description)
 {

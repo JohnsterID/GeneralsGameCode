@@ -3,8 +3,9 @@
  * @brief ATL compatibility layer for MinGW-w64 with ReactOS ATL
  *
  * Provides compatibility definitions for using ReactOS ATL headers
- * with MinGW-w64 GCC compiler. ReactOS ATL headers will use MinGW-w64's
- * PSEH implementation for exception handling.
+ * with MinGW-w64 GCC compiler. Uses ReactOS PSEH in C++-compatible
+ * dummy mode (_USE_DUMMY_PSEH) because MinGW-w64's PSEH uses GNU C
+ * nested functions which are not valid in C++.
  */
 
 #pragma once
@@ -14,8 +15,21 @@
 
 #ifdef __MINGW32__
 
-// Include PSEH compatibility first (uses MinGW-w64 PSEH)
+// Include Windows types needed for ATL compatibility
+#include <wtypes.h>
+
+// Include PSEH compatibility first (uses ReactOS PSEH in dummy mode)
 #include "pseh_compat.h"
+
+// Define _ATL_IIDOF macro for ReactOS ATL (uses MinGW-w64's __uuidof)
+#ifndef _ATL_IIDOF
+#define _ATL_IIDOF(x) __uuidof(x)
+#endif
+
+// Forward declare _Delegate function for COM aggregation support
+// ReactOS ATL's COM_INTERFACE_ENTRY_AGGREGATE macro uses _Delegate but doesn't define it
+// The actual function pointer will be defined after atlbase.h provides _ATL_CREATORARGFUNC
+extern "C" HRESULT WINAPI _ATL_DelegateQueryInterface(void* pv, REFIID riid, LPVOID* ppv, DWORD_PTR dw);
 
 // Suppress additional warnings from ReactOS ATL headers
 #pragma GCC diagnostic push
@@ -33,6 +47,19 @@
 // IMPORTANT: _ATL_NO_AUTOMATIC_NAMESPACE is NOT defined because the codebase
 // uses ATL types (CComModule, CComObject, CString, etc.) without namespace
 // qualification and relies on the automatic 'using namespace ATL;' from ATL headers.
+
+// Define _Delegate implementation and macro now that ATL types are available
+inline HRESULT WINAPI _ATL_DelegateQueryInterface(void* pv, REFIID riid, LPVOID* ppv, DWORD_PTR dw)
+{
+    IUnknown** ppunk = reinterpret_cast<IUnknown**>(reinterpret_cast<char*>(pv) + dw);
+    if (*ppunk == NULL)
+        return E_NOINTERFACE;
+    return (*ppunk)->QueryInterface(riid, ppv);
+}
+
+#ifndef _Delegate
+#define _Delegate ((ATL::_ATL_CREATORARGFUNC*)_ATL_DelegateQueryInterface)
+#endif
 
 // Restore compiler warnings after ATL includes
 #define ATL_COMPAT_RESTORE_WARNINGS() \

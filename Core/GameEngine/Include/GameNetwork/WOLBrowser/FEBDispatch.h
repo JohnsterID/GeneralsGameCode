@@ -31,6 +31,7 @@
 
 #if defined __MINGW32__
 #include "Utility/atl_compat.h"
+#include "Utility/comsupp_compat.h" 
 #endif
 
 #include <atlbase.h>

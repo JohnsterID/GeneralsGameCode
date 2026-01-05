@@ -35,6 +35,13 @@ if(MINGW)
         _int64=long\ long
     )
     
+    # Math constants for MinGW (not defined by default in C++ mode)
+    add_compile_definitions(
+        M_PI=3.14159265358979323846
+        M_PI_2=1.57079632679489661923
+        M_PI_4=0.785398163397448309616
+    )
+    
     # Ensure proper calling conventions are defined
     # MinGW-w64 should define these, but verify they exist
     include(CheckCXXSymbolExists)

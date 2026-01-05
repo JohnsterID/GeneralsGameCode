@@ -4,7 +4,6 @@
  *
  * ReactOS ATL headers include <pseh/pseh2.h>. This header ensures
  * that MinGW-w64's PSEH implementation is used instead of ReactOS PSEH.
- * MinGW-w64 provides its own PSEH headers at /usr/i686-w64-mingw32/include/pseh/
  */
 
 #pragma once

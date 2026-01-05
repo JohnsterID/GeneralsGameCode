@@ -250,4 +250,5 @@ target_precompile_headers(g_ww3d2 PRIVATE
 target_link_libraries(g_ww3d2 PRIVATE
     corei_ww3d2
     g_wwcommon
+    core_wwdebug
 )

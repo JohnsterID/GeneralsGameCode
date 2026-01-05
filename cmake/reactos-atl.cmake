@@ -29,8 +29,10 @@ if(MINGW)
         )
         
         # Add required ATL defines for MinGW compatibility
+        # NOTE: Do NOT define _ATL_NO_AUTOMATIC_NAMESPACE
+        # The codebase uses ATL types (CComModule, CComObject, CString, etc.)
+        # without ATL:: qualification and relies on automatic 'using namespace ATL;'
         target_compile_definitions(reactos_atl INTERFACE
-            _ATL_NO_AUTOMATIC_NAMESPACE
             _ATL_CSTRING_EXPLICIT_CONSTRUCTORS
             _ATL_NO_DEBUG_CRT
             ATL_NO_ASSERT_ON_DESTROY_NONEXISTENT_WINDOW

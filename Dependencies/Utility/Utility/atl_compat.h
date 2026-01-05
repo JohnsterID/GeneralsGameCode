@@ -22,27 +22,17 @@
 #pragma GCC diagnostic ignored "-Wunknown-pragmas"
 #pragma GCC diagnostic ignored "-Wattributes"
 
-// ReactOS ATL compatibility definitions
-// TODO: Confirm if we shouldn't use _ATL_NO_AUTOMATIC_NAMESPACE and if this should be in mingw.cmake
-#ifndef _ATL_NO_AUTOMATIC_NAMESPACE
-#define _ATL_NO_AUTOMATIC_NAMESPACE
-#endif
-
-#ifndef _ATL_CSTRING_EXPLICIT_CONSTRUCTORS
-#define _ATL_CSTRING_EXPLICIT_CONSTRUCTORS
-#endif
-
-#ifndef _ATL_NO_DEBUG_CRT
-#define _ATL_NO_DEBUG_CRT
-#endif
-
-#ifndef ATL_NO_ASSERT_ON_DESTROY_NONEXISTENT_WINDOW
-#define ATL_NO_ASSERT_ON_DESTROY_NONEXISTENT_WINDOW
-#endif
-
-#ifndef ATL_NO_DEFAULT_LIBS
-#define ATL_NO_DEFAULT_LIBS
-#endif
+// NOTE: ReactOS ATL compile definitions are set in cmake/reactos-atl.cmake:
+//   - _ATL_CSTRING_EXPLICIT_CONSTRUCTORS
+//   - _ATL_NO_DEBUG_CRT
+//   - ATL_NO_ASSERT_ON_DESTROY_NONEXISTENT_WINDOW
+//   - ATL_NO_DEFAULT_LIBS
+// These are applied via target_compile_definitions() on the reactos_atl target.
+// Any target linking to reactos_atl will automatically inherit these definitions.
+//
+// IMPORTANT: _ATL_NO_AUTOMATIC_NAMESPACE is NOT defined because the codebase
+// uses ATL types (CComModule, CComObject, CString, etc.) without namespace
+// qualification and relies on the automatic 'using namespace ATL;' from ATL headers.
 
 // Restore compiler warnings after ATL includes
 #define ATL_COMPAT_RESTORE_WARNINGS() \

@@ -9,11 +9,49 @@ if(MINGW)
     )
     
     if(WIDL_EXECUTABLE)
-        message(STATUS "Found widl: ${WIDL_EXECUTABLE}")
+        # Get widl version
+        execute_process(
+            COMMAND ${WIDL_EXECUTABLE} -V
+            OUTPUT_VARIABLE WIDL_VERSION_OUTPUT
+            ERROR_QUIET
+            OUTPUT_STRIP_TRAILING_WHITESPACE
+        )
+        
+        if(WIDL_VERSION_OUTPUT MATCHES "Wine IDL Compiler version ([0-9.]+)")
+            set(WIDL_VERSION ${CMAKE_MATCH_1})
+            message(STATUS "Found widl: ${WIDL_EXECUTABLE} (version ${WIDL_VERSION})")
+        else()
+            message(STATUS "Found widl: ${WIDL_EXECUTABLE}")
+        endif()
+        
         set(IDL_COMPILER ${WIDL_EXECUTABLE})
         set(IDL_COMPILER_FOUND TRUE)
+        
+        # Detect Wine include paths dynamically
+        find_path(WINE_WINDOWS_INCLUDE_DIR
+            NAMES rpc.h
+            PATHS
+                /usr/include/wine/windows
+                /usr/include/wine-development/windows
+                /opt/wine-stable/include/wine/windows
+                /usr/local/include/wine/windows
+            DOC "Wine Windows headers directory"
+        )
+        
+        if(WINE_WINDOWS_INCLUDE_DIR)
+            get_filename_component(WINE_BASE_INCLUDE_DIR "${WINE_WINDOWS_INCLUDE_DIR}/.." ABSOLUTE)
+            message(STATUS "Wine include directory: ${WINE_BASE_INCLUDE_DIR}")
+            set(WIDL_INCLUDE_PATHS
+                -I${WINE_WINDOWS_INCLUDE_DIR}
+                -I${WINE_BASE_INCLUDE_DIR}
+            )
+        else()
+            message(WARNING "Wine include directory not found. widl may fail to compile IDL files.")
+            set(WIDL_INCLUDE_PATHS "")
+        endif()
+        
     else()
-        message(WARNING "widl not found. Install with: apt-get install wine-dev (Linux) or mingw-w64-tools (Windows)")
+        message(WARNING "widl not found. Install with: apt-get install wine-stable-dev (Debian/Ubuntu) or wine-devel (Fedora/RHEL)")
         set(IDL_COMPILER_FOUND FALSE)
     endif()
     
@@ -25,21 +63,20 @@ if(MINGW)
         set(header_file "${CMAKE_CURRENT_BINARY_DIR}/${idl_basename}.h")
         set(iid_file "${CMAKE_CURRENT_BINARY_DIR}/${idl_basename}_i.c")
         
-        # Use widl with its own preprocessor but define DECLSPEC_ALIGN as empty
-        # This allows widl to handle Wine IDL imports correctly
+        # Build widl flags with dynamically detected Wine paths
+        set(WIDL_FLAGS
+            --win32
+            -I${idl_dir}
+            ${WIDL_INCLUDE_PATHS}
+            -D__WIDL__
+            -DDECLSPEC_ALIGN\(x\)=
+        )
+        
+        # Generate header file
         add_custom_command(
             OUTPUT ${header_file}
             COMMAND ${IDL_COMPILER}
-                --win32
-                -I${idl_dir}
-                -I/opt/wine-stable/include/wine/windows
-                -I/opt/wine-stable/include/wine
-                -I/opt/wine-stable/include
-                -I/usr/include/wine/wine/windows
-                -I/usr/include/wine/wine
-                -I/usr/include/wine
-                -D__WIDL__
-                -DDECLSPEC_ALIGN\(x\)=
+                ${WIDL_FLAGS}
                 -h -o ${header_file}
                 ${idl_file}
             WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
@@ -48,19 +85,11 @@ if(MINGW)
             VERBATIM
         )
         
+        # Generate IID file
         add_custom_command(
             OUTPUT ${iid_file}
             COMMAND ${IDL_COMPILER}
-                --win32
-                -I${idl_dir}
-                -I/opt/wine-stable/include/wine/windows
-                -I/opt/wine-stable/include/wine
-                -I/opt/wine-stable/include
-                -I/usr/include/wine/wine/windows
-                -I/usr/include/wine/wine
-                -I/usr/include/wine
-                -D__WIDL__
-                -DDECLSPEC_ALIGN\(x\)=
+                ${WIDL_FLAGS}
                 -u -o ${iid_file}
                 ${idl_file}
             WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}

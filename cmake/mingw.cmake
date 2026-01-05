@@ -66,6 +66,7 @@ if(MINGW)
         d3d8        # Direct3D 8
         dinput8     # DirectInput 8
         dsound      # DirectSound
+        imm32       # Input Method Manager (IME)
     )
     
     # Note: MinGW-w64 does not provide comsuppw (COM support utilities library).

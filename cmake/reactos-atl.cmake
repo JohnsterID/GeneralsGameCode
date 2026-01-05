@@ -25,25 +25,33 @@ if(MINGW)
         # Add ReactOS ATL and PSEH include directories with SYSTEM to suppress warnings
         # ReactOS PSEH must come BEFORE system includes to override MinGW's pseh2.h
         # (MinGW's pseh2.h uses GNU C nested functions which don't work in C++)
+        # NOTE: Do NOT include ReactOS CRT headers - use MinGW-w64's CRT instead
         target_include_directories(reactos_atl SYSTEM INTERFACE 
             "${reactos_atl_SOURCE_DIR}/sdk/lib/pseh/include"
             "${reactos_atl_SOURCE_DIR}/sdk/lib/atl"
-            "${reactos_atl_SOURCE_DIR}/sdk/include/crt"
         )
         
         # Create ReactOS COM support library (comsupp)
-        # Provides _com_util::ConvertStringToBSTR and other COM utilities
+        # Provides _com_util::ConvertStringToBSTR and ConvertBSTRToString
+        # Uses ReactOS's comsupp.cpp implementation from sdk/lib/comsupp
         add_library(reactos_comsupp STATIC
             "${reactos_atl_SOURCE_DIR}/sdk/lib/comsupp/comsupp.cpp"
         )
+        target_compile_definitions(reactos_comsupp PRIVATE
+            WIN32_NO_STATUS
+            _INC_WINDOWS
+        )
         target_include_directories(reactos_comsupp PRIVATE
+            "${reactos_atl_SOURCE_DIR}/sdk/include/psdk"
             "${reactos_atl_SOURCE_DIR}/sdk/include/crt"
         )
         # Link comsupp to oleaut32 for SysAllocString, SysFreeString, etc.
-        target_link_libraries(reactos_comsupp PRIVATE oleaut32)
+        target_link_libraries(reactos_comsupp PRIVATE oleaut32 ole32)
         
-        # Add reactos_comsupp to global link libraries for all MinGW targets
-        link_libraries(reactos_comsupp)
+        # Note: reactos_comsupp is NOT added globally via link_libraries()
+        # to avoid export conflicts with external dependencies like binkstub.
+        # Instead, it should be linked explicitly to targets that need COM support.
+        # This is automatically done for game targets via mingw.cmake's link_libraries().
         
         # Add required ATL defines for MinGW compatibility
         # NOTE: Do NOT define _ATL_NO_AUTOMATIC_NAMESPACE
@@ -62,9 +70,9 @@ if(MINGW)
         
         message(STATUS "ReactOS ATL headers: ${reactos_atl_SOURCE_DIR}/sdk/lib/atl")
         message(STATUS "ReactOS PSEH headers: ${reactos_atl_SOURCE_DIR}/sdk/lib/pseh/include")
-        message(STATUS "ReactOS CRT headers: ${reactos_atl_SOURCE_DIR}/sdk/include/crt")
-        message(STATUS "ReactOS COM support library (comsupp): ${reactos_atl_SOURCE_DIR}/sdk/lib/comsupp")
+        message(STATUS "ReactOS COM support (comsupp): ${reactos_atl_SOURCE_DIR}/sdk/lib/comsupp/comsupp.cpp")
         message(STATUS "Using ReactOS PSEH in C++-compatible dummy mode (_USE_DUMMY_PSEH)")
+        message(STATUS "Using MinGW-w64 CRT headers (NOT ReactOS CRT)")
     endif()
 else()
     # Create dummy target for non-MinGW builds

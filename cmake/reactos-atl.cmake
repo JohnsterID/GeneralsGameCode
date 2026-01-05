@@ -28,7 +28,22 @@ if(MINGW)
         target_include_directories(reactos_atl SYSTEM INTERFACE 
             "${reactos_atl_SOURCE_DIR}/sdk/lib/pseh/include"
             "${reactos_atl_SOURCE_DIR}/sdk/lib/atl"
+            "${reactos_atl_SOURCE_DIR}/sdk/include/crt"
         )
+        
+        # Create ReactOS COM support library (comsupp)
+        # Provides _com_util::ConvertStringToBSTR and other COM utilities
+        add_library(reactos_comsupp STATIC
+            "${reactos_atl_SOURCE_DIR}/sdk/lib/comsupp/comsupp.cpp"
+        )
+        target_include_directories(reactos_comsupp PRIVATE
+            "${reactos_atl_SOURCE_DIR}/sdk/include/crt"
+        )
+        # Link comsupp to oleaut32 for SysAllocString, SysFreeString, etc.
+        target_link_libraries(reactos_comsupp PRIVATE oleaut32)
+        
+        # Add reactos_comsupp to global link libraries for all MinGW targets
+        link_libraries(reactos_comsupp)
         
         # Add required ATL defines for MinGW compatibility
         # NOTE: Do NOT define _ATL_NO_AUTOMATIC_NAMESPACE
@@ -47,6 +62,8 @@ if(MINGW)
         
         message(STATUS "ReactOS ATL headers: ${reactos_atl_SOURCE_DIR}/sdk/lib/atl")
         message(STATUS "ReactOS PSEH headers: ${reactos_atl_SOURCE_DIR}/sdk/lib/pseh/include")
+        message(STATUS "ReactOS CRT headers: ${reactos_atl_SOURCE_DIR}/sdk/include/crt")
+        message(STATUS "ReactOS COM support library (comsupp): ${reactos_atl_SOURCE_DIR}/sdk/lib/comsupp")
         message(STATUS "Using ReactOS PSEH in C++-compatible dummy mode (_USE_DUMMY_PSEH)")
     endif()
 else()

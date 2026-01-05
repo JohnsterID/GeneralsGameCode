@@ -31,27 +31,9 @@ if(MINGW)
             "${reactos_atl_SOURCE_DIR}/sdk/lib/atl"
         )
         
-        # Create ReactOS COM support library (comsupp)
-        # Provides _com_util::ConvertStringToBSTR and ConvertBSTRToString
-        # Uses ReactOS's comsupp.cpp implementation from sdk/lib/comsupp
-        add_library(reactos_comsupp STATIC
-            "${reactos_atl_SOURCE_DIR}/sdk/lib/comsupp/comsupp.cpp"
-        )
-        target_compile_definitions(reactos_comsupp PRIVATE
-            WIN32_NO_STATUS
-            _INC_WINDOWS
-        )
-        target_include_directories(reactos_comsupp PRIVATE
-            "${reactos_atl_SOURCE_DIR}/sdk/include/psdk"
-            "${reactos_atl_SOURCE_DIR}/sdk/include/crt"
-        )
-        # Link comsupp to oleaut32 for SysAllocString, SysFreeString, etc.
-        target_link_libraries(reactos_comsupp PRIVATE oleaut32 ole32)
-        
-        # Note: reactos_comsupp is NOT added globally via link_libraries()
-        # to avoid export conflicts with external dependencies like binkstub.
-        # Instead, it should be linked explicitly to targets that need COM support.
-        # This is automatically done for game targets via mingw.cmake's link_libraries().
+        # COM support (_com_util::ConvertStringToBSTR and ConvertBSTRToString)
+        # is provided by Dependencies/Utility/Utility/comsupp_compat.h as a
+        # header-only implementation. No library needs to be built or linked.
         
         # Add required ATL defines for MinGW compatibility
         # NOTE: Do NOT define _ATL_NO_AUTOMATIC_NAMESPACE
@@ -70,7 +52,7 @@ if(MINGW)
         
         message(STATUS "ReactOS ATL headers: ${reactos_atl_SOURCE_DIR}/sdk/lib/atl")
         message(STATUS "ReactOS PSEH headers: ${reactos_atl_SOURCE_DIR}/sdk/lib/pseh/include")
-        message(STATUS "ReactOS COM support (comsupp): ${reactos_atl_SOURCE_DIR}/sdk/lib/comsupp/comsupp.cpp")
+        message(STATUS "COM support (comsupp): Header-only in Dependencies/Utility/Utility/comsupp_compat.h")
         message(STATUS "Using ReactOS PSEH in C++-compatible dummy mode (_USE_DUMMY_PSEH)")
         message(STATUS "Using MinGW-w64 CRT headers (NOT ReactOS CRT)")
     endif()

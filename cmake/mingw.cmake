@@ -54,6 +54,7 @@ if(MINGW)
     endif()
     
     # Required Windows libraries for DX8 + COM
+    # Note: reactos_comsupp must be linked AFTER reactos-atl.cmake is included
     link_libraries(
         uuid        # COM GUIDs
         ole32       # COM runtime
@@ -69,8 +70,9 @@ if(MINGW)
     )
     
     # Note: MinGW-w64 does not provide comsuppw (COM support utilities library).
-    # Functions like _com_util::ConvertStringToBSTR() need to be provided by
-    # the project or avoided. See reactos-atl.cmake for ATL/COM support.
+    # We use ReactOS comsupp instead, which provides _com_util::ConvertStringToBSTR()
+    # and other COM utilities. The reactos_comsupp library is linked automatically
+    # when reactos-atl.cmake is included.
     
     # MinGW-w64 compatibility: Create d3dx8 as an alias to d3dx8d
     # MinGW-w64 only provides libd3dx8d.a (debug library), not libd3dx8.a

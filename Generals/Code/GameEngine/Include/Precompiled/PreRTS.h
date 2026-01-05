@@ -128,5 +128,5 @@ class STLSpecialAlloc;
 #include "Common/UnicodeString.h"
 
 #if defined(__GNUC__) && defined(_WIN32)
-    ATL_COMPAT_RESTORE_WARNINGS()
+    #pragma GCC diagnostic pop
 #endif

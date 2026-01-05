@@ -4,7 +4,7 @@
 if(MINGW)
     # Find widl executable
     find_program(WIDL_EXECUTABLE
-        NAMES widl
+        NAMES widl widl-stable
         DOC "Wine IDL compiler for MinGW-w64"
     )
     

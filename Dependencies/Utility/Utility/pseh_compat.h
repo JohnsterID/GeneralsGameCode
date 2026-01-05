@@ -3,7 +3,9 @@
  * @brief PSEH compatibility for MinGW-w64 with ReactOS ATL
  *
  * ReactOS ATL headers include <pseh/pseh2.h>. This header ensures
- * that MinGW-w64's PSEH implementation is used instead of ReactOS PSEH.
+ * that ReactOS PSEH is used in C++-compatible dummy mode (_USE_DUMMY_PSEH).
+ * The cmake configuration (reactos-atl.cmake) adds ReactOS PSEH headers
+ * to the include path before system headers, and defines _USE_DUMMY_PSEH.
  */
 
 #pragma once
@@ -13,16 +15,16 @@
 
 #ifdef __MINGW32__
 
-// Suppress PSEH-related warnings from MinGW-w64 PSEH headers
+// Suppress PSEH-related warnings from ReactOS PSEH headers
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunknown-pragmas"
 #pragma GCC diagnostic ignored "-Wattributes"
 #pragma GCC diagnostic ignored "-Wunused-variable"
 #pragma GCC diagnostic ignored "-Wunused-but-set-variable"
+#pragma GCC diagnostic ignored "-Wunused-label"
 
-// Include MinGW-w64's PSEH2 implementation
-// This provides proper structured exception handling for GCC
-#include <pseh/pseh2.h>
+// ReactOS PSEH headers will be included by ATL headers
+// No need to include them explicitly here
 
 // Restore compiler warnings after PSEH includes
 #define PSEH_COMPAT_RESTORE_WARNINGS() \

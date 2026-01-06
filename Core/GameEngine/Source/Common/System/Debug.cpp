@@ -806,22 +806,105 @@ void ReleaseCrash(const char *reason)
 		}
 	}
 
-#if defined(RTS_DEBUG)
-	/* static */ char buff[8192]; // not so static so we can be threadsafe
-	snprintf(buff, 8192, "Sorry, a serious error occurred. (%s)", reason);
-	::MessageBox(NULL, buff, "Technical Difficulties...", MB_OK|MB_SYSTEMMODAL|MB_ICONERROR);
-#else
-// crash error messaged changed 3/6/03 BGC
-//	::MessageBox(NULL, "Sorry, a serious error occurred.", "Technical Difficulties...", MB_OK|MB_TASKMODAL|MB_ICONERROR);
-//	::MessageBox(NULL, "You have encountered a serious error.  Serious errors can be caused by many things including viruses, overheated hardware and hardware that does not meet the minimum specifications for the game. Please visit the forums at www.generals.ea.com for suggested courses of action or consult your manual for Technical Support contact information.", "Technical Difficulties...", MB_OK|MB_TASKMODAL|MB_ICONERROR);
+	// TheSuperHackers @bugfix JohnsterID 06/01/2025 Update crash message to show crash report locations
+	// and point users to repo. Removes outdated EA forum references.
+	// Also shows crash location from stack trace when debug symbols are available.
+	char crashInfoPath[_MAX_PATH];
+	strlcpy(crashInfoPath, TheGlobalData->getPath_UserData().str(), ARRAY_SIZE(crashInfoPath));
+	strlcat(crashInfoPath, RELEASECRASH_FILE_NAME, ARRAY_SIZE(crashInfoPath));
 
-// crash error message changed again 8/22/03 M Lorenzen... made this message box modal to the system so it will appear on top of any task-modal windows, splash-screen, etc.
-  ::MessageBox(NULL, "You have encountered a serious error.  Serious errors can be caused by many things including viruses, overheated hardware and hardware that does not meet the minimum specifications for the game. Please visit the forums at www.generals.ea.com for suggested courses of action or consult your manual for Technical Support contact information.",
-   "Technical Difficulties...",
-   MB_OK|MB_SYSTEMMODAL|MB_ICONERROR);
-
-
+#ifdef RTS_ENABLE_CRASHDUMP
+	char crashDumpDir[_MAX_PATH];
+	strlcpy(crashDumpDir, TheGlobalData->getPath_UserData().str(), ARRAY_SIZE(crashDumpDir));
+	strlcat(crashDumpDir, "CrashDumps\\", ARRAY_SIZE(crashDumpDir));
 #endif
+
+	// Extract first line of stack trace (crash location) if available
+	char crashLocation[512] = "";
+	if (g_LastErrorDump.isNotEmpty()) {
+		const char* stackStr = g_LastErrorDump.str();
+		// Find first line (skip leading whitespace/newlines)
+		while (*stackStr && (*stackStr == ' ' || *stackStr == '\t' || *stackStr == '\n' || *stackStr == '\r')) {
+			stackStr++;
+		}
+		// Copy first line up to newline or max length
+		if (*stackStr && strstr(stackStr, "<Unknown>") == NULL) {
+			const char* lineEnd = stackStr;
+			while (*lineEnd && *lineEnd != '\n' && *lineEnd != '\r' && (lineEnd - stackStr) < 400) {
+				lineEnd++;
+			}
+			size_t len = lineEnd - stackStr;
+			if (len > 0 && len < sizeof(crashLocation) - 1) {
+				strncpy(crashLocation, stackStr, len);
+				crashLocation[len] = '\0';
+			}
+		}
+	}
+
+	char buff[2560];
+#if defined(RTS_DEBUG)
+	if (crashLocation[0] != '\0') {
+		snprintf(buff, sizeof(buff),
+			"The game encountered a critical error and needs to close.\n\n"
+			"Error: %s\n"
+			"Location:\n%s\n\n"
+			"Crash report saved to:\n%s\n"
+#ifdef RTS_ENABLE_CRASHDUMP
+			"\nMinidump files saved to:\n%s\n"
+#endif
+			"\nPlease report the issue:\nhttps://github.com/TheSuperHackers/GeneralsGameCode/issues",
+			reason, crashLocation, crashInfoPath
+#ifdef RTS_ENABLE_CRASHDUMP
+			, crashDumpDir
+#endif
+		);
+	} else {
+		snprintf(buff, sizeof(buff),
+			"The game encountered a critical error and needs to close.\n\n"
+			"Error: %s\n\n"
+			"Crash report saved to:\n%s\n"
+#ifdef RTS_ENABLE_CRASHDUMP
+			"\nMinidump files saved to:\n%s\n"
+#endif
+			"\nPlease report the issue:\nhttps://github.com/TheSuperHackers/GeneralsGameCode/issues",
+			reason, crashInfoPath
+#ifdef RTS_ENABLE_CRASHDUMP
+			, crashDumpDir
+#endif
+		);
+	}
+#else
+	if (crashLocation[0] != '\0') {
+		snprintf(buff, sizeof(buff),
+			"The game encountered a critical error and needs to close.\n\n"
+			"Location:\n%s\n\n"
+			"Crash report saved to:\n%s\n"
+#ifdef RTS_ENABLE_CRASHDUMP
+			"\nMinidump files saved to:\n%s\n"
+#endif
+			"\nPlease report the issue:\nhttps://github.com/TheSuperHackers/GeneralsGameCode/issues",
+			crashLocation, crashInfoPath
+#ifdef RTS_ENABLE_CRASHDUMP
+			, crashDumpDir
+#endif
+		);
+	} else {
+		snprintf(buff, sizeof(buff),
+			"The game encountered a critical error and needs to close.\n\n"
+			"Crash report saved to:\n%s\n"
+#ifdef RTS_ENABLE_CRASHDUMP
+			"\nMinidump files saved to:\n%s\n"
+#endif
+			"\nPlease report the issue:\nhttps://github.com/TheSuperHackers/GeneralsGameCode/issues",
+			crashInfoPath
+#ifdef RTS_ENABLE_CRASHDUMP
+			, crashDumpDir
+#endif
+		);
+	}
+#endif
+
+	::MessageBox(NULL, buff, "Game Crash", MB_OK|MB_SYSTEMMODAL|MB_ICONERROR);
 
 	_exit(1);
 }
@@ -848,9 +931,31 @@ void ReleaseCrashLocalized(const AsciiString& p, const AsciiString& m)
 		}
 	}
 
+	// TheSuperHackers @bugfix JohnsterID 06/01/2025 Append crash file locations to localized error message
+	char crashInfoPath[_MAX_PATH];
+	strlcpy(crashInfoPath, TheGlobalData->getPath_UserData().str(), ARRAY_SIZE(crashInfoPath));
+	strlcat(crashInfoPath, RELEASECRASH_FILE_NAME, ARRAY_SIZE(crashInfoPath));
+
+	char crashInfoAppendix[1024];
+	snprintf(crashInfoAppendix, sizeof(crashInfoAppendix),
+		"\n\nCrash report: %s"
+#ifdef RTS_ENABLE_CRASHDUMP
+		"\nMinidump files: %sCrashDumps\\"
+#endif
+		"\n\nReport issue: https://github.com/TheSuperHackers/GeneralsGameCode/issues",
+		crashInfoPath
+#ifdef RTS_ENABLE_CRASHDUMP
+		, TheGlobalData->getPath_UserData().str()
+#endif
+	);
+
 	if (TheSystemIsUnicode)
 	{
-		::MessageBoxW(NULL, mesg.str(), prompt.str(), MB_OK|MB_SYSTEMMODAL|MB_ICONERROR);
+		UnicodeString appendix;
+		appendix.translate(crashInfoAppendix);
+		UnicodeString fullMessage = mesg;
+		fullMessage.concat(appendix);
+		::MessageBoxW(NULL, fullMessage.str(), prompt.str(), MB_OK|MB_SYSTEMMODAL|MB_ICONERROR);
 	}
 	else
 	{
@@ -859,6 +964,7 @@ void ReleaseCrashLocalized(const AsciiString& p, const AsciiString& m)
 		AsciiString promptA, mesgA;
 		promptA.translate(prompt);
 		mesgA.translate(mesg);
+		mesgA.concat(crashInfoAppendix);
 		//Make sure main window is not TOP_MOST
 		::SetWindowPos(ApplicationHWnd, HWND_NOTOPMOST, 0, 0, 0, 0,SWP_NOSIZE |SWP_NOMOVE);
 		::MessageBoxA(NULL, mesgA.str(), promptA.str(), MB_OK|MB_TASKMODAL|MB_ICONERROR);

@@ -64,6 +64,10 @@ set(WW3D2_SRC
     #dx8webbrowser.h
     dx8wrapper.cpp
     dx8wrapper.h
+    IGraphicsDevice.h
+    GraphicsDeviceFactory.cpp
+    DX8/DX8Device.h
+    DX8/DX8Device.cpp
     #dynamesh.cpp
     #dynamesh.h
     #font3d.cpp
@@ -237,6 +241,13 @@ add_library(z_ww3d2 STATIC)
 set_target_properties(z_ww3d2 PROPERTIES OUTPUT_NAME ww3d2)
 
 target_sources(z_ww3d2 PRIVATE ${WW3D2_SRC})
+
+if(RTS_USE_DIRECTX9)
+    target_sources(z_ww3d2 PRIVATE
+        DX9/DX9Device.h
+        DX9/DX9Device.cpp
+    )
+endif()
 
 target_compile_definitions(z_ww3d2 PRIVATE
     $<$<BOOL:${IS_VS6_BUILD}>:WINVER=0x0500>

@@ -42,7 +42,11 @@ include(FetchContent)
 if((WIN32 OR "${CMAKE_SYSTEM}" MATCHES "Windows") AND ${CMAKE_SIZEOF_VOID_P} EQUAL 4)
     include(cmake/miles.cmake)
     include(cmake/bink.cmake)
-    include(cmake/dx8.cmake)
+    if(RTS_USE_DIRECTX9)
+        include(cmake/dx9.cmake)
+    else()
+        include(cmake/dx8.cmake)
+    endif()
 endif()
 
 # Define a dummy stlport target when not on VC6.

@@ -72,6 +72,9 @@ typedef IDirect3DSurface9 DXSurface;
 typedef IDirect3DTexture9 DXTexture;
 typedef IDirect3DBaseTexture9 DXBaseTexture;
 typedef D3DADAPTER_IDENTIFIER9 DXAdapterIdentifier;
+typedef D3DLIGHT9 DXLight;
+typedef D3DVIEWPORT9 DXViewport;
+typedef D3DMATERIAL9 DXMaterial;
 typedef IDirect3D9* (WINAPI *Direct3DCreateType) (UINT SDKVersion);
 #define DIRECT3D_CREATE_FUNC Direct3DCreate9
 #define DIRECT3D_SDK_VERSION D3D_SDK_VERSION
@@ -82,6 +85,9 @@ typedef IDirect3DSurface8 DXSurface;
 typedef IDirect3DTexture8 DXTexture;
 typedef IDirect3DBaseTexture8 DXBaseTexture;
 typedef D3DADAPTER_IDENTIFIER8 DXAdapterIdentifier;
+typedef D3DLIGHT8 DXLight;
+typedef D3DVIEWPORT8 DXViewport;
+typedef D3DMATERIAL8 DXMaterial;
 typedef IDirect3D8* (WINAPI *Direct3DCreateType) (UINT SDKVersion);
 #define DIRECT3D_CREATE_FUNC Direct3DCreate8
 #define DIRECT3D_SDK_VERSION D3D_SDK_VERSION
@@ -205,7 +211,7 @@ struct RenderStateStruct
 	ShaderClass shader;
 	VertexMaterialClass* material;
 	TextureBaseClass * Textures[MAX_TEXTURE_STAGES];
-	D3DLIGHT9 Lights[4];
+	DXLight Lights[4];
 	bool LightEnable[4];
   //unsigned lightsHash;
 	Matrix4x4 world;
@@ -306,7 +312,7 @@ public:
 
 	static void Clear(bool clear_color, bool clear_z_stencil, const Vector3 &color, float dest_alpha=0.0f, float z=1.0f, unsigned int stencil=0);
 
-	static void	Set_Viewport(CONST D3DVIEWPORT9* pViewport);
+	static void	Set_Viewport(CONST DXViewport* pViewport);
 
 	static void Set_Vertex_Buffer(const VertexBufferClass* vb, unsigned stream=0);
 	static void Set_Vertex_Buffer(const DynamicVBAccessClass& vba);
@@ -318,7 +324,7 @@ public:
 	static void Set_Render_State(const RenderStateStruct& state);
 	static void Release_Render_State();
 
-	static void Set_DX8_Material(const D3DMATERIAL9* mat);
+	static void Set_DX8_Material(const DXMaterial* mat);
 
 	static void Set_Gamma(float gamma,float bright,float contrast,bool calibrate=true,bool uselimit=true);
 
@@ -341,16 +347,16 @@ public:
 	static void _Set_DX8_Transform(D3DTRANSFORMSTATETYPE transform,const Matrix3D& m);
 	static void _Get_DX8_Transform(D3DTRANSFORMSTATETYPE transform, Matrix4x4& m);
 
-	static void Set_DX8_Light(int index,D3DLIGHT9* light);
+	static void Set_DX8_Light(int index,DXLight* light);
 	static void Set_DX8_Render_State(D3DRENDERSTATETYPE state, unsigned value);
 	static void Set_DX8_Clip_Plane(DWORD Index, CONST float* pPlane);
 	static void Set_DX8_Texture_Stage_State(unsigned stage, D3DTEXTURESTAGESTATETYPE state, unsigned value);
-	static void Set_DX8_Texture(unsigned int stage, IDirect3DBaseTexture9* texture);
+	static void Set_DX8_Texture(unsigned int stage, DXBaseTexture* texture);
 	static void Set_Light_Environment(LightEnvironmentClass* light_env);
 	static LightEnvironmentClass* Get_Light_Environment() { return Light_Environment; }
 	static void Set_Fog(bool enable, const Vector3 &color, float start, float end);
 
-	static WWINLINE const D3DLIGHT9& Peek_Light(unsigned index);
+	static WWINLINE const DXLight& Peek_Light(unsigned index);
 	static WWINLINE bool Is_Light_Enabled(unsigned index);
 
 	static bool Validate_Device(void);
@@ -361,7 +367,7 @@ public:
 	static void Get_Shader(ShaderClass& shader);
 	static void Set_Texture(unsigned stage,TextureBaseClass* texture);
 	static void Set_Material(const VertexMaterialClass* material);
-	static void Set_Light(unsigned index,const D3DLIGHT9* light);
+	static void Set_Light(unsigned index,const DXLight* light);
 	static void Set_Light(unsigned index,const LightClass &light);
 
 	static void Apply_Render_State_Changes();	// Apply deferred render state changes (will be called automatically by Draw...)
@@ -692,7 +698,7 @@ protected:
 	static bool								world_identity;
 	static unsigned						RenderStates[256];
 	static unsigned						TextureStageStates[MAX_TEXTURE_STAGES][32];
-	static IDirect3DBaseTexture9 *	Textures[MAX_TEXTURE_STAGES];
+	static DXBaseTexture *	Textures[MAX_TEXTURE_STAGES];
 
 	// These fog settings are constant for all objects in a given scene,
 	// unlike the matching renderstates which vary based on shader settings.
@@ -870,7 +876,7 @@ WWINLINE void DX8Wrapper::Set_Ambient(const Vector3& color)
 //
 // ----------------------------------------------------------------------------
 
-WWINLINE void DX8Wrapper::Set_DX8_Material(const D3DMATERIAL9* mat)
+WWINLINE void DX8Wrapper::Set_DX8_Material(const DXMaterial* mat)
 {
 	DX8_RECORD_MATERIAL_CHANGE();
 	WWASSERT(mat);
@@ -945,7 +951,7 @@ WWINLINE void DX8Wrapper::Set_DX8_Texture_Stage_State(unsigned stage, D3DTEXTURE
 	DX8_RECORD_TEXTURE_STAGE_STATE_CHANGE();
 }
 
-WWINLINE void DX8Wrapper::Set_DX8_Texture(unsigned int stage, IDirect3DBaseTexture9* texture)
+WWINLINE void DX8Wrapper::Set_DX8_Texture(unsigned int stage, DXBaseTexture* texture)
 {
   	if (stage >= MAX_TEXTURE_STAGES)
   	{	DX8CALL(SetTexture(stage, texture));

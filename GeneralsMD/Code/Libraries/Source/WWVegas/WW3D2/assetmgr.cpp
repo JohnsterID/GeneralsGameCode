@@ -320,8 +320,12 @@ static void Log_Textures(bool inited,unsigned& total_count, unsigned& total_mem)
 		case D3DFMT_L8: tex_format="D3DFMT_L8"; break;
 		case D3DFMT_A8: tex_format="D3DFMT_A8"; break;
 		case D3DFMT_P8: tex_format="D3DFMT_P8"; break;
-		// TheSuperHackers @feature JohnsterID 14/09/2025 D3DFMT_X8R8G8B8 replaced with D3DFMT_A8R8G8B8 in DX9
-		case D3DFMT_A8R8G8B8: tex_format="D3DFMT_A8R8G8B8"; break;
+		// TheSuperHackers @feature JohnsterID 14/09/2025 D3DFMT_X8R8G8B8 not available in DX9
+#if RTS_USE_DIRECTX9
+		case D3DFMT_A8R8G8B8: tex_format="D3DFMT_A8R8G8B8 (X8R8G8B8)"; break;
+#else
+		case D3DFMT_X8R8G8B8: tex_format="D3DFMT_X8R8G8B8"; break;
+#endif
 		case D3DFMT_X1R5G5B5: tex_format="D3DFMT_X1R5G5B5"; break;
 		case D3DFMT_R3G3B2: tex_format="D3DFMT_R3G3B2"; break;
 		case D3DFMT_A8R3G3B2: tex_format="D3DFMT_A8R3G3B2"; break;

@@ -25,8 +25,25 @@ cmake --build build/vc6 --target generalszh
 
 ### Run with test crash:
 ```bash
+# Basic test (may not show dialog in headless environments)
 generalszh.exe -testcrash
+
+# With windowed mode (better for testing on Windows GUI)
+generalszh.exe -testcrash -win
 ```
+
+### ⚠️ Important: CI/Headless Environment Behavior
+
+**In GitHub Actions / CI / Headless environments:**
+- ❌ MessageBox dialog **will NOT appear** (no GUI available)
+- ✅ Crash files **should still be generated** in CrashDumps folder
+- ✅ CrashInfo.txt **should still be created**
+- ✅ This proves the crash handler is working
+
+**For actual dialog screenshots:**
+- ✅ Must test on **Windows with GUI/desktop session**
+- ✅ Run from Windows Explorer or Command Prompt with display
+- ✅ MessageBox will appear and can be captured
 
 ## What to Capture
 
@@ -84,6 +101,28 @@ cmake --build build/vc6 --target generals
 # Run with test crash
 generals.exe -testcrash
 ```
+
+## Verifying CI Test Results
+
+When `-testcrash` runs in GitHub Actions:
+
+**Expected behavior:**
+1. Game starts
+2. Crash is triggered immediately
+3. Exit code is 1 (crash exit)
+4. Crash files should be generated (if file system is writable)
+
+**Check the CI logs for:**
+```
+Command line: -testcrash
+[Game exits with crash]
+```
+
+**To verify crash files were created (if artifacts available):**
+- Look for `CrashInfo.txt` 
+- Look for `.dmp` files in `CrashDumps/`
+
+⚠️ **CI cannot show MessageBox dialogs** - this is normal!
 
 ## After Testing
 

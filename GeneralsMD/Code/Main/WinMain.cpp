@@ -874,6 +874,15 @@ Int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
 		MiniDumper::initMiniDumper(TheGlobalData->getPath_UserData());
 #endif
 
+		// TheSuperHackers @feature JohnsterID 11/01/2026 Test crash trigger for dialog verification (DO NOT MERGE)
+		// This deliberately crashes the game to test the crash dialog and dump generation.
+		// Usage: generalszh.exe -testcrash
+		if (lpCmdLine && strstr(lpCmdLine, "-testcrash") != NULL) {
+			// Trigger null pointer dereference to generate realistic crash with stack trace
+			int* nullPtr = NULL;
+			*nullPtr = 42;
+		}
+
 		// register windows class and create application window
 		if(!TheGlobalData->m_headless && initializeAppWindows(hInstance, nCmdShow, TheGlobalData->m_windowed) == false)
 			return exitcode;

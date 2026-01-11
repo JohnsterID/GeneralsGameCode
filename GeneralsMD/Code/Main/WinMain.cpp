@@ -878,15 +878,9 @@ Int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
 		// This deliberately crashes the game to test the crash dialog and dump generation.
 		// Usage: generalszh.exe -testcrash
 		if (lpCmdLine && strstr(lpCmdLine, "-testcrash") != NULL) {
-			// First verify MessageBox works at this stage
-			int result = ::MessageBoxA(NULL, 
-				"About to trigger test crash.\n\nThis verifies MessageBox can display.\n\nClick OK to proceed with crash test.", 
-				"Test Crash - Step 1", 
-				MB_OK | MB_ICONINFORMATION | MB_SYSTEMMODAL);
-			
-			// Trigger null pointer dereference to generate realistic crash with stack trace
-			int* nullPtr = NULL;
-			*nullPtr = 42;
+			// Trigger controlled crash through ReleaseCrash to test the new dialog
+			// Note: Real exceptions go through UnHandledExceptionFilter which doesn't show a dialog!
+			ReleaseCrash("Test crash triggered with -testcrash flag");
 		}
 
 		// register windows class and create application window

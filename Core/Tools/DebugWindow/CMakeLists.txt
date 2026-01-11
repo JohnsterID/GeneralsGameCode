@@ -64,7 +64,16 @@ if(BUILD_TOOLS AND wxWidgets_FOUND)
         AdjustVariable
         AdjustVariableAndPause
     )
-    
+
+    # Optional test executable
+    if(BUILD_TESTING)
+        add_executable(test_debugwindow test_debugwindow.cpp)
+        target_link_libraries(test_debugwindow PRIVATE core_debugwindow)
+        if(NOT WIN32)
+            target_link_libraries(test_debugwindow PRIVATE pthread)
+        endif()
+    endif()
+
 elseif(WIN32 OR "${CMAKE_SYSTEM}" MATCHES "Windows")
     # Original MFC version - Windows only
     set(DEBUGWINDOW_SRC

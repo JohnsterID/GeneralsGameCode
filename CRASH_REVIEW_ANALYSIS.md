@@ -63,31 +63,22 @@ sprintf(line, "  %s(%d) : %s 0x%08p", filename, linenumber, function_name, addre
   C:\Windows\System32\kernel32.dll(456) : BaseThreadInitThunk 0x76D51234
 ```
 
-### Current behavior issue
+### Fixed behavior (as of this branch)
 
-The current code in `Debug.cpp` line 766 rejects **any** stack trace containing `<Unknown>`:
+**Previous issue:** The code rejected **any** stack trace containing `<Unknown>` anywhere, which meant even partially useful stack traces (like the "mixed" example above) were completely discarded.
 
-```cpp
-// Skip if no content or contains "<Unknown>"
-if (!*stackStr || strstr(stackStr, "<Unknown>") != NULL) {
-    return;
-}
-```
-
-**Problem:** This means even partially useful stack traces (like the "mixed" example above) are completely discarded. The user sees no location info even when some frames have symbols.
-
-### Suggested improvement
-
-Only reject if the **first line** (most relevant crash location) is `<Unknown>`:
+**Fixed:** Now only rejects if the **first line** (most relevant crash location) starts with `<Unknown>`:
 
 ```cpp
 // Skip if no content or first line starts with "<Unknown>"
-if (!*stackStr || strncmp(stackStr, "  <Unknown>", 11) == 0) {
+// Only check the first line (crash location) rather than entire stack trace,
+// so we can still show useful info even if deeper frames lack symbols.
+if (!*stackStr || strncmp(stackStr, "<Unknown>", 9) == 0) {
     return;
 }
 ```
 
-This way, if the crash location has symbols but later frames don't, we still show the useful information.
+**Benefit:** If the crash location has valid symbols but deeper stack frames don't, the user will still see the useful crash location information.
 
 ---
 

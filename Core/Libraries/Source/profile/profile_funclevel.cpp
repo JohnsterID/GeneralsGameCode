@@ -34,6 +34,11 @@
 
 #ifdef HAS_PROFILE
 
+#if defined(_MSC_VER)
+// Function-level profiling is only supported on MSVC due to its reliance on
+// compiler-specific features (__declspec(naked), _asm, and specific calling conventions).
+// For other compilers, these functions are stubbed out.
+
 // TLS index (-1 if not yet initialized)
 static int TLSIndex=-1;
 
@@ -127,6 +132,19 @@ extern "C" void __declspec(naked) __cdecl _penter(void)
     ret
   }
 }
+
+#else
+// Stub implementations for non-MSVC compilers
+// Function-level profiling via _penter/_pleave is not available on GCC/Clang
+// because it requires MSVC-specific calling conventions and naked functions.
+
+// TLS index (unused on non-MSVC)
+static int TLSIndex=-1;
+
+// our own fast critical section
+static ProfileFastCS cs;
+
+#endif // defined(_MSC_VER)
 
 ProfileFuncLevelTracer *ProfileFuncLevelTracer::head=nullptr;
 bool ProfileFuncLevelTracer::shuttingDown=false;

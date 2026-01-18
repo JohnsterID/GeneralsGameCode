@@ -25,11 +25,13 @@ inline BSTR WINAPI ConvertStringToBSTR(const char *pSrc)
     DWORD cwch;
     BSTR wsOut = NULL;
 
-    if (!pSrc) return NULL;
+    if (!pSrc)
+        return NULL;
 
     // Compute the needed size with the NULL terminator
     cwch = MultiByteToWideChar(CP_ACP, 0, pSrc, -1, NULL, 0);
-    if (cwch == 0) return NULL;
+    if (cwch == 0)
+        return NULL;
 
     // Allocate the BSTR (without the NULL terminator)
     wsOut = SysAllocStringLen(NULL, cwch - 1);
@@ -59,7 +61,8 @@ inline char* WINAPI ConvertBSTRToString(BSTR pSrc)
     DWORD cb, cwch;
     char *szOut = NULL;
 
-    if (!pSrc) return NULL;
+    if (!pSrc)
+        return NULL;
 
     // Retrieve the size of the BSTR with the NULL terminator
     cwch = SysStringLen(pSrc) + 1;

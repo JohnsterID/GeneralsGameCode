@@ -40,11 +40,12 @@ if(MINGW)
         _int64=long\ long
     )
     
-    # Math constants for MinGW (not defined by default in C++ mode)
+    # Enable math constants in MinGW's <math.h>
+    # MinGW provides M_PI, M_E, etc. in <math.h>, but only when -std=c++XX is NOT used (strict ANSI mode),
+    # or when _USE_MATH_DEFINES is defined. Since we compile with -std=c++20, we need this define.
+    # The header mingw.h (included via always.h) provides the missing constants (M_1_SQRTPI, M_SQRT_2 alias).
     add_compile_definitions(
-        M_PI=3.14159265358979323846
-        M_PI_2=1.57079632679489661923
-        M_PI_4=0.785398163397448309616
+        _USE_MATH_DEFINES
     )
     
     # Ensure proper calling conventions are defined

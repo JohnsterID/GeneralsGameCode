@@ -172,6 +172,7 @@ void DebugExceptionhandler::LogFPURegisters(Debug &dbg, struct _EXCEPTION_POINTE
     for (unsigned i=0;i<10;i++)
       dbg << Debug::Width(2) << value[i];
 
+    // TheSuperHackers @refactor Replaced MSVC inline assembly with portable C++ cast for MinGW compatibility
     // Convert from temporary real (10 byte) to double (8 bytes).
     // On x86, long double is the 10-byte x87 format, so we can just cast.
     double fpVal = (double)(*(long double*)value);

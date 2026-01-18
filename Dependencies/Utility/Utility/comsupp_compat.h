@@ -4,8 +4,25 @@
  * @brief COM Support compatibility layer for MinGW-w64
  *
  * Provides _com_util::ConvertStringToBSTR() and ConvertBSTRToString()
- * as header-only implementations. MinGW-w64 provides COM error
- * handling in comdef.h but lacks the string conversion utilities.
+ * as header-only implementations for MinGW-w64 builds.
+ *
+ * These functions are required by the _bstr_t class (from ReactOS comutil.h)
+ * for char* <-> BSTR conversions. They are called internally when constructing
+ * _bstr_t objects from C strings or converting _bstr_t back to char*.
+ *
+ * Used indirectly by:
+ * - Core/Libraries/Source/WWVegas/WW3D2/dx8webbrowser.cpp (8+ _bstr_t constructions)
+ * - Core/GameEngine/Include/GameNetwork/WOLBrowser/FEBDispatch.h (_bstr_t usage)
+ *
+ * MinGW-w64 provides COM error handling (comdef.h) but lacks the string
+ * conversion utilities. ReactOS provides comsupp.cpp with implementations,
+ * but we use this header-only version to avoid building/linking an extra
+ * library. This must be included BEFORE comutil.h to provide definitions
+ * before _bstr_t's inline methods are instantiated.
+ *
+ * @note Include this header before <comutil.h> in MinGW builds to provide
+ *       symbol definitions for _bstr_t's internal string conversion calls.
+ *       Without this, you will get "undefined reference" linker errors.
  */
 
 #pragma once

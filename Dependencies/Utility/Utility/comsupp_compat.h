@@ -10,9 +10,6 @@
 
 #pragma once
 
-#ifndef COMSUPP_COMPAT_H
-#define COMSUPP_COMPAT_H
-
 #ifdef __MINGW32__
 
 #include <windows.h>
@@ -107,5 +104,3 @@ inline char* WINAPI ConvertBSTRToString(BSTR pSrc)
 inline _variant_t vtMissing(DISP_E_PARAMNOTFOUND, VT_ERROR);
 
 #endif // __MINGW32__
-
-#endif // COMSUPP_COMPAT_H

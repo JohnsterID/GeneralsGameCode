@@ -36,9 +36,9 @@
 
 class Bridge;
 class Object;
-class Weapon;
-class PathfindZoneManager;
 class PathfindCell;
+class PathfindZoneManager;
+class Weapon;
 
 // How close is close enough when moving.
 

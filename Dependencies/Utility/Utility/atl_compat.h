@@ -11,9 +11,6 @@
 
 #pragma once
 
-#ifndef ATL_COMPAT_H
-#define ATL_COMPAT_H
-
 #ifdef __MINGW32__
 
 // Include Windows types needed for ATL compatibility
@@ -73,5 +70,3 @@ inline HRESULT WINAPI _ATL_DelegateQueryInterface(void* pv, REFIID riid, LPVOID*
 // Non-MinGW platforms don't need these workarounds
 #define ATL_COMPAT_RESTORE_WARNINGS()
 #endif // __MINGW32__
-
-#endif // ATL_COMPAT_H

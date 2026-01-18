@@ -626,6 +626,7 @@ void Dump_Exception_Info(EXCEPTION_POINTERS *e_info)
 
 		void *fp_data_ptr = (void*)(&context->FloatSave.RegisterArea[fp*10]);
 
+		// TheSuperHackers @refactor Replaced MSVC inline assembly with portable C++ cast for MinGW compatibility
 		/*
 		** Convert FP dump from temporary real value (10 bytes) to double (8 bytes).
 		** On x86, long double is the 10-byte x87 format, so we can just cast.

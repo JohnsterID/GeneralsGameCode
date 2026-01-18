@@ -11,9 +11,6 @@
 
 #pragma once
 
-#ifndef PSEH_COMPAT_H
-#define PSEH_COMPAT_H
-
 #ifdef __MINGW32__
 
 // Suppress PSEH-related warnings from ReactOS PSEH headers
@@ -35,5 +32,3 @@
 // Non-MinGW platforms use native SEH or don't need PSEH
 #define PSEH_COMPAT_RESTORE_WARNINGS()
 #endif // __MINGW32__
-
-#endif // PSEH_COMPAT_H

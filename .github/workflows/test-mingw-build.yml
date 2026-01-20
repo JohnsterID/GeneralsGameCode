@@ -1,0 +1,268 @@
+name: mingw-w64-build-bink
+
+permissions:
+  contents: read
+  pull-requests: write
+
+on:
+  push:
+    branches:
+      - mingw-w64-build-bink
+  pull_request:
+    branches:
+      - mingw-w64-build-bink
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  detect-changes:
+    name: Detect File Changes
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      generals: ${{ steps.filter.outputs.generals }}
+      generalsmd: ${{ steps.filter.outputs.generalsmd }}
+      shared: ${{ steps.filter.outputs.shared }}
+      mingw_branch: ${{ steps.check-branch.outputs.branch }}
+    steps:
+      - name: Checkout mingw-w64-build-bink Branch
+        uses: actions/checkout@v4
+        with:
+          ref: mingw-w64-build-bink
+
+      - name: Store Branch Info
+        id: check-branch
+        run: |
+          TRIGGER_BRANCH="${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}"
+          echo "branch=mingw-w64-build" >> $GITHUB_OUTPUT
+          echo "### Testing MinGW-w64 Build" >> $GITHUB_STEP_SUMMARY
+          echo "- **Building:** \`mingw-w64-build\` branch" >> $GITHUB_STEP_SUMMARY
+          echo "- **Triggered from:** \`$TRIGGER_BRANCH\`" >> $GITHUB_STEP_SUMMARY
+          echo "- **Commit:** \`$(git rev-parse HEAD)\`" >> $GITHUB_STEP_SUMMARY
+          echo "- **Short SHA:** \`$(git rev-parse --short HEAD)\`" >> $GITHUB_STEP_SUMMARY
+
+      - name: Filter Changed Paths
+        uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          token: ''
+          filters: |
+            generals:
+              - 'Generals/**'
+            generalsmd:
+              - 'GeneralsMD/**'
+            shared:
+              - '.github/workflows/**'
+              - 'CMakeLists.txt'
+              - 'CMakePresets.json'
+              - 'cmake/**'
+              - 'Core/**'
+              - 'Dependencies/**'
+
+      - name: Changes Summary
+        run: |
+          echo "### 🔍 File Changes Summary" >> $GITHUB_STEP_SUMMARY
+          echo "- Generals: ${{ steps.filter.outputs.generals == 'true' && '✅' || '❌' }}" >> $GITHUB_STEP_SUMMARY
+          echo "- GeneralsMD: ${{ steps.filter.outputs.generalsmd == 'true' && '✅' || '❌' }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Shared: ${{ steps.filter.outputs.shared == 'true' && '✅' || '❌' }}" >> $GITHUB_STEP_SUMMARY
+
+  build-mingw:
+    name: MinGW ${{ matrix.game }} (${{ matrix.preset }})
+    needs: detect-changes
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    strategy:
+      matrix:
+        game: ["Generals", "GeneralsMD"]
+        preset: ["mingw-w64-i686", "mingw-w64-i686-debug"]
+        # Note: mingw-w64-i686-profile excluded - profiling uses ASM with no GCC equivalent
+      fail-fast: false
+
+    steps:
+      - name: Checkout mingw-w64-build Branch
+        uses: actions/checkout@v4
+        with:
+          ref: mingw-w64-build
+
+      - name: Cache MinGW-w64 Dependencies
+        id: cache-mingw-deps
+        uses: actions/cache@v4
+        with:
+          path: |
+            /usr/lib/gcc/i686-w64-mingw32
+            /usr/i686-w64-mingw32
+          key: mingw-w64-deps-${{ runner.os }}-v1
+
+      - name: Install MinGW-w64 Toolchain
+        run: |
+          echo "### 🔧 Installing MinGW-w64 Toolchain" >> $GITHUB_STEP_SUMMARY
+          sudo apt-get update
+          sudo apt-get install -y mingw-w64 cmake
+
+          # Verify installation
+          i686-w64-mingw32-gcc --version
+          cmake --version
+
+          echo "✅ MinGW-w64 installation complete" >> $GITHUB_STEP_SUMMARY
+
+      - name: Install Wine and widl
+        run: |
+          echo "### 🍷 Installing Wine and widl" >> $GITHUB_STEP_SUMMARY
+
+          # Add Wine repository
+          sudo dpkg --add-architecture i386
+          sudo mkdir -pm755 /etc/apt/keyrings
+          sudo wget -O /etc/apt/keyrings/winehq-archive.key https://dl.winehq.org/wine-builds/winehq.key
+
+          # Determine Ubuntu codename
+          CODENAME=$(lsb_release -cs)
+          echo "Ubuntu codename: $CODENAME"
+
+          # Download appropriate sources file
+          sudo wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/${CODENAME}/winehq-${CODENAME}.sources || {
+            echo "⚠️ Wine sources file not found for $CODENAME, trying jammy as fallback" >> $GITHUB_STEP_SUMMARY
+            sudo wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/jammy/winehq-jammy.sources
+          }
+
+          # Update and install Wine
+          sudo apt-get update
+          sudo apt-get install -y --install-recommends winehq-stable wine-stable-dev || {
+            echo "⚠️ Full Wine installation failed, installing minimal wine-stable-dev" >> $GITHUB_STEP_SUMMARY
+            sudo apt-get install -y wine-stable-dev
+          }
+
+          # Verify widl installation
+          widl --version || echo "⚠️ widl not found in PATH, build may use fallback" >> $GITHUB_STEP_SUMMARY
+
+          echo "✅ Wine and widl installation complete" >> $GITHUB_STEP_SUMMARY
+
+      - name: Cache CMake Dependencies
+        id: cache-cmake-deps
+        uses: actions/cache@v4
+        with:
+          path: build/${{ matrix.preset }}/_deps
+          key: cmake-deps-mingw-${{ matrix.preset }}-${{ hashFiles('CMakePresets.json','cmake/**/*.cmake','**/CMakeLists.txt') }}
+
+      - name: Configure ${{ matrix.game }} with CMake (${{ matrix.preset }})
+        run: |
+          echo "### ⚙️ Configuring ${{ matrix.game }} (${{ matrix.preset }})" >> $GITHUB_STEP_SUMMARY
+
+          # Unset LD_LIBRARY_PATH to avoid library conflicts
+          unset LD_LIBRARY_PATH
+
+          # Configure with appropriate flags
+          cmake --preset ${{ matrix.preset }} \
+            -DRTS_BUILD_ZEROHOUR=${{ matrix.game == 'GeneralsMD' && 'ON' || 'OFF' }} \
+            -DRTS_BUILD_GENERALS=${{ matrix.game == 'Generals' && 'ON' || 'OFF' }} \
+            -DRTS_BUILD_CORE_TOOLS=OFF \
+            -DRTS_BUILD_GENERALS_TOOLS=OFF \
+            -DRTS_BUILD_ZEROHOUR_TOOLS=OFF \
+            -DRTS_BUILD_CORE_EXTRAS=OFF \
+            -DRTS_BUILD_GENERALS_EXTRAS=OFF \
+            -DRTS_BUILD_ZEROHOUR_EXTRAS=OFF
+
+          echo "✅ Configuration complete" >> $GITHUB_STEP_SUMMARY
+
+      - name: Build ${{ matrix.game }} (${{ matrix.preset }})
+        run: |
+          echo "### 🔨 Building ${{ matrix.game }} (${{ matrix.preset }})" >> $GITHUB_STEP_SUMMARY
+
+          # Determine target based on game
+          TARGET=${{ matrix.game == 'Generals' && 'g_generals' || 'z_generals' }}
+
+          # Build with parallel jobs
+          cmake --build build/${{ matrix.preset }} --target $TARGET -j$(nproc)
+
+          echo "✅ Build complete" >> $GITHUB_STEP_SUMMARY
+
+      - name: Verify Executables
+        run: |
+          echo "### 🔍 Verifying Executables" >> $GITHUB_STEP_SUMMARY
+
+          if [ "${{ matrix.game }}" == "Generals" ]; then
+            EXE_PATH="build/${{ matrix.preset }}/Generals/generalsv.exe"
+          else
+            EXE_PATH="build/${{ matrix.preset }}/GeneralsMD/generalszh.exe"
+          fi
+
+          if [ -f "$EXE_PATH" ]; then
+            echo "✅ Executable found: $EXE_PATH" >> $GITHUB_STEP_SUMMARY
+            file "$EXE_PATH" >> $GITHUB_STEP_SUMMARY
+            ls -lh "$EXE_PATH" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ Executable not found: $EXE_PATH" >> $GITHUB_STEP_SUMMARY
+            exit 1
+          fi
+
+      - name: Collect ${{ matrix.game }} Artifacts
+        run: |
+          ARTIFACTS_DIR="build/${{ matrix.preset }}/${{ matrix.game }}/artifacts"
+          mkdir -p "$ARTIFACTS_DIR"
+
+          # Copy executables
+          if [ "${{ matrix.game }}" == "Generals" ]; then
+            cp build/${{ matrix.preset }}/Generals/generalsv.exe "$ARTIFACTS_DIR/"
+          else
+            cp build/${{ matrix.preset }}/GeneralsMD/generalszh.exe "$ARTIFACTS_DIR/"
+          fi
+
+          # Copy any DLLs if they exist
+          find build/${{ matrix.preset }}/Core -name "*.dll" -exec cp {} "$ARTIFACTS_DIR/" \; 2>/dev/null || true
+          find build/${{ matrix.preset }}/${{ matrix.game }} -name "*.dll" -exec cp {} "$ARTIFACTS_DIR/" \; 2>/dev/null || true
+
+          echo "Artifacts collected in $ARTIFACTS_DIR:"
+          ls -lh "$ARTIFACTS_DIR"
+
+      - name: Upload ${{ matrix.game }} ${{ matrix.preset }} Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.game }}-${{ matrix.preset }}-mingw-w64
+          path: build/${{ matrix.preset }}/${{ matrix.game }}/artifacts
+          retention-days: 30
+          if-no-files-found: error
+
+  build-summary:
+    name: Build Summary
+    needs: [build-mingw]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generate Summary
+        run: |
+          echo "## 🎉 MinGW-w64 Build Test Complete" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Purpose" >> $GITHUB_STEP_SUMMARY
+          echo "This workflow tests the **NEW** MinGW-w64 cross-compilation capability from PR #2067." >> $GITHUB_STEP_SUMMARY
+          echo "**Builds:** Always builds \`mingw-w64-build\` branch (where MinGW presets exist)" >> $GITHUB_STEP_SUMMARY
+          echo "**Triggered from:** \`review-mingw-w64-build\` or \`mingw-w64-build\` branch" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Build Status" >> $GITHUB_STEP_SUMMARY
+          echo "| Compiler | Configuration | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|----------|---------------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| **MinGW-w64 GCC** (i686) | Release + Debug | ${{ needs.build-mingw.result == 'success' && '✅ Pass' || '❌ Fail' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Note:** Profile builds excluded - profiling uses MSVC inline ASM (no GCC equivalent)" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Three-Compiler Strategy (Phase 1)" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Compiler | Tested By | Purpose |" >> $GITHUB_STEP_SUMMARY
+          echo "|----------|-----------|---------|" >> $GITHUB_STEP_SUMMARY
+          echo "| **VC6** | GenCI workflow (manual) | Legacy ABI compatibility |" >> $GITHUB_STEP_SUMMARY
+          echo "| **MSVC C++20** | GenCI workflow (manual) | Modern Windows primary |" >> $GITHUB_STEP_SUMMARY
+          echo "| **MinGW-w64 GCC** | This workflow (auto) | Portability canary |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**To test VC6/MSVC:** Manually trigger **GenCI** workflow on \`mingw-w64-build\` via \`workflow_dispatch\`" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Artifacts" >> $GITHUB_STEP_SUMMARY
+          echo "MinGW-w64 cross-compiled Windows executables:" >> $GITHUB_STEP_SUMMARY
+          echo "- \`generalsv.exe\` - Generals (Release, Debug)" >> $GITHUB_STEP_SUMMARY
+          echo "- \`generalszh.exe\` - Zero Hour (Release, Debug)" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Next Steps" >> $GITHUB_STEP_SUMMARY
+          echo "1. Download and runtime test MinGW artifacts" >> $GITHUB_STEP_SUMMARY
+          echo "2. Capture MinGW warning baseline from build logs" >> $GITHUB_STEP_SUMMARY
+          echo "3. Compare warnings: VC6 (55) | MSVC (1,499) | MinGW (TBD)" >> $GITHUB_STEP_SUMMARY
+          echo "4. Update \`COMPILER_WARNINGS_BASELINE.md\` with MinGW data" >> $GITHUB_STEP_SUMMARY

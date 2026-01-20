@@ -1,7 +1,7 @@
 FetchContent_Declare(
     bink
-    GIT_REPOSITORY https://github.com/TheSuperHackers/bink-sdk-stub.git
-    GIT_TAG        3241ee1e3739b21d9c0a0760c1a5d5622d21c093
+    GIT_REPOSITORY https://github.com/JohnsterID/bink-sdk-stub.git
+    GIT_TAG        2509788d70b5114f388df3ccd5364991285ca93a
 )
 
 FetchContent_MakeAvailable(bink)

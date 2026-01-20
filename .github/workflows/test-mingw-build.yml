@@ -37,9 +37,9 @@ jobs:
         id: check-branch
         run: |
           TRIGGER_BRANCH="${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}"
-          echo "branch=mingw-w64-build" >> $GITHUB_OUTPUT
+          echo "branch=$TRIGGER_BRANCH" >> $GITHUB_OUTPUT
           echo "### Testing MinGW-w64 Build" >> $GITHUB_STEP_SUMMARY
-          echo "- **Building:** \`mingw-w64-build\` branch" >> $GITHUB_STEP_SUMMARY
+          echo "- **Building:** \`$TRIGGER_BRANCH\` branch" >> $GITHUB_STEP_SUMMARY
           echo "- **Triggered from:** \`$TRIGGER_BRANCH\`" >> $GITHUB_STEP_SUMMARY
           echo "- **Commit:** \`$(git rev-parse HEAD)\`" >> $GITHUB_STEP_SUMMARY
           echo "- **Short SHA:** \`$(git rev-parse --short HEAD)\`" >> $GITHUB_STEP_SUMMARY
@@ -82,10 +82,10 @@ jobs:
       fail-fast: false
 
     steps:
-      - name: Checkout mingw-w64-build Branch
+      - name: Checkout Source Branch
         uses: actions/checkout@v4
         with:
-          ref: mingw-w64-build
+          ref: ${{ github.ref }}
 
       - name: Cache MinGW-w64 Dependencies
         id: cache-mingw-deps
@@ -236,8 +236,8 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### Purpose" >> $GITHUB_STEP_SUMMARY
           echo "This workflow tests the **NEW** MinGW-w64 cross-compilation capability from PR #2067." >> $GITHUB_STEP_SUMMARY
-          echo "**Builds:** Always builds \`mingw-w64-build\` branch (where MinGW presets exist)" >> $GITHUB_STEP_SUMMARY
-          echo "**Triggered from:** \`review-mingw-w64-build\` or \`mingw-w64-build\` branch" >> $GITHUB_STEP_SUMMARY
+          echo "**Builds:** Builds the branch that triggered the workflow" >> $GITHUB_STEP_SUMMARY
+          echo "**Triggered from:** \`${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}\`" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### Build Status" >> $GITHUB_STEP_SUMMARY
           echo "| Compiler | Configuration | Status |" >> $GITHUB_STEP_SUMMARY

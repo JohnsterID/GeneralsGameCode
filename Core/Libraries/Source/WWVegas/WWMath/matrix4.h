@@ -111,6 +111,9 @@ public:
 	*/
 	WWINLINE Matrix4x4 Transpose(void) const;
 	WWINLINE Matrix4x4 Inverse(void) const;
+	
+	// Helper function: Wine-based matrix inverse implementation (defined in matrix4_inverse.cpp)
+	Matrix4x4 Inverse_Wine(float* pdeterminant = nullptr) const;
 
 	/*
 	** Assignment operators
@@ -531,45 +534,11 @@ WWINLINE Matrix4x4 Matrix4x4::Transpose() const
  * HISTORY:                                                                                    *
  *   06/02/1997 GH  : Created.                                                                 *
  *=============================================================================================*/
-WWINLINE Matrix4x4 Matrix4x4::Inverse() const    // Gauss-Jordan elimination with partial pivoting
+WWINLINE Matrix4x4 Matrix4x4::Inverse() const
 {
-	WWASSERT_PRINT(0,"Matrix4x4::Inverse does not work, re-implement!");
-
-	Matrix4x4 a(*this);				// As a evolves from original mat into identity
-	Matrix4x4 b(true);				// b evolves from identity into inverse(a)
-	int i, j, i1;
-
-	// Loop over cols of a from left to right, eliminating above and below diagonal
-	for (j=0; j<4; j++) {
-
-		// Find largest pivot in column j among rows j..3
-		i1 = j;
-		for (i=j+1; i<4; i++) {
-			if (WWMath::Fabs(a[i][j]) > WWMath::Fabs(a[i1][j])) {
-				i1 = i;
-			}
-		}
-
-		// Swap rows i1 and j in a and b to put pivot on diagonal
-		Swap(a.Row[i1], a.Row[j]);
-		Swap(b.Row[i1], b.Row[j]);
-
-		// Scale row j to have a unit diagonal
-		if (a[j][j]==0.) {
-			//ALGEBRA_ERROR("Matrix4x4::inverse: singular matrix; can't invert\n");
-		}
-		b.Row[j] /= a.Row[j][j];
-		a.Row[j] /= a.Row[j][j];
-
-		// Eliminate off-diagonal elems in col j of a, doing identical ops to b
-		for (i=0; i<4; i++) {
-			if (i != j) {
-				b.Row[i] -= a[i][j] * b.Row[j];
-				a.Row[i] -= a[i][j] * a.Row[j];
-			}
-		}
-	}
-	return b;
+	// Use Wine's cofactor-based inversion algorithm
+	// Implementation in matrix4_inverse.cpp (based on Wine's D3DXMatrixInverse)
+	return Inverse_Wine(nullptr);
 }
 
 /***********************************************************************************************

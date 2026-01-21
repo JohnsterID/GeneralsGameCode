@@ -48,6 +48,7 @@ set(WWMATH_SRC
     matrix3d.h
     matrix4.cpp
     matrix4.h
+    matrix4_inverse.cpp
     #normalcone.h
     obbox.cpp
     obbox.h
@@ -93,3 +94,8 @@ target_link_libraries(core_wwmath PRIVATE
 
 # @todo Test its impact and see what to do with the legacy functions.
 #add_compile_definitions(core_wwmath PUBLIC ALLOW_TEMPORARIES) # Enables legacy math with "temporaries"
+
+# Apply D3DXWrapper forced include for NO_D3DX builds
+if(MINGW AND DEFINED MINGW_D3DX_WRAPPER_INCLUDE)
+    target_compile_options(core_wwmath PRIVATE ${MINGW_D3DX_WRAPPER_INCLUDE})
+endif()

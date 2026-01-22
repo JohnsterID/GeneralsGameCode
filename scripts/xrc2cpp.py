@@ -142,7 +142,7 @@ def generate_header(dialog_info):
     
     header = f'''/*
 **Command & Conquer Renegade(tm)
-**Copyright 2025 Electronic Arts Inc.
+**Copyright 2026 TheSuperHackers
 **
 **This program is free software: you can redistribute it and/or modify
 **it under the terms of the GNU General Public License as published by
@@ -218,7 +218,7 @@ def generate_cpp(dialog_info):
     
     cpp = f'''/*
 **Command & Conquer Renegade(tm)
-**Copyright 2025 Electronic Arts Inc.
+**Copyright 2026 TheSuperHackers
 **
 **This program is free software: you can redistribute it and/or modify
 **it under the terms of the GNU General Public License as published by

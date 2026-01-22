@@ -76,14 +76,6 @@
 							</object>
 						</object>
 						<object class="sizeritem">
-							<option>0</option>
-							<flag>wxALL|wxALIGN_CENTER_VERTICAL</flag>
-							<border>5</border>
-							<object class="wxStaticText" name="m_variablesLabel">
-								<label>Variables</label>
-							</object>
-						</object>
-						<object class="sizeritem">
 							<option>1</option>
 							<flag>wxEXPAND</flag>
 							<border>5</border>
@@ -112,6 +104,14 @@
 					</object>
 				</object>
 				<object class="sizeritem">
+					<option>0</option>
+					<flag>wxLEFT|wxRIGHT|wxTOP</flag>
+					<border>5</border>
+					<object class="wxStaticText" name="m_variablesLabel">
+						<label>Variables</label>
+					</object>
+				</object>
+				<object class="sizeritem">
 					<option>2</option>
 					<flag>wxEXPAND|wxALL</flag>
 					<border>5</border>
@@ -122,7 +122,7 @@
 				</object>
 				<object class="sizeritem">
 					<option>0</option>
-					<flag>wxEXPAND|wxALL</flag>
+					<flag>wxLEFT|wxRIGHT|wxTOP</flag>
 					<border>5</border>
 					<object class="wxStaticText" name="m_messagesLabel">
 						<label>Messages</label>

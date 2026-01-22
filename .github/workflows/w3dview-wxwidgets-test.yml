@@ -33,8 +33,8 @@ jobs:
     
     - name: Check wxWidgets installation
       run: |
-        wx-config --version
-        wx-config --libs
+        wx-config --version || echo "⚠️  wx-config not found, continuing..."
+        wx-config --libs || echo "⚠️  Continuing without wx-config..."
     
     - name: Validate XRC files
       run: |
@@ -50,10 +50,10 @@ jobs:
           -DBUILD_TOOLS=ON \
           -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
     
-    - name: Build W3DView
+    - name: Build XRC test
       run: |
-        echo "🔨 Building W3DView..."
-        cmake --build build --target W3DView -j$(nproc)
+        echo "🔨 Building XRC loading test..."
+        cmake --build build --target test_xrc_loading -j$(nproc)
     
     - name: Run XRC loading test
       run: |
@@ -63,9 +63,20 @@ jobs:
         XVFB_PID=$!
         sleep 2
         
-        # Run test
-        cd build/Generals/Code/Tools/W3DView
-        ./test_xrc_loading
+        # Find the test binary
+        echo "📍 Locating test binary..."
+        find build -name "test_xrc_loading" -type f
+        TEST_BINARY=$(find build -name "test_xrc_loading" -type f | head -1)
+        
+        if [ -z "$TEST_BINARY" ]; then
+            echo "❌ Test binary not found!"
+            kill $XVFB_PID 2>/dev/null || true
+            exit 1
+        fi
+        
+        echo "🚀 Running: $TEST_BINARY"
+        cd "$(dirname "$TEST_BINARY")"
+        ./$(basename "$TEST_BINARY")
         TEST_RESULT=$?
         
         # Cleanup

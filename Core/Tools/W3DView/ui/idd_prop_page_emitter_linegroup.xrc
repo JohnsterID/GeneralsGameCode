@@ -8,6 +8,30 @@
       <object class="sizeritem">
         <flag>wxALL</flag>
         <border>5</border>
+        <object class="wxStaticText" name="-1">
+          <label>Use the controls below to specify blur time keyframes.  Hold the Ctrl key and click to insert a new key, double click a key to edit its value.</label>
+          <size>265,40</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxStaticText" name="-1">
+          <label>Rando&mizer:</label>
+          <size>60,12</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxStaticText" name="-1">
+          <label>Blur Times</label>
+          <size>51,12</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
         <object class="wxTextCtrl" name="IDC_BLUR_TIME_RANDOM_EDIT">
           <size>106,21</size>
           <style>wxTE_LEFT</style>
@@ -27,6 +51,7 @@
         <object class="wxSpinButton" name="IDC_BLUR_TIME_RANDOM_SPIN">
           <label>Spin2</label>
           <size>16,21</size>
+          <style>wxSP_VERTICAL|wxSP_ARROW_KEYS</style>
         </object>
       </object>
     </object>

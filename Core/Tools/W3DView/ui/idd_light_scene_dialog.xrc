@@ -219,6 +219,7 @@
         <object class="wxSpinButton" name="IDC_DISTANCE_SPIN">
           <label>Spin3</label>
           <size>16,21</size>
+          <style>wxSP_VERTICAL|wxSP_ARROW_KEYS</style>
         </object>
       </object>
       <object class="sizeritem">
@@ -235,6 +236,7 @@
         <object class="wxSpinButton" name="IDC_START_ATTENUATION_SPIN">
           <label>Spin3</label>
           <size>16,21</size>
+          <style>wxSP_VERTICAL|wxSP_ARROW_KEYS</style>
         </object>
       </object>
       <object class="sizeritem">
@@ -243,6 +245,7 @@
         <object class="wxSpinButton" name="IDC_END_ATTENUATION_SPIN">
           <label>Spin3</label>
           <size>16,21</size>
+          <style>wxSP_VERTICAL|wxSP_ARROW_KEYS</style>
         </object>
       </object>
     </object>

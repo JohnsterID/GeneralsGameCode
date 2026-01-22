@@ -8,6 +8,13 @@
       <object class="sizeritem">
         <flag>wxALL</flag>
         <border>5</border>
+        <object class="wxStaticBitmap" name="IDC_STATIC">
+          <size>31,30</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
         <object class="wxStaticText" name="IDC_STATIC">
           <label>&Sound Preset Library Path:</label>
           <size>178,12</size>

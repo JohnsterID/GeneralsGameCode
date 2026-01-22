@@ -8,9 +8,24 @@
       <object class="sizeritem">
         <flag>wxALL</flag>
         <border>5</border>
+        <object class="wxStaticBitmap" name="-1">
+          <size>30,30</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
         <object class="wxStaticText" name="IDC_PROMPT">
           <label>Use the controls below to specify the texture frame at the current keyframe.</label>
           <size>160,39</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxStaticText" name="-1">
+          <label>&Frame:</label>
+          <size>33,12</size>
         </object>
       </object>
       <object class="sizeritem">
@@ -43,6 +58,7 @@
         <object class="wxSpinButton" name="IDC_FRAME_SPIN">
           <label>Spin2</label>
           <size>16,21</size>
+          <style>wxSP_VERTICAL|wxSP_ARROW_KEYS</style>
         </object>
       </object>
     </object>

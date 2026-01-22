@@ -8,6 +8,13 @@
       <object class="sizeritem">
         <flag>wxALL</flag>
         <border>5</border>
+        <object class="wxStaticBitmap" name="IDC_STATIC">
+          <size>30,30</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
         <object class="wxStaticText" name="IDC_STATIC">
           <label>Use the controls below to modify texture settings.  Use the 'Restore' button to reset the texture to its original state.</label>
           <size>282,31</size>
@@ -192,6 +199,7 @@
         <object class="wxSpinButton" name="IDC_FRAME_COUNT_SPIN">
           <label>Spin1</label>
           <size>16,21</size>
+          <style>wxSP_VERTICAL|wxSP_ARROW_KEYS</style>
         </object>
       </object>
       <object class="sizeritem">
@@ -200,6 +208,7 @@
         <object class="wxSpinButton" name="IDC_FPS_SPIN">
           <label>Spin1</label>
           <size>16,21</size>
+          <style>wxSP_VERTICAL|wxSP_ARROW_KEYS</style>
         </object>
       </object>
     </object>

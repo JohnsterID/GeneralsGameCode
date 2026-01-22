@@ -8,6 +8,13 @@
       <object class="sizeritem">
         <flag>wxALL</flag>
         <border>5</border>
+        <object class="wxStaticBitmap" name="IDC_STATIC">
+          <size>31,30</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
         <object class="wxStaticText" name="IDC_STATIC">
           <label>Select an LOD component from the list below.  Use the spin control to select a maximum screen area for the model.  To include an empty render object as the lowest level, check the 'Include NULL' box.</label>
           <size>244,52</size>
@@ -75,6 +82,7 @@
         <object class="wxSpinButton" name="IDC_SWITCH_UP_SPIN">
           <label>Spin1</label>
           <size>16,21</size>
+          <style>wxSP_VERTICAL|wxSP_ARROW_KEYS</style>
         </object>
       </object>
       <object class="sizeritem">

@@ -8,9 +8,54 @@
       <object class="sizeritem">
         <flag>wxALL</flag>
         <border>5</border>
+        <object class="wxStaticBitmap" name="-1">
+          <size>30,30</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxStaticText" name="-1">
+          <label>Use the controls below to specify keyframes.  Hold the Ctrl key and click to insert a new key, double click a key to edit its value.</label>
+          <size>265,40</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxStaticText" name="-1">
+          <label>&Color</label>
+          <size>25,12</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxStaticText" name="-1">
+          <label>&Opacity</label>
+          <size>37,12</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxPanel" name="-1">
+          <size>309,1</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
         <object class="wxPanel" name="IDC_COLOR_BAR">
           <label>color</label>
           <size>286,25</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxPanel" name="-1">
+          <size>309,1</size>
         </object>
       </object>
       <object class="sizeritem">

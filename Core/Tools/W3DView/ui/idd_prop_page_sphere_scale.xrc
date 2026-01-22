@@ -8,6 +8,13 @@
       <object class="sizeritem">
         <flag>wxALL</flag>
         <border>5</border>
+        <object class="wxStaticBitmap" name="IDC_STATIC">
+          <size>30,30</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
         <object class="wxStaticText" name="IDC_STATIC">
           <label>Use the controls below to specify the initial size and relative x, y, and z scale keyframes.</label>
           <size>265,30</size>
@@ -114,6 +121,7 @@
         <object class="wxSpinButton" name="IDC_SIZE_X_SPIN">
           <label>Spin2</label>
           <size>16,21</size>
+          <style>wxSP_VERTICAL|wxSP_ARROW_KEYS</style>
         </object>
       </object>
       <object class="sizeritem">
@@ -122,6 +130,7 @@
         <object class="wxSpinButton" name="IDC_SIZE_Y_SPIN">
           <label>Spin2</label>
           <size>16,21</size>
+          <style>wxSP_VERTICAL|wxSP_ARROW_KEYS</style>
         </object>
       </object>
       <object class="sizeritem">
@@ -130,6 +139,7 @@
         <object class="wxSpinButton" name="IDC_SIZE_Z_SPIN">
           <label>Spin2</label>
           <size>16,21</size>
+          <style>wxSP_VERTICAL|wxSP_ARROW_KEYS</style>
         </object>
       </object>
       <object class="sizeritem">

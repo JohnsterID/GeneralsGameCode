@@ -107,6 +107,7 @@
         <object class="wxSpinButton" name="1008">
           <label>Spin1</label>
           <size>16,21</size>
+          <style>wxSP_VERTICAL|wxSP_ARROW_KEYS</style>
         </object>
       </object>
       <object class="sizeritem">
@@ -123,6 +124,7 @@
         <object class="wxSpinButton" name="1009">
           <label>Spin1</label>
           <size>16,21</size>
+          <style>wxSP_VERTICAL|wxSP_ARROW_KEYS</style>
         </object>
       </object>
       <object class="sizeritem">
@@ -139,6 +141,7 @@
         <object class="wxSpinButton" name="1010">
           <label>Spin1</label>
           <size>16,21</size>
+          <style>wxSP_VERTICAL|wxSP_ARROW_KEYS</style>
         </object>
       </object>
       <object class="sizeritem">

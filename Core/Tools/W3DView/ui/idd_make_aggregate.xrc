@@ -8,6 +8,13 @@
       <object class="sizeritem">
         <flag>wxALL</flag>
         <border>5</border>
+        <object class="wxStaticBitmap" name="IDC_STATIC">
+          <size>30,30</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
         <object class="wxStaticText" name="IDC_STATIC">
           <label>Please give the new aggregate a name using the controls below.  The aggregate will be refered to by this name from now on.  While this name is independent of the filename, for convention's sake they should be the same</label>
           <size>271,55</size>

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-RC to XRC Converter v3 - Enhanced with multi-line CONTROL support
+RC to XRC Converter v2 - Enhanced with CONTROL statement support
 """
 
 import re
@@ -20,13 +20,13 @@ CONTROL_MAP = {
     'COMBOBOX': 'wxComboBox',
     'LISTBOX': 'wxListBox',
     'SCROLLBAR': 'wxScrollBar',
-    'ICON': 'wxStaticBitmap',
 }
 
+# Map MFC custom control classes to wxWidgets
 CUSTOM_CONTROL_MAP = {
     'msctls_trackbar32': 'wxSlider',
-    'Static': 'wxStaticText',
-    'Button': 'wxCheckBox',
+    'Static': 'wxStaticText',  # Generic static control
+    'Button': 'wxCheckBox',  # Button with BS_AUTOCHECKBOX style
     'SysTreeView32': 'wxTreeCtrl',
     'SysListView32': 'wxListCtrl',
     'SysTabControl32': 'wxNotebook',
@@ -35,38 +35,6 @@ CUSTOM_CONTROL_MAP = {
     'RichEdit20A': 'wxTextCtrl',
     'RichEdit20W': 'wxTextCtrl',
 }
-
-def join_continuation_lines(text):
-    """Join lines that are continuations (indented lines after control statements)"""
-    lines = text.split('\n')
-    result = []
-    i = 0
-    
-    while i < len(lines):
-        line = lines[i]
-        
-        # Check if this is a control statement
-        if re.match(r'^\s*(CONTROL|LTEXT|RTEXT|CTEXT|PUSHBUTTON|DEFPUSHBUTTON|EDITTEXT|CHECKBOX|RADIOBUTTON|GROUPBOX|COMBOBOX|LISTBOX|ICON)\s+', line):
-            # Collect continuation lines (heavily indented lines that follow)
-            combined = line
-            i += 1
-            
-            while i < len(lines):
-                next_line = lines[i]
-                # If next line starts with lots of spaces (continuation) and doesn't start with a keyword
-                if re.match(r'^\s{16,}', next_line) and not re.match(r'^\s*(CONTROL|LTEXT|RTEXT|CTEXT|PUSHBUTTON|DEFPUSHBUTTON|EDITTEXT|CHECKBOX|RADIOBUTTON|GROUPBOX|COMBOBOX|LISTBOX|ICON|END)\s+', next_line):
-                    # Join with previous, removing leading spaces and keeping a space
-                    combined += ' ' + next_line.strip()
-                    i += 1
-                else:
-                    break
-            
-            result.append(combined)
-        else:
-            result.append(line)
-            i += 1
-    
-    return '\n'.join(result)
 
 def parse_rc_dialog(rc_content, dialog_id):
     """Parse a specific dialog from RC content"""
@@ -120,41 +88,25 @@ def parse_rc_dialog(rc_content, dialog_id):
     
     dialog_block = rc_content[block_start:block_end]
     
-    # Join continuation lines BEFORE parsing
-    dialog_block = join_continuation_lines(dialog_block)
-    
     # Extract caption
     cap_match = re.search(r'CAPTION\s+"([^"]*)"', dialog_block)
     if cap_match:
         dialog.title = cap_match.group(1)
     
-    # Parse controls - enhanced patterns with multi-line support
+    # Parse controls - enhanced patterns
     patterns = [
-        # ICON ID,id,x,y,w,h
-        (r'ICON\s+(\w+)\s*,\s*(\S+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)', 'icon'),
         # Standard labeled controls: PUSHBUTTON "OK",IDOK,x,y,w,h
-        (r'(DEFPUSHBUTTON|PUSHBUTTON|CHECKBOX|RADIOBUTTON|GROUPBOX|LTEXT|RTEXT|CTEXT)\s+"([^"]*)"\s*,\s*(\S+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)', 'labeled'),
+        (r'(DEFPUSHBUTTON|PUSHBUTTON|CHECKBOX|RADIOBUTTON|GROUPBOX|LTEXT|RTEXT|CTEXT)\s+"([^"]*)"\s*,\s*(\w+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)', 'labeled'),
         # Unlabeled controls: EDITTEXT ID,x,y,w,h
-        (r'(EDITTEXT|COMBOBOX|LISTBOX)\s+(\S+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)', 'unlabeled'),
-        # CONTROL with class - now should match multi-line joined statements
-        # CONTROL "text",ID,"ClassName",styles...,x,y,w,h
-        (r'CONTROL\s+"([^"]*)"\s*,\s*(\S+)\s*,\s*"([^"]+)"\s*,\s*[^,]+?\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)', 'control_class'),
+        (r'(EDITTEXT|COMBOBOX|LISTBOX)\s+(\w+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)', 'unlabeled'),
+        # CONTROL with class: CONTROL "text",ID,"ClassName",style,x,y,w,h
+        (r'CONTROL\s+"([^"]*)"\s*,\s*(\w+)\s*,\s*"([^"]*)"\s*,\s*[^,]+\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)', 'control_class'),
     ]
     
     for pattern, ptype in patterns:
         for m in re.finditer(pattern, dialog_block):
             control = ControlInfo()
-            if ptype == 'icon':
-                control.type = 'ICON'
-                control.text = ""
-                control.icon_id = m.group(1)
-                control.id = m.group(2)
-                control.x = int(m.group(3))
-                control.y = int(m.group(4))
-                control.width = int(m.group(5))
-                control.height = int(m.group(6))
-                control.custom_class = None
-            elif ptype == 'labeled':
+            if ptype == 'labeled':
                 control.type = m.group(1)
                 control.text = m.group(2)
                 control.id = m.group(3)
@@ -212,10 +164,9 @@ def generate_xrc(dialog):
         # Determine wx control type
         if ctrl.type == 'CONTROL' and ctrl.custom_class:
             wx_type = CUSTOM_CONTROL_MAP.get(ctrl.custom_class, 'wxPanel')
+            # Special handling for Static with SS_BLACKFRAME (gradient displays)
             if ctrl.custom_class == 'Static' and not ctrl.text:
-                wx_type = 'wxPanel'
-        elif ctrl.type == 'ICON':
-            wx_type = 'wxStaticBitmap'
+                wx_type = 'wxPanel'  # Empty static = colored panel
         else:
             wx_type = CONTROL_MAP.get(ctrl.type, 'wxControl')
         
@@ -232,13 +183,11 @@ def generate_xrc(dialog):
         
         lines.append(f'          <size>{cw},{ch}</size>')
         
-        # Add style hints
+        # Add style hints based on control type
         if wx_type == 'wxSlider':
             lines.append('          <style>wxSL_HORIZONTAL</style>')
         elif wx_type == 'wxTextCtrl' and ctrl.type == 'EDITTEXT':
             lines.append('          <style>wxTE_LEFT</style>')
-        elif wx_type == 'wxSpinButton':
-            lines.append('          <style>wxSP_VERTICAL|wxSP_ARROW_KEYS</style>')
         
         lines.append('        </object>')
         lines.append('      </object>')
@@ -251,7 +200,7 @@ def generate_xrc(dialog):
 
 def main():
     if len(sys.argv) < 3:
-        print("Usage: rc2xrc_v3.py <input.rc> <dialog_id> [output.xrc]")
+        print("Usage: rc2xrc_v2.py <input.rc> <dialog_id> [output.xrc]")
         sys.exit(1)
     
     rc_file = Path(sys.argv[1])
@@ -271,12 +220,7 @@ def main():
     # Count control types
     control_types = {}
     for ctrl in dialog.controls:
-        if ctrl.type == 'CONTROL':
-            ctype = ctrl.custom_class
-        elif ctrl.type == 'ICON':
-            ctype = 'ICON'
-        else:
-            ctype = ctrl.type
+        ctype = ctrl.custom_class if ctrl.type == 'CONTROL' else ctrl.type
         control_types[ctype] = control_types.get(ctype, 0) + 1
     
     print(f"✅ Converted {dialog_id}")

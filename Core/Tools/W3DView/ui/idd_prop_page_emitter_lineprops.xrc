@@ -8,6 +8,13 @@
       <object class="sizeritem">
         <flag>wxALL</flag>
         <border>5</border>
+        <object class="wxStaticBitmap" name="IDC_STATIC">
+          <size>30,30</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
         <object class="wxStaticText" name="IDC_STATIC">
           <label>Use the controls below to modify the line rendering settings for this particle emitter.  Note that these settings are only used when the emitter is rendered in line mode.</label>
           <size>262,36</size>
@@ -153,6 +160,7 @@
         <object class="wxSpinButton" name="IDC_SUBDIVISION_LEVEL_SPIN">
           <label>Spin1</label>
           <size>16,21</size>
+          <style>wxSP_VERTICAL|wxSP_ARROW_KEYS</style>
         </object>
       </object>
       <object class="sizeritem">
@@ -161,6 +169,7 @@
         <object class="wxSpinButton" name="IDC_NOISE_AMPLITUDE_SPIN">
           <label>Spin1</label>
           <size>16,21</size>
+          <style>wxSP_VERTICAL|wxSP_ARROW_KEYS</style>
         </object>
       </object>
       <object class="sizeritem">
@@ -200,6 +209,7 @@
         <object class="wxSpinButton" name="IDC_MERGE_ABORT_FACTOR_SPIN">
           <label>Spin1</label>
           <size>16,21</size>
+          <style>wxSP_VERTICAL|wxSP_ARROW_KEYS</style>
         </object>
       </object>
       <object class="sizeritem">
@@ -208,6 +218,7 @@
         <object class="wxSpinButton" name="IDC_UVTILING_SPIN">
           <label>Spin1</label>
           <size>16,21</size>
+          <style>wxSP_VERTICAL|wxSP_ARROW_KEYS</style>
         </object>
       </object>
       <object class="sizeritem">
@@ -216,6 +227,7 @@
         <object class="wxSpinButton" name="IDC_UPERSEC_SPIN">
           <label>Spin1</label>
           <size>16,21</size>
+          <style>wxSP_VERTICAL|wxSP_ARROW_KEYS</style>
         </object>
       </object>
       <object class="sizeritem">
@@ -224,6 +236,7 @@
         <object class="wxSpinButton" name="IDC_VPERSEC_SPIN">
           <label>Spin1</label>
           <size>16,21</size>
+          <style>wxSP_VERTICAL|wxSP_ARROW_KEYS</style>
         </object>
       </object>
     </object>

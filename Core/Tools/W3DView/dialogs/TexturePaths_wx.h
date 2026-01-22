@@ -87,4 +87,8 @@ private:
     void OnCancel(wxCommandEvent &event);
 
     wxDECLARE_EVENT_TABLE();
+private:
+    // Event handlers (Phase 2)
+void OnBrowse1(wxCommandEvent &event);  // Button/Checkbox click
+    void OnBrowse2(wxCommandEvent &event);  // Button/Checkbox click
 };

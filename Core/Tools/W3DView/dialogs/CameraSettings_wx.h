@@ -124,4 +124,9 @@ private:
     void OnCancel(wxCommandEvent &event);
 
     wxDECLARE_EVENT_TABLE();
+private:
+    // Event handlers (Phase 2)
+void OnFovCheck(wxCommandEvent &event);  // Button/Checkbox click
+    void OnClipPlaneCheck(wxCommandEvent &event);  // Button/Checkbox click
+    void OnReset(wxCommandEvent &event);  // Button/Checkbox click
 };

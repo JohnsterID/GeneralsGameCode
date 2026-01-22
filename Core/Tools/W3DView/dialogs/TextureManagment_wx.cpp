@@ -22,9 +22,21 @@
 #include <wx/xrc/xmlres.h>
 
 wxBEGIN_EVENT_TABLE(TextureManagment, TextureManagmentBase)
-    EVT_BUTTON(wxID_OK, TextureManagment::OnOK)
-    EVT_BUTTON(wxID_CANCEL, TextureManagment::OnCancel)
-    // Add more event handlers as needed
+EVT_TREE_SEL_CHANGED(XRCID("IDC_MESH_TEXTURE_LIST_CTRL"), TextureManagment::OnDblclkMeshTextureListCtrl)  // Notification message (needs analysis)
+    EVT_TREE_SEL_CHANGED(XRCID("IDC_MESH_TEXTURE_LIST_CTRL"), TextureManagment::OnKeydownMeshTextureListCtrl)  // Notification message (needs analysis)
+    EVT_WINDOW_DESTROY(TextureManagment::OnDestroy)  // Window destruction
+    // TODO: Map ON_COMMAND manually
+    // MFC: ON_COMMAND(IDC_BACK, OnBack)
+    // TODO: Map ON_COMMAND manually
+    // MFC: ON_COMMAND(IDC_DETAILS, OnDetails)
+    // TODO: Map ON_COMMAND manually
+    // MFC: ON_COMMAND(IDC_LARGE, OnLarge)
+    // TODO: Map ON_COMMAND manually
+    // MFC: ON_COMMAND(IDC_LIST, OnList)
+    // TODO: Map ON_COMMAND manually
+    // MFC: ON_COMMAND(IDC_SMALL, OnSmall)
+    // TODO: Map ON_COMMAND manually
+    // MFC: ON_COMMAND(IDC_PROPAGATE, OnPropagate)
 wxEND_EVENT_TABLE()
 
 TextureManagment::TextureManagment(wxWindow *parent)
@@ -47,4 +59,25 @@ void TextureManagment::OnCancel(wxCommandEvent &event)
 {
     // Close without saving
     EndModal(wxID_CANCEL);
+}
+
+// ============================================================================
+// Event Handlers (Phase 2 - Auto-integrated)
+// ============================================================================
+
+void TextureManagment::OnDblclkMeshTextureListCtrl(various &event)
+{
+    // TODO: Implement OnDblclkMeshTextureListCtrl
+    // Control ID: IDC_MESH_TEXTURE_LIST_CTRL
+}
+
+void TextureManagment::OnKeydownMeshTextureListCtrl(various &event)
+{
+    // TODO: Implement OnKeydownMeshTextureListCtrl
+    // Control ID: IDC_MESH_TEXTURE_LIST_CTRL
+}
+
+void TextureManagment::OnDestroy(wxWindowDestroyEvent &event)
+{
+    // TODO: Implement OnDestroy
 }

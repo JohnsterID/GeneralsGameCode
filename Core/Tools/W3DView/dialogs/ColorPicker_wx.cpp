@@ -22,9 +22,7 @@
 #include <wx/xrc/xmlres.h>
 
 wxBEGIN_EVENT_TABLE(ColorPicker, ColorPickerBase)
-    EVT_BUTTON(wxID_OK, ColorPicker::OnOK)
-    EVT_BUTTON(wxID_CANCEL, ColorPicker::OnCancel)
-    // Add more event handlers as needed
+EVT_BUTTON(XRCID("IDC_RESET"), ColorPicker::OnReset)  // Button/Checkbox click
 wxEND_EVENT_TABLE()
 
 ColorPicker::ColorPicker(wxWindow *parent)
@@ -47,4 +45,14 @@ void ColorPicker::OnCancel(wxCommandEvent &event)
 {
     // Close without saving
     EndModal(wxID_CANCEL);
+}
+
+// ============================================================================
+// Event Handlers (Phase 2 - Auto-integrated)
+// ============================================================================
+
+void ColorPicker::OnReset(wxCommandEvent &event)
+{
+    // TODO: Implement OnReset
+    // Control ID: IDC_RESET
 }

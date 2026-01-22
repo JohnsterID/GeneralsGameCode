@@ -22,9 +22,8 @@
 #include <wx/xrc/xmlres.h>
 
 wxBEGIN_EVENT_TABLE(BackgroundObject, BackgroundObjectBase)
-    EVT_BUTTON(wxID_OK, BackgroundObject::OnOK)
-    EVT_BUTTON(wxID_CANCEL, BackgroundObject::OnCancel)
-    // Add more event handlers as needed
+EVT_TREE_SEL_CHANGED(XRCID("IDC_HIERARCHY_LIST"), BackgroundObject::OnItemChangedHierarchyList)  // Notification message (needs analysis)
+    EVT_BUTTON(XRCID("IDC_CLEAR"), BackgroundObject::OnClear)  // Button/Checkbox click
 wxEND_EVENT_TABLE()
 
 BackgroundObject::BackgroundObject(wxWindow *parent)
@@ -47,4 +46,20 @@ void BackgroundObject::OnCancel(wxCommandEvent &event)
 {
     // Close without saving
     EndModal(wxID_CANCEL);
+}
+
+// ============================================================================
+// Event Handlers (Phase 2 - Auto-integrated)
+// ============================================================================
+
+void BackgroundObject::OnItemChangedHierarchyList(various &event)
+{
+    // TODO: Implement OnItemChangedHierarchyList
+    // Control ID: IDC_HIERARCHY_LIST
+}
+
+void BackgroundObject::OnClear(wxCommandEvent &event)
+{
+    // TODO: Implement OnClear
+    // Control ID: IDC_CLEAR
 }

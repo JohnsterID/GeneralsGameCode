@@ -22,9 +22,9 @@
 #include <wx/xrc/xmlres.h>
 
 wxBEGIN_EVENT_TABLE(CameraSettings, CameraSettingsBase)
-    EVT_BUTTON(wxID_OK, CameraSettings::OnOK)
-    EVT_BUTTON(wxID_CANCEL, CameraSettings::OnCancel)
-    // Add more event handlers as needed
+EVT_CHECKBOX(XRCID("IDC_FOV_CHECK"), CameraSettings::OnFovCheck)  // Button/Checkbox click
+    EVT_CHECKBOX(XRCID("IDC_CLIP_PLANE_CHECK"), CameraSettings::OnClipPlaneCheck)  // Button/Checkbox click
+    EVT_BUTTON(XRCID("IDC_RESET"), CameraSettings::OnReset)  // Button/Checkbox click
 wxEND_EVENT_TABLE()
 
 CameraSettings::CameraSettings(wxWindow *parent)
@@ -47,4 +47,26 @@ void CameraSettings::OnCancel(wxCommandEvent &event)
 {
     // Close without saving
     EndModal(wxID_CANCEL);
+}
+
+// ============================================================================
+// Event Handlers (Phase 2 - Auto-integrated)
+// ============================================================================
+
+void CameraSettings::OnFovCheck(wxCommandEvent &event)
+{
+    // TODO: Implement OnFovCheck
+    // Control ID: IDC_FOV_CHECK
+}
+
+void CameraSettings::OnClipPlaneCheck(wxCommandEvent &event)
+{
+    // TODO: Implement OnClipPlaneCheck
+    // Control ID: IDC_CLIP_PLANE_CHECK
+}
+
+void CameraSettings::OnReset(wxCommandEvent &event)
+{
+    // TODO: Implement OnReset
+    // Control ID: IDC_RESET
 }

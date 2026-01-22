@@ -108,4 +108,8 @@ private:
     void OnCancel(wxCommandEvent &event);
 
     wxDECLARE_EVENT_TABLE();
+private:
+    // Event handlers (Phase 2)
+void OnSpecifyCreationVolume(wxCommandEvent &event);  // Button/Checkbox click
+    void OnMaxParticlesCheck(wxCommandEvent &event);  // Button/Checkbox click
 };

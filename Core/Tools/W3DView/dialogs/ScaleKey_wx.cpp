@@ -22,9 +22,7 @@
 #include <wx/xrc/xmlres.h>
 
 wxBEGIN_EVENT_TABLE(ScaleKey, ScaleKeyBase)
-    EVT_BUTTON(wxID_OK, ScaleKey::OnOK)
-    EVT_BUTTON(wxID_CANCEL, ScaleKey::OnCancel)
-    // Add more event handlers as needed
+
 wxEND_EVENT_TABLE()
 
 ScaleKey::ScaleKey(wxWindow *parent)

@@ -22,9 +22,8 @@
 #include <wx/xrc/xmlres.h>
 
 wxBEGIN_EVENT_TABLE(TexturePaths, TexturePathsBase)
-    EVT_BUTTON(wxID_OK, TexturePaths::OnOK)
-    EVT_BUTTON(wxID_CANCEL, TexturePaths::OnCancel)
-    // Add more event handlers as needed
+EVT_BUTTON(XRCID("IDC_BROWSE1"), TexturePaths::OnBrowse1)  // Button/Checkbox click
+    EVT_BUTTON(XRCID("IDC_BROWSE2"), TexturePaths::OnBrowse2)  // Button/Checkbox click
 wxEND_EVENT_TABLE()
 
 TexturePaths::TexturePaths(wxWindow *parent)
@@ -47,4 +46,20 @@ void TexturePaths::OnCancel(wxCommandEvent &event)
 {
     // Close without saving
     EndModal(wxID_CANCEL);
+}
+
+// ============================================================================
+// Event Handlers (Phase 2 - Auto-integrated)
+// ============================================================================
+
+void TexturePaths::OnBrowse1(wxCommandEvent &event)
+{
+    // TODO: Implement OnBrowse1
+    // Control ID: IDC_BROWSE1
+}
+
+void TexturePaths::OnBrowse2(wxCommandEvent &event)
+{
+    // TODO: Implement OnBrowse2
+    // Control ID: IDC_BROWSE2
 }

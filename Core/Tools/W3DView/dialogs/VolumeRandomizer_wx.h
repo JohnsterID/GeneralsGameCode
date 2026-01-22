@@ -128,4 +128,9 @@ private:
     void OnCancel(wxCommandEvent &event);
 
     wxDECLARE_EVENT_TABLE();
+private:
+    // Event handlers (Phase 2)
+void OnBoxRadio(wxCommandEvent &event);  // Button/Checkbox click
+    void OnCylinderRadio(wxCommandEvent &event);  // Button/Checkbox click
+    void OnSphereRadio(wxCommandEvent &event);  // Button/Checkbox click
 };

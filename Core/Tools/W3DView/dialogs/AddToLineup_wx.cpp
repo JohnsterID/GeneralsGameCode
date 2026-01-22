@@ -22,9 +22,7 @@
 #include <wx/xrc/xmlres.h>
 
 wxBEGIN_EVENT_TABLE(AddToLineup, AddToLineupBase)
-    EVT_BUTTON(wxID_OK, AddToLineup::OnOK)
-    EVT_BUTTON(wxID_CANCEL, AddToLineup::OnCancel)
-    // Add more event handlers as needed
+
 wxEND_EVENT_TABLE()
 
 AddToLineup::AddToLineup(wxWindow *parent)

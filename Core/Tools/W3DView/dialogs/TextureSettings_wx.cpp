@@ -22,9 +22,11 @@
 #include <wx/xrc/xmlres.h>
 
 wxBEGIN_EVENT_TABLE(TextureSettings, TextureSettingsBase)
-    EVT_BUTTON(wxID_OK, TextureSettings::OnOK)
-    EVT_BUTTON(wxID_CANCEL, TextureSettings::OnCancel)
-    // Add more event handlers as needed
+EVT_CHECKBOX(XRCID("IDC_ANIMATION_CHECK"), TextureSettings::OnAnimationCheck)  // Button/Checkbox click
+    EVT_WINDOW_DESTROY(TextureSettings::OnDestroy)  // Window destruction
+    EVT_BUTTON(XRCID("IDC_BROWSE_BUTTON"), TextureSettings::OnBrowseButton)  // Button/Checkbox click
+    EVT_BUTTON(XRCID("IDC_RESTORE"), TextureSettings::OnRestore)  // Button/Checkbox click
+    EVT_BUTTON(XRCID("IDC_APPLY"), TextureSettings::OnApply)  // Button/Checkbox click
 wxEND_EVENT_TABLE()
 
 TextureSettings::TextureSettings(wxWindow *parent)
@@ -47,4 +49,37 @@ void TextureSettings::OnCancel(wxCommandEvent &event)
 {
     // Close without saving
     EndModal(wxID_CANCEL);
+}
+
+// ============================================================================
+// Event Handlers (Phase 2 - Auto-integrated)
+// ============================================================================
+
+void TextureSettings::OnAnimationCheck(wxCommandEvent &event)
+{
+    // TODO: Implement OnAnimationCheck
+    // Control ID: IDC_ANIMATION_CHECK
+}
+
+void TextureSettings::OnDestroy(wxWindowDestroyEvent &event)
+{
+    // TODO: Implement OnDestroy
+}
+
+void TextureSettings::OnBrowseButton(wxCommandEvent &event)
+{
+    // TODO: Implement OnBrowseButton
+    // Control ID: IDC_BROWSE_BUTTON
+}
+
+void TextureSettings::OnRestore(wxCommandEvent &event)
+{
+    // TODO: Implement OnRestore
+    // Control ID: IDC_RESTORE
+}
+
+void TextureSettings::OnApply(wxCommandEvent &event)
+{
+    // TODO: Implement OnApply
+    // Control ID: IDC_APPLY
 }

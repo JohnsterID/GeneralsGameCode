@@ -22,9 +22,7 @@
 #include <wx/xrc/xmlres.h>
 
 wxBEGIN_EVENT_TABLE(ParticleRotationKey, ParticleRotationKeyBase)
-    EVT_BUTTON(wxID_OK, ParticleRotationKey::OnOK)
-    EVT_BUTTON(wxID_CANCEL, ParticleRotationKey::OnCancel)
-    // Add more event handlers as needed
+
 wxEND_EVENT_TABLE()
 
 ParticleRotationKey::ParticleRotationKey(wxWindow *parent)

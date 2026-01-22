@@ -22,9 +22,8 @@
 #include <wx/xrc/xmlres.h>
 
 wxBEGIN_EVENT_TABLE(PlaySoundEffect, PlaySoundEffectBase)
-    EVT_BUTTON(wxID_OK, PlaySoundEffect::OnOK)
-    EVT_BUTTON(wxID_CANCEL, PlaySoundEffect::OnCancel)
-    // Add more event handlers as needed
+EVT_BUTTON(XRCID("IDC_PLAY_SOUND_EFFECT"), PlaySoundEffect::OnPlaySoundEffect)  // Button/Checkbox click
+    EVT_BUTTON(XRCID("IDC_STOP_SOUND_EFFECT"), PlaySoundEffect::OnStopSoundEffect)  // Button/Checkbox click
 wxEND_EVENT_TABLE()
 
 PlaySoundEffect::PlaySoundEffect(wxWindow *parent)
@@ -47,4 +46,20 @@ void PlaySoundEffect::OnCancel(wxCommandEvent &event)
 {
     // Close without saving
     EndModal(wxID_CANCEL);
+}
+
+// ============================================================================
+// Event Handlers (Phase 2 - Auto-integrated)
+// ============================================================================
+
+void PlaySoundEffect::OnPlaySoundEffect(wxCommandEvent &event)
+{
+    // TODO: Implement OnPlaySoundEffect
+    // Control ID: IDC_PLAY_SOUND_EFFECT
+}
+
+void PlaySoundEffect::OnStopSoundEffect(wxCommandEvent &event)
+{
+    // TODO: Implement OnStopSoundEffect
+    // Control ID: IDC_STOP_SOUND_EFFECT
 }

@@ -22,9 +22,7 @@
 #include <wx/xrc/xmlres.h>
 
 wxBEGIN_EVENT_TABLE(ParticleFrameKey, ParticleFrameKeyBase)
-    EVT_BUTTON(wxID_OK, ParticleFrameKey::OnOK)
-    EVT_BUTTON(wxID_CANCEL, ParticleFrameKey::OnCancel)
-    // Add more event handlers as needed
+
 wxEND_EVENT_TABLE()
 
 ParticleFrameKey::ParticleFrameKey(wxWindow *parent)

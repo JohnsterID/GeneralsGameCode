@@ -89,4 +89,12 @@ private:
     void OnCancel(wxCommandEvent &event);
 
     wxDECLARE_EVENT_TABLE();
+private:
+    // Event handlers (Phase 2)
+void OnHscroll(wxScrollEvent &event);  // Horizontal scroll (slider)
+    void OnDestroy(wxWindowDestroyEvent &event);  // Window destruction
+    void OnBlend(wxCommandEvent &event);  // Button/Checkbox click
+    void OnCompressq(wxCommandEvent &event);  // Button/Checkbox click
+    void On16bit(wxCommandEvent &event);  // Button/Checkbox click
+    void On8bit(wxCommandEvent &event);  // Button/Checkbox click
 };

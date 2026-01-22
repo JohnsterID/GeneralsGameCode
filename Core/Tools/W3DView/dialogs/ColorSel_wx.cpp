@@ -22,9 +22,13 @@
 #include <wx/xrc/xmlres.h>
 
 wxBEGIN_EVENT_TABLE(ColorSel, ColorSelBase)
-    EVT_BUTTON(wxID_OK, ColorSel::OnOK)
-    EVT_BUTTON(wxID_CANCEL, ColorSel::OnCancel)
-    // Add more event handlers as needed
+EVT_SLIDER(XRCID("IDC_SLIDER_BLUE"), ColorSel::OnHscroll)  // Horizontal scroll (slider)
+    // TODO: Map ON_WM_PAINT manually
+    // MFC: ON_WM_PAINT()
+    EVT_CHECKBOX(XRCID("IDC_GRAYSCALE_CHECK"), ColorSel::OnGrayscaleCheck)  // Button/Checkbox click
+    EVT_TEXT(XRCID("IDC_BLUE_EDIT"), ColorSel::OnChangeBlueEdit)  // Text control change
+    EVT_TEXT(XRCID("IDC_GREEN_EDIT"), ColorSel::OnChangeGreenEdit)  // Text control change
+    EVT_TEXT(XRCID("IDC_RED_EDIT"), ColorSel::OnChangeRedEdit)  // Text control change
 wxEND_EVENT_TABLE()
 
 ColorSel::ColorSel(wxWindow *parent)
@@ -47,4 +51,37 @@ void ColorSel::OnCancel(wxCommandEvent &event)
 {
     // Close without saving
     EndModal(wxID_CANCEL);
+}
+
+// ============================================================================
+// Event Handlers (Phase 2 - Auto-integrated)
+// ============================================================================
+
+void ColorSel::OnHscroll(wxScrollEvent &event)
+{
+    // TODO: Implement OnHscroll
+}
+
+void ColorSel::OnGrayscaleCheck(wxCommandEvent &event)
+{
+    // TODO: Implement OnGrayscaleCheck
+    // Control ID: IDC_GRAYSCALE_CHECK
+}
+
+void ColorSel::OnChangeBlueEdit(wxCommandEvent &event)
+{
+    // TODO: Implement OnChangeBlueEdit
+    // Control ID: IDC_BLUE_EDIT
+}
+
+void ColorSel::OnChangeGreenEdit(wxCommandEvent &event)
+{
+    // TODO: Implement OnChangeGreenEdit
+    // Control ID: IDC_GREEN_EDIT
+}
+
+void ColorSel::OnChangeRedEdit(wxCommandEvent &event)
+{
+    // TODO: Implement OnChangeRedEdit
+    // Control ID: IDC_RED_EDIT
 }

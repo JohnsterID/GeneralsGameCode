@@ -22,9 +22,7 @@
 #include <wx/xrc/xmlres.h>
 
 wxBEGIN_EVENT_TABLE(ParticleSize, ParticleSizeBase)
-    EVT_BUTTON(wxID_OK, ParticleSize::OnOK)
-    EVT_BUTTON(wxID_CANCEL, ParticleSize::OnCancel)
-    // Add more event handlers as needed
+
 wxEND_EVENT_TABLE()
 
 ParticleSize::ParticleSize(wxWindow *parent)

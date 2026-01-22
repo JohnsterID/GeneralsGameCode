@@ -22,9 +22,12 @@
 #include <wx/xrc/xmlres.h>
 
 wxBEGIN_EVENT_TABLE(Displayspeed, DisplayspeedBase)
-    EVT_BUTTON(wxID_OK, Displayspeed::OnOK)
-    EVT_BUTTON(wxID_CANCEL, Displayspeed::OnCancel)
-    // Add more event handlers as needed
+EVT_SLIDER(XRCID("IDC_SPEED_SLIDER"), Displayspeed::OnHscroll)  // Horizontal scroll (slider)
+    EVT_WINDOW_DESTROY(Displayspeed::OnDestroy)  // Window destruction
+    EVT_CHECKBOX(XRCID("IDC_BLEND"), Displayspeed::OnBlend)  // Button/Checkbox click
+    EVT_CHECKBOX(XRCID("IDC_COMPRESSQ"), Displayspeed::OnCompressq)  // Button/Checkbox click
+    EVT_CHECKBOX(XRCID("IDC_16BIT"), Displayspeed::On16bit)  // Button/Checkbox click
+    EVT_CHECKBOX(XRCID("IDC_8BIT"), Displayspeed::On8bit)  // Button/Checkbox click
 wxEND_EVENT_TABLE()
 
 Displayspeed::Displayspeed(wxWindow *parent)
@@ -47,4 +50,42 @@ void Displayspeed::OnCancel(wxCommandEvent &event)
 {
     // Close without saving
     EndModal(wxID_CANCEL);
+}
+
+// ============================================================================
+// Event Handlers (Phase 2 - Auto-integrated)
+// ============================================================================
+
+void Displayspeed::OnHscroll(wxScrollEvent &event)
+{
+    // TODO: Implement OnHscroll
+}
+
+void Displayspeed::OnDestroy(wxWindowDestroyEvent &event)
+{
+    // TODO: Implement OnDestroy
+}
+
+void Displayspeed::OnBlend(wxCommandEvent &event)
+{
+    // TODO: Implement OnBlend
+    // Control ID: IDC_BLEND
+}
+
+void Displayspeed::OnCompressq(wxCommandEvent &event)
+{
+    // TODO: Implement OnCompressq
+    // Control ID: IDC_COMPRESSQ
+}
+
+void Displayspeed::On16bit(wxCommandEvent &event)
+{
+    // TODO: Implement On16bit
+    // Control ID: IDC_16BIT
+}
+
+void Displayspeed::On8bit(wxCommandEvent &event)
+{
+    // TODO: Implement On8bit
+    // Control ID: IDC_8BIT
 }

@@ -22,9 +22,8 @@
 #include <wx/xrc/xmlres.h>
 
 wxBEGIN_EVENT_TABLE(PropPageMesh, PropPageMeshBase)
-    EVT_BUTTON(wxID_OK, PropPageMesh::OnOK)
-    EVT_BUTTON(wxID_CANCEL, PropPageMesh::OnCancel)
-    // Add more event handlers as needed
+// TODO: Map ON_WM_CLOSE manually
+    // MFC: ON_WM_CLOSE()
 wxEND_EVENT_TABLE()
 
 PropPageMesh::PropPageMesh(wxWindow *parent)

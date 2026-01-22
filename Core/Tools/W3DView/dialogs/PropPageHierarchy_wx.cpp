@@ -22,9 +22,7 @@
 #include <wx/xrc/xmlres.h>
 
 wxBEGIN_EVENT_TABLE(PropPageHierarchy, PropPageHierarchyBase)
-    EVT_BUTTON(wxID_OK, PropPageHierarchy::OnOK)
-    EVT_BUTTON(wxID_CANCEL, PropPageHierarchy::OnCancel)
-    // Add more event handlers as needed
+EVT_TREE_SEL_CHANGED(XRCID("IDC_SUBOBJECT_LIST"), PropPageHierarchy::OnDblclkSubObjectList)  // Notification message (needs analysis)
 wxEND_EVENT_TABLE()
 
 PropPageHierarchy::PropPageHierarchy(wxWindow *parent)
@@ -47,4 +45,14 @@ void PropPageHierarchy::OnCancel(wxCommandEvent &event)
 {
     // Close without saving
     EndModal(wxID_CANCEL);
+}
+
+// ============================================================================
+// Event Handlers (Phase 2 - Auto-integrated)
+// ============================================================================
+
+void PropPageHierarchy::OnDblclkSubObjectList(various &event)
+{
+    // TODO: Implement OnDblclkSubObjectList
+    // Control ID: IDC_SUBOBJECT_LIST
 }

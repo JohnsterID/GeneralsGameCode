@@ -22,9 +22,7 @@
 #include <wx/xrc/xmlres.h>
 
 wxBEGIN_EVENT_TABLE(PropPageEmitterPhysics, PropPageEmitterPhysicsBase)
-    EVT_BUTTON(wxID_OK, PropPageEmitterPhysics::OnOK)
-    EVT_BUTTON(wxID_CANCEL, PropPageEmitterPhysics::OnCancel)
-    // Add more event handlers as needed
+EVT_BUTTON(XRCID("IDC_SPECIFY_VELOCITY_RANDOM"), PropPageEmitterPhysics::OnSpecifyVelocityRandom)  // Button/Checkbox click
 wxEND_EVENT_TABLE()
 
 PropPageEmitterPhysics::PropPageEmitterPhysics(wxWindow *parent)
@@ -47,4 +45,14 @@ void PropPageEmitterPhysics::OnCancel(wxCommandEvent &event)
 {
     // Close without saving
     EndModal(wxID_CANCEL);
+}
+
+// ============================================================================
+// Event Handlers (Phase 2 - Auto-integrated)
+// ============================================================================
+
+void PropPageEmitterPhysics::OnSpecifyVelocityRandom(wxCommandEvent &event)
+{
+    // TODO: Implement OnSpecifyVelocityRandom
+    // Control ID: IDC_SPECIFY_VELOCITY_RANDOM
 }

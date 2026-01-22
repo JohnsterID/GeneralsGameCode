@@ -22,9 +22,7 @@
 #include <wx/xrc/xmlres.h>
 
 wxBEGIN_EVENT_TABLE(CameraDistance, CameraDistanceBase)
-    EVT_BUTTON(wxID_OK, CameraDistance::OnOK)
-    EVT_BUTTON(wxID_CANCEL, CameraDistance::OnCancel)
-    // Add more event handlers as needed
+
 wxEND_EVENT_TABLE()
 
 CameraDistance::CameraDistance(wxWindow *parent)

@@ -22,9 +22,8 @@
 #include <wx/xrc/xmlres.h>
 
 wxBEGIN_EVENT_TABLE(LightAmbientDialog, LightAmbientDialogBase)
-    EVT_BUTTON(wxID_OK, LightAmbientDialog::OnOK)
-    EVT_BUTTON(wxID_CANCEL, LightAmbientDialog::OnCancel)
-    // Add more event handlers as needed
+EVT_SLIDER(XRCID("IDC_SLIDER_BLUE"), LightAmbientDialog::OnHscroll)  // Horizontal scroll (slider)
+    EVT_CHECKBOX(XRCID("IDC_GRAYSCALE_CHECK"), LightAmbientDialog::OnGrayscaleCheck)  // Button/Checkbox click
 wxEND_EVENT_TABLE()
 
 LightAmbientDialog::LightAmbientDialog(wxWindow *parent)
@@ -47,4 +46,19 @@ void LightAmbientDialog::OnCancel(wxCommandEvent &event)
 {
     // Close without saving
     EndModal(wxID_CANCEL);
+}
+
+// ============================================================================
+// Event Handlers (Phase 2 - Auto-integrated)
+// ============================================================================
+
+void LightAmbientDialog::OnHscroll(wxScrollEvent &event)
+{
+    // TODO: Implement OnHscroll
+}
+
+void LightAmbientDialog::OnGrayscaleCheck(wxCommandEvent &event)
+{
+    // TODO: Implement OnGrayscaleCheck
+    // Control ID: IDC_GRAYSCALE_CHECK
 }

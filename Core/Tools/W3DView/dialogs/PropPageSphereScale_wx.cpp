@@ -22,9 +22,7 @@
 #include <wx/xrc/xmlres.h>
 
 wxBEGIN_EVENT_TABLE(PropPageSphereScale, PropPageSphereScaleBase)
-    EVT_BUTTON(wxID_OK, PropPageSphereScale::OnOK)
-    EVT_BUTTON(wxID_CANCEL, PropPageSphereScale::OnCancel)
-    // Add more event handlers as needed
+EVT_WINDOW_DESTROY(PropPageSphereScale::OnDestroy)  // Window destruction
 wxEND_EVENT_TABLE()
 
 PropPageSphereScale::PropPageSphereScale(wxWindow *parent)
@@ -47,4 +45,13 @@ void PropPageSphereScale::OnCancel(wxCommandEvent &event)
 {
     // Close without saving
     EndModal(wxID_CANCEL);
+}
+
+// ============================================================================
+// Event Handlers (Phase 2 - Auto-integrated)
+// ============================================================================
+
+void PropPageSphereScale::OnDestroy(wxWindowDestroyEvent &event)
+{
+    // TODO: Implement OnDestroy
 }

@@ -22,9 +22,9 @@
 #include <wx/xrc/xmlres.h>
 
 wxBEGIN_EVENT_TABLE(PropPageSphereColor, PropPageSphereColorBase)
-    EVT_BUTTON(wxID_OK, PropPageSphereColor::OnOK)
-    EVT_BUTTON(wxID_CANCEL, PropPageSphereColor::OnCancel)
-    // Add more event handlers as needed
+EVT_WINDOW_DESTROY(PropPageSphereColor::OnDestroy)  // Window destruction
+    EVT_CHECKBOX(XRCID("IDC_OPACITY_VECTOR_CHECK"), PropPageSphereColor::OnOpacityVectorCheck)  // Button/Checkbox click
+    EVT_CHECKBOX(XRCID("IDC_INVERT_VECTOR_CHECK"), PropPageSphereColor::OnInvertVectorCheck)  // Button/Checkbox click
 wxEND_EVENT_TABLE()
 
 PropPageSphereColor::PropPageSphereColor(wxWindow *parent)
@@ -47,4 +47,25 @@ void PropPageSphereColor::OnCancel(wxCommandEvent &event)
 {
     // Close without saving
     EndModal(wxID_CANCEL);
+}
+
+// ============================================================================
+// Event Handlers (Phase 2 - Auto-integrated)
+// ============================================================================
+
+void PropPageSphereColor::OnDestroy(wxWindowDestroyEvent &event)
+{
+    // TODO: Implement OnDestroy
+}
+
+void PropPageSphereColor::OnOpacityVectorCheck(wxCommandEvent &event)
+{
+    // TODO: Implement OnOpacityVectorCheck
+    // Control ID: IDC_OPACITY_VECTOR_CHECK
+}
+
+void PropPageSphereColor::OnInvertVectorCheck(wxCommandEvent &event)
+{
+    // TODO: Implement OnInvertVectorCheck
+    // Control ID: IDC_INVERT_VECTOR_CHECK
 }

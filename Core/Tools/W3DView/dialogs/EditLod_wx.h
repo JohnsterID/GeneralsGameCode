@@ -93,4 +93,10 @@ private:
     void OnCancel(wxCommandEvent &event);
 
     wxDECLARE_EVENT_TABLE();
+private:
+    // Event handlers (Phase 2)
+void OnDeltaposSwitchUpSpin(various &event);  // Notification message (needs analysis)
+    void OnDeltaposSwitchDnSpin(various &event);  // Notification message (needs analysis)
+    void OnItemChangedHierarchyList(various &event);  // Notification message (needs analysis)
+    void OnRecalc(wxCommandEvent &event);  // Button/Checkbox click
 };

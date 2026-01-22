@@ -22,9 +22,7 @@
 #include <wx/xrc/xmlres.h>
 
 wxBEGIN_EVENT_TABLE(BackgroundBmp, BackgroundBmpBase)
-    EVT_BUTTON(wxID_OK, BackgroundBmp::OnOK)
-    EVT_BUTTON(wxID_CANCEL, BackgroundBmp::OnCancel)
-    // Add more event handlers as needed
+EVT_BUTTON(XRCID("IDC_BROWSE"), BackgroundBmp::OnBrowse)  // Button/Checkbox click
 wxEND_EVENT_TABLE()
 
 BackgroundBmp::BackgroundBmp(wxWindow *parent)
@@ -47,4 +45,14 @@ void BackgroundBmp::OnCancel(wxCommandEvent &event)
 {
     // Close without saving
     EndModal(wxID_CANCEL);
+}
+
+// ============================================================================
+// Event Handlers (Phase 2 - Auto-integrated)
+// ============================================================================
+
+void BackgroundBmp::OnBrowse(wxCommandEvent &event)
+{
+    // TODO: Implement OnBrowse
+    // Control ID: IDC_BROWSE
 }

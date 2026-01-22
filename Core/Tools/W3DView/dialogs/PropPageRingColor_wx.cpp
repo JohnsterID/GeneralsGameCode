@@ -22,9 +22,7 @@
 #include <wx/xrc/xmlres.h>
 
 wxBEGIN_EVENT_TABLE(PropPageRingColor, PropPageRingColorBase)
-    EVT_BUTTON(wxID_OK, PropPageRingColor::OnOK)
-    EVT_BUTTON(wxID_CANCEL, PropPageRingColor::OnCancel)
-    // Add more event handlers as needed
+EVT_WINDOW_DESTROY(PropPageRingColor::OnDestroy)  // Window destruction
 wxEND_EVENT_TABLE()
 
 PropPageRingColor::PropPageRingColor(wxWindow *parent)
@@ -47,4 +45,13 @@ void PropPageRingColor::OnCancel(wxCommandEvent &event)
 {
     // Close without saving
     EndModal(wxID_CANCEL);
+}
+
+// ============================================================================
+// Event Handlers (Phase 2 - Auto-integrated)
+// ============================================================================
+
+void PropPageRingColor::OnDestroy(wxWindowDestroyEvent &event)
+{
+    // TODO: Implement OnDestroy
 }

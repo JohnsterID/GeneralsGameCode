@@ -22,9 +22,10 @@
 #include <wx/xrc/xmlres.h>
 
 wxBEGIN_EVENT_TABLE(BoneManagement, BoneManagementBase)
-    EVT_BUTTON(wxID_OK, BoneManagement::OnOK)
-    EVT_BUTTON(wxID_CANCEL, BoneManagement::OnCancel)
-    // Add more event handlers as needed
+EVT_TREE_SEL_CHANGED(XRCID("IDC_BONE_TREE"), BoneManagement::OnSelchangedBoneTree)  // Notification message (needs analysis)
+    EVT_COMBOBOX(XRCID("IDC_OBJECT_COMBO"), BoneManagement::OnSelchangeObjectCombo)  // Combobox selection change
+    EVT_WINDOW_DESTROY(BoneManagement::OnDestroy)  // Window destruction
+    EVT_BUTTON(XRCID("IDC_ATTACH_BUTTON"), BoneManagement::OnAttachButton)  // Button/Checkbox click
 wxEND_EVENT_TABLE()
 
 BoneManagement::BoneManagement(wxWindow *parent)
@@ -47,4 +48,31 @@ void BoneManagement::OnCancel(wxCommandEvent &event)
 {
     // Close without saving
     EndModal(wxID_CANCEL);
+}
+
+// ============================================================================
+// Event Handlers (Phase 2 - Auto-integrated)
+// ============================================================================
+
+void BoneManagement::OnSelchangedBoneTree(various &event)
+{
+    // TODO: Implement OnSelchangedBoneTree
+    // Control ID: IDC_BONE_TREE
+}
+
+void BoneManagement::OnSelchangeObjectCombo(wxCommandEvent &event)
+{
+    // TODO: Implement OnSelchangeObjectCombo
+    // Control ID: IDC_OBJECT_COMBO
+}
+
+void BoneManagement::OnDestroy(wxWindowDestroyEvent &event)
+{
+    // TODO: Implement OnDestroy
+}
+
+void BoneManagement::OnAttachButton(wxCommandEvent &event)
+{
+    // TODO: Implement OnAttachButton
+    // Control ID: IDC_ATTACH_BUTTON
 }

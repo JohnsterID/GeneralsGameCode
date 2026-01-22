@@ -22,9 +22,7 @@
 #include <wx/xrc/xmlres.h>
 
 wxBEGIN_EVENT_TABLE(PropPageAnimation, PropPageAnimationBase)
-    EVT_BUTTON(wxID_OK, PropPageAnimation::OnOK)
-    EVT_BUTTON(wxID_CANCEL, PropPageAnimation::OnCancel)
-    // Add more event handlers as needed
+
 wxEND_EVENT_TABLE()
 
 PropPageAnimation::PropPageAnimation(wxWindow *parent)

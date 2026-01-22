@@ -22,9 +22,9 @@
 #include <wx/xrc/xmlres.h>
 
 wxBEGIN_EVENT_TABLE(VolumeRandomizer, VolumeRandomizerBase)
-    EVT_BUTTON(wxID_OK, VolumeRandomizer::OnOK)
-    EVT_BUTTON(wxID_CANCEL, VolumeRandomizer::OnCancel)
-    // Add more event handlers as needed
+EVT_CHECKBOX(XRCID("IDC_BOX_RADIO"), VolumeRandomizer::OnBoxRadio)  // Button/Checkbox click
+    EVT_CHECKBOX(XRCID("IDC_CYLINDER_RADIO"), VolumeRandomizer::OnCylinderRadio)  // Button/Checkbox click
+    EVT_CHECKBOX(XRCID("IDC_SPHERE_RADIO"), VolumeRandomizer::OnSphereRadio)  // Button/Checkbox click
 wxEND_EVENT_TABLE()
 
 VolumeRandomizer::VolumeRandomizer(wxWindow *parent)
@@ -47,4 +47,26 @@ void VolumeRandomizer::OnCancel(wxCommandEvent &event)
 {
     // Close without saving
     EndModal(wxID_CANCEL);
+}
+
+// ============================================================================
+// Event Handlers (Phase 2 - Auto-integrated)
+// ============================================================================
+
+void VolumeRandomizer::OnBoxRadio(wxCommandEvent &event)
+{
+    // TODO: Implement OnBoxRadio
+    // Control ID: IDC_BOX_RADIO
+}
+
+void VolumeRandomizer::OnCylinderRadio(wxCommandEvent &event)
+{
+    // TODO: Implement OnCylinderRadio
+    // Control ID: IDC_CYLINDER_RADIO
+}
+
+void VolumeRandomizer::OnSphereRadio(wxCommandEvent &event)
+{
+    // TODO: Implement OnSphereRadio
+    // Control ID: IDC_SPHERE_RADIO
 }

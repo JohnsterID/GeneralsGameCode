@@ -22,9 +22,7 @@
 #include <wx/xrc/xmlres.h>
 
 wxBEGIN_EVENT_TABLE(RenderDeviceSelector, RenderDeviceSelectorBase)
-    EVT_BUTTON(wxID_OK, RenderDeviceSelector::OnOK)
-    EVT_BUTTON(wxID_CANCEL, RenderDeviceSelector::OnCancel)
-    // Add more event handlers as needed
+EVT_COMBOBOX(XRCID("IDC_RENDER_DEVICE_COMBO"), RenderDeviceSelector::OnSelchangeRenderDeviceCombo)  // Combobox selection change
 wxEND_EVENT_TABLE()
 
 RenderDeviceSelector::RenderDeviceSelector(wxWindow *parent)
@@ -47,4 +45,14 @@ void RenderDeviceSelector::OnCancel(wxCommandEvent &event)
 {
     // Close without saving
     EndModal(wxID_CANCEL);
+}
+
+// ============================================================================
+// Event Handlers (Phase 2 - Auto-integrated)
+// ============================================================================
+
+void RenderDeviceSelector::OnSelchangeRenderDeviceCombo(wxCommandEvent &event)
+{
+    // TODO: Implement OnSelchangeRenderDeviceCombo
+    // Control ID: IDC_RENDER_DEVICE_COMBO
 }

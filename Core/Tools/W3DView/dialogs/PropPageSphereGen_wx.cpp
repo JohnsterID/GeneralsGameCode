@@ -22,9 +22,11 @@
 #include <wx/xrc/xmlres.h>
 
 wxBEGIN_EVENT_TABLE(PropPageSphereGen, PropPageSphereGenBase)
-    EVT_BUTTON(wxID_OK, PropPageSphereGen::OnOK)
-    EVT_BUTTON(wxID_CANCEL, PropPageSphereGen::OnCancel)
-    // Add more event handlers as needed
+EVT_BUTTON(XRCID("IDC_BROWSE_BUTTON"), PropPageSphereGen::OnBrowseButton)  // Button/Checkbox click
+    EVT_TEXT(XRCID("IDC_FILENAME_EDIT"), PropPageSphereGen::OnChangeFilenameEdit)  // Text control change
+    EVT_TEXT(XRCID("IDC_NAME_EDIT"), PropPageSphereGen::OnChangeNameEdit)  // Text control change
+    EVT_TEXT(XRCID("IDC_LIFETIME_EDIT"), PropPageSphereGen::OnChangeLifetimeEdit)  // Text control change
+    EVT_COMBOBOX(XRCID("IDC_SHADER_COMBO"), PropPageSphereGen::OnSelchangeShaderCombo)  // Combobox selection change
 wxEND_EVENT_TABLE()
 
 PropPageSphereGen::PropPageSphereGen(wxWindow *parent)
@@ -47,4 +49,38 @@ void PropPageSphereGen::OnCancel(wxCommandEvent &event)
 {
     // Close without saving
     EndModal(wxID_CANCEL);
+}
+
+// ============================================================================
+// Event Handlers (Phase 2 - Auto-integrated)
+// ============================================================================
+
+void PropPageSphereGen::OnBrowseButton(wxCommandEvent &event)
+{
+    // TODO: Implement OnBrowseButton
+    // Control ID: IDC_BROWSE_BUTTON
+}
+
+void PropPageSphereGen::OnChangeFilenameEdit(wxCommandEvent &event)
+{
+    // TODO: Implement OnChangeFilenameEdit
+    // Control ID: IDC_FILENAME_EDIT
+}
+
+void PropPageSphereGen::OnChangeNameEdit(wxCommandEvent &event)
+{
+    // TODO: Implement OnChangeNameEdit
+    // Control ID: IDC_NAME_EDIT
+}
+
+void PropPageSphereGen::OnChangeLifetimeEdit(wxCommandEvent &event)
+{
+    // TODO: Implement OnChangeLifetimeEdit
+    // Control ID: IDC_LIFETIME_EDIT
+}
+
+void PropPageSphereGen::OnSelchangeShaderCombo(wxCommandEvent &event)
+{
+    // TODO: Implement OnSelchangeShaderCombo
+    // Control ID: IDC_SHADER_COMBO
 }

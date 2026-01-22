@@ -103,4 +103,11 @@ private:
     void OnCancel(wxCommandEvent &event);
 
     wxDECLARE_EVENT_TABLE();
+private:
+    // Event handlers (Phase 2)
+void OnBrowseButton(wxCommandEvent &event);  // Button/Checkbox click
+    void OnChangeFilenameEdit(wxCommandEvent &event);  // Text control change
+    void OnChangeNameEdit(wxCommandEvent &event);  // Text control change
+    void OnChangeLifetimeEdit(wxCommandEvent &event);  // Text control change
+    void OnSelchangeShaderCombo(wxCommandEvent &event);  // Combobox selection change
 };

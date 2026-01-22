@@ -22,9 +22,8 @@
 #include <wx/xrc/xmlres.h>
 
 wxBEGIN_EVENT_TABLE(PropPageEmitterUser, PropPageEmitterUserBase)
-    EVT_BUTTON(wxID_OK, PropPageEmitterUser::OnOK)
-    EVT_BUTTON(wxID_CANCEL, PropPageEmitterUser::OnCancel)
-    // Add more event handlers as needed
+EVT_TEXT(XRCID("IDC_PROGRAMMER_SETTINGS_EDIT"), PropPageEmitterUser::OnChangeProgrammerSettingsEdit)  // Text control change
+    EVT_COMBOBOX(XRCID("IDC_TYPE_COMBO"), PropPageEmitterUser::OnSelchangeTypeCombo)  // Combobox selection change
 wxEND_EVENT_TABLE()
 
 PropPageEmitterUser::PropPageEmitterUser(wxWindow *parent)
@@ -47,4 +46,20 @@ void PropPageEmitterUser::OnCancel(wxCommandEvent &event)
 {
     // Close without saving
     EndModal(wxID_CANCEL);
+}
+
+// ============================================================================
+// Event Handlers (Phase 2 - Auto-integrated)
+// ============================================================================
+
+void PropPageEmitterUser::OnChangeProgrammerSettingsEdit(wxCommandEvent &event)
+{
+    // TODO: Implement OnChangeProgrammerSettingsEdit
+    // Control ID: IDC_PROGRAMMER_SETTINGS_EDIT
+}
+
+void PropPageEmitterUser::OnSelchangeTypeCombo(wxCommandEvent &event)
+{
+    // TODO: Implement OnSelchangeTypeCombo
+    // Control ID: IDC_TYPE_COMBO
 }

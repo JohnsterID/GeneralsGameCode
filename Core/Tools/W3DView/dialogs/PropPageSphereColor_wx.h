@@ -91,4 +91,9 @@ private:
     void OnCancel(wxCommandEvent &event);
 
     wxDECLARE_EVENT_TABLE();
+private:
+    // Event handlers (Phase 2)
+void OnDestroy(wxWindowDestroyEvent &event);  // Window destruction
+    void OnOpacityVectorCheck(wxCommandEvent &event);  // Button/Checkbox click
+    void OnInvertVectorCheck(wxCommandEvent &event);  // Button/Checkbox click
 };

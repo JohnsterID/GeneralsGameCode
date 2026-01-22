@@ -22,9 +22,7 @@
 #include <wx/xrc/xmlres.h>
 
 wxBEGIN_EVENT_TABLE(OpacityVector, OpacityVectorBase)
-    EVT_BUTTON(wxID_OK, OpacityVector::OnOK)
-    EVT_BUTTON(wxID_CANCEL, OpacityVector::OnCancel)
-    // Add more event handlers as needed
+EVT_SLIDER(XRCID("IDC_SLIDER_Z"), OpacityVector::OnHscroll)  // Horizontal scroll (slider)
 wxEND_EVENT_TABLE()
 
 OpacityVector::OpacityVector(wxWindow *parent)
@@ -47,4 +45,13 @@ void OpacityVector::OnCancel(wxCommandEvent &event)
 {
     // Close without saving
     EndModal(wxID_CANCEL);
+}
+
+// ============================================================================
+// Event Handlers (Phase 2 - Auto-integrated)
+// ============================================================================
+
+void OpacityVector::OnHscroll(wxScrollEvent &event)
+{
+    // TODO: Implement OnHscroll
 }

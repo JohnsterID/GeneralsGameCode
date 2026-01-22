@@ -22,9 +22,7 @@
 #include <wx/xrc/xmlres.h>
 
 wxBEGIN_EVENT_TABLE(Opacity, OpacityBase)
-    EVT_BUTTON(wxID_OK, Opacity::OnOK)
-    EVT_BUTTON(wxID_CANCEL, Opacity::OnCancel)
-    // Add more event handlers as needed
+
 wxEND_EVENT_TABLE()
 
 Opacity::Opacity(wxWindow *parent)

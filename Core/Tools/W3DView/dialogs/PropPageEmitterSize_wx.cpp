@@ -22,9 +22,7 @@
 #include <wx/xrc/xmlres.h>
 
 wxBEGIN_EVENT_TABLE(PropPageEmitterSize, PropPageEmitterSizeBase)
-    EVT_BUTTON(wxID_OK, PropPageEmitterSize::OnOK)
-    EVT_BUTTON(wxID_CANCEL, PropPageEmitterSize::OnCancel)
-    // Add more event handlers as needed
+
 wxEND_EVENT_TABLE()
 
 PropPageEmitterSize::PropPageEmitterSize(wxWindow *parent)

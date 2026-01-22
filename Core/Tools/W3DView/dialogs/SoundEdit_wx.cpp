@@ -22,9 +22,11 @@
 #include <wx/xrc/xmlres.h>
 
 wxBEGIN_EVENT_TABLE(SoundEdit, SoundEditBase)
-    EVT_BUTTON(wxID_OK, SoundEdit::OnOK)
-    EVT_BUTTON(wxID_CANCEL, SoundEdit::OnCancel)
-    // Add more event handlers as needed
+EVT_BUTTON(XRCID("IDC_BROWSE"), SoundEdit::OnBrowse)  // Button/Checkbox click
+    EVT_CHECKBOX(XRCID("IDC_2D_RADIO"), SoundEdit::On2DRadio)  // Button/Checkbox click
+    EVT_CHECKBOX(XRCID("IDC_3D_RADIO"), SoundEdit::On3DRadio)  // Button/Checkbox click
+    EVT_BUTTON(XRCID("IDC_PLAY"), SoundEdit::OnPlay)  // Button/Checkbox click
+    EVT_SLIDER(XRCID("IDC_VOLUME_SLIDER"), SoundEdit::OnHscroll)  // Horizontal scroll (slider)
 wxEND_EVENT_TABLE()
 
 SoundEdit::SoundEdit(wxWindow *parent)
@@ -47,4 +49,37 @@ void SoundEdit::OnCancel(wxCommandEvent &event)
 {
     // Close without saving
     EndModal(wxID_CANCEL);
+}
+
+// ============================================================================
+// Event Handlers (Phase 2 - Auto-integrated)
+// ============================================================================
+
+void SoundEdit::OnBrowse(wxCommandEvent &event)
+{
+    // TODO: Implement OnBrowse
+    // Control ID: IDC_BROWSE
+}
+
+void SoundEdit::On2DRadio(wxCommandEvent &event)
+{
+    // TODO: Implement On2DRadio
+    // Control ID: IDC_2D_RADIO
+}
+
+void SoundEdit::On3DRadio(wxCommandEvent &event)
+{
+    // TODO: Implement On3DRadio
+    // Control ID: IDC_3D_RADIO
+}
+
+void SoundEdit::OnPlay(wxCommandEvent &event)
+{
+    // TODO: Implement OnPlay
+    // Control ID: IDC_PLAY
+}
+
+void SoundEdit::OnHscroll(wxScrollEvent &event)
+{
+    // TODO: Implement OnHscroll
 }

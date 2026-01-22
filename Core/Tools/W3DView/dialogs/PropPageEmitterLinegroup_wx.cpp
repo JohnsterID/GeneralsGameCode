@@ -22,9 +22,7 @@
 #include <wx/xrc/xmlres.h>
 
 wxBEGIN_EVENT_TABLE(PropPageEmitterLinegroup, PropPageEmitterLinegroupBase)
-    EVT_BUTTON(wxID_OK, PropPageEmitterLinegroup::OnOK)
-    EVT_BUTTON(wxID_CANCEL, PropPageEmitterLinegroup::OnCancel)
-    // Add more event handlers as needed
+
 wxEND_EVENT_TABLE()
 
 PropPageEmitterLinegroup::PropPageEmitterLinegroup(wxWindow *parent)

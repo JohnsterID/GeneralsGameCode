@@ -22,9 +22,8 @@
 #include <wx/xrc/xmlres.h>
 
 wxBEGIN_EVENT_TABLE(PropPageEmitterParticle, PropPageEmitterParticleBase)
-    EVT_BUTTON(wxID_OK, PropPageEmitterParticle::OnOK)
-    EVT_BUTTON(wxID_CANCEL, PropPageEmitterParticle::OnCancel)
-    // Add more event handlers as needed
+EVT_BUTTON(XRCID("IDC_SPECIFY_CREATION_VOLUME"), PropPageEmitterParticle::OnSpecifyCreationVolume)  // Button/Checkbox click
+    EVT_CHECKBOX(XRCID("IDC_MAX_PARTICLES_CHECK"), PropPageEmitterParticle::OnMaxParticlesCheck)  // Button/Checkbox click
 wxEND_EVENT_TABLE()
 
 PropPageEmitterParticle::PropPageEmitterParticle(wxWindow *parent)
@@ -47,4 +46,20 @@ void PropPageEmitterParticle::OnCancel(wxCommandEvent &event)
 {
     // Close without saving
     EndModal(wxID_CANCEL);
+}
+
+// ============================================================================
+// Event Handlers (Phase 2 - Auto-integrated)
+// ============================================================================
+
+void PropPageEmitterParticle::OnSpecifyCreationVolume(wxCommandEvent &event)
+{
+    // TODO: Implement OnSpecifyCreationVolume
+    // Control ID: IDC_SPECIFY_CREATION_VOLUME
+}
+
+void PropPageEmitterParticle::OnMaxParticlesCheck(wxCommandEvent &event)
+{
+    // TODO: Implement OnMaxParticlesCheck
+    // Control ID: IDC_MAX_PARTICLES_CHECK
 }

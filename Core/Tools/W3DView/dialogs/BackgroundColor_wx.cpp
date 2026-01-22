@@ -22,9 +22,8 @@
 #include <wx/xrc/xmlres.h>
 
 wxBEGIN_EVENT_TABLE(BackgroundColor, BackgroundColorBase)
-    EVT_BUTTON(wxID_OK, BackgroundColor::OnOK)
-    EVT_BUTTON(wxID_CANCEL, BackgroundColor::OnCancel)
-    // Add more event handlers as needed
+EVT_SLIDER(XRCID("IDC_SLIDER_BLUE"), BackgroundColor::OnHscroll)  // Horizontal scroll (slider)
+    EVT_CHECKBOX(XRCID("IDC_GRAYSCALE_CHECK"), BackgroundColor::OnGrayscaleCheck)  // Button/Checkbox click
 wxEND_EVENT_TABLE()
 
 BackgroundColor::BackgroundColor(wxWindow *parent)
@@ -47,4 +46,19 @@ void BackgroundColor::OnCancel(wxCommandEvent &event)
 {
     // Close without saving
     EndModal(wxID_CANCEL);
+}
+
+// ============================================================================
+// Event Handlers (Phase 2 - Auto-integrated)
+// ============================================================================
+
+void BackgroundColor::OnHscroll(wxScrollEvent &event)
+{
+    // TODO: Implement OnHscroll
+}
+
+void BackgroundColor::OnGrayscaleCheck(wxCommandEvent &event)
+{
+    // TODO: Implement OnGrayscaleCheck
+    // Control ID: IDC_GRAYSCALE_CHECK
 }

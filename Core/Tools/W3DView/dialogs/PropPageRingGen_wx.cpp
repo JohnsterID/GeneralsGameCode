@@ -22,9 +22,12 @@
 #include <wx/xrc/xmlres.h>
 
 wxBEGIN_EVENT_TABLE(PropPageRingGen, PropPageRingGenBase)
-    EVT_BUTTON(wxID_OK, PropPageRingGen::OnOK)
-    EVT_BUTTON(wxID_CANCEL, PropPageRingGen::OnCancel)
-    // Add more event handlers as needed
+EVT_BUTTON(XRCID("IDC_BROWSE_BUTTON"), PropPageRingGen::OnBrowseButton)  // Button/Checkbox click
+    EVT_TEXT(XRCID("IDC_FILENAME_EDIT"), PropPageRingGen::OnChangeFilenameEdit)  // Text control change
+    EVT_TEXT(XRCID("IDC_NAME_EDIT"), PropPageRingGen::OnChangeNameEdit)  // Text control change
+    EVT_TEXT(XRCID("IDC_LIFETIME_EDIT"), PropPageRingGen::OnChangeLifetimeEdit)  // Text control change
+    EVT_COMBOBOX(XRCID("IDC_SHADER_COMBO"), PropPageRingGen::OnSelchangeShaderCombo)  // Combobox selection change
+    EVT_TEXT(XRCID("IDC_TEXTURE_TILE_EDIT"), PropPageRingGen::OnChangeTextureTileEdit)  // Text control change
 wxEND_EVENT_TABLE()
 
 PropPageRingGen::PropPageRingGen(wxWindow *parent)
@@ -47,4 +50,44 @@ void PropPageRingGen::OnCancel(wxCommandEvent &event)
 {
     // Close without saving
     EndModal(wxID_CANCEL);
+}
+
+// ============================================================================
+// Event Handlers (Phase 2 - Auto-integrated)
+// ============================================================================
+
+void PropPageRingGen::OnBrowseButton(wxCommandEvent &event)
+{
+    // TODO: Implement OnBrowseButton
+    // Control ID: IDC_BROWSE_BUTTON
+}
+
+void PropPageRingGen::OnChangeFilenameEdit(wxCommandEvent &event)
+{
+    // TODO: Implement OnChangeFilenameEdit
+    // Control ID: IDC_FILENAME_EDIT
+}
+
+void PropPageRingGen::OnChangeNameEdit(wxCommandEvent &event)
+{
+    // TODO: Implement OnChangeNameEdit
+    // Control ID: IDC_NAME_EDIT
+}
+
+void PropPageRingGen::OnChangeLifetimeEdit(wxCommandEvent &event)
+{
+    // TODO: Implement OnChangeLifetimeEdit
+    // Control ID: IDC_LIFETIME_EDIT
+}
+
+void PropPageRingGen::OnSelchangeShaderCombo(wxCommandEvent &event)
+{
+    // TODO: Implement OnSelchangeShaderCombo
+    // Control ID: IDC_SHADER_COMBO
+}
+
+void PropPageRingGen::OnChangeTextureTileEdit(wxCommandEvent &event)
+{
+    // TODO: Implement OnChangeTextureTileEdit
+    // Control ID: IDC_TEXTURE_TILE_EDIT
 }

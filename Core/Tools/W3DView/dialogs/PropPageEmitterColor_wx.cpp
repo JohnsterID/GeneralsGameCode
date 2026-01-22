@@ -22,9 +22,8 @@
 #include <wx/xrc/xmlres.h>
 
 wxBEGIN_EVENT_TABLE(PropPageEmitterColor, PropPageEmitterColorBase)
-    EVT_BUTTON(wxID_OK, PropPageEmitterColor::OnOK)
-    EVT_BUTTON(wxID_CANCEL, PropPageEmitterColor::OnCancel)
-    // Add more event handlers as needed
+EVT_WINDOW_DESTROY(PropPageEmitterColor::OnDestroy)  // Window destruction
+    EVT_TREE_SEL_CHANGED(XRCID("IDC_RED_RANDOM_SPIN"), PropPageEmitterColor::OnDeltaposRedRandomSpin)  // Notification message (needs analysis)
 wxEND_EVENT_TABLE()
 
 PropPageEmitterColor::PropPageEmitterColor(wxWindow *parent)
@@ -47,4 +46,19 @@ void PropPageEmitterColor::OnCancel(wxCommandEvent &event)
 {
     // Close without saving
     EndModal(wxID_CANCEL);
+}
+
+// ============================================================================
+// Event Handlers (Phase 2 - Auto-integrated)
+// ============================================================================
+
+void PropPageEmitterColor::OnDestroy(wxWindowDestroyEvent &event)
+{
+    // TODO: Implement OnDestroy
+}
+
+void PropPageEmitterColor::OnDeltaposRedRandomSpin(various &event)
+{
+    // TODO: Implement OnDeltaposRedRandomSpin
+    // Control ID: IDC_RED_RANDOM_SPIN
 }

@@ -22,9 +22,7 @@
 #include <wx/xrc/xmlres.h>
 
 wxBEGIN_EVENT_TABLE(ParticleBlurTimeKey, ParticleBlurTimeKeyBase)
-    EVT_BUTTON(wxID_OK, ParticleBlurTimeKey::OnOK)
-    EVT_BUTTON(wxID_CANCEL, ParticleBlurTimeKey::OnCancel)
-    // Add more event handlers as needed
+EVT_BUTTON(XRCID("IDOK2"), ParticleBlurTimeKey::OnOk2)  // Button/Checkbox click
 wxEND_EVENT_TABLE()
 
 ParticleBlurTimeKey::ParticleBlurTimeKey(wxWindow *parent)
@@ -47,4 +45,14 @@ void ParticleBlurTimeKey::OnCancel(wxCommandEvent &event)
 {
     // Close without saving
     EndModal(wxID_CANCEL);
+}
+
+// ============================================================================
+// Event Handlers (Phase 2 - Auto-integrated)
+// ============================================================================
+
+void ParticleBlurTimeKey::OnOk2(wxCommandEvent &event)
+{
+    // TODO: Implement OnOk2
+    // Control ID: IDOK2
 }

@@ -22,9 +22,7 @@
 #include <wx/xrc/xmlres.h>
 
 wxBEGIN_EVENT_TABLE(PropPageAdvanimReport, PropPageAdvanimReportBase)
-    EVT_BUTTON(wxID_OK, PropPageAdvanimReport::OnOK)
-    EVT_BUTTON(wxID_CANCEL, PropPageAdvanimReport::OnCancel)
-    // Add more event handlers as needed
+
 wxEND_EVENT_TABLE()
 
 PropPageAdvanimReport::PropPageAdvanimReport(wxWindow *parent)

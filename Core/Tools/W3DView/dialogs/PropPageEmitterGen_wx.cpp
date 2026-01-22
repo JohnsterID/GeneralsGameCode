@@ -22,9 +22,12 @@
 #include <wx/xrc/xmlres.h>
 
 wxBEGIN_EVENT_TABLE(PropPageEmitterGen, PropPageEmitterGenBase)
-    EVT_BUTTON(wxID_OK, PropPageEmitterGen::OnOK)
-    EVT_BUTTON(wxID_CANCEL, PropPageEmitterGen::OnCancel)
-    // Add more event handlers as needed
+EVT_BUTTON(XRCID("IDC_BROWSE_BUTTON"), PropPageEmitterGen::OnBrowseButton)  // Button/Checkbox click
+    EVT_TEXT(XRCID("IDC_FILENAME_EDIT"), PropPageEmitterGen::OnChangeFilenameEdit)  // Text control change
+    EVT_TEXT(XRCID("IDC_NAME_EDIT"), PropPageEmitterGen::OnChangeNameEdit)  // Text control change
+    EVT_TEXT(XRCID("IDC_PARTICLE_LIFETIME_EDIT"), PropPageEmitterGen::OnChangeParticleLifetimeEdit)  // Text control change
+    EVT_COMBOBOX(XRCID("IDC_SHADER_COMBO"), PropPageEmitterGen::OnSelchangeShaderCombo)  // Combobox selection change
+    EVT_CHECKBOX(XRCID("IDC_PARTICLE_LIFETIME_CHECK"), PropPageEmitterGen::OnParticleLifetimeCheck)  // Button/Checkbox click
 wxEND_EVENT_TABLE()
 
 PropPageEmitterGen::PropPageEmitterGen(wxWindow *parent)
@@ -47,4 +50,44 @@ void PropPageEmitterGen::OnCancel(wxCommandEvent &event)
 {
     // Close without saving
     EndModal(wxID_CANCEL);
+}
+
+// ============================================================================
+// Event Handlers (Phase 2 - Auto-integrated)
+// ============================================================================
+
+void PropPageEmitterGen::OnBrowseButton(wxCommandEvent &event)
+{
+    // TODO: Implement OnBrowseButton
+    // Control ID: IDC_BROWSE_BUTTON
+}
+
+void PropPageEmitterGen::OnChangeFilenameEdit(wxCommandEvent &event)
+{
+    // TODO: Implement OnChangeFilenameEdit
+    // Control ID: IDC_FILENAME_EDIT
+}
+
+void PropPageEmitterGen::OnChangeNameEdit(wxCommandEvent &event)
+{
+    // TODO: Implement OnChangeNameEdit
+    // Control ID: IDC_NAME_EDIT
+}
+
+void PropPageEmitterGen::OnChangeParticleLifetimeEdit(wxCommandEvent &event)
+{
+    // TODO: Implement OnChangeParticleLifetimeEdit
+    // Control ID: IDC_PARTICLE_LIFETIME_EDIT
+}
+
+void PropPageEmitterGen::OnSelchangeShaderCombo(wxCommandEvent &event)
+{
+    // TODO: Implement OnSelchangeShaderCombo
+    // Control ID: IDC_SHADER_COMBO
+}
+
+void PropPageEmitterGen::OnParticleLifetimeCheck(wxCommandEvent &event)
+{
+    // TODO: Implement OnParticleLifetimeCheck
+    // Control ID: IDC_PARTICLE_LIFETIME_CHECK
 }

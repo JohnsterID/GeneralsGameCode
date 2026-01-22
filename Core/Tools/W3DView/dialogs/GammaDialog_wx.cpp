@@ -22,9 +22,7 @@
 #include <wx/xrc/xmlres.h>
 
 wxBEGIN_EVENT_TABLE(GammaDialog, GammaDialogBase)
-    EVT_BUTTON(wxID_OK, GammaDialog::OnOK)
-    EVT_BUTTON(wxID_CANCEL, GammaDialog::OnCancel)
-    // Add more event handlers as needed
+EVT_TREE_SEL_CHANGED(XRCID("IDC_GAMMA_SLIDER"), GammaDialog::OnReleasedcaptureGammaSlider)  // Notification message (needs analysis)
 wxEND_EVENT_TABLE()
 
 GammaDialog::GammaDialog(wxWindow *parent)
@@ -47,4 +45,14 @@ void GammaDialog::OnCancel(wxCommandEvent &event)
 {
     // Close without saving
     EndModal(wxID_CANCEL);
+}
+
+// ============================================================================
+// Event Handlers (Phase 2 - Auto-integrated)
+// ============================================================================
+
+void GammaDialog::OnReleasedcaptureGammaSlider(various &event)
+{
+    // TODO: Implement OnReleasedcaptureGammaSlider
+    // Control ID: IDC_GAMMA_SLIDER
 }

@@ -79,4 +79,8 @@ private:
     void OnCancel(wxCommandEvent &event);
 
     wxDECLARE_EVENT_TABLE();
+private:
+    // Event handlers (Phase 2)
+void OnChangeProgrammerSettingsEdit(wxCommandEvent &event);  // Text control change
+    void OnSelchangeTypeCombo(wxCommandEvent &event);  // Combobox selection change
 };

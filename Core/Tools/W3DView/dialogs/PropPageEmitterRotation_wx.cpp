@@ -22,9 +22,7 @@
 #include <wx/xrc/xmlres.h>
 
 wxBEGIN_EVENT_TABLE(PropPageEmitterRotation, PropPageEmitterRotationBase)
-    EVT_BUTTON(wxID_OK, PropPageEmitterRotation::OnOK)
-    EVT_BUTTON(wxID_CANCEL, PropPageEmitterRotation::OnCancel)
-    // Add more event handlers as needed
+
 wxEND_EVENT_TABLE()
 
 PropPageEmitterRotation::PropPageEmitterRotation(wxWindow *parent)

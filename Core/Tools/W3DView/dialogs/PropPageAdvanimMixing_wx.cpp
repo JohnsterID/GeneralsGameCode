@@ -22,9 +22,7 @@
 #include <wx/xrc/xmlres.h>
 
 wxBEGIN_EVENT_TABLE(PropPageAdvanimMixing, PropPageAdvanimMixingBase)
-    EVT_BUTTON(wxID_OK, PropPageAdvanimMixing::OnOK)
-    EVT_BUTTON(wxID_CANCEL, PropPageAdvanimMixing::OnCancel)
-    // Add more event handlers as needed
+
 wxEND_EVENT_TABLE()
 
 PropPageAdvanimMixing::PropPageAdvanimMixing(wxWindow *parent)

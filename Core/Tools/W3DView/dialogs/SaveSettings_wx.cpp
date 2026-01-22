@@ -22,9 +22,9 @@
 #include <wx/xrc/xmlres.h>
 
 wxBEGIN_EVENT_TABLE(SaveSettings, SaveSettingsBase)
-    EVT_BUTTON(wxID_OK, SaveSettings::OnOK)
-    EVT_BUTTON(wxID_CANCEL, SaveSettings::OnCancel)
-    // Add more event handlers as needed
+EVT_BUTTON(XRCID("IDC_BROWSE_BUTTON"), SaveSettings::OnBrowseButton)  // Button/Checkbox click
+    // TODO: Map ON_EN_UPDATE manually
+    // MFC: ON_EN_UPDATE(IDC_FILENAME_EDIT, OnUpdateFilenameEdit)
 wxEND_EVENT_TABLE()
 
 SaveSettings::SaveSettings(wxWindow *parent)
@@ -47,4 +47,14 @@ void SaveSettings::OnCancel(wxCommandEvent &event)
 {
     // Close without saving
     EndModal(wxID_CANCEL);
+}
+
+// ============================================================================
+// Event Handlers (Phase 2 - Auto-integrated)
+// ============================================================================
+
+void SaveSettings::OnBrowseButton(wxCommandEvent &event)
+{
+    // TODO: Implement OnBrowseButton
+    // Control ID: IDC_BROWSE_BUTTON
 }

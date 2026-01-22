@@ -22,9 +22,9 @@
 #include <wx/xrc/xmlres.h>
 
 wxBEGIN_EVENT_TABLE(AnimatedSoundDialog, AnimatedSoundDialogBase)
-    EVT_BUTTON(wxID_OK, AnimatedSoundDialog::OnOK)
-    EVT_BUTTON(wxID_CANCEL, AnimatedSoundDialog::OnCancel)
-    // Add more event handlers as needed
+EVT_BUTTON(XRCID("IDC_SOUND_DEFINITION_LIBRARY_BROWSE_BUTTON"), AnimatedSoundDialog::OnSoundDefinitionLibraryBrowseButton)  // Button/Checkbox click
+    EVT_BUTTON(XRCID("IDC_SOUND_INI_BROWSE_BUTTON"), AnimatedSoundDialog::OnSoundIniBrowseButton)  // Button/Checkbox click
+    EVT_BUTTON(XRCID("IDC_SOUND_PATH_BROWSE_BUTTON"), AnimatedSoundDialog::OnSoundPathBrowseButton)  // Button/Checkbox click
 wxEND_EVENT_TABLE()
 
 AnimatedSoundDialog::AnimatedSoundDialog(wxWindow *parent)
@@ -47,4 +47,26 @@ void AnimatedSoundDialog::OnCancel(wxCommandEvent &event)
 {
     // Close without saving
     EndModal(wxID_CANCEL);
+}
+
+// ============================================================================
+// Event Handlers (Phase 2 - Auto-integrated)
+// ============================================================================
+
+void AnimatedSoundDialog::OnSoundDefinitionLibraryBrowseButton(wxCommandEvent &event)
+{
+    // TODO: Implement OnSoundDefinitionLibraryBrowseButton
+    // Control ID: IDC_SOUND_DEFINITION_LIBRARY_BROWSE_BUTTON
+}
+
+void AnimatedSoundDialog::OnSoundIniBrowseButton(wxCommandEvent &event)
+{
+    // TODO: Implement OnSoundIniBrowseButton
+    // Control ID: IDC_SOUND_INI_BROWSE_BUTTON
+}
+
+void AnimatedSoundDialog::OnSoundPathBrowseButton(wxCommandEvent &event)
+{
+    // TODO: Implement OnSoundPathBrowseButton
+    // Control ID: IDC_SOUND_PATH_BROWSE_BUTTON
 }

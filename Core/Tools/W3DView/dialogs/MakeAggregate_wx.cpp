@@ -22,9 +22,7 @@
 #include <wx/xrc/xmlres.h>
 
 wxBEGIN_EVENT_TABLE(MakeAggregate, MakeAggregateBase)
-    EVT_BUTTON(wxID_OK, MakeAggregate::OnOK)
-    EVT_BUTTON(wxID_CANCEL, MakeAggregate::OnCancel)
-    // Add more event handlers as needed
+
 wxEND_EVENT_TABLE()
 
 MakeAggregate::MakeAggregate(wxWindow *parent)

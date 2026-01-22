@@ -22,9 +22,7 @@
 #include <wx/xrc/xmlres.h>
 
 wxBEGIN_EVENT_TABLE(XxxBrowseDirectory, XxxBrowseDirectoryBase)
-    EVT_BUTTON(wxID_OK, XxxBrowseDirectory::OnOK)
-    EVT_BUTTON(wxID_CANCEL, XxxBrowseDirectory::OnCancel)
-    // Add more event handlers as needed
+
 wxEND_EVENT_TABLE()
 
 XxxBrowseDirectory::XxxBrowseDirectory(wxWindow *parent)

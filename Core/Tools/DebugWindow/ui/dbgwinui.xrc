@@ -76,20 +76,12 @@
 							</object>
 						</object>
 						<object class="sizeritem">
-							<option>1</option>
-							<flag>wxEXPAND</flag>
-							<border>5</border>
-							<object class="wxPanel">
-								<style>wxTAB_TRAVERSAL</style>
-							</object>
-						</object>
-						<object class="sizeritem">
 							<option>0</option>
 							<flag>wxALL</flag>
 							<border>5</border>
 							<object class="wxToggleButton" name="m_runFastXTenBtn">
 								<label>Run Fast (10 X)</label>
-								<size>110,30</size>
+								<size>100,30</size>
 							</object>
 						</object>
 						<object class="sizeritem">

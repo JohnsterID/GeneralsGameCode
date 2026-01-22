@@ -8,17 +8,17 @@
       <object class="sizeritem">
         <flag>wxALL</flag>
         <border>5</border>
-        <object class="wxStaticText" name="IDC_STATIC">
-          <label>Select the animations you want to mix:</label>
-          <size>181,12</size>
+        <object class="wxListCtrl" name="IDC_ANIMATION_LIST">
+          <label>List2</label>
+          <size>324,264</size>
         </object>
       </object>
       <object class="sizeritem">
         <flag>wxALL</flag>
         <border>5</border>
-        <object class="wxListCtrl" name="IDC_ANIMATION_LIST">
-          <label>List2</label>
-          <size>324,264</size>
+        <object class="wxStaticText" name="IDC_STATIC">
+          <label>Select the animations you want to mix:</label>
+          <size>181,12</size>
         </object>
       </object>
     </object>

@@ -9,48 +9,154 @@
         <flag>wxALL</flag>
         <border>5</border>
         <object class="wxStaticBox" name="IDC_STATIC">
-          <label>&Channel</label>
+          <label>&amp;Channel</label>
           <size>345,166</size>
         </object>
       </object>
       <object class="sizeritem">
         <flag>wxALL</flag>
         <border>5</border>
+        <object class="wxCheckBox" name="IDC_CHANNEL_DIFFUSE_RADIO">
+          <label>&amp;Diffuse</label>
+          <size>57,15</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxCheckBox" name="IDC_CHANNEL_SPECULAR_RADIO">
+          <label>S&amp;pecular</label>
+          <size>66,15</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxCheckBox" name="IDC_CHANNEL_BOTH_RADIO">
+          <label>&amp;Both</label>
+          <size>46,15</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxPanel" name="IDC_RED_GRADIENT">
+          <size>273,12</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
         <object class="wxStaticText" name="IDC_STATIC">
-          <label>&Red</label>
+          <label>&amp;Red</label>
           <size>21,12</size>
         </object>
       </object>
       <object class="sizeritem">
         <flag>wxALL</flag>
         <border>5</border>
+        <object class="wxSlider" name="IDC_SLIDER_RED">
+          <label>Slider1</label>
+          <size>288,18</size>
+          <style>wxSL_HORIZONTAL</style>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxPanel" name="IDC_GREEN_GRADIENT">
+          <size>273,12</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
         <object class="wxStaticText" name="IDC_STATIC">
-          <label>Gree&n</label>
+          <label>Gree&amp;n</label>
           <size>30,12</size>
         </object>
       </object>
       <object class="sizeritem">
         <flag>wxALL</flag>
         <border>5</border>
+        <object class="wxSlider" name="IDC_SLIDER_GREEN">
+          <label>Slider1</label>
+          <size>288,18</size>
+          <style>wxSL_HORIZONTAL</style>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxPanel" name="IDC_BLUE_GRADIENT">
+          <size>273,12</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
         <object class="wxStaticText" name="IDC_STATIC">
-          <label>Bl&ue</label>
+          <label>Bl&amp;ue</label>
           <size>22,12</size>
         </object>
       </object>
       <object class="sizeritem">
         <flag>wxALL</flag>
         <border>5</border>
-        <object class="wxStaticText" name="IDC_STATIC">
-          <label>&Intensity:</label>
-          <size>43,12</size>
+        <object class="wxSlider" name="IDC_SLIDER_BLUE">
+          <label>Slider1</label>
+          <size>288,18</size>
+          <style>wxSL_HORIZONTAL</style>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxCheckBox" name="IDC_GRAYSCALE_CHECK">
+          <label>&amp;Grayscale</label>
+          <size>127,15</size>
         </object>
       </object>
       <object class="sizeritem">
         <flag>wxALL</flag>
         <border>5</border>
         <object class="wxStaticText" name="IDC_STATIC">
-          <label>Dis&tance:</label>
+          <label>&amp;Intensity:</label>
+          <size>43,12</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxSlider" name="IDC_INTENSITY_SLIDER">
+          <label>Slider1</label>
+          <size>151,16</size>
+          <style>wxSL_HORIZONTAL</style>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxStaticText" name="IDC_STATIC">
+          <label>Dis&amp;tance:</label>
           <size>46,12</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxTextCtrl" name="IDC_DISTANCE_EDIT">
+          <size>79,21</size>
+          <style>wxTE_LEFT</style>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxSpinButton" name="IDC_DISTANCE_SPIN">
+          <label>Spin3</label>
+          <size>16,21</size>
+          <style>wxSP_VERTICAL|wxSP_ARROW_KEYS</style>
         </object>
       </object>
       <object class="sizeritem">
@@ -63,17 +169,59 @@
       <object class="sizeritem">
         <flag>wxALL</flag>
         <border>5</border>
-        <object class="wxStaticText" name="IDC_STATIC">
-          <label>&Start</label>
-          <size>24,12</size>
+        <object class="wxCheckBox" name="IDC_ATTENUATION_CHECK">
+          <label>&amp;Attenuation</label>
+          <size>78,15</size>
         </object>
       </object>
       <object class="sizeritem">
         <flag>wxALL</flag>
         <border>5</border>
         <object class="wxStaticText" name="IDC_STATIC">
-          <label>&End</label>
+          <label>&amp;Start</label>
+          <size>24,12</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxTextCtrl" name="IDC_START_ATTENUATION_EDIT">
+          <size>79,21</size>
+          <style>wxTE_LEFT</style>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxSpinButton" name="IDC_START_ATTENUATION_SPIN">
+          <label>Spin3</label>
+          <size>16,21</size>
+          <style>wxSP_VERTICAL|wxSP_ARROW_KEYS</style>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxStaticText" name="IDC_STATIC">
+          <label>&amp;End</label>
           <size>21,12</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxTextCtrl" name="IDC_END_ATTENUATION_EDIT">
+          <size>79,21</size>
+          <style>wxTE_LEFT</style>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxSpinButton" name="IDC_END_ATTENUATION_SPIN">
+          <label>Spin3</label>
+          <size>16,21</size>
+          <style>wxSP_VERTICAL|wxSP_ARROW_KEYS</style>
         </object>
       </object>
       <object class="sizeritem">
@@ -98,154 +246,6 @@
         <object class="wxButton" name="IDCANCEL">
           <label>Cancel</label>
           <size>75,21</size>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxTextCtrl" name="IDC_DISTANCE_EDIT">
-          <size>79,21</size>
-          <style>wxTE_LEFT</style>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxTextCtrl" name="IDC_START_ATTENUATION_EDIT">
-          <size>79,21</size>
-          <style>wxTE_LEFT</style>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxTextCtrl" name="IDC_END_ATTENUATION_EDIT">
-          <size>79,21</size>
-          <style>wxTE_LEFT</style>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxCheckBox" name="IDC_CHANNEL_DIFFUSE_RADIO">
-          <label>&Diffuse</label>
-          <size>57,15</size>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxCheckBox" name="IDC_CHANNEL_SPECULAR_RADIO">
-          <label>S&pecular</label>
-          <size>66,15</size>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxCheckBox" name="IDC_CHANNEL_BOTH_RADIO">
-          <label>&Both</label>
-          <size>46,15</size>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxPanel" name="IDC_RED_GRADIENT">
-          <size>273,12</size>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxSlider" name="IDC_SLIDER_RED">
-          <label>Slider1</label>
-          <size>288,18</size>
-          <style>wxSL_HORIZONTAL</style>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxPanel" name="IDC_GREEN_GRADIENT">
-          <size>273,12</size>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxSlider" name="IDC_SLIDER_GREEN">
-          <label>Slider1</label>
-          <size>288,18</size>
-          <style>wxSL_HORIZONTAL</style>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxPanel" name="IDC_BLUE_GRADIENT">
-          <size>273,12</size>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxSlider" name="IDC_SLIDER_BLUE">
-          <label>Slider1</label>
-          <size>288,18</size>
-          <style>wxSL_HORIZONTAL</style>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxCheckBox" name="IDC_GRAYSCALE_CHECK">
-          <label>&Grayscale</label>
-          <size>127,15</size>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxSlider" name="IDC_INTENSITY_SLIDER">
-          <label>Slider1</label>
-          <size>151,16</size>
-          <style>wxSL_HORIZONTAL</style>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxSpinButton" name="IDC_DISTANCE_SPIN">
-          <label>Spin3</label>
-          <size>16,21</size>
-          <style>wxSP_VERTICAL|wxSP_ARROW_KEYS</style>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxCheckBox" name="IDC_ATTENUATION_CHECK">
-          <label>&Attenuation</label>
-          <size>78,15</size>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxSpinButton" name="IDC_START_ATTENUATION_SPIN">
-          <label>Spin3</label>
-          <size>16,21</size>
-          <style>wxSP_VERTICAL|wxSP_ARROW_KEYS</style>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxSpinButton" name="IDC_END_ATTENUATION_SPIN">
-          <label>Spin3</label>
-          <size>16,21</size>
-          <style>wxSP_VERTICAL|wxSP_ARROW_KEYS</style>
         </object>
       </object>
     </object>

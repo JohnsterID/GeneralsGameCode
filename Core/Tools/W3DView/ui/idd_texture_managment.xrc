@@ -8,13 +8,6 @@
       <object class="sizeritem">
         <flag>wxALL</flag>
         <border>5</border>
-        <object class="wxStaticBitmap" name="IDC_STATIC">
-          <size>30,30</size>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
         <object class="wxButton" name="IDOK">
           <label>OK</label>
           <size>75,21</size>
@@ -39,9 +32,8 @@
       <object class="sizeritem">
         <flag>wxALL</flag>
         <border>5</border>
-        <object class="wxStaticText" name="IDC_TOOLBAR_SLOT">
-          <label>Toolbar goes here</label>
-          <size>442,34</size>
+        <object class="wxStaticBitmap" name="IDC_STATIC">
+          <size>30,30</size>
         </object>
       </object>
       <object class="sizeritem">
@@ -50,6 +42,14 @@
         <object class="wxListCtrl" name="IDC_MESH_TEXTURE_LIST_CTRL">
           <label>List1</label>
           <size>442,232</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxStaticText" name="IDC_TOOLBAR_SLOT">
+          <label>Toolbar goes here</label>
+          <size>442,34</size>
         </object>
       </object>
     </object>

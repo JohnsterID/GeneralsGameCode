@@ -8,23 +8,24 @@
       <object class="sizeritem">
         <flag>wxALL</flag>
         <border>5</border>
-        <object class="wxStaticBitmap" name="IDC_STATIC">
-          <size>31,30</size>
+        <object class="wxStaticText" name="IDC_STATIC">
+          <label>&amp;Sound Preset Library Path:</label>
+          <size>178,12</size>
         </object>
       </object>
       <object class="sizeritem">
         <flag>wxALL</flag>
         <border>5</border>
-        <object class="wxStaticText" name="IDC_STATIC">
-          <label>&Sound Preset Library Path:</label>
-          <size>178,12</size>
+        <object class="wxTextCtrl" name="IDC_SOUND_DEFINITION_LIBRARY_EDIT">
+          <size>325,21</size>
+          <style>wxTE_LEFT</style>
         </object>
       </object>
       <object class="sizeritem">
         <flag>wxALL</flag>
         <border>5</border>
         <object class="wxButton" name="IDC_SOUND_DEFINITION_LIBRARY_BROWSE_BUTTON">
-          <label>&Browse...</label>
+          <label>&amp;Browse...</label>
           <size>75,21</size>
         </object>
       </object>
@@ -32,15 +33,23 @@
         <flag>wxALL</flag>
         <border>5</border>
         <object class="wxStaticText" name="IDC_STATIC">
-          <label>&Animated Sound INI Path:</label>
+          <label>&amp;Animated Sound INI Path:</label>
           <size>178,12</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxTextCtrl" name="IDC_SOUND_INI_EDIT">
+          <size>325,21</size>
+          <style>wxTE_LEFT</style>
         </object>
       </object>
       <object class="sizeritem">
         <flag>wxALL</flag>
         <border>5</border>
         <object class="wxButton" name="IDC_SOUND_INI_BROWSE_BUTTON">
-          <label>Bro&wse...</label>
+          <label>Bro&amp;wse...</label>
           <size>75,21</size>
         </object>
       </object>
@@ -48,15 +57,23 @@
         <flag>wxALL</flag>
         <border>5</border>
         <object class="wxStaticText" name="IDC_STATIC">
-          <label>Sound &File(s) Path:</label>
+          <label>Sound &amp;File(s) Path:</label>
           <size>178,12</size>
         </object>
       </object>
       <object class="sizeritem">
         <flag>wxALL</flag>
         <border>5</border>
+        <object class="wxTextCtrl" name="IDC_SOUND_FILE_PATH_EDIT">
+          <size>325,21</size>
+          <style>wxTE_LEFT</style>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
         <object class="wxButton" name="IDC_SOUND_PATH_BROWSE_BUTTON">
-          <label>B&rowse...</label>
+          <label>B&amp;rowse...</label>
           <size>75,21</size>
         </object>
       </object>
@@ -79,33 +96,16 @@
       <object class="sizeritem">
         <flag>wxALL</flag>
         <border>5</border>
+        <object class="wxStaticBitmap" name="IDC_STATIC">
+          <size>31,30</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
         <object class="wxStaticText" name="IDC_STATIC">
           <label>Use the controls below to configure the animation-triggered sound effect settings for the viewer.</label>
           <size>358,34</size>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxTextCtrl" name="IDC_SOUND_DEFINITION_LIBRARY_EDIT">
-          <size>325,21</size>
-          <style>wxTE_LEFT</style>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxTextCtrl" name="IDC_SOUND_INI_EDIT">
-          <size>325,21</size>
-          <style>wxTE_LEFT</style>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxTextCtrl" name="IDC_SOUND_FILE_PATH_EDIT">
-          <size>325,21</size>
-          <style>wxTE_LEFT</style>
         </object>
       </object>
     </object>

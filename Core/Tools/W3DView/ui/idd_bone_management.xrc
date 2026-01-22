@@ -24,8 +24,16 @@
         <flag>wxALL</flag>
         <border>5</border>
         <object class="wxStaticText" name="IDC_STATIC">
-          <label>&Bones:</label>
+          <label>&amp;Bones:</label>
           <size>34,12</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxTreeCtrl" name="IDC_BONE_TREE">
+          <label>Tree1</label>
+          <size>364,288</size>
         </object>
       </object>
       <object class="sizeritem">
@@ -40,15 +48,22 @@
         <flag>wxALL</flag>
         <border>5</border>
         <object class="wxStaticText" name="IDC_STATIC">
-          <label>&Render object:</label>
+          <label>&amp;Render object:</label>
           <size>96,12</size>
         </object>
       </object>
       <object class="sizeritem">
         <flag>wxALL</flag>
         <border>5</border>
+        <object class="wxComboBox" name="IDC_OBJECT_COMBO">
+          <size>252,331</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
         <object class="wxButton" name="IDC_ATTACH_BUTTON">
-          <label>&Attach</label>
+          <label>&amp;Attach</label>
           <size>75,21</size>
         </object>
       </object>
@@ -66,21 +81,6 @@
         <object class="wxButton" name="IDCANCEL">
           <label>Cancel</label>
           <size>75,21</size>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxComboBox" name="IDC_OBJECT_COMBO">
-          <size>252,331</size>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxTreeCtrl" name="IDC_BONE_TREE">
-          <label>Tree1</label>
-          <size>364,288</size>
         </object>
       </object>
     </object>

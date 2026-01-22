@@ -23,8 +23,15 @@
       <object class="sizeritem">
         <flag>wxALL</flag>
         <border>5</border>
+        <object class="wxPanel" name="IDC_STATIC">
+          <size>309,1</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
         <object class="wxStaticText" name="IDC_STATIC">
-          <label>&Velocity</label>
+          <label>&amp;Velocity</label>
           <size>39,12</size>
         </object>
       </object>
@@ -39,152 +46,9 @@
       <object class="sizeritem">
         <flag>wxALL</flag>
         <border>5</border>
-        <object class="wxStaticText" name="IDC_STATIC">
-          <label>Y:</label>
-          <size>12,12</size>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxStaticText" name="IDC_STATIC">
-          <label>Z:</label>
-          <size>12,12</size>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxButton" name="IDC_SPECIFY_VELOCITY_RANDOM">
-          <label>&Randomizer...</label>
-          <size>85,21</size>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxStaticText" name="IDC_STATIC">
-          <label>&Additive Velocity Factors</label>
-          <size>117,12</size>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxStaticText" name="IDC_STATIC">
-          <label>&Outward:</label>
-          <size>45,12</size>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxStaticText" name="IDC_STATIC">
-          <label>In&heritance:</label>
-          <size>57,12</size>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxStaticText" name="IDC_STATIC">
-          <label>&Acceleration</label>
-          <size>60,12</size>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxStaticText" name="IDC_STATIC">
-          <label>X:</label>
-          <size>12,12</size>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxStaticText" name="IDC_STATIC">
-          <label>Y:</label>
-          <size>12,12</size>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxStaticText" name="IDC_STATIC">
-          <label>Z:</label>
-          <size>12,12</size>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
         <object class="wxTextCtrl" name="IDC_VELOCITY_X_EDIT">
           <size>64,21</size>
           <style>wxTE_LEFT</style>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxTextCtrl" name="IDC_VELOCITY_Y_EDIT">
-          <size>64,21</size>
-          <style>wxTE_LEFT</style>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxTextCtrl" name="IDC_VELOCITY_Z_EDIT">
-          <size>64,21</size>
-          <style>wxTE_LEFT</style>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxTextCtrl" name="IDC_OUT_FACTOR_EDIT">
-          <size>52,21</size>
-          <style>wxTE_LEFT</style>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxTextCtrl" name="IDC_INHERITANCE_FACTOR_EDIT">
-          <size>52,21</size>
-          <style>wxTE_LEFT</style>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxTextCtrl" name="IDC_ACCELERATION_X_EDIT">
-          <size>64,21</size>
-          <style>wxTE_LEFT</style>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxTextCtrl" name="IDC_ACCELERATION_Y_EDIT">
-          <size>64,21</size>
-          <style>wxTE_LEFT</style>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxTextCtrl" name="IDC_ACCELERATION_Z_EDIT">
-          <size>64,21</size>
-          <style>wxTE_LEFT</style>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxPanel" name="IDC_STATIC">
-          <size>309,1</size>
         </object>
       </object>
       <object class="sizeritem">
@@ -199,10 +63,42 @@
       <object class="sizeritem">
         <flag>wxALL</flag>
         <border>5</border>
+        <object class="wxStaticText" name="IDC_STATIC">
+          <label>Y:</label>
+          <size>12,12</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxTextCtrl" name="IDC_VELOCITY_Y_EDIT">
+          <size>64,21</size>
+          <style>wxTE_LEFT</style>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
         <object class="wxSpinButton" name="IDC_VELOCITY_Y_SPIN">
           <label>Spin1</label>
           <size>16,21</size>
           <style>wxSP_VERTICAL|wxSP_ARROW_KEYS</style>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxStaticText" name="IDC_STATIC">
+          <label>Z:</label>
+          <size>12,12</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxTextCtrl" name="IDC_VELOCITY_Z_EDIT">
+          <size>64,21</size>
+          <style>wxTE_LEFT</style>
         </object>
       </object>
       <object class="sizeritem">
@@ -217,8 +113,40 @@
       <object class="sizeritem">
         <flag>wxALL</flag>
         <border>5</border>
+        <object class="wxButton" name="IDC_SPECIFY_VELOCITY_RANDOM">
+          <label>&amp;Randomizer...</label>
+          <size>85,21</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
         <object class="wxPanel" name="IDC_STATIC">
           <size>309,1</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxStaticText" name="IDC_STATIC">
+          <label>&amp;Additive Velocity Factors</label>
+          <size>117,12</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxStaticText" name="IDC_STATIC">
+          <label>&amp;Outward:</label>
+          <size>45,12</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxTextCtrl" name="IDC_OUT_FACTOR_EDIT">
+          <size>52,21</size>
+          <style>wxTE_LEFT</style>
         </object>
       </object>
       <object class="sizeritem">
@@ -228,6 +156,22 @@
           <label>Spin1</label>
           <size>16,21</size>
           <style>wxSP_VERTICAL|wxSP_ARROW_KEYS</style>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxStaticText" name="IDC_STATIC">
+          <label>In&amp;heritance:</label>
+          <size>57,12</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxTextCtrl" name="IDC_INHERITANCE_FACTOR_EDIT">
+          <size>52,21</size>
+          <style>wxTE_LEFT</style>
         </object>
       </object>
       <object class="sizeritem">
@@ -249,6 +193,30 @@
       <object class="sizeritem">
         <flag>wxALL</flag>
         <border>5</border>
+        <object class="wxStaticText" name="IDC_STATIC">
+          <label>&amp;Acceleration</label>
+          <size>60,12</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxStaticText" name="IDC_STATIC">
+          <label>X:</label>
+          <size>12,12</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxTextCtrl" name="IDC_ACCELERATION_X_EDIT">
+          <size>64,21</size>
+          <style>wxTE_LEFT</style>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
         <object class="wxSpinButton" name="IDC_ACCELERATION_X_SPIN">
           <label>Spin1</label>
           <size>16,21</size>
@@ -258,10 +226,42 @@
       <object class="sizeritem">
         <flag>wxALL</flag>
         <border>5</border>
+        <object class="wxStaticText" name="IDC_STATIC">
+          <label>Y:</label>
+          <size>12,12</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxTextCtrl" name="IDC_ACCELERATION_Y_EDIT">
+          <size>64,21</size>
+          <style>wxTE_LEFT</style>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
         <object class="wxSpinButton" name="IDC_ACCELERATION_Y_SPIN">
           <label>Spin1</label>
           <size>16,21</size>
           <style>wxSP_VERTICAL|wxSP_ARROW_KEYS</style>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxStaticText" name="IDC_STATIC">
+          <label>Z:</label>
+          <size>12,12</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxTextCtrl" name="IDC_ACCELERATION_Z_EDIT">
+          <size>64,21</size>
+          <style>wxTE_LEFT</style>
         </object>
       </object>
       <object class="sizeritem">

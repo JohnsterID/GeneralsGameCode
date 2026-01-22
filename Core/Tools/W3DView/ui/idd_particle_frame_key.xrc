@@ -24,24 +24,8 @@
         <flag>wxALL</flag>
         <border>5</border>
         <object class="wxStaticText" name="-1">
-          <label>&Frame:</label>
+          <label>&amp;Frame:</label>
           <size>33,12</size>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxButton" name="IDOK">
-          <label>OK</label>
-          <size>75,21</size>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxButton" name="IDCANCEL">
-          <label>Cancel</label>
-          <size>75,21</size>
         </object>
       </object>
       <object class="sizeritem">
@@ -59,6 +43,22 @@
           <label>Spin2</label>
           <size>16,21</size>
           <style>wxSP_VERTICAL|wxSP_ARROW_KEYS</style>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxButton" name="IDOK">
+          <label>OK</label>
+          <size>75,21</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxButton" name="IDCANCEL">
+          <label>Cancel</label>
+          <size>75,21</size>
         </object>
       </object>
     </object>

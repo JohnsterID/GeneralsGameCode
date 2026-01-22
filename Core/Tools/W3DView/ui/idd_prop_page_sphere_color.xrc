@@ -23,24 +23,16 @@
       <object class="sizeritem">
         <flag>wxALL</flag>
         <border>5</border>
-        <object class="wxStaticText" name="IDC_STATIC">
-          <label>&Color</label>
-          <size>25,12</size>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxStaticText" name="IDC_STATIC">
-          <label>&Opacity</label>
-          <size>37,12</size>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
         <object class="wxPanel" name="IDC_STATIC">
           <size>309,1</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxStaticText" name="IDC_STATIC">
+          <label>&amp;Color</label>
+          <size>25,12</size>
         </object>
       </object>
       <object class="sizeritem">
@@ -56,6 +48,14 @@
         <border>5</border>
         <object class="wxPanel" name="IDC_STATIC">
           <size>309,1</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxStaticText" name="IDC_STATIC">
+          <label>&amp;Opacity</label>
+          <size>37,12</size>
         </object>
       </object>
       <object class="sizeritem">
@@ -77,7 +77,7 @@
         <flag>wxALL</flag>
         <border>5</border>
         <object class="wxCheckBox" name="IDC_OPACITY_VECTOR_CHECK">
-          <label>Opacity &Vector</label>
+          <label>Opacity &amp;Vector</label>
           <size>94,15</size>
         </object>
       </object>
@@ -85,7 +85,7 @@
         <flag>wxALL</flag>
         <border>5</border>
         <object class="wxCheckBox" name="IDC_INVERT_VECTOR_CHECK">
-          <label>&Invert Effect</label>
+          <label>&amp;Invert Effect</label>
           <size>82,15</size>
         </object>
       </object>

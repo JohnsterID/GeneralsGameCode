@@ -8,13 +8,6 @@
       <object class="sizeritem">
         <flag>wxALL</flag>
         <border>5</border>
-        <object class="wxStaticBitmap" name="IDC_STATIC">
-          <size>31,30</size>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
         <object class="wxButton" name="IDOK">
           <label>OK</label>
           <size>75,21</size>
@@ -39,6 +32,21 @@
       <object class="sizeritem">
         <flag>wxALL</flag>
         <border>5</border>
+        <object class="wxStaticBitmap" name="IDC_STATIC">
+          <size>31,30</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxTreeCtrl" name="IDC_TREE1">
+          <label>Tree1</label>
+          <size>352,115</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
         <object class="wxStaticBox" name="IDC_STATIC">
           <label>Static</label>
           <size>352,97</size>
@@ -47,8 +55,15 @@
       <object class="sizeritem">
         <flag>wxALL</flag>
         <border>5</border>
+        <object class="wxComboBox" name="IDC_TEXTURE_FILENAME">
+          <size>246,145</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
         <object class="wxStaticText" name="IDC_STATIC">
-          <label>&New Texture:</label>
+          <label>&amp;New Texture:</label>
           <size>67,12</size>
         </object>
       </object>
@@ -64,7 +79,7 @@
         <flag>wxALL</flag>
         <border>5</border>
         <object class="wxStaticText" name="IDC_STATIC">
-          <label><filename></label>
+          <label>&lt;filename&gt;</label>
           <size>243,15</size>
         </object>
       </object>
@@ -72,7 +87,7 @@
         <flag>wxALL</flag>
         <border>5</border>
         <object class="wxButton" name="IDC_ADVANCED">
-          <label>&Advanced...</label>
+          <label>&amp;Advanced...</label>
           <size>75,21</size>
         </object>
       </object>
@@ -80,7 +95,7 @@
         <flag>wxALL</flag>
         <border>5</border>
         <object class="wxButton" name="IDC_REPLACE_TEXTURE">
-          <label>&Replace</label>
+          <label>&amp;Replace</label>
           <size>75,21</size>
         </object>
       </object>
@@ -88,23 +103,8 @@
         <flag>wxALL</flag>
         <border>5</border>
         <object class="wxButton" name="IDC_RESTORE_TEXTURE">
-          <label>&Restore</label>
+          <label>&amp;Restore</label>
           <size>75,21</size>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxComboBox" name="IDC_TEXTURE_FILENAME">
-          <size>246,145</size>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxTreeCtrl" name="IDC_TREE1">
-          <label>Tree1</label>
-          <size>352,115</size>
         </object>
       </object>
     </object>

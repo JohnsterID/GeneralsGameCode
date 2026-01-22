@@ -23,6 +23,13 @@
       <object class="sizeritem">
         <flag>wxALL</flag>
         <border>5</border>
+        <object class="wxPanel" name="IDC_STATIC">
+          <size>309,1</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
         <object class="wxStaticText" name="IDC_STATIC">
           <label>Line Rendering Options</label>
           <size>112,12</size>
@@ -39,119 +46,9 @@
       <object class="sizeritem">
         <flag>wxALL</flag>
         <border>5</border>
-        <object class="wxStaticText" name="IDC_STATIC">
-          <label>&Noise Amplitude:</label>
-          <size>81,12</size>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxStaticText" name="IDC_STATIC">
-          <label>&Parameters</label>
-          <size>54,12</size>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxStaticText" name="IDC_STATIC">
-          <label>Mapping Mode:</label>
-          <size>75,12</size>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxStaticText" name="IDC_STATIC">
-          <label>Merge Abort Factor:</label>
-          <size>96,12</size>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxStaticText" name="IDC_STATIC">
-          <label>UVTiling:</label>
-          <size>45,12</size>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxStaticText" name="IDC_STATIC">
-          <label>UPerSec:</label>
-          <size>48,12</size>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxStaticText" name="IDC_STATIC">
-          <label>VPerSec:</label>
-          <size>46,12</size>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
         <object class="wxTextCtrl" name="IDC_SUBDIVISION_LEVEL_EDIT">
           <size>60,21</size>
           <style>wxTE_LEFT</style>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxTextCtrl" name="IDC_NOISE_AMPLITUDE_EDIT">
-          <size>60,21</size>
-          <style>wxTE_LEFT</style>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxComboBox" name="IDC_MAPMODE_COMBO">
-          <size>153,70</size>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxTextCtrl" name="IDC_MERGE_ABORT_FACTOR_EDIT">
-          <size>60,21</size>
-          <style>wxTE_LEFT</style>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxTextCtrl" name="IDC_UVTILING_EDIT">
-          <size>60,21</size>
-          <style>wxTE_LEFT</style>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxTextCtrl" name="IDC_UPERSEC_EDIT">
-          <size>60,21</size>
-          <style>wxTE_LEFT</style>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxTextCtrl" name="IDC_VPERSEC_EDIT">
-          <size>60,21</size>
-          <style>wxTE_LEFT</style>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxPanel" name="IDC_STATIC">
-          <size>309,1</size>
         </object>
       </object>
       <object class="sizeritem">
@@ -161,6 +58,22 @@
           <label>Spin1</label>
           <size>16,21</size>
           <style>wxSP_VERTICAL|wxSP_ARROW_KEYS</style>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxStaticText" name="IDC_STATIC">
+          <label>&amp;Noise Amplitude:</label>
+          <size>81,12</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxTextCtrl" name="IDC_NOISE_AMPLITUDE_EDIT">
+          <size>60,21</size>
+          <style>wxTE_LEFT</style>
         </object>
       </object>
       <object class="sizeritem">
@@ -182,8 +95,16 @@
       <object class="sizeritem">
         <flag>wxALL</flag>
         <border>5</border>
+        <object class="wxStaticText" name="IDC_STATIC">
+          <label>&amp;Parameters</label>
+          <size>54,12</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
         <object class="wxCheckBox" name="IDC_MERGE_INTERSECTIONS_CHECK">
-          <label>&Merge Intersections</label>
+          <label>&amp;Merge Intersections</label>
           <size>117,15</size>
         </object>
       </object>
@@ -191,7 +112,7 @@
         <flag>wxALL</flag>
         <border>5</border>
         <object class="wxCheckBox" name="IDC_END_CAPS_CHECK">
-          <label>&End Caps</label>
+          <label>&amp;End Caps</label>
           <size>70,15</size>
         </object>
       </object>
@@ -199,8 +120,39 @@
         <flag>wxALL</flag>
         <border>5</border>
         <object class="wxCheckBox" name="IDC_DISABLE_SORTING_CHECK">
-          <label>&Disable Sorting</label>
+          <label>&amp;Disable Sorting</label>
           <size>94,15</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxStaticText" name="IDC_STATIC">
+          <label>Mapping Mode:</label>
+          <size>75,12</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxComboBox" name="IDC_MAPMODE_COMBO">
+          <size>153,70</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxStaticText" name="IDC_STATIC">
+          <label>Merge Abort Factor:</label>
+          <size>96,12</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxTextCtrl" name="IDC_MERGE_ABORT_FACTOR_EDIT">
+          <size>60,21</size>
+          <style>wxTE_LEFT</style>
         </object>
       </object>
       <object class="sizeritem">
@@ -215,6 +167,22 @@
       <object class="sizeritem">
         <flag>wxALL</flag>
         <border>5</border>
+        <object class="wxStaticText" name="IDC_STATIC">
+          <label>UVTiling:</label>
+          <size>45,12</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxTextCtrl" name="IDC_UVTILING_EDIT">
+          <size>60,21</size>
+          <style>wxTE_LEFT</style>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
         <object class="wxSpinButton" name="IDC_UVTILING_SPIN">
           <label>Spin1</label>
           <size>16,21</size>
@@ -224,10 +192,42 @@
       <object class="sizeritem">
         <flag>wxALL</flag>
         <border>5</border>
+        <object class="wxStaticText" name="IDC_STATIC">
+          <label>UPerSec:</label>
+          <size>48,12</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxTextCtrl" name="IDC_UPERSEC_EDIT">
+          <size>60,21</size>
+          <style>wxTE_LEFT</style>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
         <object class="wxSpinButton" name="IDC_UPERSEC_SPIN">
           <label>Spin1</label>
           <size>16,21</size>
           <style>wxSP_VERTICAL|wxSP_ARROW_KEYS</style>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxStaticText" name="IDC_STATIC">
+          <label>VPerSec:</label>
+          <size>46,12</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxTextCtrl" name="IDC_VPERSEC_EDIT">
+          <size>60,21</size>
+          <style>wxTE_LEFT</style>
         </object>
       </object>
       <object class="sizeritem">

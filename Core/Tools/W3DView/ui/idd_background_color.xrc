@@ -8,46 +8,6 @@
       <object class="sizeritem">
         <flag>wxALL</flag>
         <border>5</border>
-        <object class="wxButton" name="IDOK">
-          <label>OK</label>
-          <size>75,21</size>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxButton" name="IDCANCEL">
-          <label>Cancel</label>
-          <size>75,21</size>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxStaticText" name="IDC_STATIC">
-          <label>Red</label>
-          <size>21,12</size>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxStaticText" name="IDC_STATIC">
-          <label>Green</label>
-          <size>30,12</size>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxStaticText" name="IDC_STATIC">
-          <label>Blue</label>
-          <size>22,12</size>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
         <object class="wxPanel" name="IDC_RED_GRADIENT">
           <size>202,12</size>
         </object>
@@ -97,8 +57,48 @@
         <flag>wxALL</flag>
         <border>5</border>
         <object class="wxCheckBox" name="IDC_GRAYSCALE_CHECK">
-          <label>&Grayscale</label>
+          <label>&amp;Grayscale</label>
           <size>127,15</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxButton" name="IDOK">
+          <label>OK</label>
+          <size>75,21</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxButton" name="IDCANCEL">
+          <label>Cancel</label>
+          <size>75,21</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxStaticText" name="IDC_STATIC">
+          <label>Red</label>
+          <size>21,12</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxStaticText" name="IDC_STATIC">
+          <label>Green</label>
+          <size>30,12</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxStaticText" name="IDC_STATIC">
+          <label>Blue</label>
+          <size>22,12</size>
         </object>
       </object>
     </object>

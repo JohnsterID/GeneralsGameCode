@@ -8,13 +8,6 @@
       <object class="sizeritem">
         <flag>wxALL</flag>
         <border>5</border>
-        <object class="wxStaticBitmap" name="-1">
-          <size>30,30</size>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
         <object class="wxStaticText" name="-1">
           <label>Total polygons:</label>
           <size>73,12</size>
@@ -31,9 +24,31 @@
       <object class="sizeritem">
         <flag>wxALL</flag>
         <border>5</border>
+        <object class="wxStaticBitmap" name="-1">
+          <size>30,30</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxPanel" name="-1">
+          <size>294,1</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
         <object class="wxStaticText" name="IDC_DESCRIPTION">
           <label>Properties for %s</label>
           <size>244,30</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxListCtrl" name="IDC_SUBOBJECT_LIST">
+          <label>List1</label>
+          <size>294,105</size>
         </object>
       </object>
       <object class="sizeritem">
@@ -58,21 +73,6 @@
         <object class="wxStaticText" name="IDC_SUBOBJECTS">
           <label>Static</label>
           <size>40,12</size>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxPanel" name="-1">
-          <size>294,1</size>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxListCtrl" name="IDC_SUBOBJECT_LIST">
-          <label>List1</label>
-          <size>294,105</size>
         </object>
       </object>
     </object>

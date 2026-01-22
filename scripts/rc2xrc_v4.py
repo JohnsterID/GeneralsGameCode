@@ -110,7 +110,7 @@ def parse_rc_dialog(rc_content, dialog_id):
     dialog.controls = []
     
     # Find dialog definition
-    pattern = rf'^{dialog_id}\s+DIALOG(?:EX)?\s+(?:DISCARDABLE\s+)?(-?\d+)\s*,\s*(-?\d+)\s*,\s*(-?\d+)\s*,\s*(-?\d+)'
+    pattern = rf'^{dialog_id}\s+DIALOG(?:EX)?\s+(?:DISCARDABLE\s+)?(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)'
     match = re.search(pattern, rc_content, re.MULTILINE)
     
     if not match:
@@ -165,7 +165,7 @@ def parse_rc_dialog(rc_content, dialog_id):
             continue
         
         # Try ICON first (no quotes)
-        icon_match = re.match(r'ICON\s+(\w+)\s*,\s*(\S+)\s*,\s*(-?\d+)\s*,\s*(-?\d+)\s*,\s*(-?\d+)\s*,\s*(-?\d+)', line)
+        icon_match = re.match(r'ICON\s+(\w+)\s*,\s*(\S+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)', line)
         if icon_match:
             control = ControlInfo()
             control.type = 'ICON'
@@ -195,7 +195,7 @@ def parse_rc_dialog(rc_content, dialog_id):
                 
                 # Parse the rest: ,ID,x,y,w,h
                 rest = line[quote_end:].strip()
-                coords_match = re.match(r',\s*(\S+)\s*,\s*(-?\d+)\s*,\s*(-?\d+)\s*,\s*(-?\d+)\s*,\s*(-?\d+)', rest)
+                coords_match = re.match(r',\s*(\S+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)', rest)
                 if coords_match:
                     control = ControlInfo()
                     control.type = ctrl_type
@@ -210,7 +210,7 @@ def parse_rc_dialog(rc_content, dialog_id):
                     break
         else:
             # Try unlabeled controls
-            unlabeled_match = re.match(r'(EDITTEXT|COMBOBOX|LISTBOX)\s+(\S+)\s*,\s*(-?\d+)\s*,\s*(-?\d+)\s*,\s*(-?\d+)\s*,\s*(-?\d+)', line)
+            unlabeled_match = re.match(r'(EDITTEXT|COMBOBOX|LISTBOX)\s+(\S+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)', line)
             if unlabeled_match:
                 control = ControlInfo()
                 control.type = unlabeled_match.group(1)
@@ -232,7 +232,7 @@ def parse_rc_dialog(rc_content, dialog_id):
                     if text is not None:
                         rest = line[quote_end:].strip()
                         # CONTROL "text",ID,"ClassName",styles,x,y,w,h
-                        control_match = re.match(r',\s*(\S+)\s*,\s*"([^"]+)"\s*,\s*[^,]+?\s*,\s*(-?\d+)\s*,\s*(-?\d+)\s*,\s*(-?\d+)\s*,\s*(-?\d+)', rest)
+                        control_match = re.match(r',\s*(\S+)\s*,\s*"([^"]+)"\s*,\s*[^,]+?\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)', rest)
                         if control_match:
                             control = ControlInfo()
                             control.type = 'CONTROL'
@@ -247,7 +247,7 @@ def parse_rc_dialog(rc_content, dialog_id):
                             continue
                 
                 # Try CONTROL with numeric ID (bitmap)
-                bitmap_match = re.match(r'CONTROL\s+(-?\d+)\s*,\s*(\S+)\s*,\s*"([^"]+)"\s*,\s*[^,]+?\s*,\s*(-?\d+)\s*,\s*(-?\d+)\s*,\s*(-?\d+)\s*,\s*(-?\d+)', line)
+                bitmap_match = re.match(r'CONTROL\s+(\d+)\s*,\s*(\S+)\s*,\s*"([^"]+)"\s*,\s*[^,]+?\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)', line)
                 if bitmap_match:
                     control = ControlInfo()
                     control.type = 'CONTROL'

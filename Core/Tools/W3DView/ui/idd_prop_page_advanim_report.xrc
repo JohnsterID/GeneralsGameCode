@@ -8,6 +8,14 @@
       <object class="sizeritem">
         <flag>wxALL</flag>
         <border>5</border>
+        <object class="wxListCtrl" name="IDC_ANIM_REPORT">
+          <label>List1</label>
+          <size>324,198</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
         <object class="wxStaticText" name="IDC_STATIC">
           <label>Bones affected by each animation:</label>
           <size>165,12</size>
@@ -59,14 +67,6 @@
         <object class="wxStaticText" name="IDC_STATIC">
           <label>Z - Translation on Z Axis</label>
           <size>117,12</size>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxListCtrl" name="IDC_ANIM_REPORT">
-          <label>List1</label>
-          <size>324,198</size>
         </object>
       </object>
     </object>

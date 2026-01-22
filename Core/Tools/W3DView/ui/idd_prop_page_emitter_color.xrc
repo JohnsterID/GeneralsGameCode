@@ -23,9 +23,24 @@
       <object class="sizeritem">
         <flag>wxALL</flag>
         <border>5</border>
+        <object class="wxPanel" name="IDC_STATIC">
+          <size>309,1</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
         <object class="wxStaticText" name="IDC_STATIC">
-          <label>&Color</label>
+          <label>&amp;Color</label>
           <size>25,12</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxPanel" name="IDC_COLOR_BAR">
+          <label>color</label>
+          <size>286,25</size>
         </object>
       </object>
       <object class="sizeritem">
@@ -40,48 +55,8 @@
         <flag>wxALL</flag>
         <border>5</border>
         <object class="wxStaticText" name="IDC_STATIC">
-          <label>&R:</label>
+          <label>&amp;R:</label>
           <size>12,12</size>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxStaticText" name="IDC_STATIC">
-          <label>&G:</label>
-          <size>12,12</size>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxStaticText" name="IDC_STATIC">
-          <label>&B:</label>
-          <size>12,12</size>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxStaticText" name="IDC_STATIC">
-          <label>&Opacity</label>
-          <size>37,12</size>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxStaticText" name="IDC_STATIC">
-          <label>Rando&mizer:</label>
-          <size>60,12</size>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxStaticText" name="IDC_STATIC">
-          <label>% Opaque</label>
-          <size>51,12</size>
         </object>
       </object>
       <object class="sizeritem">
@@ -90,45 +65,6 @@
         <object class="wxTextCtrl" name="IDC_RED_RANDOM_EDIT">
           <size>46,21</size>
           <style>wxTE_LEFT</style>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxTextCtrl" name="IDC_GREEN_RANDOM_EDIT">
-          <size>46,21</size>
-          <style>wxTE_LEFT</style>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxTextCtrl" name="IDC_BLUE_RANDOM_EDIT">
-          <size>46,21</size>
-          <style>wxTE_LEFT</style>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxTextCtrl" name="IDC_OPACITY_RANDOM_EDIT">
-          <size>49,21</size>
-          <style>wxTE_LEFT</style>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxPanel" name="IDC_STATIC">
-          <size>309,1</size>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxPanel" name="IDC_COLOR_BAR">
-          <label>color</label>
-          <size>286,25</size>
         </object>
       </object>
       <object class="sizeritem">
@@ -143,10 +79,42 @@
       <object class="sizeritem">
         <flag>wxALL</flag>
         <border>5</border>
+        <object class="wxStaticText" name="IDC_STATIC">
+          <label>&amp;G:</label>
+          <size>12,12</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxTextCtrl" name="IDC_GREEN_RANDOM_EDIT">
+          <size>46,21</size>
+          <style>wxTE_LEFT</style>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
         <object class="wxSpinButton" name="IDC_GREEN_RANDOM_SPIN">
           <label>Spin2</label>
           <size>16,21</size>
           <style>wxSP_VERTICAL|wxSP_ARROW_KEYS</style>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxStaticText" name="IDC_STATIC">
+          <label>&amp;B:</label>
+          <size>12,12</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxTextCtrl" name="IDC_BLUE_RANDOM_EDIT">
+          <size>46,21</size>
+          <style>wxTE_LEFT</style>
         </object>
       </object>
       <object class="sizeritem">
@@ -168,9 +136,33 @@
       <object class="sizeritem">
         <flag>wxALL</flag>
         <border>5</border>
+        <object class="wxStaticText" name="IDC_STATIC">
+          <label>&amp;Opacity</label>
+          <size>37,12</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
         <object class="wxPanel" name="IDC_OPACITY_BAR">
           <label>opacity</label>
           <size>286,25</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxStaticText" name="IDC_STATIC">
+          <label>Rando&amp;mizer:</label>
+          <size>60,12</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxTextCtrl" name="IDC_OPACITY_RANDOM_EDIT">
+          <size>49,21</size>
+          <style>wxTE_LEFT</style>
         </object>
       </object>
       <object class="sizeritem">
@@ -180,6 +172,14 @@
           <label>Spin2</label>
           <size>16,21</size>
           <style>wxSP_VERTICAL|wxSP_ARROW_KEYS</style>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxStaticText" name="IDC_STATIC">
+          <label>% Opaque</label>
+          <size>51,12</size>
         </object>
       </object>
     </object>

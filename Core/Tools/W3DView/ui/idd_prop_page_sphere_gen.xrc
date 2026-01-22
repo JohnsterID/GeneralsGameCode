@@ -24,56 +24,8 @@
         <flag>wxALL</flag>
         <border>5</border>
         <object class="wxStaticText" name="IDC_STATIC">
-          <label>&Name:</label>
+          <label>&amp;Name:</label>
           <size>33,12</size>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxStaticText" name="IDC_STATIC">
-          <label>&Duration:</label>
-          <size>43,12</size>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxStaticText" name="IDC_STATIC">
-          <label>secs</label>
-          <size>24,12</size>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxStaticBox" name="IDC_STATIC">
-          <label>&Visual</label>
-          <size>309,93</size>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxStaticText" name="IDC_STATIC">
-          <label>&Shader:</label>
-          <size>39,12</size>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxStaticText" name="IDC_STATIC">
-          <label>&Texure filename:</label>
-          <size>79,12</size>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxButton" name="IDC_BROWSE_BUTTON">
-          <label>&Browse...</label>
-          <size>75,21</size>
         </object>
       </object>
       <object class="sizeritem">
@@ -87,23 +39,16 @@
       <object class="sizeritem">
         <flag>wxALL</flag>
         <border>5</border>
+        <object class="wxStaticText" name="IDC_STATIC">
+          <label>&amp;Duration:</label>
+          <size>43,12</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
         <object class="wxTextCtrl" name="IDC_LIFETIME_EDIT">
           <size>60,21</size>
-          <style>wxTE_LEFT</style>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxComboBox" name="IDC_SHADER_COMBO">
-          <size>210,172</size>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxTextCtrl" name="IDC_FILENAME_EDIT">
-          <size>204,21</size>
           <style>wxTE_LEFT</style>
         </object>
       </object>
@@ -119,8 +64,16 @@
       <object class="sizeritem">
         <flag>wxALL</flag>
         <border>5</border>
+        <object class="wxStaticText" name="IDC_STATIC">
+          <label>secs</label>
+          <size>24,12</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
         <object class="wxCheckBox" name="IDC_CAMERA_ALIGNED_CHECK">
-          <label>&Camera Aligned</label>
+          <label>&amp;Camera Aligned</label>
           <size>111,15</size>
         </object>
       </object>
@@ -128,8 +81,55 @@
         <flag>wxALL</flag>
         <border>5</border>
         <object class="wxCheckBox" name="IDC_LOOPING_CHECK">
-          <label>&Looping</label>
+          <label>&amp;Looping</label>
           <size>111,15</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxStaticBox" name="IDC_STATIC">
+          <label>&amp;Visual</label>
+          <size>309,93</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxStaticText" name="IDC_STATIC">
+          <label>&amp;Shader:</label>
+          <size>39,12</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxComboBox" name="IDC_SHADER_COMBO">
+          <size>210,172</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxStaticText" name="IDC_STATIC">
+          <label>&amp;Texure filename:</label>
+          <size>79,12</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxTextCtrl" name="IDC_FILENAME_EDIT">
+          <size>204,21</size>
+          <style>wxTE_LEFT</style>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxButton" name="IDC_BROWSE_BUTTON">
+          <label>&amp;Browse...</label>
+          <size>75,21</size>
         </object>
       </object>
     </object>

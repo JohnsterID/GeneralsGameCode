@@ -24,23 +24,39 @@
         <flag>wxALL</flag>
         <border>5</border>
         <object class="wxStaticText" name="IDC_STATIC">
-          <label>&Name:</label>
+          <label>&amp;Name:</label>
           <size>49,12</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxTextCtrl" name="IDC_NAME_EDIT">
+          <size>333,21</size>
+          <style>wxTE_LEFT</style>
         </object>
       </object>
       <object class="sizeritem">
         <flag>wxALL</flag>
         <border>5</border>
         <object class="wxStaticText" name="IDC_STATIC">
-          <label>&Filename:</label>
+          <label>&amp;Filename:</label>
           <size>49,12</size>
         </object>
       </object>
       <object class="sizeritem">
         <flag>wxALL</flag>
         <border>5</border>
+        <object class="wxTextCtrl" name="IDC_FILENAME_EDIT">
+          <size>244,21</size>
+          <style>wxTE_LEFT</style>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
         <object class="wxButton" name="IDC_BROWSE">
-          <label>&Browse...</label>
+          <label>&amp;Browse...</label>
           <size>75,21</size>
         </object>
       </object>
@@ -54,9 +70,25 @@
       <object class="sizeritem">
         <flag>wxALL</flag>
         <border>5</border>
+        <object class="wxCheckBox" name="IDC_2D_RADIO">
+          <label>&amp;2D or 2D Trigger</label>
+          <size>105,15</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
         <object class="wxStaticText" name="IDC_STATIC">
-          <label>Trigger &Radius:</label>
+          <label>Trigger &amp;Radius:</label>
           <size>76,12</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxTextCtrl" name="IDC_TRIGGER_RADIUS_EDIT">
+          <size>51,21</size>
+          <style>wxTE_LEFT</style>
         </object>
       </object>
       <object class="sizeritem">
@@ -77,14 +109,30 @@
       <object class="sizeritem">
         <flag>wxALL</flag>
         <border>5</border>
+        <object class="wxCheckBox" name="IDC_3D_RADIO">
+          <label>&amp;3D Sound</label>
+          <size>73,15</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
         <object class="wxStaticText" name="IDC_STATIC">
-          <label>&Dropoff at:</label>
+          <label>&amp;Dropoff at:</label>
           <size>55,12</size>
         </object>
       </object>
       <object class="sizeritem">
         <flag>wxALL</flag>
         <border>5</border>
+        <object class="wxTextCtrl" name="IDC_DROP_OFF_EDIT">
+          <size>51,21</size>
+          <style>wxTE_LEFT</style>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
         <object class="wxStaticText" name="IDC_STATIC">
           <label>m</label>
           <size>12,12</size>
@@ -94,13 +142,21 @@
         <flag>wxALL</flag>
         <border>5</border>
         <object class="wxStaticText" name="IDC_STATIC">
-          <label>Ma&x volume at:</label>
+          <label>Ma&amp;x volume at:</label>
           <size>76,12</size>
         </object>
       </object>
       <object class="sizeritem">
         <flag>wxALL</flag>
         <border>5</border>
+        <object class="wxTextCtrl" name="IDC_MAX_VOL_EDIT">
+          <size>51,21</size>
+          <style>wxTE_LEFT</style>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
         <object class="wxStaticText" name="IDC_STATIC">
           <label>m</label>
           <size>12,12</size>
@@ -109,24 +165,74 @@
       <object class="sizeritem">
         <flag>wxALL</flag>
         <border>5</border>
+        <object class="wxCheckBox" name="IDC_INFINITE_LOOPS_CHECK">
+          <label>&amp;Infinite loops</label>
+          <size>87,15</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxCheckBox" name="IDC_STOP_WHEN_HIDDEN_CHECK">
+          <label>&amp;Stop when hidden</label>
+          <size>114,15</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxCheckBox" name="IDC_SOUNDEFFECT_RADIO">
+          <label>&amp;Sound effect</label>
+          <size>87,15</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxCheckBox" name="IDC_MUSIC_RADIO">
+          <label>&amp;Music</label>
+          <size>55,15</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
         <object class="wxStaticText" name="IDC_STATIC">
-          <label>Priorit&y</label>
+          <label>Priorit&amp;y</label>
           <size>37,12</size>
         </object>
       </object>
       <object class="sizeritem">
         <flag>wxALL</flag>
         <border>5</border>
+        <object class="wxSlider" name="IDC_PRIORITY_SLIDER">
+          <label>Slider1</label>
+          <size>138,18</size>
+          <style>wxSL_HORIZONTAL</style>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
         <object class="wxStaticText" name="IDC_STATIC">
-          <label>&Volume</label>
+          <label>&amp;Volume</label>
           <size>40,12</size>
         </object>
       </object>
       <object class="sizeritem">
         <flag>wxALL</flag>
         <border>5</border>
+        <object class="wxSlider" name="IDC_VOLUME_SLIDER">
+          <label>Slider1</label>
+          <size>138,18</size>
+          <style>wxSL_HORIZONTAL</style>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
         <object class="wxButton" name="IDC_PLAY">
-          <label>&Play...</label>
+          <label>&amp;Play...</label>
           <size>75,21</size>
         </object>
       </object>
@@ -144,112 +250,6 @@
         <object class="wxButton" name="IDCANCEL">
           <label>Cancel</label>
           <size>75,21</size>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxTextCtrl" name="IDC_NAME_EDIT">
-          <size>333,21</size>
-          <style>wxTE_LEFT</style>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxTextCtrl" name="IDC_FILENAME_EDIT">
-          <size>244,21</size>
-          <style>wxTE_LEFT</style>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxTextCtrl" name="IDC_TRIGGER_RADIUS_EDIT">
-          <size>51,21</size>
-          <style>wxTE_LEFT</style>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxTextCtrl" name="IDC_DROP_OFF_EDIT">
-          <size>51,21</size>
-          <style>wxTE_LEFT</style>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxTextCtrl" name="IDC_MAX_VOL_EDIT">
-          <size>51,21</size>
-          <style>wxTE_LEFT</style>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxCheckBox" name="IDC_2D_RADIO">
-          <label>&2D or 2D Trigger</label>
-          <size>105,15</size>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxCheckBox" name="IDC_3D_RADIO">
-          <label>&3D Sound</label>
-          <size>73,15</size>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxCheckBox" name="IDC_INFINITE_LOOPS_CHECK">
-          <label>&Infinite loops</label>
-          <size>87,15</size>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxCheckBox" name="IDC_STOP_WHEN_HIDDEN_CHECK">
-          <label>&Stop when hidden</label>
-          <size>114,15</size>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxCheckBox" name="IDC_SOUNDEFFECT_RADIO">
-          <label>&Sound effect</label>
-          <size>87,15</size>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxCheckBox" name="IDC_MUSIC_RADIO">
-          <label>&Music</label>
-          <size>55,15</size>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxSlider" name="IDC_PRIORITY_SLIDER">
-          <label>Slider1</label>
-          <size>138,18</size>
-          <style>wxSL_HORIZONTAL</style>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxSlider" name="IDC_VOLUME_SLIDER">
-          <label>Slider1</label>
-          <size>138,18</size>
-          <style>wxSL_HORIZONTAL</style>
         </object>
       </object>
     </object>

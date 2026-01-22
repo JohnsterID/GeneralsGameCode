@@ -9,16 +9,38 @@
         <flag>wxALL</flag>
         <border>5</border>
         <object class="wxStaticText" name="20627,7,7,92">
-          <label>Directory &name:</label>
+          <label>Directory &amp;name:</label>
           <size>0,0</size>
         </object>
       </object>
       <object class="sizeritem">
         <flag>wxALL</flag>
         <border>5</border>
+        <object class="wxTextCtrl" name="20626">
+          <size>214,18</size>
+          <style>wxTE_LEFT</style>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxListBox" name="1121">
+          <size>214,96</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
         <object class="wxStaticText" name="-1,7,107,92">
-          <label>Dri&ves:</label>
+          <label>Dri&amp;ves:</label>
           <size>0,0</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxComboBox" name="1137">
+          <size>214,102</size>
         </object>
       </object>
       <object class="sizeritem">
@@ -40,8 +62,52 @@
       <object class="sizeritem">
         <flag>wxALL</flag>
         <border>5</border>
+        <object class="wxStaticText" name="1090">
+          <size>114,13</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxTextCtrl" name="1152">
+          <size>135,18</size>
+          <style>wxTE_LEFT</style>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxStaticText" name="1088">
+          <size>138,13</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxListBox" name="1120">
+          <size>12,13</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxStaticText" name="1089">
+          <label>List Files of &amp;Type:</label>
+          <size>135,13</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxComboBox" name="1136">
+          <size>135,54</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
         <object class="wxButton" name="1037">
-          <label>Net&work...</label>
+          <label>Net&amp;work...</label>
           <size>75,21</size>
         </object>
       </object>
@@ -50,28 +116,6 @@
         <border>5</border>
         <object class="wxStaticText" name="21251">
           <size>214,43</size>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxTextCtrl" name="20626">
-          <size>214,18</size>
-          <style>wxTE_LEFT</style>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxListBox" name="1121">
-          <size>214,96</size>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxComboBox" name="1137">
-          <size>214,102</size>
         </object>
       </object>
     </object>

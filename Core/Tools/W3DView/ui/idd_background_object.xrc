@@ -8,13 +8,6 @@
       <object class="sizeritem">
         <flag>wxALL</flag>
         <border>5</border>
-        <object class="wxStaticBitmap" name="IDC_STATIC">
-          <size>31,30</size>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
         <object class="wxStaticText" name="IDC_STATIC">
           <label>Select a hierarchy from the list below to use as a background object.</label>
           <size>216,25</size>
@@ -24,8 +17,16 @@
         <flag>wxALL</flag>
         <border>5</border>
         <object class="wxStaticText" name="IDC_STATIC">
-          <label>&Hierarchies:</label>
+          <label>&amp;Hierarchies:</label>
           <size>57,12</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxListCtrl" name="IDC_HIERARCHY_LIST">
+          <label>List1</label>
+          <size>270,99</size>
         </object>
       </object>
       <object class="sizeritem">
@@ -47,8 +48,15 @@
       <object class="sizeritem">
         <flag>wxALL</flag>
         <border>5</border>
+        <object class="wxStaticBitmap" name="IDC_STATIC">
+          <size>31,30</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
         <object class="wxButton" name="IDC_CLEAR">
-          <label>&Clear</label>
+          <label>&amp;Clear</label>
           <size>75,21</size>
         </object>
       </object>
@@ -66,14 +74,6 @@
         <object class="wxStaticText" name="IDC_CURR_OBJ">
           <label>Static</label>
           <size>196,13</size>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxListCtrl" name="IDC_HIERARCHY_LIST">
-          <label>List1</label>
-          <size>270,99</size>
         </object>
       </object>
     </object>

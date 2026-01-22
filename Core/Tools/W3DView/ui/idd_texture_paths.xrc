@@ -31,8 +31,16 @@
       <object class="sizeritem">
         <flag>wxALL</flag>
         <border>5</border>
+        <object class="wxTextCtrl" name="IDC_PATH1">
+          <size>238,21</size>
+          <style>wxTE_LEFT</style>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
         <object class="wxButton" name="IDC_BROWSE1">
-          <label>&Browse...</label>
+          <label>&amp;Browse...</label>
           <size>75,21</size>
         </object>
       </object>
@@ -47,8 +55,16 @@
       <object class="sizeritem">
         <flag>wxALL</flag>
         <border>5</border>
+        <object class="wxTextCtrl" name="IDC_PATH2">
+          <size>238,21</size>
+          <style>wxTE_LEFT</style>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
         <object class="wxButton" name="IDC_BROWSE2">
-          <label>Bro&wse...</label>
+          <label>Bro&amp;wse...</label>
           <size>75,21</size>
         </object>
       </object>
@@ -66,22 +82,6 @@
         <object class="wxButton" name="IDCANCEL">
           <label>Cancel</label>
           <size>75,21</size>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxTextCtrl" name="IDC_PATH1">
-          <size>238,21</size>
-          <style>wxTE_LEFT</style>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxTextCtrl" name="IDC_PATH2">
-          <size>238,21</size>
-          <style>wxTE_LEFT</style>
         </object>
       </object>
     </object>

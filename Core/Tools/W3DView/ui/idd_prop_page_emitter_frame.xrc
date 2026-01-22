@@ -23,9 +23,34 @@
       <object class="sizeritem">
         <flag>wxALL</flag>
         <border>5</border>
+        <object class="wxPanel" name="IDC_FRAME_BAR">
+          <label>size</label>
+          <size>309,85</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
         <object class="wxStaticText" name="IDC_STATIC">
-          <label>Rando&mizer:</label>
+          <label>Rando&amp;mizer:</label>
           <size>60,12</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxTextCtrl" name="IDC_FRAME_RANDOM_EDIT">
+          <size>49,21</size>
+          <style>wxTE_LEFT</style>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxSpinButton" name="IDC_FRAME_RANDOM_SPIN">
+          <label>Spin2</label>
+          <size>16,21</size>
+          <style>wxSP_VERTICAL|wxSP_ARROW_KEYS</style>
         </object>
       </object>
       <object class="sizeritem">
@@ -34,6 +59,13 @@
         <object class="wxStaticText" name="IDC_STATIC">
           <label>Frames</label>
           <size>36,12</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxComboBox" name="IDC_FRAME_LAYOUT_COMBO">
+          <size>76,172</size>
         </object>
       </object>
       <object class="sizeritem">
@@ -50,38 +82,6 @@
         <object class="wxStaticText" name="IDC_STATIC">
           <label>Particles Only</label>
           <size>66,12</size>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxTextCtrl" name="IDC_FRAME_RANDOM_EDIT">
-          <size>49,21</size>
-          <style>wxTE_LEFT</style>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxComboBox" name="IDC_FRAME_LAYOUT_COMBO">
-          <size>76,172</size>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxPanel" name="IDC_FRAME_BAR">
-          <label>size</label>
-          <size>309,85</size>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxSpinButton" name="IDC_FRAME_RANDOM_SPIN">
-          <label>Spin2</label>
-          <size>16,21</size>
-          <style>wxSP_VERTICAL|wxSP_ARROW_KEYS</style>
         </object>
       </object>
       <object class="sizeritem">

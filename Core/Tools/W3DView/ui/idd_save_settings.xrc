@@ -17,48 +17,8 @@
         <flag>wxALL</flag>
         <border>5</border>
         <object class="wxStaticBox" name="IDC_STATIC">
-          <label>&Settings saved</label>
+          <label>&amp;Settings saved</label>
           <size>166,88</size>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxStaticText" name="IDC_STATIC">
-          <label>&Filename:</label>
-          <size>52,12</size>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxButton" name="IDC_BROWSE_BUTTON">
-          <label>&Browse...</label>
-          <size>75,21</size>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxButton" name="IDOK">
-          <label>OK</label>
-          <size>75,21</size>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxButton" name="IDCANCEL">
-          <label>Cancel</label>
-          <size>75,21</size>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxTextCtrl" name="IDC_FILENAME_EDIT">
-          <size>175,21</size>
-          <style>wxTE_LEFT</style>
         </object>
       </object>
       <object class="sizeritem">
@@ -83,6 +43,46 @@
         <object class="wxCheckBox" name="IDC_CAMERA_CHECKBOX">
           <label>Camera</label>
           <size>112,15</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxStaticText" name="IDC_STATIC">
+          <label>&amp;Filename:</label>
+          <size>52,12</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxTextCtrl" name="IDC_FILENAME_EDIT">
+          <size>175,21</size>
+          <style>wxTE_LEFT</style>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxButton" name="IDC_BROWSE_BUTTON">
+          <label>&amp;Browse...</label>
+          <size>75,21</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxButton" name="IDOK">
+          <label>OK</label>
+          <size>75,21</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxButton" name="IDCANCEL">
+          <label>Cancel</label>
+          <size>75,21</size>
         </object>
       </object>
     </object>

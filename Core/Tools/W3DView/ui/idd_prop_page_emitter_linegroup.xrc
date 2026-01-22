@@ -16,17 +16,17 @@
       <object class="sizeritem">
         <flag>wxALL</flag>
         <border>5</border>
-        <object class="wxStaticText" name="-1">
-          <label>Rando&mizer:</label>
-          <size>60,12</size>
+        <object class="wxPanel" name="IDC_BLUR_TIME_BAR">
+          <label>blurtime</label>
+          <size>309,85</size>
         </object>
       </object>
       <object class="sizeritem">
         <flag>wxALL</flag>
         <border>5</border>
         <object class="wxStaticText" name="-1">
-          <label>Blur Times</label>
-          <size>51,12</size>
+          <label>Rando&amp;mizer:</label>
+          <size>60,12</size>
         </object>
       </object>
       <object class="sizeritem">
@@ -40,18 +40,18 @@
       <object class="sizeritem">
         <flag>wxALL</flag>
         <border>5</border>
-        <object class="wxPanel" name="IDC_BLUR_TIME_BAR">
-          <label>blurtime</label>
-          <size>309,85</size>
+        <object class="wxSpinButton" name="IDC_BLUR_TIME_RANDOM_SPIN">
+          <label>Spin2</label>
+          <size>16,21</size>
+          <style>wxSP_VERTICAL|wxSP_ARROW_KEYS</style>
         </object>
       </object>
       <object class="sizeritem">
         <flag>wxALL</flag>
         <border>5</border>
-        <object class="wxSpinButton" name="IDC_BLUR_TIME_RANDOM_SPIN">
-          <label>Spin2</label>
-          <size>16,21</size>
-          <style>wxSP_VERTICAL|wxSP_ARROW_KEYS</style>
+        <object class="wxStaticText" name="-1">
+          <label>Blur Times</label>
+          <size>51,12</size>
         </object>
       </object>
     </object>

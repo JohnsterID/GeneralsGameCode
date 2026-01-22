@@ -23,24 +23,16 @@
       <object class="sizeritem">
         <flag>wxALL</flag>
         <border>5</border>
-        <object class="wxStaticText" name="-1">
-          <label>&Color</label>
-          <size>25,12</size>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxStaticText" name="-1">
-          <label>&Opacity</label>
-          <size>37,12</size>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
         <object class="wxPanel" name="-1">
           <size>309,1</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxStaticText" name="-1">
+          <label>&amp;Color</label>
+          <size>25,12</size>
         </object>
       </object>
       <object class="sizeritem">
@@ -56,6 +48,14 @@
         <border>5</border>
         <object class="wxPanel" name="-1">
           <size>309,1</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxStaticText" name="-1">
+          <label>&amp;Opacity</label>
+          <size>37,12</size>
         </object>
       </object>
       <object class="sizeritem">

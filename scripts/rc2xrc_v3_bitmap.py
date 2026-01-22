@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-RC to XRC Converter - v4 with escaped quote support
+RC to XRC Converter - Final Version with all enhancements
 """
 
 import re
@@ -68,35 +68,6 @@ def join_continuation_lines(text):
     
     return '\n'.join(result)
 
-def extract_quoted_string(text, start_pos):
-    """
-    Extract a quoted string from text starting at start_pos.
-    Handles escaped quotes ("").
-    Returns (extracted_text, end_pos) or (None, start_pos) if not found.
-    """
-    if start_pos >= len(text) or text[start_pos] != '"':
-        return None, start_pos
-    
-    result = []
-    i = start_pos + 1  # Skip opening quote
-    
-    while i < len(text):
-        if text[i] == '"':
-            # Check if it's an escaped quote
-            if i + 1 < len(text) and text[i + 1] == '"':
-                # Escaped quote - add single quote to result
-                result.append('"')
-                i += 2
-            else:
-                # End of string
-                return ''.join(result), i + 1
-        else:
-            result.append(text[i])
-            i += 1
-    
-    # Unclosed quote
-    return None, start_pos
-
 def parse_rc_dialog(rc_content, dialog_id):
     """Parse a specific dialog from RC content"""
     class DialogInfo:
@@ -110,7 +81,7 @@ def parse_rc_dialog(rc_content, dialog_id):
     dialog.controls = []
     
     # Find dialog definition
-    pattern = rf'^{dialog_id}\s+DIALOG(?:EX)?\s+(?:DISCARDABLE\s+)?(-?\d+)\s*,\s*(-?\d+)\s*,\s*(-?\d+)\s*,\s*(-?\d+)'
+    pattern = rf'^{dialog_id}\s+DIALOG(?:EX)?\s+(?:DISCARDABLE\s+)?(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)'
     match = re.search(pattern, rc_content, re.MULTILINE)
     
     if not match:
@@ -157,110 +128,72 @@ def parse_rc_dialog(rc_content, dialog_id):
     if cap_match:
         dialog.title = cap_match.group(1)
     
-    # Parse controls with custom string extraction for escaped quotes
-    # Process line by line
-    for line in dialog_block.split('\n'):
-        line = line.strip()
-        if not line or line.startswith('//'):
-            continue
-        
-        # Try ICON first (no quotes)
-        icon_match = re.match(r'ICON\s+(\w+)\s*,\s*(\S+)\s*,\s*(-?\d+)\s*,\s*(-?\d+)\s*,\s*(-?\d+)\s*,\s*(-?\d+)', line)
-        if icon_match:
+    # Parse controls - comprehensive patterns
+    patterns = [
+        # ICON ID,id,x,y,w,h
+        (r'ICON\s+(\w+)\s*,\s*(\S+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)', 'icon'),
+        # Standard labeled controls: PUSHBUTTON "OK",IDOK,x,y,w,h
+        (r'(DEFPUSHBUTTON|PUSHBUTTON|CHECKBOX|RADIOBUTTON|GROUPBOX|LTEXT|RTEXT|CTEXT)\s+"([^"]*)"\s*,\s*(\S+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)', 'labeled'),
+        # Unlabeled controls: EDITTEXT ID,x,y,w,h
+        (r'(EDITTEXT|COMBOBOX|LISTBOX)\s+(\S+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)', 'unlabeled'),
+        # CONTROL with string: CONTROL "text",ID,"ClassName",styles...,x,y,w,h
+        (r'CONTROL\s+"([^"]*)"\s*,\s*(\S+)\s*,\s*"([^"]+)"\s*,\s*[^,]+?\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)', 'control_class'),
+        # CONTROL with number (bitmap): CONTROL 204,ID,"Static",styles...,x,y,w,h
+        (r'CONTROL\s+(\d+)\s*,\s*(\S+)\s*,\s*"([^"]+)"\s*,\s*[^,]+?\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)', 'control_bitmap'),
+    ]
+    
+    for pattern, ptype in patterns:
+        for m in re.finditer(pattern, dialog_block):
             control = ControlInfo()
-            control.type = 'ICON'
-            control.text = ""
-            control.icon_id = icon_match.group(1)
-            control.id = icon_match.group(2)
-            control.x = int(icon_match.group(3))
-            control.y = int(icon_match.group(4))
-            control.width = int(icon_match.group(5))
-            control.height = int(icon_match.group(6))
-            control.custom_class = None
-            dialog.controls.append(control)
-            continue
-        
-        # Try labeled controls (LTEXT, PUSHBUTTON, etc.) with custom string extraction
-        for ctrl_type in ['DEFPUSHBUTTON', 'PUSHBUTTON', 'CHECKBOX', 'RADIOBUTTON', 'GROUPBOX', 'LTEXT', 'RTEXT', 'CTEXT']:
-            pattern = rf'^{ctrl_type}\s+'
-            if re.match(pattern, line):
-                # Extract the quoted string manually
-                quote_start = line.find('"')
-                if quote_start == -1:
-                    break
-                
-                text, quote_end = extract_quoted_string(line, quote_start)
-                if text is None:
-                    break
-                
-                # Parse the rest: ,ID,x,y,w,h
-                rest = line[quote_end:].strip()
-                coords_match = re.match(r',\s*(\S+)\s*,\s*(-?\d+)\s*,\s*(-?\d+)\s*,\s*(-?\d+)\s*,\s*(-?\d+)', rest)
-                if coords_match:
-                    control = ControlInfo()
-                    control.type = ctrl_type
-                    control.text = text
-                    control.id = coords_match.group(1)
-                    control.x = int(coords_match.group(2))
-                    control.y = int(coords_match.group(3))
-                    control.width = int(coords_match.group(4))
-                    control.height = int(coords_match.group(5))
-                    control.custom_class = None
-                    dialog.controls.append(control)
-                    break
-        else:
-            # Try unlabeled controls
-            unlabeled_match = re.match(r'(EDITTEXT|COMBOBOX|LISTBOX)\s+(\S+)\s*,\s*(-?\d+)\s*,\s*(-?\d+)\s*,\s*(-?\d+)\s*,\s*(-?\d+)', line)
-            if unlabeled_match:
-                control = ControlInfo()
-                control.type = unlabeled_match.group(1)
+            if ptype == 'icon':
+                control.type = 'ICON'
                 control.text = ""
-                control.id = unlabeled_match.group(2)
-                control.x = int(unlabeled_match.group(3))
-                control.y = int(unlabeled_match.group(4))
-                control.width = int(unlabeled_match.group(5))
-                control.height = int(unlabeled_match.group(6))
+                control.icon_id = m.group(1)
+                control.id = m.group(2)
+                control.x = int(m.group(3))
+                control.y = int(m.group(4))
+                control.width = int(m.group(5))
+                control.height = int(m.group(6))
                 control.custom_class = None
-                dialog.controls.append(control)
-                continue
+            elif ptype == 'labeled':
+                control.type = m.group(1)
+                control.text = m.group(2)
+                control.id = m.group(3)
+                control.x = int(m.group(4))
+                control.y = int(m.group(5))
+                control.width = int(m.group(6))
+                control.height = int(m.group(7))
+                control.custom_class = None
+            elif ptype == 'unlabeled':
+                control.type = m.group(1)
+                control.text = ""
+                control.id = m.group(2)
+                control.x = int(m.group(3))
+                control.y = int(m.group(4))
+                control.width = int(m.group(5))
+                control.height = int(m.group(6))
+                control.custom_class = None
+            elif ptype == 'control_class':
+                control.type = 'CONTROL'
+                control.text = m.group(1)
+                control.id = m.group(2)
+                control.custom_class = m.group(3)
+                control.x = int(m.group(4))
+                control.y = int(m.group(5))
+                control.width = int(m.group(6))
+                control.height = int(m.group(7))
+            elif ptype == 'control_bitmap':
+                control.type = 'CONTROL'
+                control.text = ""  # Bitmap ID, no text
+                control.bitmap_id = m.group(1)
+                control.id = m.group(2)
+                control.custom_class = m.group(3)  # Usually "Static"
+                control.x = int(m.group(4))
+                control.y = int(m.group(5))
+                control.width = int(m.group(6))
+                control.height = int(m.group(7))
             
-            # Try CONTROL with text
-            if line.startswith('CONTROL'):
-                quote_start = line.find('"')
-                if quote_start != -1:
-                    text, quote_end = extract_quoted_string(line, quote_start)
-                    if text is not None:
-                        rest = line[quote_end:].strip()
-                        # CONTROL "text",ID,"ClassName",styles,x,y,w,h
-                        control_match = re.match(r',\s*(\S+)\s*,\s*"([^"]+)"\s*,\s*[^,]+?\s*,\s*(-?\d+)\s*,\s*(-?\d+)\s*,\s*(-?\d+)\s*,\s*(-?\d+)', rest)
-                        if control_match:
-                            control = ControlInfo()
-                            control.type = 'CONTROL'
-                            control.text = text
-                            control.id = control_match.group(1)
-                            control.custom_class = control_match.group(2)
-                            control.x = int(control_match.group(3))
-                            control.y = int(control_match.group(4))
-                            control.width = int(control_match.group(5))
-                            control.height = int(control_match.group(6))
-                            dialog.controls.append(control)
-                            continue
-                
-                # Try CONTROL with numeric ID (bitmap)
-                bitmap_match = re.match(r'CONTROL\s+(-?\d+)\s*,\s*(\S+)\s*,\s*"([^"]+)"\s*,\s*[^,]+?\s*,\s*(-?\d+)\s*,\s*(-?\d+)\s*,\s*(-?\d+)\s*,\s*(-?\d+)', line)
-                if bitmap_match:
-                    control = ControlInfo()
-                    control.type = 'CONTROL'
-                    control.text = ""
-                    control.bitmap_id = bitmap_match.group(1)
-                    control.id = bitmap_match.group(2)
-                    control.custom_class = bitmap_match.group(3)
-                    control.x = int(bitmap_match.group(4))
-                    control.y = int(bitmap_match.group(5))
-                    control.width = int(bitmap_match.group(6))
-                    control.height = int(bitmap_match.group(7))
-                    dialog.controls.append(control)
-                    continue
+            dialog.controls.append(control)
     
     return dialog
 
@@ -291,6 +224,7 @@ def generate_xrc(dialog):
         if ctrl.type == 'CONTROL' and ctrl.custom_class:
             wx_type = CUSTOM_CONTROL_MAP.get(ctrl.custom_class, 'wxPanel')
             if ctrl.custom_class == 'Static':
+                # Check if it's a bitmap or panel
                 if hasattr(ctrl, 'bitmap_id'):
                     wx_type = 'wxStaticBitmap'
                 elif not ctrl.text:
@@ -309,9 +243,7 @@ def generate_xrc(dialog):
         lines.append(f'        <object class="{wx_type}" name="{ctrl.id}">')
         
         if ctrl.text:
-            # Escape XML special characters
-            text = ctrl.text.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
-            lines.append(f'          <label>{text}</label>')
+            lines.append(f'          <label>{ctrl.text}</label>')
         
         lines.append(f'          <size>{cw},{ch}</size>')
         
@@ -334,7 +266,7 @@ def generate_xrc(dialog):
 
 def main():
     if len(sys.argv) < 3:
-        print("Usage: rc2xrc_v4.py <input.rc> <dialog_id> [output.xrc]")
+        print("Usage: rc2xrc_final.py <input.rc> <dialog_id> [output.xrc]")
         sys.exit(1)
     
     rc_file = Path(sys.argv[1])

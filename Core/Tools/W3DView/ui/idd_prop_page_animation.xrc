@@ -23,6 +23,13 @@
       <object class="sizeritem">
         <flag>wxALL</flag>
         <border>5</border>
+        <object class="wxPanel" name="IDC_STATIC">
+          <size>294,1</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
         <object class="wxStaticText" name="IDC_STATIC">
           <label>Frames:</label>
           <size>39,12</size>
@@ -63,6 +70,14 @@
       <object class="sizeritem">
         <flag>wxALL</flag>
         <border>5</border>
+        <object class="wxTextCtrl" name="IDC_HIERARCHY_NAME">
+          <size>202,21</size>
+          <style>wxTE_LEFT</style>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
         <object class="wxStaticText" name="IDC_STATIC">
           <label>Total time:</label>
           <size>51,12</size>
@@ -74,21 +89,6 @@
         <object class="wxStaticText" name="IDC_TOTAL_TIME">
           <label>0</label>
           <size>91,12</size>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxTextCtrl" name="IDC_HIERARCHY_NAME">
-          <size>202,21</size>
-          <style>wxTE_LEFT</style>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <flag>wxALL</flag>
-        <border>5</border>
-        <object class="wxPanel" name="IDC_STATIC">
-          <size>294,1</size>
         </object>
       </object>
     </object>

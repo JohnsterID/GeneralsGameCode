@@ -37,24 +37,24 @@ if(BUILD_TOOLS AND wxWidgets_FOUND)
         set_target_properties(g_w3dview_wx PROPERTIES OUTPUT_NAME w3dviewv)
     endif()
     
-    # XRC loading test executable
-    add_executable(test_xrc_loading
-        ${CMAKE_CURRENT_SOURCE_DIR}/../../../../Core/Tools/W3DView/test_xrc_loading.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/../../../../Core/Tools/W3DView/W3DViewUI.cpp
-    )
-    
-    target_link_libraries(test_xrc_loading PRIVATE
-        ${wxWidgets_LIBRARIES}
-    )
-    
-    target_include_directories(test_xrc_loading PRIVATE
-        ${wxWidgets_INCLUDE_DIRS}
-        ${CMAKE_CURRENT_SOURCE_DIR}/../../../../Core/Tools/W3DView
-    )
-    
-    target_compile_definitions(test_xrc_loading PRIVATE
-        ${wxWidgets_DEFINITIONS}
-    )
+    # XRC loading test executable (commented out - test file not on feat branch, not REQUIRED)
+    # add_executable(test_xrc_loading
+    #     ${CMAKE_CURRENT_SOURCE_DIR}/../../../../Core/Tools/W3DView/test_xrc_loading.cpp
+    #     ${CMAKE_CURRENT_SOURCE_DIR}/../../../../Core/Tools/W3DView/W3DViewUI.cpp
+    # )
+    #
+    # target_link_libraries(test_xrc_loading PRIVATE
+    #     ${wxWidgets_LIBRARIES}
+    # )
+    #
+    # target_include_directories(test_xrc_loading PRIVATE
+    #     ${wxWidgets_INCLUDE_DIRS}
+    #     ${CMAKE_CURRENT_SOURCE_DIR}/../../../../Core/Tools/W3DView
+    # )
+    #
+    # target_compile_definitions(test_xrc_loading PRIVATE
+    #     ${wxWidgets_DEFINITIONS}
+    # )
 
 elseif(WIN32 OR "${CMAKE_SYSTEM}" MATCHES "Windows")
     add_executable(g_w3dview WIN32)

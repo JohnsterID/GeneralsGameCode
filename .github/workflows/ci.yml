@@ -8,6 +8,7 @@ on:
   push:
     branches:
       - main
+      - feat/debugwindow-wxwidgets-conversion-ci
   pull_request:
     branches:
       - main

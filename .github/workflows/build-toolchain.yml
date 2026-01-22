@@ -144,6 +144,18 @@ jobs:
           runVcpkgInstall: false
           doNotCache: true
 
+      - name: Install wxWidgets via vcpkg (for non-vcpkg win32 builds)
+        if: startsWith(inputs.preset, 'win32') && !contains(inputs.preset, 'vcpkg')
+        shell: pwsh
+        run: |
+          Write-Host "Installing wxWidgets via vcpkg for ${{ inputs.preset }} build" -ForegroundColor Cyan
+          & "$env:VCPKG_ROOT\vcpkg.exe" install wxwidgets:x86-windows --clean-after-build
+          
+          # Set CMAKE_PREFIX_PATH so CMake can find wxWidgets
+          $wxWidgetsPath = "$env:VCPKG_ROOT\installed\x86-windows"
+          "CMAKE_PREFIX_PATH=$wxWidgetsPath" >> $env:GITHUB_ENV
+          Write-Host "wxWidgets installed and CMAKE_PREFIX_PATH set to $wxWidgetsPath"
+
       - name: Configure vcpkg to use cached directory
         if: startsWith(inputs.preset, 'win32')
         shell: pwsh

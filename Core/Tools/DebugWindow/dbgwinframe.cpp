@@ -39,12 +39,26 @@ DbgWinFrame::DbgWinFrame(wxWindow *parent, const wxString &label) :
     SetPosition({ 0, 0 });
     
     // Bind event handlers - equivalent to MFC message map
+    Bind(wxEVT_TOGGLEBUTTON, &DbgWinFrame::On_Pause, this, XRCID("m_pauseBtn"));
     Bind(wxEVT_BUTTON, &DbgWinFrame::On_Step, this, XRCID("m_stepBtn"));
     Bind(wxEVT_BUTTON, &DbgWinFrame::On_Step_Ten, this, XRCID("m_stepTenBtn"));
     Bind(wxEVT_BUTTON, &DbgWinFrame::On_Clear, this, XRCID("m_clearBtn"));
     Bind(wxEVT_SCROLLWIN_THUMBTRACK, &DbgWinFrame::On_Thumb, this, XRCID("m_variableList"));
     Bind(wxEVT_SCROLLWIN_THUMBRELEASE, &DbgWinFrame::On_Thumb_Release, this, XRCID("m_variableList"));
     Bind(wxEVT_CLOSE_WINDOW, &DbgWinFrame::On_Exit, this);
+}
+
+void DbgWinFrame::On_Pause(wxCommandEvent &event)
+{
+    // Equivalent to original OnPause() - toggle between paused and running
+    // wxToggleButton has already updated its state when this fires, so read the new state
+    if (m_pauseBtn->GetValue()) {
+        // Button is now pressed (paused)
+        m_numberOfStepsAllowed = 0;
+    } else {
+        // Button is now unpressed (running)
+        m_numberOfStepsAllowed = -1;
+    }
 }
 
 void DbgWinFrame::On_Step(wxCommandEvent &event)

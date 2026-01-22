@@ -46,6 +46,7 @@ public:
     DbgWinFrame(wxWindow *parent, const wxString &label);
 
     // wx Event handlers
+    void On_Pause(wxCommandEvent &event);
     void On_Step(wxCommandEvent &event);
     void On_Step_Ten(wxCommandEvent &event);
     void On_Clear(wxCommandEvent &event);

@@ -2,7 +2,7 @@
 <resource xmlns="http://www.wxwidgets.org/wxxrc" version="2.5.3.0">
 	<object class="wxFrame" name="DbgWinBaseFrame">
 		<style>wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL</style>
-		<size>420,600</size>
+		<size>320,600</size>
 		<title>Debug Window</title>
 		<centered>1</centered>
 		<object class="wxPanel" name="m_panel">

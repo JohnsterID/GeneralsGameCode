@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resource xmlns="http://www.wxwidgets.org/wxxrc" version="2.5.3.0">
+  <object class="wxDialog" name="IDD_BONE_MANAGEMENT">
+    <style>wxDEFAULT_DIALOG_STYLE</style>
+    <size>385,466</size>
+    <object class="wxBoxSizer">
+      <orient>wxVERTICAL</orient>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxStaticText" name="IDC_STATIC">
+          <label>You can attach objects to bones using the controls below.  Highlight the bone you wish to modify and select a new object to add or an existing object to remove.</label>
+          <size>318,39</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxStaticText" name="IDC_STATIC">
+          <label>&Bones:</label>
+          <size>34,12</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxStaticBox" name="IDC_BONE_GROUPBOX">
+          <label>Static</label>
+          <size>364,63</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxStaticText" name="IDC_STATIC">
+          <label>&Render object:</label>
+          <size>96,12</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxButton" name="IDC_ATTACH_BUTTON">
+          <label>&Attach</label>
+          <size>75,21</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxButton" name="IDOK">
+          <label>OK</label>
+          <size>75,21</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxButton" name="IDCANCEL">
+          <label>Cancel</label>
+          <size>75,21</size>
+        </object>
+      </object>
+    </object>
+  </object>
+</resource>

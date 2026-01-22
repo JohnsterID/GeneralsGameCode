@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resource xmlns="http://www.wxwidgets.org/wxxrc" version="2.5.3.0">
+  <object class="wxDialog" name="IDD_MAKE_AGGREGATE">
+    <style>wxDEFAULT_DIALOG_STYLE</style>
+    <size>331,154</size>
+    <object class="wxBoxSizer">
+      <orient>wxVERTICAL</orient>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxStaticText" name="IDC_STATIC">
+          <label>Please give the new aggregate a name using the controls below.  The aggregate will be refered to by this name from now on.  While this name is independent of the filename, for convention's sake they should be the same</label>
+          <size>271,55</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxStaticText" name="IDC_STATIC">
+          <label>&Aggregate Name:</label>
+          <size>84,12</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxButton" name="IDOK">
+          <label>OK</label>
+          <size>75,21</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxButton" name="IDCANCEL">
+          <label>Cancel</label>
+          <size>75,21</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxTextCtrl" name="IDC_AGGREGATE_NAME">
+          <size>310,21</size>
+        </object>
+      </object>
+    </object>
+  </object>
+</resource>

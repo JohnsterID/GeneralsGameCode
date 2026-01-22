@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resource xmlns="http://www.wxwidgets.org/wxxrc" version="2.5.3.0">
+  <object class="wxDialog" name="IDD_LIGHT_SCENE_DIALOG">
+    <style>wxDEFAULT_DIALOG_STYLE</style>
+    <size>366,339</size>
+    <object class="wxBoxSizer">
+      <orient>wxVERTICAL</orient>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxStaticBox" name="IDC_STATIC">
+          <label>&Channel</label>
+          <size>345,166</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxStaticText" name="IDC_STATIC">
+          <label>&Red</label>
+          <size>21,12</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxStaticText" name="IDC_STATIC">
+          <label>Gree&n</label>
+          <size>30,12</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxStaticText" name="IDC_STATIC">
+          <label>Bl&ue</label>
+          <size>22,12</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxStaticText" name="IDC_STATIC">
+          <label>&Intensity:</label>
+          <size>43,12</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxStaticText" name="IDC_STATIC">
+          <label>Dis&tance:</label>
+          <size>46,12</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxStaticBox" name="IDC_STATIC">
+          <size>345,46</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxStaticText" name="IDC_STATIC">
+          <label>&Start</label>
+          <size>24,12</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxStaticText" name="IDC_STATIC">
+          <label>&End</label>
+          <size>21,12</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxStaticText" name="IDC_STATIC">
+          <label>Note:  To reposition the scene light, hold down the control key, click the left mouse button in the scene window and move the mouse.  The light will trackball around the object.</label>
+          <size>339,39</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxButton" name="IDOK">
+          <label>OK</label>
+          <size>75,21</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxButton" name="IDCANCEL">
+          <label>Cancel</label>
+          <size>75,21</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxTextCtrl" name="IDC_DISTANCE_EDIT">
+          <size>79,21</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxTextCtrl" name="IDC_START_ATTENUATION_EDIT">
+          <size>79,21</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxTextCtrl" name="IDC_END_ATTENUATION_EDIT">
+          <size>79,21</size>
+        </object>
+      </object>
+    </object>
+  </object>
+</resource>

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resource xmlns="http://www.wxwidgets.org/wxxrc" version="2.5.3.0">
+  <object class="wxDialog" name="IDD_PROP_PAGE_EMITTER_PARTICLE">
+    <style>wxDEFAULT_DIALOG_STYLE</style>
+    <size>330,249</size>
+    <object class="wxBoxSizer">
+      <orient>wxVERTICAL</orient>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxStaticText" name="IDC_STATIC">
+          <label>Use the controls below to modify the burst and emission rates and the particle creation volume.  These values will not take affect until you apply the changes.</label>
+          <size>262,36</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxStaticText" name="IDC_STATIC">
+          <label>&Bursts</label>
+          <size>30,12</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxStaticText" name="IDC_STATIC">
+          <label>&Rate:</label>
+          <size>27,12</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxStaticText" name="IDC_STATIC">
+          <label>per sec</label>
+          <size>36,12</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxStaticText" name="IDC_STATIC">
+          <label>&Particles:</label>
+          <size>45,12</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxStaticText" name="IDC_STATIC">
+          <label>&Cap</label>
+          <size>21,12</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxStaticText" name="IDC_STATIC">
+          <label>Crea&tion Volume</label>
+          <size>78,12</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxButton" name="IDC_SPECIFY_CREATION_VOLUME">
+          <label>&Specify...</label>
+          <size>75,21</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxTextCtrl" name="IDC_EMISSION_RATE_EDIT">
+          <size>60,21</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxTextCtrl" name="IDC_BURST_SIZE_EDIT">
+          <size>60,21</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxTextCtrl" name="IDC_MAX_PARTICLES_EDIT">
+          <size>60,21</size>
+        </object>
+      </object>
+    </object>
+  </object>
+</resource>

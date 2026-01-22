@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resource xmlns="http://www.wxwidgets.org/wxxrc" version="2.5.3.0">
+  <object class="wxDialog" name="IDD_PROP_PAGE_EMITTER_USER">
+    <style>wxDEFAULT_DIALOG_STYLE</style>
+    <size>330,249</size>
+    <object class="wxBoxSizer">
+      <orient>wxVERTICAL</orient>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxStaticText" name="IDC_STATIC">
+          <label>&Type:</label>
+          <size>30,12</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxStaticText" name="IDC_STATIC">
+          <label>&Programmer settings:</label>
+          <size>99,12</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxTextCtrl" name="IDC_PROGRAMMER_SETTINGS_EDIT">
+          <size>309,114</size>
+        </object>
+      </object>
+    </object>
+  </object>
+</resource>

@@ -1,0 +1,23 @@
+// Generated event table entries for PlaySoundEffect
+// Add these to your wxBEGIN_EVENT_TABLE block:
+    EVT_BUTTON(XRCID("IDC_PLAY_SOUND_EFFECT"), PlaySoundEffect::OnPlaySoundEffect)  // Button/Checkbox click
+    EVT_BUTTON(XRCID("IDC_STOP_SOUND_EFFECT"), PlaySoundEffect::OnStopSoundEffect)  // Button/Checkbox click
+
+// Handler method stubs to add to your class:
+// In .h file:
+    void OnPlaySoundEffect(wxCommandEvent &event);  // Button/Checkbox click
+    void OnStopSoundEffect(wxCommandEvent &event);  // Button/Checkbox click
+
+// In .cpp file:
+
+void PlaySoundEffect::OnPlaySoundEffect(wxCommandEvent &event)
+{
+    // TODO: Implement OnPlaySoundEffect
+    // Control ID: IDC_PLAY_SOUND_EFFECT
+}
+
+void PlaySoundEffect::OnStopSoundEffect(wxCommandEvent &event)
+{
+    // TODO: Implement OnStopSoundEffect
+    // Control ID: IDC_STOP_SOUND_EFFECT
+}

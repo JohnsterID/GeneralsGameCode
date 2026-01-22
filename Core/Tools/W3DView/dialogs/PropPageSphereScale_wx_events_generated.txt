@@ -1,0 +1,14 @@
+// Generated event table entries for PropPageSphereScale
+// Add these to your wxBEGIN_EVENT_TABLE block:
+    EVT_WINDOW_DESTROY(PropPageSphereScale::OnDestroy)  // Window destruction
+
+// Handler method stubs to add to your class:
+// In .h file:
+    void OnDestroy(wxWindowDestroyEvent &event);  // Window destruction
+
+// In .cpp file:
+
+void PropPageSphereScale::OnDestroy(wxWindowDestroyEvent &event)
+{
+    // TODO: Implement OnDestroy
+}

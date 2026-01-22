@@ -10,114 +10,19 @@ import sys
 from pathlib import Path
 import json
 
-# Mapping of MFC dialog names to wxWidgets dialog names
-# Based on existing files in dialogs/ directory
-DIALOG_MAPPING = {
-    # MFC .cpp filename -> wxWidgets filename (without _wx.cpp)
-    'AnimationSpeed.cpp': 'Displayspeed',
-    'BackgroundColorDialog.cpp': 'BackgroundColor',
-    'BackgroundBMPDialog.cpp': 'BackgroundBmp',
-    'BackgroundObjectDialog.cpp': 'BackgroundObject',
-    'BoneMgrDialog.cpp': 'BoneManagement',
-    'CameraDistanceDialog.cpp': 'CameraDistance',
-    'CameraSettingsDialog.cpp': 'CameraSettings',
-    'AddToLineupDialog.cpp': 'AddToLineup',
-    'AggregateNameDialog.cpp': 'AggregateName',
-    'AmbientLightDialog.cpp': 'AmbientLight',
-    'AnimatedSoundOptionsDialog.cpp': 'AnimatedSoundDialog',
-    'AnimationPropPage.cpp': 'PropPageAnimation',
-    'AssetPropertySheet.cpp': 'AssetPropertySheet',
-    'ColorSelectionDialog.cpp': 'ColorSel',
-    'DeviceSelectionDialog.cpp': 'DeviceSelection',
-    'DirectoryDialog.cpp': 'Directory',
-    'EditLODDialog.cpp': 'EditLod',
-    'EmitterInstancePropPage.cpp': 'PropPageEmitterInstance',
-    'EmitterPropPage.cpp': 'PropPageEmitter',
-    'EmitterUserPage.cpp': 'PropPageEmitterUser',
-    'FXNuggetPropPage.cpp': 'PropPageFxNugget',
-    'FXShaderPropPage.cpp': 'PropPageFxShader',
-    'FXTexturePropPage.cpp': 'PropPageFxTexture',
-    'GeneralPropPage.cpp': 'PropPageGeneral',
-    'HierarchyPropPage.cpp': 'PropPageHierarchy',
-    'HLodPropPage.cpp': 'PropPageHlod',
-    'LightSettingsDialog.cpp': 'LightSettings',
-    'MaterialEditorDialog.cpp': 'MaterialEditor',
-    'MaterialPassDlg.cpp': 'MaterialPass',
-    'MeshPropPage.cpp': 'PropPageMesh',
-    'NormalMapGeneratorDialog.cpp': 'NormalMapGenerator',
-    'ObjectPropertiesDlg.cpp': 'ObjectProperties',
-    'ParticlePropertySheet.cpp': 'ParticlePropertySheet',
-    'PreviewLODDialog.cpp': 'PreviewLod',
-    'ScriptDialog.cpp': 'Script',
-    'SelectAnimationDialog.cpp': 'SelectAnimation',
-    'ShaderDlg.cpp': 'Shader',
-    'SkinPropPage.cpp': 'PropPageSkin',
-    'SoundRObjDlg.cpp': 'SoundRobj',
-    'TexturePathDialog.cpp': 'TexturePath',
-    'TextureReductionDialog.cpp': 'TextureReduction',
-    'VertexMaterialDlg.cpp': 'VertexMaterial',
-    'AdvancedAnimSheet.cpp': 'AdvancedAnimSheet',
-    'AnimMixingPage.cpp': 'AnimMixingPage',
-    'AnimReportPage.cpp': 'AnimReportPage',
-}
-
-# Additional XRC name mapping (some use different IDD names)
-XRC_MAPPING = {
-    'Displayspeed': 'idd_displayspeed',
-    'BackgroundColor': 'idd_background_color',
-    'BackgroundBmp': 'idd_background_bmp',
-    'BackgroundObject': 'idd_background_object',
-    'BoneManagement': 'idd_bone_management',
-    'CameraDistance': 'idd_camera_distance',
-    'CameraSettings': 'idd_camera_settings',
-    'AddToLineup': 'idd_add_to_lineup',
-    'AggregateName': 'idd_aggregate_name',
-    'AmbientLight': 'idd_ambient_light',
-    'AnimatedSoundDialog': 'idd_animated_sound_dialog',
-    'PropPageAnimation': 'idd_animation',
-    'AssetPropertySheet': 'idd_asset_property_sheet',
-    'ColorSel': 'idd_color_sel',
-    'DeviceSelection': 'idd_device_selection',
-    'Directory': 'idd_directory',
-    'EditLod': 'idd_edit_lod',
-    'PropPageEmitterInstance': 'idd_emitter_instance',
-    'PropPageEmitter': 'idd_emitter',
-    'PropPageEmitterUser': 'idd_emitter_user',
-    'PropPageFxNugget': 'idd_fx_nugget',
-    'PropPageFxShader': 'idd_fx_shader',
-    'PropPageFxTexture': 'idd_fx_texture',
-    'PropPageGeneral': 'idd_general',
-    'PropPageHierarchy': 'idd_hierarchy',
-    'PropPageHlod': 'idd_hlod',
-    'LightSettings': 'idd_light_settings',
-    'MaterialEditor': 'idd_material_editor',
-    'MaterialPass': 'idd_material_pass',
-    'PropPageMesh': 'idd_mesh',
-    'NormalMapGenerator': 'idd_normal_map_generator',
-    'ObjectProperties': 'idd_object_properties',
-    'ParticlePropertySheet': 'idd_particle_property_sheet',
-    'PreviewLod': 'idd_preview_lod',
-    'Script': 'idd_script',
-    'SelectAnimation': 'idd_select_animation',
-    'Shader': 'idd_shader',
-    'PropPageSkin': 'idd_skin',
-    'SoundRobj': 'idd_sound_robj',
-    'TexturePath': 'idd_texture_path',
-    'TextureReduction': 'idd_texture_reduction',
-    'VertexMaterial': 'idd_vertex_material',
-}
-
 
 def find_xrc_file(wx_name, ui_dir):
     """Find the XRC file for a given wx dialog name"""
-    xrc_base = XRC_MAPPING.get(wx_name)
-    if xrc_base:
-        xrc_path = ui_dir / f"{xrc_base}.xrc"
-        if xrc_path.exists():
-            return xrc_path
-    
     # Try lowercase version of dialog name
     xrc_path = ui_dir / f"idd_{wx_name.lower()}.xrc"
+    if xrc_path.exists():
+        return xrc_path
+    
+    # Try with underscores converted from camel case
+    import re
+    # Insert underscore before uppercase letters
+    snake_case = re.sub(r'(?<!^)(?=[A-Z])', '_', wx_name).lower()
+    xrc_path = ui_dir / f"idd_{snake_case}.xrc"
     if xrc_path.exists():
         return xrc_path
     
@@ -130,8 +35,24 @@ def main():
     wx_dialogs_dir = root_dir / "Core/Tools/W3DView/dialogs"
     ui_dir = root_dir / "Core/Tools/W3DView/ui"
     
-    # First, extract all MFC dialog files
+    # Load dialog mapping
+    mapping_file = root_dir / "dialog_mapping.json"
+    if not mapping_file.exists():
+        print("Error: dialog_mapping.json not found!")
+        print("Run: python3 scripts/build_dialog_mapping.py")
+        return 1
+    
+    with open(mapping_file, 'r') as f:
+        mapping_data = json.load(f)
+    
+    DIALOG_MAPPING = mapping_data['mapping']
+    
     print("=" * 70)
+    print(f"Loaded mapping for {len(DIALOG_MAPPING)} dialogs")
+    print("=" * 70)
+    
+    # First, extract all MFC dialog files
+    print("\n" + "=" * 70)
     print("Step 1: Extracting MFC dialog files from git history")
     print("=" * 70)
     

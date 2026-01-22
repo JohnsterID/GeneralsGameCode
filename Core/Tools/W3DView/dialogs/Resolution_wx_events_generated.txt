@@ -1,0 +1,15 @@
+// Generated event table entries for Resolution
+// Add these to your wxBEGIN_EVENT_TABLE block:
+    EVT_TREE_SEL_CHANGED(XRCID("IDC_RESOLUTION_LIST_CTRL"), Resolution::OnDblclkResolutionListCtrl)  // Notification message (needs analysis)
+
+// Handler method stubs to add to your class:
+// In .h file:
+    void OnDblclkResolutionListCtrl(various &event);  // Notification message (needs analysis)
+
+// In .cpp file:
+
+void Resolution::OnDblclkResolutionListCtrl(various &event)
+{
+    // TODO: Implement OnDblclkResolutionListCtrl
+    // Control ID: IDC_RESOLUTION_LIST_CTRL
+}

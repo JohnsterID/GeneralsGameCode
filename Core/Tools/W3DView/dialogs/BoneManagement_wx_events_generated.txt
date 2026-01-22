@@ -1,0 +1,38 @@
+// Generated event table entries for BoneManagement
+// Add these to your wxBEGIN_EVENT_TABLE block:
+    EVT_TREE_SEL_CHANGED(XRCID("IDC_BONE_TREE"), BoneManagement::OnSelchangedBoneTree)  // Notification message (needs analysis)
+    EVT_COMBOBOX(XRCID("IDC_OBJECT_COMBO"), BoneManagement::OnSelchangeObjectCombo)  // Combobox selection change
+    EVT_WINDOW_DESTROY(BoneManagement::OnDestroy)  // Window destruction
+    EVT_BUTTON(XRCID("IDC_ATTACH_BUTTON"), BoneManagement::OnAttachButton)  // Button/Checkbox click
+
+// Handler method stubs to add to your class:
+// In .h file:
+    void OnSelchangedBoneTree(various &event);  // Notification message (needs analysis)
+    void OnSelchangeObjectCombo(wxCommandEvent &event);  // Combobox selection change
+    void OnDestroy(wxWindowDestroyEvent &event);  // Window destruction
+    void OnAttachButton(wxCommandEvent &event);  // Button/Checkbox click
+
+// In .cpp file:
+
+void BoneManagement::OnSelchangedBoneTree(various &event)
+{
+    // TODO: Implement OnSelchangedBoneTree
+    // Control ID: IDC_BONE_TREE
+}
+
+void BoneManagement::OnSelchangeObjectCombo(wxCommandEvent &event)
+{
+    // TODO: Implement OnSelchangeObjectCombo
+    // Control ID: IDC_OBJECT_COMBO
+}
+
+void BoneManagement::OnDestroy(wxWindowDestroyEvent &event)
+{
+    // TODO: Implement OnDestroy
+}
+
+void BoneManagement::OnAttachButton(wxCommandEvent &event)
+{
+    // TODO: Implement OnAttachButton
+    // Control ID: IDC_ATTACH_BUTTON
+}

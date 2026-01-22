@@ -1,0 +1,23 @@
+// Generated event table entries for PropPageEmitterParticle
+// Add these to your wxBEGIN_EVENT_TABLE block:
+    EVT_BUTTON(XRCID("IDC_SPECIFY_CREATION_VOLUME"), PropPageEmitterParticle::OnSpecifyCreationVolume)  // Button/Checkbox click
+    EVT_CHECKBOX(XRCID("IDC_MAX_PARTICLES_CHECK"), PropPageEmitterParticle::OnMaxParticlesCheck)  // Button/Checkbox click
+
+// Handler method stubs to add to your class:
+// In .h file:
+    void OnSpecifyCreationVolume(wxCommandEvent &event);  // Button/Checkbox click
+    void OnMaxParticlesCheck(wxCommandEvent &event);  // Button/Checkbox click
+
+// In .cpp file:
+
+void PropPageEmitterParticle::OnSpecifyCreationVolume(wxCommandEvent &event)
+{
+    // TODO: Implement OnSpecifyCreationVolume
+    // Control ID: IDC_SPECIFY_CREATION_VOLUME
+}
+
+void PropPageEmitterParticle::OnMaxParticlesCheck(wxCommandEvent &event)
+{
+    // TODO: Implement OnMaxParticlesCheck
+    // Control ID: IDC_MAX_PARTICLES_CHECK
+}

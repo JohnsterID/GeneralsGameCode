@@ -1,0 +1,54 @@
+// Generated event table entries for LightSceneDialog
+// Add these to your wxBEGIN_EVENT_TABLE block:
+    EVT_SLIDER(XRCID("IDC_INTENSITY_SLIDER"), LightSceneDialog::OnHscroll)  // Horizontal scroll (slider)
+    EVT_CHECKBOX(XRCID("IDC_GRAYSCALE_CHECK"), LightSceneDialog::OnGrayscaleCheck)  // Button/Checkbox click
+    EVT_CHECKBOX(XRCID("IDC_CHANNEL_BOTH_RADIO"), LightSceneDialog::OnChannelBothRadio)  // Button/Checkbox click
+    EVT_CHECKBOX(XRCID("IDC_CHANNEL_DIFFUSE_RADIO"), LightSceneDialog::OnChannelDiffuseRadio)  // Button/Checkbox click
+    EVT_CHECKBOX(XRCID("IDC_CHANNEL_SPECULAR_RADIO"), LightSceneDialog::OnChannelSpecularRadio)  // Button/Checkbox click
+    EVT_CHECKBOX(XRCID("IDC_ATTENUATION_CHECK"), LightSceneDialog::OnAttenuationCheck)  // Button/Checkbox click
+
+// Handler method stubs to add to your class:
+// In .h file:
+    void OnHscroll(wxScrollEvent &event);  // Horizontal scroll (slider)
+    void OnGrayscaleCheck(wxCommandEvent &event);  // Button/Checkbox click
+    void OnChannelBothRadio(wxCommandEvent &event);  // Button/Checkbox click
+    void OnChannelDiffuseRadio(wxCommandEvent &event);  // Button/Checkbox click
+    void OnChannelSpecularRadio(wxCommandEvent &event);  // Button/Checkbox click
+    void OnAttenuationCheck(wxCommandEvent &event);  // Button/Checkbox click
+
+// In .cpp file:
+
+void LightSceneDialog::OnHscroll(wxScrollEvent &event)
+{
+    // TODO: Implement OnHscroll
+}
+
+void LightSceneDialog::OnGrayscaleCheck(wxCommandEvent &event)
+{
+    // TODO: Implement OnGrayscaleCheck
+    // Control ID: IDC_GRAYSCALE_CHECK
+}
+
+void LightSceneDialog::OnChannelBothRadio(wxCommandEvent &event)
+{
+    // TODO: Implement OnChannelBothRadio
+    // Control ID: IDC_CHANNEL_BOTH_RADIO
+}
+
+void LightSceneDialog::OnChannelDiffuseRadio(wxCommandEvent &event)
+{
+    // TODO: Implement OnChannelDiffuseRadio
+    // Control ID: IDC_CHANNEL_DIFFUSE_RADIO
+}
+
+void LightSceneDialog::OnChannelSpecularRadio(wxCommandEvent &event)
+{
+    // TODO: Implement OnChannelSpecularRadio
+    // Control ID: IDC_CHANNEL_SPECULAR_RADIO
+}
+
+void LightSceneDialog::OnAttenuationCheck(wxCommandEvent &event)
+{
+    // TODO: Implement OnAttenuationCheck
+    // Control ID: IDC_ATTENUATION_CHECK
+}

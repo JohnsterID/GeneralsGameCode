@@ -1,0 +1,15 @@
+// Generated event table entries for RenderDeviceSelector
+// Add these to your wxBEGIN_EVENT_TABLE block:
+    EVT_COMBOBOX(XRCID("IDC_RENDER_DEVICE_COMBO"), RenderDeviceSelector::OnSelchangeRenderDeviceCombo)  // Combobox selection change
+
+// Handler method stubs to add to your class:
+// In .h file:
+    void OnSelchangeRenderDeviceCombo(wxCommandEvent &event);  // Combobox selection change
+
+// In .cpp file:
+
+void RenderDeviceSelector::OnSelchangeRenderDeviceCombo(wxCommandEvent &event)
+{
+    // TODO: Implement OnSelchangeRenderDeviceCombo
+    // Control ID: IDC_RENDER_DEVICE_COMBO
+}

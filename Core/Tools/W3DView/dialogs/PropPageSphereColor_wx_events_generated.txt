@@ -1,0 +1,30 @@
+// Generated event table entries for PropPageSphereColor
+// Add these to your wxBEGIN_EVENT_TABLE block:
+    EVT_WINDOW_DESTROY(PropPageSphereColor::OnDestroy)  // Window destruction
+    EVT_CHECKBOX(XRCID("IDC_OPACITY_VECTOR_CHECK"), PropPageSphereColor::OnOpacityVectorCheck)  // Button/Checkbox click
+    EVT_CHECKBOX(XRCID("IDC_INVERT_VECTOR_CHECK"), PropPageSphereColor::OnInvertVectorCheck)  // Button/Checkbox click
+
+// Handler method stubs to add to your class:
+// In .h file:
+    void OnDestroy(wxWindowDestroyEvent &event);  // Window destruction
+    void OnOpacityVectorCheck(wxCommandEvent &event);  // Button/Checkbox click
+    void OnInvertVectorCheck(wxCommandEvent &event);  // Button/Checkbox click
+
+// In .cpp file:
+
+void PropPageSphereColor::OnDestroy(wxWindowDestroyEvent &event)
+{
+    // TODO: Implement OnDestroy
+}
+
+void PropPageSphereColor::OnOpacityVectorCheck(wxCommandEvent &event)
+{
+    // TODO: Implement OnOpacityVectorCheck
+    // Control ID: IDC_OPACITY_VECTOR_CHECK
+}
+
+void PropPageSphereColor::OnInvertVectorCheck(wxCommandEvent &event)
+{
+    // TODO: Implement OnInvertVectorCheck
+    // Control ID: IDC_INVERT_VECTOR_CHECK
+}

@@ -1,0 +1,337 @@
+{
+  "success": [
+    "AddToLineupDialog.cpp",
+    "AggregateNameDialog.cpp",
+    "AmbientLightDialog.cpp",
+    "AnimMixingPage.cpp",
+    "AnimReportPage.cpp",
+    "AnimatedSoundOptionsDialog.cpp",
+    "AnimationPropPage.cpp",
+    "AnimationSpeed.cpp",
+    "BackgroundBMPDialog.cpp",
+    "BackgroundColorDialog.cpp",
+    "BackgroundObjectDialog.cpp",
+    "BoneMgrDialog.cpp",
+    "CameraDistanceDialog.cpp",
+    "CameraSettingsDialog.cpp",
+    "ColorPicker.cpp",
+    "ColorPickerDialogClass.cpp",
+    "ColorSelectionDialog.cpp",
+    "DeviceSelectionDialog.cpp",
+    "DirectoryDialog.cpp",
+    "EditLODDialog.cpp",
+    "EmitterColorPropPage.cpp",
+    "EmitterFramePropPage.cpp",
+    "EmitterGeneralPropPage.cpp",
+    "EmitterLineGroupPropPage.cpp",
+    "EmitterLinePropPage.cpp",
+    "EmitterParticlePropPage.cpp",
+    "EmitterPhysicsPropPage.cpp",
+    "EmitterRotationPropPage.cpp",
+    "EmitterSizePropPage.cpp",
+    "EmitterUserPropPage.cpp",
+    "GammaDialog.cpp",
+    "HierarchyPropPage.cpp",
+    "MeshPropPage.cpp",
+    "OpacitySettingsDialog.cpp",
+    "OpacityVectorDialog.cpp",
+    "ParticleBlurTimeKeyDialog.cpp",
+    "ParticleFrameKeyDialog.cpp",
+    "ParticleRotationKeyDialog.cpp",
+    "ParticleSizeDialog.cpp",
+    "PlaySoundDialog.cpp",
+    "ResolutionDialog.cpp",
+    "RingColorPropPage.cpp",
+    "RingGeneralPropPage.cpp",
+    "RingSizePropPage.cpp",
+    "SaveSettingsDialog.cpp",
+    "ScaleDialog.cpp",
+    "SceneLightDialog.cpp",
+    "SoundEditDialog.cpp",
+    "SphereColorPropPage.cpp",
+    "SphereGeneralPropPage.cpp",
+    "SphereSizePropPage.cpp",
+    "TextureMgrDialog.cpp",
+    "TexturePathDialog.cpp",
+    "TextureSettingsDialog.cpp",
+    "VolumeRandomDialog.cpp"
+  ],
+  "failed": [],
+  "stats": {
+    "AddToLineupDialog.cpp": {
+      "message_map_entries": 0,
+      "control_bindings": 0,
+      "xrc_controls": 5
+    },
+    "AggregateNameDialog.cpp": {
+      "message_map_entries": 0,
+      "control_bindings": 0,
+      "xrc_controls": 5
+    },
+    "AmbientLightDialog.cpp": {
+      "message_map_entries": 2,
+      "control_bindings": 3,
+      "xrc_controls": 11
+    },
+    "AnimMixingPage.cpp": {
+      "message_map_entries": 0,
+      "control_bindings": 1,
+      "xrc_controls": 3
+    },
+    "AnimReportPage.cpp": {
+      "message_map_entries": 0,
+      "control_bindings": 1,
+      "xrc_controls": 3
+    },
+    "AnimatedSoundOptionsDialog.cpp": {
+      "message_map_entries": 3,
+      "control_bindings": 0,
+      "xrc_controls": 10
+    },
+    "AnimationPropPage.cpp": {
+      "message_map_entries": 0,
+      "control_bindings": 0,
+      "xrc_controls": 7
+    },
+    "AnimationSpeed.cpp": {
+      "message_map_entries": 6,
+      "control_bindings": 1,
+      "xrc_controls": 8
+    },
+    "BackgroundBMPDialog.cpp": {
+      "message_map_entries": 1,
+      "control_bindings": 0,
+      "xrc_controls": 6
+    },
+    "BackgroundColorDialog.cpp": {
+      "message_map_entries": 2,
+      "control_bindings": 3,
+      "xrc_controls": 11
+    },
+    "BackgroundObjectDialog.cpp": {
+      "message_map_entries": 2,
+      "control_bindings": 1,
+      "xrc_controls": 7
+    },
+    "BoneMgrDialog.cpp": {
+      "message_map_entries": 4,
+      "control_bindings": 2,
+      "xrc_controls": 8
+    },
+    "CameraDistanceDialog.cpp": {
+      "message_map_entries": 0,
+      "control_bindings": 1,
+      "xrc_controls": 6
+    },
+    "CameraSettingsDialog.cpp": {
+      "message_map_entries": 3,
+      "control_bindings": 5,
+      "xrc_controls": 17
+    },
+    "ColorPicker.cpp": {
+      "message_map_entries": 7,
+      "control_bindings": 0,
+      "xrc_controls": 18
+    },
+    "ColorPickerDialogClass.cpp": {
+      "message_map_entries": 1,
+      "control_bindings": 3,
+      "xrc_controls": 18
+    },
+    "ColorSelectionDialog.cpp": {
+      "message_map_entries": 6,
+      "control_bindings": 7,
+      "xrc_controls": 18
+    },
+    "DeviceSelectionDialog.cpp": {
+      "message_map_entries": 1,
+      "control_bindings": 1,
+      "xrc_controls": 16
+    },
+    "DirectoryDialog.cpp": {
+      "message_map_entries": 0,
+      "control_bindings": 0,
+      "xrc_controls": 16
+    },
+    "EditLODDialog.cpp": {
+      "message_map_entries": 6,
+      "control_bindings": 3,
+      "xrc_controls": 9
+    },
+    "EmitterColorPropPage.cpp": {
+      "message_map_entries": 2,
+      "control_bindings": 4,
+      "xrc_controls": 12
+    },
+    "EmitterFramePropPage.cpp": {
+      "message_map_entries": 0,
+      "control_bindings": 2,
+      "xrc_controls": 6
+    },
+    "EmitterGeneralPropPage.cpp": {
+      "message_map_entries": 6,
+      "control_bindings": 2,
+      "xrc_controls": 10
+    },
+    "EmitterLineGroupPropPage.cpp": {
+      "message_map_entries": 0,
+      "control_bindings": 1,
+      "xrc_controls": 5
+    },
+    "EmitterLinePropPage.cpp": {
+      "message_map_entries": 0,
+      "control_bindings": 7,
+      "xrc_controls": 18
+    },
+    "EmitterParticlePropPage.cpp": {
+      "message_map_entries": 2,
+      "control_bindings": 3,
+      "xrc_controls": 10
+    },
+    "EmitterPhysicsPropPage.cpp": {
+      "message_map_entries": 1,
+      "control_bindings": 8,
+      "xrc_controls": 19
+    },
+    "EmitterRotationPropPage.cpp": {
+      "message_map_entries": 0,
+      "control_bindings": 2,
+      "xrc_controls": 7
+    },
+    "EmitterSizePropPage.cpp": {
+      "message_map_entries": 0,
+      "control_bindings": 1,
+      "xrc_controls": 5
+    },
+    "EmitterUserPropPage.cpp": {
+      "message_map_entries": 2,
+      "control_bindings": 1,
+      "xrc_controls": 4
+    },
+    "GammaDialog.cpp": {
+      "message_map_entries": 1,
+      "control_bindings": 1,
+      "xrc_controls": 6
+    },
+    "HierarchyPropPage.cpp": {
+      "message_map_entries": 1,
+      "control_bindings": 1,
+      "xrc_controls": 6
+    },
+    "MeshPropPage.cpp": {
+      "message_map_entries": 1,
+      "control_bindings": 0,
+      "xrc_controls": 13
+    },
+    "OpacitySettingsDialog.cpp": {
+      "message_map_entries": 0,
+      "control_bindings": 0,
+      "xrc_controls": 5
+    },
+    "OpacityVectorDialog.cpp": {
+      "message_map_entries": 1,
+      "control_bindings": 2,
+      "xrc_controls": 7
+    },
+    "ParticleBlurTimeKeyDialog.cpp": {
+      "message_map_entries": 1,
+      "control_bindings": 1,
+      "xrc_controls": 7
+    },
+    "ParticleFrameKeyDialog.cpp": {
+      "message_map_entries": 0,
+      "control_bindings": 1,
+      "xrc_controls": 7
+    },
+    "ParticleRotationKeyDialog.cpp": {
+      "message_map_entries": 0,
+      "control_bindings": 1,
+      "xrc_controls": 7
+    },
+    "ParticleSizeDialog.cpp": {
+      "message_map_entries": 0,
+      "control_bindings": 1,
+      "xrc_controls": 6
+    },
+    "PlaySoundDialog.cpp": {
+      "message_map_entries": 2,
+      "control_bindings": 0,
+      "xrc_controls": 6
+    },
+    "ResolutionDialog.cpp": {
+      "message_map_entries": 1,
+      "control_bindings": 1,
+      "xrc_controls": 6
+    },
+    "RingColorPropPage.cpp": {
+      "message_map_entries": 1,
+      "control_bindings": 0,
+      "xrc_controls": 4
+    },
+    "RingGeneralPropPage.cpp": {
+      "message_map_entries": 6,
+      "control_bindings": 2,
+      "xrc_controls": 12
+    },
+    "RingSizePropPage.cpp": {
+      "message_map_entries": 1,
+      "control_bindings": 4,
+      "xrc_controls": 14
+    },
+    "SaveSettingsDialog.cpp": {
+      "message_map_entries": 2,
+      "control_bindings": 0,
+      "xrc_controls": 9
+    },
+    "ScaleDialog.cpp": {
+      "message_map_entries": 0,
+      "control_bindings": 1,
+      "xrc_controls": 7
+    },
+    "SceneLightDialog.cpp": {
+      "message_map_entries": 6,
+      "control_bindings": 7,
+      "xrc_controls": 22
+    },
+    "SoundEditDialog.cpp": {
+      "message_map_entries": 5,
+      "control_bindings": 2,
+      "xrc_controls": 19
+    },
+    "SphereColorPropPage.cpp": {
+      "message_map_entries": 3,
+      "control_bindings": 0,
+      "xrc_controls": 7
+    },
+    "SphereGeneralPropPage.cpp": {
+      "message_map_entries": 5,
+      "control_bindings": 1,
+      "xrc_controls": 10
+    },
+    "SphereSizePropPage.cpp": {
+      "message_map_entries": 1,
+      "control_bindings": 3,
+      "xrc_controls": 11
+    },
+    "TextureMgrDialog.cpp": {
+      "message_map_entries": 9,
+      "control_bindings": 1,
+      "xrc_controls": 6
+    },
+    "TexturePathDialog.cpp": {
+      "message_map_entries": 2,
+      "control_bindings": 0,
+      "xrc_controls": 8
+    },
+    "TextureSettingsDialog.cpp": {
+      "message_map_entries": 5,
+      "control_bindings": 3,
+      "xrc_controls": 20
+    },
+    "VolumeRandomDialog.cpp": {
+      "message_map_entries": 3,
+      "control_bindings": 6,
+      "xrc_controls": 20
+    }
+  }
+}

@@ -1,0 +1,46 @@
+// Generated event table entries for SoundEdit
+// Add these to your wxBEGIN_EVENT_TABLE block:
+    EVT_BUTTON(XRCID("IDC_BROWSE"), SoundEdit::OnBrowse)  // Button/Checkbox click
+    EVT_CHECKBOX(XRCID("IDC_2D_RADIO"), SoundEdit::On2DRadio)  // Button/Checkbox click
+    EVT_CHECKBOX(XRCID("IDC_3D_RADIO"), SoundEdit::On3DRadio)  // Button/Checkbox click
+    EVT_BUTTON(XRCID("IDC_PLAY"), SoundEdit::OnPlay)  // Button/Checkbox click
+    EVT_SLIDER(XRCID("IDC_VOLUME_SLIDER"), SoundEdit::OnHscroll)  // Horizontal scroll (slider)
+
+// Handler method stubs to add to your class:
+// In .h file:
+    void OnBrowse(wxCommandEvent &event);  // Button/Checkbox click
+    void On2DRadio(wxCommandEvent &event);  // Button/Checkbox click
+    void On3DRadio(wxCommandEvent &event);  // Button/Checkbox click
+    void OnPlay(wxCommandEvent &event);  // Button/Checkbox click
+    void OnHscroll(wxScrollEvent &event);  // Horizontal scroll (slider)
+
+// In .cpp file:
+
+void SoundEdit::OnBrowse(wxCommandEvent &event)
+{
+    // TODO: Implement OnBrowse
+    // Control ID: IDC_BROWSE
+}
+
+void SoundEdit::On2DRadio(wxCommandEvent &event)
+{
+    // TODO: Implement On2DRadio
+    // Control ID: IDC_2D_RADIO
+}
+
+void SoundEdit::On3DRadio(wxCommandEvent &event)
+{
+    // TODO: Implement On3DRadio
+    // Control ID: IDC_3D_RADIO
+}
+
+void SoundEdit::OnPlay(wxCommandEvent &event)
+{
+    // TODO: Implement OnPlay
+    // Control ID: IDC_PLAY
+}
+
+void SoundEdit::OnHscroll(wxScrollEvent &event)
+{
+    // TODO: Implement OnHscroll
+}

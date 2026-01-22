@@ -1,0 +1,15 @@
+// Generated event table entries for PropPageEmitterPhysics
+// Add these to your wxBEGIN_EVENT_TABLE block:
+    EVT_BUTTON(XRCID("IDC_SPECIFY_VELOCITY_RANDOM"), PropPageEmitterPhysics::OnSpecifyVelocityRandom)  // Button/Checkbox click
+
+// Handler method stubs to add to your class:
+// In .h file:
+    void OnSpecifyVelocityRandom(wxCommandEvent &event);  // Button/Checkbox click
+
+// In .cpp file:
+
+void PropPageEmitterPhysics::OnSpecifyVelocityRandom(wxCommandEvent &event)
+{
+    // TODO: Implement OnSpecifyVelocityRandom
+    // Control ID: IDC_SPECIFY_VELOCITY_RANDOM
+}

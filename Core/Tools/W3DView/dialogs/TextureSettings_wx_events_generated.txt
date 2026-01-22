@@ -1,0 +1,46 @@
+// Generated event table entries for TextureSettings
+// Add these to your wxBEGIN_EVENT_TABLE block:
+    EVT_CHECKBOX(XRCID("IDC_ANIMATION_CHECK"), TextureSettings::OnAnimationCheck)  // Button/Checkbox click
+    EVT_WINDOW_DESTROY(TextureSettings::OnDestroy)  // Window destruction
+    EVT_BUTTON(XRCID("IDC_BROWSE_BUTTON"), TextureSettings::OnBrowseButton)  // Button/Checkbox click
+    EVT_BUTTON(XRCID("IDC_RESTORE"), TextureSettings::OnRestore)  // Button/Checkbox click
+    EVT_BUTTON(XRCID("IDC_APPLY"), TextureSettings::OnApply)  // Button/Checkbox click
+
+// Handler method stubs to add to your class:
+// In .h file:
+    void OnAnimationCheck(wxCommandEvent &event);  // Button/Checkbox click
+    void OnDestroy(wxWindowDestroyEvent &event);  // Window destruction
+    void OnBrowseButton(wxCommandEvent &event);  // Button/Checkbox click
+    void OnRestore(wxCommandEvent &event);  // Button/Checkbox click
+    void OnApply(wxCommandEvent &event);  // Button/Checkbox click
+
+// In .cpp file:
+
+void TextureSettings::OnAnimationCheck(wxCommandEvent &event)
+{
+    // TODO: Implement OnAnimationCheck
+    // Control ID: IDC_ANIMATION_CHECK
+}
+
+void TextureSettings::OnDestroy(wxWindowDestroyEvent &event)
+{
+    // TODO: Implement OnDestroy
+}
+
+void TextureSettings::OnBrowseButton(wxCommandEvent &event)
+{
+    // TODO: Implement OnBrowseButton
+    // Control ID: IDC_BROWSE_BUTTON
+}
+
+void TextureSettings::OnRestore(wxCommandEvent &event)
+{
+    // TODO: Implement OnRestore
+    // Control ID: IDC_RESTORE
+}
+
+void TextureSettings::OnApply(wxCommandEvent &event)
+{
+    // TODO: Implement OnApply
+    // Control ID: IDC_APPLY
+}

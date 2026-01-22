@@ -1,0 +1,15 @@
+// Generated event table entries for GammaDialog
+// Add these to your wxBEGIN_EVENT_TABLE block:
+    EVT_TREE_SEL_CHANGED(XRCID("IDC_GAMMA_SLIDER"), GammaDialog::OnReleasedcaptureGammaSlider)  // Notification message (needs analysis)
+
+// Handler method stubs to add to your class:
+// In .h file:
+    void OnReleasedcaptureGammaSlider(various &event);  // Notification message (needs analysis)
+
+// In .cpp file:
+
+void GammaDialog::OnReleasedcaptureGammaSlider(various &event)
+{
+    // TODO: Implement OnReleasedcaptureGammaSlider
+    // Control ID: IDC_GAMMA_SLIDER
+}

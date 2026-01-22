@@ -1,0 +1,22 @@
+// Generated event table entries for LightAmbientDialog
+// Add these to your wxBEGIN_EVENT_TABLE block:
+    EVT_SLIDER(XRCID("IDC_SLIDER_BLUE"), LightAmbientDialog::OnHscroll)  // Horizontal scroll (slider)
+    EVT_CHECKBOX(XRCID("IDC_GRAYSCALE_CHECK"), LightAmbientDialog::OnGrayscaleCheck)  // Button/Checkbox click
+
+// Handler method stubs to add to your class:
+// In .h file:
+    void OnHscroll(wxScrollEvent &event);  // Horizontal scroll (slider)
+    void OnGrayscaleCheck(wxCommandEvent &event);  // Button/Checkbox click
+
+// In .cpp file:
+
+void LightAmbientDialog::OnHscroll(wxScrollEvent &event)
+{
+    // TODO: Implement OnHscroll
+}
+
+void LightAmbientDialog::OnGrayscaleCheck(wxCommandEvent &event)
+{
+    // TODO: Implement OnGrayscaleCheck
+    // Control ID: IDC_GRAYSCALE_CHECK
+}

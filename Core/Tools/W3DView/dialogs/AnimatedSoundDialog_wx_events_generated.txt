@@ -1,0 +1,31 @@
+// Generated event table entries for AnimatedSoundDialog
+// Add these to your wxBEGIN_EVENT_TABLE block:
+    EVT_BUTTON(XRCID("IDC_SOUND_DEFINITION_LIBRARY_BROWSE_BUTTON"), AnimatedSoundDialog::OnSoundDefinitionLibraryBrowseButton)  // Button/Checkbox click
+    EVT_BUTTON(XRCID("IDC_SOUND_INI_BROWSE_BUTTON"), AnimatedSoundDialog::OnSoundIniBrowseButton)  // Button/Checkbox click
+    EVT_BUTTON(XRCID("IDC_SOUND_PATH_BROWSE_BUTTON"), AnimatedSoundDialog::OnSoundPathBrowseButton)  // Button/Checkbox click
+
+// Handler method stubs to add to your class:
+// In .h file:
+    void OnSoundDefinitionLibraryBrowseButton(wxCommandEvent &event);  // Button/Checkbox click
+    void OnSoundIniBrowseButton(wxCommandEvent &event);  // Button/Checkbox click
+    void OnSoundPathBrowseButton(wxCommandEvent &event);  // Button/Checkbox click
+
+// In .cpp file:
+
+void AnimatedSoundDialog::OnSoundDefinitionLibraryBrowseButton(wxCommandEvent &event)
+{
+    // TODO: Implement OnSoundDefinitionLibraryBrowseButton
+    // Control ID: IDC_SOUND_DEFINITION_LIBRARY_BROWSE_BUTTON
+}
+
+void AnimatedSoundDialog::OnSoundIniBrowseButton(wxCommandEvent &event)
+{
+    // TODO: Implement OnSoundIniBrowseButton
+    // Control ID: IDC_SOUND_INI_BROWSE_BUTTON
+}
+
+void AnimatedSoundDialog::OnSoundPathBrowseButton(wxCommandEvent &event)
+{
+    // TODO: Implement OnSoundPathBrowseButton
+    // Control ID: IDC_SOUND_PATH_BROWSE_BUTTON
+}

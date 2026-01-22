@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-RC to XRC Converter - Final Version with all enhancements
+RC to XRC Converter v3 - Enhanced with multi-line CONTROL support
 """
 
 import re
@@ -47,15 +47,15 @@ def join_continuation_lines(text):
         
         # Check if this is a control statement
         if re.match(r'^\s*(CONTROL|LTEXT|RTEXT|CTEXT|PUSHBUTTON|DEFPUSHBUTTON|EDITTEXT|CHECKBOX|RADIOBUTTON|GROUPBOX|COMBOBOX|LISTBOX|ICON)\s+', line):
+            # Collect continuation lines (heavily indented lines that follow)
             combined = line
             i += 1
             
-            # Collect continuation lines
             while i < len(lines):
                 next_line = lines[i]
-                # Heavily indented continuation or comma at end of previous line
-                if (re.match(r'^\s{16,}', next_line) or combined.rstrip().endswith(',')) and \
-                   not re.match(r'^\s*(CONTROL|LTEXT|RTEXT|CTEXT|PUSHBUTTON|DEFPUSHBUTTON|EDITTEXT|CHECKBOX|RADIOBUTTON|GROUPBOX|COMBOBOX|LISTBOX|ICON|END)\s+', next_line):
+                # If next line starts with lots of spaces (continuation) and doesn't start with a keyword
+                if re.match(r'^\s{16,}', next_line) and not re.match(r'^\s*(CONTROL|LTEXT|RTEXT|CTEXT|PUSHBUTTON|DEFPUSHBUTTON|EDITTEXT|CHECKBOX|RADIOBUTTON|GROUPBOX|COMBOBOX|LISTBOX|ICON|END)\s+', next_line):
+                    # Join with previous, removing leading spaces and keeping a space
                     combined += ' ' + next_line.strip()
                     i += 1
                 else:
@@ -128,7 +128,7 @@ def parse_rc_dialog(rc_content, dialog_id):
     if cap_match:
         dialog.title = cap_match.group(1)
     
-    # Parse controls - comprehensive patterns
+    # Parse controls - enhanced patterns with multi-line support
     patterns = [
         # ICON ID,id,x,y,w,h
         (r'ICON\s+(\w+)\s*,\s*(\S+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)', 'icon'),
@@ -136,10 +136,9 @@ def parse_rc_dialog(rc_content, dialog_id):
         (r'(DEFPUSHBUTTON|PUSHBUTTON|CHECKBOX|RADIOBUTTON|GROUPBOX|LTEXT|RTEXT|CTEXT)\s+"([^"]*)"\s*,\s*(\S+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)', 'labeled'),
         # Unlabeled controls: EDITTEXT ID,x,y,w,h
         (r'(EDITTEXT|COMBOBOX|LISTBOX)\s+(\S+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)', 'unlabeled'),
-        # CONTROL with string: CONTROL "text",ID,"ClassName",styles...,x,y,w,h
+        # CONTROL with class - now should match multi-line joined statements
+        # CONTROL "text",ID,"ClassName",styles...,x,y,w,h
         (r'CONTROL\s+"([^"]*)"\s*,\s*(\S+)\s*,\s*"([^"]+)"\s*,\s*[^,]+?\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)', 'control_class'),
-        # CONTROL with number (bitmap): CONTROL 204,ID,"Static",styles...,x,y,w,h
-        (r'CONTROL\s+(\d+)\s*,\s*(\S+)\s*,\s*"([^"]+)"\s*,\s*[^,]+?\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)', 'control_bitmap'),
     ]
     
     for pattern, ptype in patterns:
@@ -182,16 +181,6 @@ def parse_rc_dialog(rc_content, dialog_id):
                 control.y = int(m.group(5))
                 control.width = int(m.group(6))
                 control.height = int(m.group(7))
-            elif ptype == 'control_bitmap':
-                control.type = 'CONTROL'
-                control.text = ""  # Bitmap ID, no text
-                control.bitmap_id = m.group(1)
-                control.id = m.group(2)
-                control.custom_class = m.group(3)  # Usually "Static"
-                control.x = int(m.group(4))
-                control.y = int(m.group(5))
-                control.width = int(m.group(6))
-                control.height = int(m.group(7))
             
             dialog.controls.append(control)
     
@@ -223,12 +212,8 @@ def generate_xrc(dialog):
         # Determine wx control type
         if ctrl.type == 'CONTROL' and ctrl.custom_class:
             wx_type = CUSTOM_CONTROL_MAP.get(ctrl.custom_class, 'wxPanel')
-            if ctrl.custom_class == 'Static':
-                # Check if it's a bitmap or panel
-                if hasattr(ctrl, 'bitmap_id'):
-                    wx_type = 'wxStaticBitmap'
-                elif not ctrl.text:
-                    wx_type = 'wxPanel'
+            if ctrl.custom_class == 'Static' and not ctrl.text:
+                wx_type = 'wxPanel'
         elif ctrl.type == 'ICON':
             wx_type = 'wxStaticBitmap'
         else:
@@ -266,7 +251,7 @@ def generate_xrc(dialog):
 
 def main():
     if len(sys.argv) < 3:
-        print("Usage: rc2xrc_final.py <input.rc> <dialog_id> [output.xrc]")
+        print("Usage: rc2xrc_v3.py <input.rc> <dialog_id> [output.xrc]")
         sys.exit(1)
     
     rc_file = Path(sys.argv[1])

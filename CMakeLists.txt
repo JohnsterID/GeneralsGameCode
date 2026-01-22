@@ -67,16 +67,13 @@ include(cmake/gamespy.cmake)
 include(cmake/lzhl.cmake)
 
 # TheSuperHackers: Add wxWidgets support for cross-platform GUI tools
-option(BUILD_TOOLS "Build developer/debug tools" OFF)
+# Always search for wxWidgets - use it if available, fall back to platform-specific if not
+find_package(wxWidgets COMPONENTS core base xrc xml html adv QUIET)
 
-# Try and find wxWidgets which is used for some GUI tools.
-if(BUILD_TOOLS)
-    find_package(wxWidgets COMPONENTS core base xrc xml html adv)
-    
-    if(NOT wxWidgets_FOUND)
-        message(WARNING "Debug tools are enabled, but wxWidgets was not found.")
-        message(WARNING "GUI tools will not be built.")
-    endif()
+if(wxWidgets_FOUND)
+    message(STATUS "wxWidgets found - GUI tools will use wxWidgets")
+else()
+    message(STATUS "wxWidgets not found - GUI tools will use platform-specific fallbacks (e.g. MFC on Windows)")
 endif()
 
 if (IS_VS6_BUILD)

@@ -1,4 +1,4 @@
-if(BUILD_TOOLS AND wxWidgets_FOUND)
+if(wxWidgets_FOUND)
     # wxWidgets version - cross-platform
     include(${CMAKE_SOURCE_DIR}/cmake/TargetExports.cmake)
     include(${wxWidgets_USE_FILE})

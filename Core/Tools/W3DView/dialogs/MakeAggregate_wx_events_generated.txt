@@ -1,7 +1,0 @@
-// Generated event table entries for MakeAggregate
-// Add these to your wxBEGIN_EVENT_TABLE block:
-
-// Handler method stubs to add to your class:
-// In .h file:
-
-// In .cpp file:

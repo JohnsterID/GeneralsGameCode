@@ -144,18 +144,6 @@ jobs:
           runVcpkgInstall: false
           doNotCache: true
 
-      - name: Install wxWidgets via vcpkg (for non-vcpkg win32 builds)
-        if: startsWith(inputs.preset, 'win32') && !contains(inputs.preset, 'vcpkg')
-        shell: pwsh
-        run: |
-          Write-Host "Installing wxWidgets via vcpkg for ${{ inputs.preset }} build" -ForegroundColor Cyan
-          & "$env:VCPKG_ROOT\vcpkg.exe" install wxwidgets:x86-windows --clean-after-build
-          
-          # Set CMAKE_PREFIX_PATH so CMake can find wxWidgets
-          $wxWidgetsPath = "$env:VCPKG_ROOT\installed\x86-windows"
-          "CMAKE_PREFIX_PATH=$wxWidgetsPath" >> $env:GITHUB_ENV
-          Write-Host "wxWidgets installed and CMAKE_PREFIX_PATH set to $wxWidgetsPath"
-
       - name: Configure vcpkg to use cached directory
         if: startsWith(inputs.preset, 'win32')
         shell: pwsh
@@ -217,25 +205,14 @@ jobs:
 
           $files | Move-Item -Destination $artifactsDir -Verbose -Force
 
-          # Copy vcpkg DLL dependencies for vcpkg builds
+          # Copy vcpkg DLL dependencies for vcpkg builds (includes zlib, ffmpeg, wxWidgets)
           if ("${{ inputs.preset }}" -like "*vcpkg*") {
             Write-Host "Collecting vcpkg DLL dependencies" -ForegroundColor Cyan
             $vcpkgBinDir = "$env:VCPKG_ROOT\installed\x86-windows\bin"
             if (Test-Path $vcpkgBinDir) {
               $vcpkgDlls = Get-ChildItem -Path $vcpkgBinDir -Filter "*.dll" -File -Verbose
               $vcpkgDlls | Copy-Item -Destination $artifactsDir -Verbose -Force
-              Write-Host "Copied $($vcpkgDlls.Count) vcpkg DLLs" -ForegroundColor Green
-            }
-          }
-
-          # Copy vcpkg DLL dependencies for non-vcpkg win32 builds (if wxWidgets was installed)
-          if ("${{ inputs.preset }}" -like "win32*" -and "${{ inputs.preset }}" -notlike "*vcpkg*" -and $env:CMAKE_PREFIX_PATH) {
-            Write-Host "Collecting wxWidgets DLL dependencies" -ForegroundColor Cyan
-            $wxBinDir = "$env:CMAKE_PREFIX_PATH\bin"
-            if (Test-Path $wxBinDir) {
-              $wxDlls = Get-ChildItem -Path $wxBinDir -Filter "*.dll" -File -Verbose
-              $wxDlls | Copy-Item -Destination $artifactsDir -Verbose -Force
-              Write-Host "Copied $($wxDlls.Count) wxWidgets DLLs" -ForegroundColor Green
+              Write-Host "Copied $($vcpkgDlls.Count) vcpkg DLLs (including wxWidgets)" -ForegroundColor Green
             }
           }
 

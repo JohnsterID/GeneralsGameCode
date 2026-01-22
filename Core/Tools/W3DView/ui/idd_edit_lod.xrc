@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resource xmlns="http://www.wxwidgets.org/wxxrc" version="2.5.3.0">
+  <object class="wxDialog" name="IDD_EDIT_LOD">
+    <style>wxDEFAULT_DIALOG_STYLE</style>
+    <size>310,279</size>
+    <object class="wxBoxSizer">
+      <orient>wxVERTICAL</orient>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxStaticBitmap" name="IDC_STATIC">
+          <size>31,30</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxStaticText" name="IDC_STATIC">
+          <label>Select an LOD component from the list below.  Use the spin control to select a maximum screen area for the model.  To include an empty render object as the lowest level, check the 'Include NULL' box.</label>
+          <size>244,52</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxStaticText" name="IDC_STATIC">
+          <label>&amp;Models:</label>
+          <size>39,12</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxListCtrl" name="IDC_HIERARCHY_LIST">
+          <label>List1</label>
+          <size>289,85</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxStaticBox" name="IDC_SETTINGS_GROUP">
+          <label>Settings (CONEL1)</label>
+          <size>289,42</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxStaticText" name="IDC_STATIC">
+          <label>Ma&amp;ximum screen area:</label>
+          <size>111,12</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxTextCtrl" name="IDC_SWITCH_UP_EDIT">
+          <size>64,21</size>
+          <style>wxTE_LEFT</style>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxSpinButton" name="IDC_SWITCH_UP_SPIN">
+          <label>Spin1</label>
+          <size>16,21</size>
+          <style>wxSP_VERTICAL|wxSP_ARROW_KEYS</style>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxCheckBox" name="IDC_CHECK1">
+          <label>&amp;Include NULL object</label>
+          <size>121,15</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxButton" name="IDOK">
+          <label>OK</label>
+          <size>75,21</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxButton" name="IDCANCEL">
+          <label>Cancel</label>
+          <size>75,21</size>
+        </object>
+      </object>
+    </object>
+  </object>
+</resource>

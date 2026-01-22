@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resource xmlns="http://www.wxwidgets.org/wxxrc" version="2.5.3.0">
+  <object class="wxDialog" name="IDD_PROP_PAGE_EMITTER_SIZE">
+    <style>wxDEFAULT_DIALOG_STYLE</style>
+    <size>330,249</size>
+    <object class="wxBoxSizer">
+      <orient>wxVERTICAL</orient>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxStaticBitmap" name="-1">
+          <size>30,30</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxStaticText" name="-1">
+          <label>Use the controls below to specify keyframes.  Hold the Ctrl key and click to insert a new key, double click a key to edit its value.</label>
+          <size>265,40</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxPanel" name="IDC_SIZE_BAR">
+          <label>size</label>
+          <size>309,85</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxStaticText" name="-1">
+          <label>Rando&amp;mizer:</label>
+          <size>60,12</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxTextCtrl" name="IDC_SIZE_RANDOM_EDIT">
+          <size>49,21</size>
+          <style>wxTE_LEFT</style>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxSpinButton" name="IDC_SIZE_RANDOM_SPIN">
+          <label>Spin2</label>
+          <size>16,21</size>
+          <style>wxSP_VERTICAL|wxSP_ARROW_KEYS</style>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxStaticText" name="-1">
+          <label>meters</label>
+          <size>33,12</size>
+        </object>
+      </object>
+    </object>
+  </object>
+</resource>

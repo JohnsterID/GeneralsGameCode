@@ -72,7 +72,23 @@
 							<border>5</border>
 							<object class="wxStaticText" name="m_frameTxt">
 								<label>0</label>
-								<size>100,-1</size>
+								<size>60,-1</size>
+							</object>
+						</object>
+						<object class="sizeritem">
+							<option>0</option>
+							<flag>wxALL|wxALIGN_CENTER_VERTICAL</flag>
+							<border>5</border>
+							<object class="wxStaticText" name="m_variablesLabel">
+								<label>Variables</label>
+							</object>
+						</object>
+						<object class="sizeritem">
+							<option>1</option>
+							<flag>wxEXPAND</flag>
+							<border>5</border>
+							<object class="wxPanel">
+								<style>wxTAB_TRAVERSAL</style>
 							</object>
 						</object>
 						<object class="sizeritem">
@@ -80,8 +96,8 @@
 							<flag>wxALL</flag>
 							<border>5</border>
 							<object class="wxToggleButton" name="m_runFastXTenBtn">
-								<label>Run Fast (10x)</label>
-								<size>100,30</size>
+								<label>Run Fast (10 X)</label>
+								<size>110,30</size>
 							</object>
 						</object>
 						<object class="sizeritem">
@@ -96,15 +112,7 @@
 					</object>
 				</object>
 				<object class="sizeritem">
-					<option>0</option>
-					<flag>wxEXPAND|wxALL</flag>
-					<border>5</border>
-					<object class="wxStaticText" name="m_variablesLabel">
-						<label>Variables</label>
-					</object>
-				</object>
-				<object class="sizeritem">
-					<option>1</option>
+					<option>2</option>
 					<flag>wxEXPAND|wxALL</flag>
 					<border>5</border>
 					<object class="wxListBox" name="m_variableList">

@@ -93,7 +93,7 @@ void DbgWinFrame::Set_Frame_Number(int frame)
     // Thread-safe UI update using CallAfter to marshal to main GUI thread
     CallAfter([this, frame]() {
         char buf[32];
-        std::snprintf(buf, sizeof(buf), "Frame %9d", frame);
+        std::snprintf(buf, sizeof(buf), "%d", frame);
         m_frameTxt->SetLabel(buf);
         m_frameTxt->Refresh();
         m_currentFrame = frame;

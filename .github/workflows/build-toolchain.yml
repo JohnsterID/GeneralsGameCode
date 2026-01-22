@@ -168,6 +168,9 @@ jobs:
           )
 
           $gamePrefix = "${{ inputs.game == 'Generals' && 'GENERALS' || 'ZEROHOUR' }}"
+          
+          # Enable BUILD_TOOLS to allow wxWidgets detection for GUI tools
+          $buildFlags += "-DBUILD_TOOLS=${{ inputs.tools && 'ON' || 'OFF' }}"
           $buildFlags += "-DRTS_BUILD_CORE_TOOLS=${{ inputs.tools && 'ON' || 'OFF' }}"
           $buildFlags += "-DRTS_BUILD_${gamePrefix}_TOOLS=${{ inputs.tools && 'ON' || 'OFF' }}"
           $buildFlags += "-DRTS_BUILD_CORE_EXTRAS=${{ inputs.extras && 'ON' || 'OFF' }}"

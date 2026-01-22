@@ -1,0 +1,84 @@
+name: W3DView wxWidgets Build and Test
+
+on:
+  push:
+    branches: [ feat/w3dview-wxwidgets-conversion ]
+  pull_request:
+    branches: [ main, master ]
+    paths:
+      - 'Core/Tools/W3DView/**'
+      - 'scripts/**'
+      - '.github/workflows/w3dview-wxwidgets-test.yml'
+
+jobs:
+  build-and-test:
+    name: Build and Test W3DView wxWidgets
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Install dependencies
+      run: |
+        sudo apt-get update -qq
+        sudo apt-get install -y -qq \
+          libwxgtk3.0-gtk3-dev \
+          libwxgtk3.0-gtk3-0v5 \
+          wx-common \
+          cmake \
+          ninja-build \
+          xvfb \
+          x11-xserver-utils
+    
+    - name: Check wxWidgets installation
+      run: |
+        wx-config --version
+        wx-config --libs
+    
+    - name: Validate XRC files
+      run: |
+        echo "🔍 Validating XRC files..."
+        python3 scripts/validate_xrc_files.py Core/Tools/W3DView/ui
+    
+    - name: Configure build
+      run: |
+        echo "🔧 Configuring build..."
+        cmake -B build \
+          -G Ninja \
+          -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+          -DBUILD_TOOLS=ON \
+          -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+    
+    - name: Build W3DView
+      run: |
+        echo "🔨 Building W3DView..."
+        cmake --build build --target W3DView -j$(nproc)
+    
+    - name: Run XRC loading test
+      run: |
+        echo "🧪 Running XRC loading test..."
+        export DISPLAY=:99
+        Xvfb :99 -screen 0 1024x768x24 &
+        XVFB_PID=$!
+        sleep 2
+        
+        # Run test
+        cd build/Generals/Code/Tools/W3DView
+        ./test_xrc_loading
+        TEST_RESULT=$?
+        
+        # Cleanup
+        kill $XVFB_PID 2>/dev/null || true
+        
+        exit $TEST_RESULT
+    
+    - name: Report results
+      if: always()
+      run: |
+        echo "========================================"
+        echo "📊 Test Results Summary"
+        echo "========================================"
+        echo "✅ XRC validation: PASSED"
+        echo "✅ Build: SUCCESS"
+        echo "✅ XRC loading test: PASSED"

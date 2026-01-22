@@ -120,6 +120,7 @@
         <border>5</border>
         <object class="wxTextCtrl" name="IDC_NEAR_CLIP_EDIT">
           <size>103,21</size>
+          <style>wxTE_LEFT</style>
         </object>
       </object>
       <object class="sizeritem">
@@ -127,6 +128,7 @@
         <border>5</border>
         <object class="wxTextCtrl" name="IDC_FAR_CLIP_EDIT">
           <size>103,21</size>
+          <style>wxTE_LEFT</style>
         </object>
       </object>
       <object class="sizeritem">
@@ -134,6 +136,7 @@
         <border>5</border>
         <object class="wxTextCtrl" name="IDC_LENS_EDIT">
           <size>73,21</size>
+          <style>wxTE_LEFT</style>
         </object>
       </object>
       <object class="sizeritem">
@@ -141,6 +144,7 @@
         <border>5</border>
         <object class="wxTextCtrl" name="IDC_HFOV_EDIT">
           <size>73,21</size>
+          <style>wxTE_LEFT</style>
         </object>
       </object>
       <object class="sizeritem">
@@ -148,6 +152,63 @@
         <border>5</border>
         <object class="wxTextCtrl" name="IDC_VFOV_EDIT">
           <size>73,21</size>
+          <style>wxTE_LEFT</style>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxCheckBox" name="IDC_CLIP_PLANE_CHECK">
+          <label>&Clip Planes</label>
+          <size>76,15</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxSpinButton" name="IDC_NEAR_CLIP_SPIN">
+          <label>Spin1</label>
+          <size>16,21</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxSpinButton" name="IDC_FAR_CLIP_SPIN">
+          <label>Spin1</label>
+          <size>16,21</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxCheckBox" name="IDC_FOV_CHECK">
+          <label>Field of &View</label>
+          <size>87,15</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxSpinButton" name="IDC_LENS_SPIN">
+          <label>Spin1</label>
+          <size>16,21</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxSpinButton" name="IDC_HFOV_SPIN">
+          <label>Spin1</label>
+          <size>16,21</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxSpinButton" name="IDC_VFOV_SPIN">
+          <label>Spin1</label>
+          <size>16,21</size>
         </object>
       </object>
     </object>

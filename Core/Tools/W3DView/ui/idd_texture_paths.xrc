@@ -66,6 +66,7 @@
         <border>5</border>
         <object class="wxTextCtrl" name="IDC_PATH1">
           <size>238,21</size>
+          <style>wxTE_LEFT</style>
         </object>
       </object>
       <object class="sizeritem">
@@ -73,6 +74,7 @@
         <border>5</border>
         <object class="wxTextCtrl" name="IDC_PATH2">
           <size>238,21</size>
+          <style>wxTE_LEFT</style>
         </object>
       </object>
     </object>

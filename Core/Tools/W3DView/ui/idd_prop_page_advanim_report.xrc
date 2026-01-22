@@ -61,6 +61,14 @@
           <size>117,12</size>
         </object>
       </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxListCtrl" name="IDC_ANIM_REPORT">
+          <label>List1</label>
+          <size>324,198</size>
+        </object>
+      </object>
     </object>
   </object>
 </resource>

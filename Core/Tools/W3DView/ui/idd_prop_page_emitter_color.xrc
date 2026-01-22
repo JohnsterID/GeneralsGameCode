@@ -82,6 +82,7 @@
         <border>5</border>
         <object class="wxTextCtrl" name="IDC_RED_RANDOM_EDIT">
           <size>46,21</size>
+          <style>wxTE_LEFT</style>
         </object>
       </object>
       <object class="sizeritem">
@@ -89,6 +90,7 @@
         <border>5</border>
         <object class="wxTextCtrl" name="IDC_GREEN_RANDOM_EDIT">
           <size>46,21</size>
+          <style>wxTE_LEFT</style>
         </object>
       </object>
       <object class="sizeritem">
@@ -96,6 +98,7 @@
         <border>5</border>
         <object class="wxTextCtrl" name="IDC_BLUE_RANDOM_EDIT">
           <size>46,21</size>
+          <style>wxTE_LEFT</style>
         </object>
       </object>
       <object class="sizeritem">
@@ -103,6 +106,69 @@
         <border>5</border>
         <object class="wxTextCtrl" name="IDC_OPACITY_RANDOM_EDIT">
           <size>49,21</size>
+          <style>wxTE_LEFT</style>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxPanel" name="IDC_STATIC">
+          <size>309,1</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxPanel" name="IDC_COLOR_BAR">
+          <label>color</label>
+          <size>286,25</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxSpinButton" name="IDC_RED_RANDOM_SPIN">
+          <label>Spin2</label>
+          <size>16,21</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxSpinButton" name="IDC_GREEN_RANDOM_SPIN">
+          <label>Spin2</label>
+          <size>16,21</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxSpinButton" name="IDC_BLUE_RANDOM_SPIN">
+          <label>Spin2</label>
+          <size>16,21</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxPanel" name="IDC_STATIC">
+          <size>309,1</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxPanel" name="IDC_OPACITY_BAR">
+          <label>opacity</label>
+          <size>286,25</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxSpinButton" name="IDC_OPACITY_RANDOM_SPIN">
+          <label>Spin2</label>
+          <size>16,21</size>
         </object>
       </object>
     </object>

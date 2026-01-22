@@ -37,6 +37,14 @@
           <size>442,34</size>
         </object>
       </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxListCtrl" name="IDC_MESH_TEXTURE_LIST_CTRL">
+          <label>List1</label>
+          <size>442,232</size>
+        </object>
+      </object>
     </object>
   </object>
 </resource>

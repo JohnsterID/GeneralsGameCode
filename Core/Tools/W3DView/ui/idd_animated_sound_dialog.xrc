@@ -82,6 +82,7 @@
         <border>5</border>
         <object class="wxTextCtrl" name="IDC_SOUND_DEFINITION_LIBRARY_EDIT">
           <size>325,21</size>
+          <style>wxTE_LEFT</style>
         </object>
       </object>
       <object class="sizeritem">
@@ -89,6 +90,7 @@
         <border>5</border>
         <object class="wxTextCtrl" name="IDC_SOUND_INI_EDIT">
           <size>325,21</size>
+          <style>wxTE_LEFT</style>
         </object>
       </object>
       <object class="sizeritem">
@@ -96,6 +98,7 @@
         <border>5</border>
         <object class="wxTextCtrl" name="IDC_SOUND_FILE_PATH_EDIT">
           <size>325,21</size>
+          <style>wxTE_LEFT</style>
         </object>
       </object>
     </object>

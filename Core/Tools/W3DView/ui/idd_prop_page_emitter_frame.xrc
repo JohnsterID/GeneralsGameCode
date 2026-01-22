@@ -50,6 +50,37 @@
         <border>5</border>
         <object class="wxTextCtrl" name="IDC_FRAME_RANDOM_EDIT">
           <size>49,21</size>
+          <style>wxTE_LEFT</style>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxComboBox" name="IDC_FRAME_LAYOUT_COMBO">
+          <size>76,172</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxPanel" name="IDC_FRAME_BAR">
+          <label>size</label>
+          <size>309,85</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxSpinButton" name="IDC_FRAME_RANDOM_SPIN">
+          <label>Spin2</label>
+          <size>16,21</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxPanel" name="IDC_STATIC">
+          <size>306,1</size>
         </object>
       </object>
     </object>

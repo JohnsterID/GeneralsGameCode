@@ -37,6 +37,22 @@
           <size>75,21</size>
         </object>
       </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxListCtrl" name="IDC_RESOLUTION_LIST_CTRL">
+          <label>List2</label>
+          <size>325,126</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxCheckBox" name="IDC_FULLSCREEN_CHECK">
+          <label>&Fullscreen</label>
+          <size>105,15</size>
+        </object>
+      </object>
     </object>
   </object>
 </resource>

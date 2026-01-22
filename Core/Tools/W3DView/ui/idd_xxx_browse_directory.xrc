@@ -49,6 +49,21 @@
         <border>5</border>
         <object class="wxTextCtrl" name="20626">
           <size>214,18</size>
+          <style>wxTE_LEFT</style>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxListBox" name="1121">
+          <size>214,96</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxComboBox" name="1137">
+          <size>214,102</size>
         </object>
       </object>
     </object>

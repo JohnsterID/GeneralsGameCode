@@ -85,6 +85,21 @@
           <size>75,21</size>
         </object>
       </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxComboBox" name="IDC_TEXTURE_FILENAME">
+          <size>246,145</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxTreeCtrl" name="IDC_TREE1">
+          <label>Tree1</label>
+          <size>352,115</size>
+        </object>
+      </object>
     </object>
   </object>
 </resource>

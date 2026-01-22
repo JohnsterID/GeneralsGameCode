@@ -181,6 +181,36 @@
           <size>156,12</size>
         </object>
       </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxComboBox" name="IDC_RENDER_DEVICE_COMBO">
+          <size>168,85</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxCheckBox" name="IDC_COLORDEPTH_24">
+          <label>24 Bit Color Depth</label>
+          <size>109,15</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxCheckBox" name="IDC_COLORDEPTH_16">
+          <label>16 Bit Color Depth</label>
+          <size>109,15</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxPanel" name="IDC_STATIC">
+          <size>270,1</size>
+        </object>
+      </object>
     </object>
   </object>
 </resource>

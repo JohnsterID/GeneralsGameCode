@@ -90,6 +90,7 @@
         <border>5</border>
         <object class="wxTextCtrl" name="IDC_SUBDIVISION_LEVEL_EDIT">
           <size>60,21</size>
+          <style>wxTE_LEFT</style>
         </object>
       </object>
       <object class="sizeritem">
@@ -97,6 +98,14 @@
         <border>5</border>
         <object class="wxTextCtrl" name="IDC_NOISE_AMPLITUDE_EDIT">
           <size>60,21</size>
+          <style>wxTE_LEFT</style>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxComboBox" name="IDC_MAPMODE_COMBO">
+          <size>153,70</size>
         </object>
       </object>
       <object class="sizeritem">
@@ -104,6 +113,7 @@
         <border>5</border>
         <object class="wxTextCtrl" name="IDC_MERGE_ABORT_FACTOR_EDIT">
           <size>60,21</size>
+          <style>wxTE_LEFT</style>
         </object>
       </object>
       <object class="sizeritem">
@@ -111,6 +121,7 @@
         <border>5</border>
         <object class="wxTextCtrl" name="IDC_UVTILING_EDIT">
           <size>60,21</size>
+          <style>wxTE_LEFT</style>
         </object>
       </object>
       <object class="sizeritem">
@@ -118,6 +129,7 @@
         <border>5</border>
         <object class="wxTextCtrl" name="IDC_UPERSEC_EDIT">
           <size>60,21</size>
+          <style>wxTE_LEFT</style>
         </object>
       </object>
       <object class="sizeritem">
@@ -125,6 +137,93 @@
         <border>5</border>
         <object class="wxTextCtrl" name="IDC_VPERSEC_EDIT">
           <size>60,21</size>
+          <style>wxTE_LEFT</style>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxPanel" name="IDC_STATIC">
+          <size>309,1</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxSpinButton" name="IDC_SUBDIVISION_LEVEL_SPIN">
+          <label>Spin1</label>
+          <size>16,21</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxSpinButton" name="IDC_NOISE_AMPLITUDE_SPIN">
+          <label>Spin1</label>
+          <size>16,21</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxPanel" name="IDC_STATIC">
+          <size>307,3</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxCheckBox" name="IDC_MERGE_INTERSECTIONS_CHECK">
+          <label>&Merge Intersections</label>
+          <size>117,15</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxCheckBox" name="IDC_END_CAPS_CHECK">
+          <label>&End Caps</label>
+          <size>70,15</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxCheckBox" name="IDC_DISABLE_SORTING_CHECK">
+          <label>&Disable Sorting</label>
+          <size>94,15</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxSpinButton" name="IDC_MERGE_ABORT_FACTOR_SPIN">
+          <label>Spin1</label>
+          <size>16,21</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxSpinButton" name="IDC_UVTILING_SPIN">
+          <label>Spin1</label>
+          <size>16,21</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxSpinButton" name="IDC_UPERSEC_SPIN">
+          <label>Spin1</label>
+          <size>16,21</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxSpinButton" name="IDC_VPERSEC_SPIN">
+          <label>Spin1</label>
+          <size>16,21</size>
         </object>
       </object>
     </object>

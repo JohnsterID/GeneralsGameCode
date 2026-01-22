@@ -74,6 +74,7 @@
         <border>5</border>
         <object class="wxTextCtrl" name="IDC_NAME_EDIT">
           <size>250,21</size>
+          <style>wxTE_LEFT</style>
         </object>
       </object>
       <object class="sizeritem">
@@ -81,6 +82,14 @@
         <border>5</border>
         <object class="wxTextCtrl" name="IDC_LIFETIME_EDIT">
           <size>60,21</size>
+          <style>wxTE_LEFT</style>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxComboBox" name="IDC_SHADER_COMBO">
+          <size>210,172</size>
         </object>
       </object>
       <object class="sizeritem">
@@ -88,6 +97,31 @@
         <border>5</border>
         <object class="wxTextCtrl" name="IDC_FILENAME_EDIT">
           <size>204,21</size>
+          <style>wxTE_LEFT</style>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxSpinButton" name="IDC_LIFETIME_SPIN">
+          <label>Spin1</label>
+          <size>16,21</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxCheckBox" name="IDC_CAMERA_ALIGNED_CHECK">
+          <label>&Camera Aligned</label>
+          <size>111,15</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxCheckBox" name="IDC_LOOPING_CHECK">
+          <label>&Looping</label>
+          <size>111,15</size>
         </object>
       </object>
     </object>

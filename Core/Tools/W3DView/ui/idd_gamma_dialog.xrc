@@ -61,6 +61,15 @@
           <size>325,132</size>
         </object>
       </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxSlider" name="IDC_GAMMA_SLIDER">
+          <label>Slider2</label>
+          <size>240,27</size>
+          <style>wxSL_HORIZONTAL</style>
+        </object>
+      </object>
     </object>
   </object>
 </resource>

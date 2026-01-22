@@ -24,8 +24,16 @@
       <object class="sizeritem">
         <flag>wxALL</flag>
         <border>5</border>
+        <object class="wxComboBox" name="IDC_TYPE_COMBO">
+          <size>172,78</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
         <object class="wxTextCtrl" name="IDC_PROGRAMMER_SETTINGS_EDIT">
           <size>309,114</size>
+          <style>wxTE_LEFT</style>
         </object>
       </object>
     </object>

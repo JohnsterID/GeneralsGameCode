@@ -45,6 +45,14 @@
           <size>190,28</size>
         </object>
       </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxPanel" name="IDC_OPACITY_BAR">
+          <label>test</label>
+          <size>237,21</size>
+        </object>
+      </object>
     </object>
   </object>
 </resource>

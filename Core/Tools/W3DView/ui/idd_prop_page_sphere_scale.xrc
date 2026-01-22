@@ -82,6 +82,7 @@
         <border>5</border>
         <object class="wxTextCtrl" name="IDC_SIZE_X_EDIT">
           <size>60,21</size>
+          <style>wxTE_LEFT</style>
         </object>
       </object>
       <object class="sizeritem">
@@ -89,6 +90,7 @@
         <border>5</border>
         <object class="wxTextCtrl" name="IDC_SIZE_Y_EDIT">
           <size>60,21</size>
+          <style>wxTE_LEFT</style>
         </object>
       </object>
       <object class="sizeritem">
@@ -96,6 +98,69 @@
         <border>5</border>
         <object class="wxTextCtrl" name="IDC_SIZE_Z_EDIT">
           <size>60,21</size>
+          <style>wxTE_LEFT</style>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxPanel" name="IDC_STATIC">
+          <size>309,1</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxSpinButton" name="IDC_SIZE_X_SPIN">
+          <label>Spin2</label>
+          <size>16,21</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxSpinButton" name="IDC_SIZE_Y_SPIN">
+          <label>Spin2</label>
+          <size>16,21</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxSpinButton" name="IDC_SIZE_Z_SPIN">
+          <label>Spin2</label>
+          <size>16,21</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxPanel" name="IDC_STATIC">
+          <size>309,1</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxPanel" name="IDC_SCALE_BAR_X">
+          <label>size</label>
+          <size>309,25</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxPanel" name="IDC_SCALE_BAR_Y">
+          <label>size</label>
+          <size>309,25</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxPanel" name="IDC_SCALE_BAR_Z">
+          <label>size</label>
+          <size>309,25</size>
         </object>
       </object>
     </object>

@@ -74,6 +74,7 @@
         <border>5</border>
         <object class="wxTextCtrl" name="IDC_NAME_EDIT">
           <size>202,21</size>
+          <style>wxTE_LEFT</style>
         </object>
       </object>
       <object class="sizeritem">
@@ -81,6 +82,14 @@
         <border>5</border>
         <object class="wxTextCtrl" name="IDC_PARTICLE_LIFETIME_EDIT">
           <size>60,21</size>
+          <style>wxTE_LEFT</style>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxComboBox" name="IDC_SHADER_COMBO">
+          <size>196,172</size>
         </object>
       </object>
       <object class="sizeritem">
@@ -88,6 +97,30 @@
         <border>5</border>
         <object class="wxTextCtrl" name="IDC_FILENAME_EDIT">
           <size>204,21</size>
+          <style>wxTE_LEFT</style>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxComboBox" name="IDC_RENDER_MODE_COMBO">
+          <size>196,70</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxSpinButton" name="IDC_PARTICLE_LIFETIME_SPIN">
+          <label>Spin1</label>
+          <size>16,21</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxCheckBox" name="IDC_PARTICLE_LIFETIME_CHECK">
+          <label>Particle &Lifetime</label>
+          <size>97,15</size>
         </object>
       </object>
     </object>

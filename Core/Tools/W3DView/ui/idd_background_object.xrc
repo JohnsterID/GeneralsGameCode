@@ -61,6 +61,14 @@
           <size>196,13</size>
         </object>
       </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxListCtrl" name="IDC_HIERARCHY_LIST">
+          <label>List1</label>
+          <size>270,99</size>
+        </object>
+      </object>
     </object>
   </object>
 </resource>

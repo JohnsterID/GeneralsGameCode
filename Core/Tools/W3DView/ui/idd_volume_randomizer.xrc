@@ -103,6 +103,7 @@
         <border>5</border>
         <object class="wxTextCtrl" name="IDC_BOX_X_EDIT">
           <size>64,21</size>
+          <style>wxTE_LEFT</style>
         </object>
       </object>
       <object class="sizeritem">
@@ -110,6 +111,7 @@
         <border>5</border>
         <object class="wxTextCtrl" name="IDC_BOX_Y_EDIT">
           <size>64,21</size>
+          <style>wxTE_LEFT</style>
         </object>
       </object>
       <object class="sizeritem">
@@ -117,6 +119,7 @@
         <border>5</border>
         <object class="wxTextCtrl" name="IDC_BOX_Z_EDIT">
           <size>64,21</size>
+          <style>wxTE_LEFT</style>
         </object>
       </object>
       <object class="sizeritem">
@@ -124,6 +127,7 @@
         <border>5</border>
         <object class="wxTextCtrl" name="IDC_SPHERE_RADIUS_EDIT">
           <size>106,21</size>
+          <style>wxTE_LEFT</style>
         </object>
       </object>
       <object class="sizeritem">
@@ -131,6 +135,7 @@
         <border>5</border>
         <object class="wxTextCtrl" name="IDC_CYLINDER_RADIUS_EDIT">
           <size>64,21</size>
+          <style>wxTE_LEFT</style>
         </object>
       </object>
       <object class="sizeritem">
@@ -138,6 +143,87 @@
         <border>5</border>
         <object class="wxTextCtrl" name="IDC_CYLINDER_HEIGHT_EDIT">
           <size>64,21</size>
+          <style>wxTE_LEFT</style>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxCheckBox" name="IDC_BOX_RADIO">
+          <label>&Box</label>
+          <size>39,15</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxCheckBox" name="IDC_SPHERE_RADIO">
+          <label>&Sphere</label>
+          <size>60,15</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxCheckBox" name="IDC_CYLINDER_RADIO">
+          <label>&Cylinder</label>
+          <size>60,15</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxSpinButton" name="IDC_BOX_X_SPIN">
+          <label>Spin1</label>
+          <size>16,21</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxSpinButton" name="IDC_BOX_Y_SPIN">
+          <label>Spin1</label>
+          <size>16,21</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxSpinButton" name="IDC_BOX_Z_SPIN">
+          <label>Spin1</label>
+          <size>16,21</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxSpinButton" name="IDC_SPHERE_RADIUS_SPIN">
+          <label>Spin1</label>
+          <size>16,21</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxCheckBox" name="IDC_SPHERE_HOLLOW_CHECK">
+          <label>&Hollow</label>
+          <size>75,15</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxSpinButton" name="IDC_CYLINDER_RADIUS_SPIN">
+          <label>Spin1</label>
+          <size>16,21</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxSpinButton" name="IDC_CYLINDER_HEIGHT_SPIN">
+          <label>Spin1</label>
+          <size>16,21</size>
         </object>
       </object>
     </object>

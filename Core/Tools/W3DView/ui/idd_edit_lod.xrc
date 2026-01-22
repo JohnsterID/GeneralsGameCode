@@ -58,6 +58,31 @@
         <border>5</border>
         <object class="wxTextCtrl" name="IDC_SWITCH_UP_EDIT">
           <size>64,21</size>
+          <style>wxTE_LEFT</style>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxListCtrl" name="IDC_HIERARCHY_LIST">
+          <label>List1</label>
+          <size>289,85</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxSpinButton" name="IDC_SWITCH_UP_SPIN">
+          <label>Spin1</label>
+          <size>16,21</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxCheckBox" name="IDC_CHECK1">
+          <label>&Include NULL object</label>
+          <size>121,15</size>
         </object>
       </object>
     </object>

@@ -36,6 +36,47 @@
           <size>133,54</size>
         </object>
       </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxSlider" name="IDC_SPEED_SLIDER">
+          <label>Slider1</label>
+          <size>258,21</size>
+          <style>wxSL_HORIZONTAL</style>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxCheckBox" name="IDC_BLEND">
+          <label>&Blend frames</label>
+          <size>79,15</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxCheckBox" name="IDC_COMPRESSQ">
+          <label>Compress Q-Channel</label>
+          <size>114,15</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxCheckBox" name="IDC_16BIT">
+          <label>16-bit</label>
+          <size>69,12</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxCheckBox" name="IDC_8BIT">
+          <label>8-bit</label>
+          <size>69,12</size>
+        </object>
+      </object>
     </object>
   </object>
 </resource>

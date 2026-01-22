@@ -109,6 +109,32 @@
           <size>39,12</size>
         </object>
       </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxSlider" name="IDC_SLIDER_Y">
+          <label>Slider1</label>
+          <size>220,18</size>
+          <style>wxSL_HORIZONTAL</style>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxSlider" name="IDC_SLIDER_Z">
+          <label>Slider1</label>
+          <size>220,18</size>
+          <style>wxSL_HORIZONTAL</style>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxPanel" name="IDC_OPACITY_BAR">
+          <label>test</label>
+          <size>268,21</size>
+        </object>
+      </object>
     </object>
   </object>
 </resource>

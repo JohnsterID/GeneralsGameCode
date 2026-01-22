@@ -5,6 +5,22 @@
     <size>330,270</size>
     <object class="wxBoxSizer">
       <orient>wxVERTICAL</orient>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxPanel" name="IDC_COLOR_BAR">
+          <label>color</label>
+          <size>286,25</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxPanel" name="IDC_OPACITY_BAR">
+          <label>opacity</label>
+          <size>286,25</size>
+        </object>
+      </object>
     </object>
   </object>
 </resource>

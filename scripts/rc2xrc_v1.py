@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
 """
-RC to XRC Converter v2 - Enhanced with CONTROL statement support
+RC to XRC Converter for W3DView
+Converts MFC .rc dialog definitions to wxWidgets .xrc format
 """
 
 import re
 import sys
 from pathlib import Path
 
+# Control type mappings
 CONTROL_MAP = {
     'PUSHBUTTON': 'wxButton',
     'DEFPUSHBUTTON': 'wxButton',
@@ -20,20 +22,7 @@ CONTROL_MAP = {
     'COMBOBOX': 'wxComboBox',
     'LISTBOX': 'wxListBox',
     'SCROLLBAR': 'wxScrollBar',
-}
-
-# Map MFC custom control classes to wxWidgets
-CUSTOM_CONTROL_MAP = {
-    'msctls_trackbar32': 'wxSlider',
-    'Static': 'wxStaticText',  # Generic static control
-    'Button': 'wxCheckBox',  # Button with BS_AUTOCHECKBOX style
-    'SysTreeView32': 'wxTreeCtrl',
-    'SysListView32': 'wxListCtrl',
-    'SysTabControl32': 'wxNotebook',
-    'msctls_progress32': 'wxGauge',
-    'msctls_updown32': 'wxSpinButton',
-    'RichEdit20A': 'wxTextCtrl',
-    'RichEdit20W': 'wxTextCtrl',
+    'CONTROL': 'wxControl',
 }
 
 def parse_rc_dialog(rc_content, dialog_id):
@@ -81,7 +70,7 @@ def parse_rc_dialog(rc_content, dialog_id):
             depth -= 1
         pos += end_match.end()
         if depth == 0:
-            block_end = pos - 3
+            block_end = pos - 3  # Back up to before END
             break
     else:
         return None
@@ -93,14 +82,10 @@ def parse_rc_dialog(rc_content, dialog_id):
     if cap_match:
         dialog.title = cap_match.group(1)
     
-    # Parse controls - enhanced patterns
+    # Parse controls - simple patterns
     patterns = [
-        # Standard labeled controls: PUSHBUTTON "OK",IDOK,x,y,w,h
         (r'(DEFPUSHBUTTON|PUSHBUTTON|CHECKBOX|RADIOBUTTON|GROUPBOX|LTEXT|RTEXT|CTEXT)\s+"([^"]*)"\s*,\s*(\w+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)', 'labeled'),
-        # Unlabeled controls: EDITTEXT ID,x,y,w,h
-        (r'(EDITTEXT|COMBOBOX|LISTBOX)\s+(\w+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)', 'unlabeled'),
-        # CONTROL with class: CONTROL "text",ID,"ClassName",style,x,y,w,h
-        (r'CONTROL\s+"([^"]*)"\s*,\s*(\w+)\s*,\s*"([^"]*)"\s*,\s*[^,]+\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)', 'control_class'),
+        (r'(EDITTEXT)\s+(\w+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)', 'unlabeled'),
     ]
     
     for pattern, ptype in patterns:
@@ -114,8 +99,7 @@ def parse_rc_dialog(rc_content, dialog_id):
                 control.y = int(m.group(5))
                 control.width = int(m.group(6))
                 control.height = int(m.group(7))
-                control.custom_class = None
-            elif ptype == 'unlabeled':
+            else:
                 control.type = m.group(1)
                 control.text = ""
                 control.id = m.group(2)
@@ -123,17 +107,6 @@ def parse_rc_dialog(rc_content, dialog_id):
                 control.y = int(m.group(4))
                 control.width = int(m.group(5))
                 control.height = int(m.group(6))
-                control.custom_class = None
-            elif ptype == 'control_class':
-                control.type = 'CONTROL'
-                control.text = m.group(1)
-                control.id = m.group(2)
-                control.custom_class = m.group(3)
-                control.x = int(m.group(4))
-                control.y = int(m.group(5))
-                control.width = int(m.group(6))
-                control.height = int(m.group(7))
-            
             dialog.controls.append(control)
     
     return dialog
@@ -161,15 +134,7 @@ def generate_xrc(dialog):
     lines.append('      <orient>wxVERTICAL</orient>')
     
     for ctrl in dialog.controls:
-        # Determine wx control type
-        if ctrl.type == 'CONTROL' and ctrl.custom_class:
-            wx_type = CUSTOM_CONTROL_MAP.get(ctrl.custom_class, 'wxPanel')
-            # Special handling for Static with SS_BLACKFRAME (gradient displays)
-            if ctrl.custom_class == 'Static' and not ctrl.text:
-                wx_type = 'wxPanel'  # Empty static = colored panel
-        else:
-            wx_type = CONTROL_MAP.get(ctrl.type, 'wxControl')
-        
+        wx_type = CONTROL_MAP.get(ctrl.type, 'wxControl')
         cw = dlu_to_px(ctrl.width)
         ch = dlu_to_px(ctrl.height)
         
@@ -177,18 +142,9 @@ def generate_xrc(dialog):
         lines.append('        <flag>wxALL</flag>')
         lines.append('        <border>5</border>')
         lines.append(f'        <object class="{wx_type}" name="{ctrl.id}">')
-        
         if ctrl.text:
             lines.append(f'          <label>{ctrl.text}</label>')
-        
         lines.append(f'          <size>{cw},{ch}</size>')
-        
-        # Add style hints based on control type
-        if wx_type == 'wxSlider':
-            lines.append('          <style>wxSL_HORIZONTAL</style>')
-        elif wx_type == 'wxTextCtrl' and ctrl.type == 'EDITTEXT':
-            lines.append('          <style>wxTE_LEFT</style>')
-        
         lines.append('        </object>')
         lines.append('      </object>')
     
@@ -200,7 +156,7 @@ def generate_xrc(dialog):
 
 def main():
     if len(sys.argv) < 3:
-        print("Usage: rc2xrc_v2.py <input.rc> <dialog_id> [output.xrc]")
+        print("Usage: rc2xrc.py <input.rc> <dialog_id> [output.xrc]")
         sys.exit(1)
     
     rc_file = Path(sys.argv[1])
@@ -217,17 +173,9 @@ def main():
     xrc = generate_xrc(dialog)
     out_file.write_text(xrc, encoding='utf-8')
     
-    # Count control types
-    control_types = {}
-    for ctrl in dialog.controls:
-        ctype = ctrl.custom_class if ctrl.type == 'CONTROL' else ctrl.type
-        control_types[ctype] = control_types.get(ctype, 0) + 1
-    
     print(f"✅ Converted {dialog_id}")
     print(f"   Size: {dialog.width}x{dialog.height} DLU → {int(dialog.width*1.5)}x{int(dialog.height*1.5)} px")
     print(f"   Controls: {len(dialog.controls)}")
-    if control_types:
-        print(f"   Types: {', '.join(f'{k}:{v}' for k,v in sorted(control_types.items()))}")
     print(f"   Output: {out_file}")
 
 if __name__ == "__main__":

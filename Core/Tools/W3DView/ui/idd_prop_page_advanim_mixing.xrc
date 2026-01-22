@@ -13,6 +13,14 @@
           <size>181,12</size>
         </object>
       </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxListCtrl" name="IDC_ANIMATION_LIST">
+          <label>List2</label>
+          <size>324,264</size>
+        </object>
+      </object>
     </object>
   </object>
 </resource>

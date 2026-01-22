@@ -61,6 +61,21 @@
           <size>75,21</size>
         </object>
       </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxComboBox" name="IDC_OBJECT_COMBO">
+          <size>252,331</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxTreeCtrl" name="IDC_BONE_TREE">
+          <label>Tree1</label>
+          <size>364,288</size>
+        </object>
+      </object>
     </object>
   </object>
 </resource>

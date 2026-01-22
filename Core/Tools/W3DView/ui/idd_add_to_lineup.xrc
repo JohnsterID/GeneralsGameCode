@@ -37,6 +37,13 @@
           <size>36,12</size>
         </object>
       </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxComboBox" name="IDC_OBJECT">
+          <size>183,118</size>
+        </object>
+      </object>
     </object>
   </object>
 </resource>

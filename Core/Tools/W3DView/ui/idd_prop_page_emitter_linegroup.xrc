@@ -10,6 +10,23 @@
         <border>5</border>
         <object class="wxTextCtrl" name="IDC_BLUR_TIME_RANDOM_EDIT">
           <size>106,21</size>
+          <style>wxTE_LEFT</style>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxPanel" name="IDC_BLUR_TIME_BAR">
+          <label>blurtime</label>
+          <size>309,85</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxSpinButton" name="IDC_BLUR_TIME_RANDOM_SPIN">
+          <label>Spin2</label>
+          <size>16,21</size>
         </object>
       </object>
     </object>

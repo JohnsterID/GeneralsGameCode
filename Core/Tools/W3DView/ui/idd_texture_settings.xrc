@@ -105,6 +105,7 @@
         <border>5</border>
         <object class="wxTextCtrl" name="IDC_FILENAME_EDIT">
           <size>247,21</size>
+          <style>wxTE_LEFT</style>
         </object>
       </object>
       <object class="sizeritem">
@@ -112,6 +113,7 @@
         <border>5</border>
         <object class="wxTextCtrl" name="IDC_FRAME_COUNT_EDIT">
           <size>51,21</size>
+          <style>wxTE_LEFT</style>
         </object>
       </object>
       <object class="sizeritem">
@@ -119,6 +121,85 @@
         <border>5</border>
         <object class="wxTextCtrl" name="IDC_FPS_EDIT">
           <size>51,21</size>
+          <style>wxTE_LEFT</style>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxComboBox" name="IDC_TYPE_COMBO">
+          <size>88,117</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxCheckBox" name="IDC_RESIZEABLE_CHECK">
+          <label>R&esizeable</label>
+          <size>76,15</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxCheckBox" name="IDC_MIPMAP_OFF_CHECK">
+          <label>&MipMap Off</label>
+          <size>79,15</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxCheckBox" name="IDC_ALPHA_CHECK">
+          <label>Alp&ha Bitmap</label>
+          <size>85,15</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxCheckBox" name="IDC_CLAMPU_CHECK">
+          <label>Clamp &U</label>
+          <size>64,15</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxCheckBox" name="IDC_CLAMPV_CHECK">
+          <label>Clamp &V</label>
+          <size>63,15</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxPanel" name="IDC_TEXTURE_THUMBNAIL">
+          <size>130,102</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxCheckBox" name="IDC_ANIMATION_CHECK">
+          <label>&Animation</label>
+          <size>70,15</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxSpinButton" name="IDC_FRAME_COUNT_SPIN">
+          <label>Spin1</label>
+          <size>16,21</size>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL</flag>
+        <border>5</border>
+        <object class="wxSpinButton" name="IDC_FPS_SPIN">
+          <label>Spin1</label>
+          <size>16,21</size>
         </object>
       </object>
     </object>

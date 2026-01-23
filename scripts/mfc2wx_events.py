@@ -21,13 +21,13 @@ from pathlib import Path
 MFC_TO_WX_MAP = {
     'ON_WM_HSCROLL': {
         'wx_event': 'EVT_SLIDER',
-        'event_type': 'wxScrollEvent',
+        'event_type': 'wxCommandEvent',
         'needs_id': True,
         'comment': 'Horizontal scroll (slider)'
     },
     'ON_WM_VSCROLL': {
         'wx_event': 'EVT_SLIDER',
-        'event_type': 'wxScrollEvent',
+        'event_type': 'wxCommandEvent',
         'needs_id': True,
         'comment': 'Vertical scroll (slider)'
     },

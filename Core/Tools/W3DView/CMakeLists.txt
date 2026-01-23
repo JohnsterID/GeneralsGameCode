@@ -16,6 +16,7 @@ if(wxWidgets_FOUND)
         "GraphicView_wx.cpp"
         "GraphicView_wx.h"
         "w3dcompat_wx.h"
+        "w3dcompat_wx.cpp"
         "StdAfx_wx.h"
         
         # XRC resource initialization (auto-generated)

@@ -22,6 +22,17 @@
 #include "w3dviewdoc_wx.h"
 #include <wx/dcclient.h>
 
+// Phase 3A.2: Include engine headers in .cpp (after wx headers)
+// CRITICAL: Undefine CString before including engine headers
+#ifdef CString
+#undef CString
+#endif
+
+#include "camera.h"
+
+// Redefine CString for wxWidgets compatibility
+#define CString wxString
+
 // Global instance pointer for Get_Graphic_View()
 static CGraphicView* g_pGraphicView = nullptr;
 

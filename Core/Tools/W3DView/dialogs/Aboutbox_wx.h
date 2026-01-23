@@ -59,19 +59,14 @@ protected:
 };
 
 // Derived class for event handlers and custom logic
+// Phase 3A.1: Simple dialog with no infrastructure dependencies
 class Aboutbox : public AboutboxBase
 {
 public:
     Aboutbox(wxWindow *parent);
 
-protected:
-    // Override for data transfer if needed
-    // bool TransferDataToWindow() override;
-    // bool TransferDataFromWindow() override;
-
 private:
     void OnOK(wxCommandEvent &event);
-    void OnCancel(wxCommandEvent &event);
 
     wxDECLARE_EVENT_TABLE();
 };

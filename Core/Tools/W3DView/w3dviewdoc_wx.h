@@ -22,9 +22,24 @@
 
 #include <wx/docview.h>
 
+// Phase 3A.2: Include engine types needed for member variables
+// CRITICAL: Undefine CString before including engine headers
+#ifdef CString
+#undef CString
+#endif
+
+#include "vector3.h"
+
+// Redefine CString for wxWidgets compatibility
+#define CString wxString
+
+#include "w3dcompat_wx.h"
+
+// Forward declarations for other engine types
 class ViewerSceneClass;
 class RenderObjClass;
 class AssetInfoClass;
+class CGraphicView;
 
 class W3DViewDoc : public wxDocument
 {
@@ -32,21 +47,48 @@ public:
     W3DViewDoc();
     virtual ~W3DViewDoc();
 
+    // Document overrides
     virtual bool OnOpenDocument(const wxString &filename) override;
     virtual bool OnSaveDocument(const wxString &filename) override;
     virtual bool OnNewDocument() override;
     virtual bool OnCloseDocument() override;
 
+    // Scene and object accessors
     ViewerSceneClass *GetScene() { return m_scene; }
     RenderObjClass *GetCurrentObject() { return m_currentObject; }
+    RenderObjClass *GetDisplayedObject() { return m_currentObject; }  // Alias for MFC compatibility
     void SetCurrentObject(RenderObjClass *obj) { m_currentObject = obj; }
 
     AssetInfoClass *GetAssetInfo(int index);
     int GetAssetCount() const;
 
+    // ============================================================================
+    // Phase 3A: Dialog Infrastructure Methods
+    // ============================================================================
+
+    // Background color methods
+    const Vector3& GetBackgroundColor() const { return m_backgroundColor; }
+    void SetBackgroundColor(const Vector3& color);
+
+    // Camera settings methods
+    bool Is_FOV_Manual() const { return m_manualFOV; }
+    void Set_Manual_FOV(bool manual) { m_manualFOV = manual; }
+    
+    bool Are_Clip_Planes_Manual() const { return m_manualClipPlanes; }
+    void Set_Manul_Clip_Planes(bool manual) { m_manualClipPlanes = manual; }  // Note: typo matches MFC
+    
+    // View access
+    CGraphicView* GetGraphicView();
+
 private:
+    // Scene and object data
     ViewerSceneClass *m_scene;
     RenderObjClass *m_currentObject;
+
+    // Phase 3A: Dialog settings storage
+    Vector3 m_backgroundColor;
+    bool m_manualFOV;
+    bool m_manualClipPlanes;
 
     wxDECLARE_DYNAMIC_CLASS(W3DViewDoc);
 };

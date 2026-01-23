@@ -51,15 +51,18 @@ const char *gAppPrefix = "w3_";
 const char *g_strFile = "data/Generals.str";
 const char *g_csfFile = "data/%s/Generals.csf";
 
-// Stub for WWMath if not available
-#ifndef USE_FULL_W3D_ENGINE
-class WWMath {
-public:
-    static void Init() { /* Stub */ }
-};
-#else
-#include "wwmath.h"
+// Phase 3A.2: Include engine headers properly
+// CRITICAL: Undefine CString before including MFC-dependent headers
+#ifdef CString
+#undef CString
 #endif
+
+#include "wwmath.h"
+// TODO: ViewerAssetMgr.h has MFC CString dependencies - fix in Phase 3A.3
+// #include "ViewerAssetMgr.h"
+
+// Redefine CString for wxWidgets compatibility
+#define CString wxString
 
 W3DViewApp::W3DViewApp()
     : m_frame(nullptr)
@@ -133,8 +136,10 @@ bool W3DViewApp::OnInit()
         CLASSINFO(W3DViewView)
     );
 
+    // TODO: Phase 3A.2 - ViewerAssetMgrClass has MFC CString dependencies
     // Allocate asset manager
-    _TheAssetMgr = new ViewerAssetMgrClass;
+    // _TheAssetMgr = new ViewerAssetMgrClass;
+    _TheAssetMgr = nullptr;
 
     // Create main frame
     m_frame = new W3DViewFrame(m_docManager);

@@ -23,6 +23,19 @@
 
 #include <wx/wx.h>
 #include <wx/timer.h>
+
+// Phase 3A.2: Include engine headers for complete types
+// CRITICAL: Undefine CString macro before including engine headers
+#ifdef CString
+#undef CString
+#endif
+
+#include "vector3.h"
+#include "sphere.h"
+
+// Redefine CString for wxWidgets compatibility
+#define CString wxString
+
 #include "w3dcompat_wx.h"
 
 // Forward declarations

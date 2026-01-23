@@ -59,19 +59,21 @@ void W3DViewTreeCtrl::BuildTree()
 
     wxTreeItemId root = AddRoot("Assets");
 
+    // TODO: Phase 3A.2 - AssetMgr has MFC CString dependencies
+    // Tree population will be enabled when CString issues are resolved
     if (_TheAssetMgr)
     {
-        int assetCount = _TheAssetMgr->Get_Asset_Count();
-        for (int i = 0; i < assetCount; i++)
-        {
-            AssetInfoClass *info = _TheAssetMgr->Get_Asset_Info(i);
-            if (info)
-            {
-                wxString assetName = info->Get_Name();
-                wxTreeItemId item = AppendItem(root, assetName);
-                SetItemData(item, new TreeItemDataInt(i));
-            }
-        }
+        // int assetCount = _TheAssetMgr->Get_Asset_Count();
+        // for (int i = 0; i < assetCount; i++)
+        // {
+        //     AssetInfoClass *info = _TheAssetMgr->Get_Asset_Info(i);
+        //     if (info)
+        //     {
+        //         wxString assetName = info->Get_Name();
+        //         wxTreeItemId item = AppendItem(root, assetName);
+        //         SetItemData(item, new TreeItemDataInt(i));
+        //     }
+        // }
     }
 
     Expand(root);

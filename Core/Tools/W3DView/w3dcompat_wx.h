@@ -28,6 +28,14 @@
 #ifndef USE_FULL_W3D_ENGINE
 
 // Basic math types
+class Vector2
+{
+public:
+    Vector2() : X(0), Y(0) {}
+    Vector2(float _x, float _y) : X(_x), Y(_y) {}
+    float X, Y;
+};
+
 class Vector3
 {
 public:

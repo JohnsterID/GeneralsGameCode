@@ -61,4 +61,24 @@ void LightAmbientDialog::OnGrayscaleCheck(wxCommandEvent &event)
 {
     // TODO: Implement OnGrayscaleCheck
     // Control ID: IDC_GRAYSCALE_CHECK
+
+// ============================================================================
+// Phase 2.5: Dialog Infrastructure (Auto-generated)
+// ============================================================================
+
+bool LightAmbientDialogBase::TransferDataToWindow()
+{
+    // Data is transferred in OnInitDialog for this dialog
+    return true;
+}
+
+bool LightAmbientDialogBase::TransferDataFromWindow()
+{
+    // Extract data from controls and apply to business logic
+
+    // TODO: Extract data from controls
+
+    return true;
+}
+
 }

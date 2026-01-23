@@ -62,4 +62,24 @@ void BackgroundObject::OnClear(wxCommandEvent &event)
 {
     // TODO: Implement OnClear
     // Control ID: IDC_CLEAR
+
+// ============================================================================
+// Phase 2.5: Dialog Infrastructure (Auto-generated)
+// ============================================================================
+
+bool BackgroundObjectBase::TransferDataToWindow()
+{
+    // Data is transferred in OnInitDialog for this dialog
+    return true;
+}
+
+bool BackgroundObjectBase::TransferDataFromWindow()
+{
+    // Extract data from controls and apply to business logic
+
+    // TODO: Extract data from controls
+
+    return true;
+}
+
 }

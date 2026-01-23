@@ -86,6 +86,10 @@ private:
 
     wxDECLARE_EVENT_TABLE();
 private:
+    // Phase 2.5: Dialog infrastructure
+    bool TransferDataToWindow() override;
+    bool TransferDataFromWindow() override;
+
     // Event handlers (Phase 2)
 void OnItemChangedHierarchyList(wxListEvent &event);  // Notification message (needs analysis)
     void OnClear(wxCommandEvent &event);  // Button/Checkbox click

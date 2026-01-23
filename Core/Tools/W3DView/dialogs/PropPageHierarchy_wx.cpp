@@ -55,4 +55,24 @@ void PropPageHierarchy::OnDblclkSubObjectList(wxListEvent &event)
 {
     // TODO: Implement OnDblclkSubObjectList
     // Control ID: IDC_SUBOBJECT_LIST
+
+// ============================================================================
+// Phase 2.5: Dialog Infrastructure (Auto-generated)
+// ============================================================================
+
+bool PropPageHierarchyBase::TransferDataToWindow()
+{
+    // Data is transferred in OnInitDialog for this dialog
+    return true;
+}
+
+bool PropPageHierarchyBase::TransferDataFromWindow()
+{
+    // Extract data from controls and apply to business logic
+
+    // TODO: Extract data from controls
+
+    return true;
+}
+
 }

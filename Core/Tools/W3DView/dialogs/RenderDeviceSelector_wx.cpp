@@ -55,4 +55,24 @@ void RenderDeviceSelector::OnSelchangeRenderDeviceCombo(wxCommandEvent &event)
 {
     // TODO: Implement OnSelchangeRenderDeviceCombo
     // Control ID: IDC_RENDER_DEVICE_COMBO
+
+// ============================================================================
+// Phase 2.5: Dialog Infrastructure (Auto-generated)
+// ============================================================================
+
+bool RenderDeviceSelectorBase::TransferDataToWindow()
+{
+    // Data is transferred in OnInitDialog for this dialog
+    return true;
+}
+
+bool RenderDeviceSelectorBase::TransferDataFromWindow()
+{
+    // Extract data from controls and apply to business logic
+
+    // TODO: Extract data from controls
+
+    return true;
+}
+
 }

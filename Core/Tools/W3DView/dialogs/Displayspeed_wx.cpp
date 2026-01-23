@@ -56,7 +56,7 @@ void Displayspeed::OnCancel(wxCommandEvent &event)
 // Event Handlers (Phase 2 - Auto-integrated)
 // ============================================================================
 
-void Displayspeed::OnHscroll(wxScrollEvent &event)
+void Displayspeed::OnHscroll(wxCommandEvent &event)
 {
     // TODO: Implement OnHscroll
 }

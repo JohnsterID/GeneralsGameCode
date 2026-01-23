@@ -56,7 +56,7 @@ void LightSceneDialog::OnCancel(wxCommandEvent &event)
 // Event Handlers (Phase 2 - Auto-integrated)
 // ============================================================================
 
-void LightSceneDialog::OnHscroll(wxScrollEvent &event)
+void LightSceneDialog::OnHscroll(wxCommandEvent &event)
 {
     // TODO: Implement OnHscroll
 }

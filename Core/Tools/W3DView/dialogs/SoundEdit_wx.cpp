@@ -79,7 +79,7 @@ void SoundEdit::OnPlay(wxCommandEvent &event)
     // Control ID: IDC_PLAY
 }
 
-void SoundEdit::OnHscroll(wxScrollEvent &event)
+void SoundEdit::OnHscroll(wxCommandEvent &event)
 {
     // TODO: Implement OnHscroll
 }

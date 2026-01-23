@@ -57,7 +57,7 @@ void ColorSel::OnCancel(wxCommandEvent &event)
 // Event Handlers (Phase 2 - Auto-integrated)
 // ============================================================================
 
-void ColorSel::OnHscroll(wxScrollEvent &event)
+void ColorSel::OnHscroll(wxCommandEvent &event)
 {
     // TODO: Implement OnHscroll
 }

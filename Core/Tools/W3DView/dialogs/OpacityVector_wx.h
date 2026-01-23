@@ -105,5 +105,5 @@ private:
     wxDECLARE_EVENT_TABLE();
 private:
     // Event handlers (Phase 2)
-void OnHscroll(wxScrollEvent &event);  // Horizontal scroll (slider)
+void OnHscroll(wxCommandEvent &event);  // Horizontal scroll (slider)
 };

@@ -52,7 +52,7 @@ void BackgroundColor::OnCancel(wxCommandEvent &event)
 // Event Handlers (Phase 2 - Auto-integrated)
 // ============================================================================
 
-void BackgroundColor::OnHscroll(wxScrollEvent &event)
+void BackgroundColor::OnHscroll(wxCommandEvent &event)
 {
     // TODO: Implement OnHscroll
 }

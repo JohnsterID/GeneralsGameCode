@@ -112,7 +112,7 @@ private:
     wxDECLARE_EVENT_TABLE();
 private:
     // Event handlers (Phase 2)
-void OnHscroll(wxScrollEvent &event);  // Horizontal scroll (slider)
+void OnHscroll(wxCommandEvent &event);  // Horizontal scroll (slider)
     void OnGrayscaleCheck(wxCommandEvent &event);  // Button/Checkbox click
     void OnChangeBlueEdit(wxCommandEvent &event);  // Text control change
     void OnChangeGreenEdit(wxCommandEvent &event);  // Text control change

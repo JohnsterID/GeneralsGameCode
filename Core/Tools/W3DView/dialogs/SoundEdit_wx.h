@@ -138,5 +138,5 @@ void OnBrowse(wxCommandEvent &event);  // Button/Checkbox click
     void On2DRadio(wxCommandEvent &event);  // Button/Checkbox click
     void On3DRadio(wxCommandEvent &event);  // Button/Checkbox click
     void OnPlay(wxCommandEvent &event);  // Button/Checkbox click
-    void OnHscroll(wxScrollEvent &event);  // Horizontal scroll (slider)
+    void OnHscroll(wxCommandEvent &event);  // Horizontal scroll (slider)
 };

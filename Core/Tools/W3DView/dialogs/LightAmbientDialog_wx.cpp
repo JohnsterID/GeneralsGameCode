@@ -52,7 +52,7 @@ void LightAmbientDialog::OnCancel(wxCommandEvent &event)
 // Event Handlers (Phase 2 - Auto-integrated)
 // ============================================================================
 
-void LightAmbientDialog::OnHscroll(wxScrollEvent &event)
+void LightAmbientDialog::OnHscroll(wxCommandEvent &event)
 {
     // TODO: Implement OnHscroll
 }

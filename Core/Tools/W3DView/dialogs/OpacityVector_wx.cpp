@@ -51,7 +51,7 @@ void OpacityVector::OnCancel(wxCommandEvent &event)
 // Event Handlers (Phase 2 - Auto-integrated)
 // ============================================================================
 
-void OpacityVector::OnHscroll(wxScrollEvent &event)
+void OpacityVector::OnHscroll(wxCommandEvent &event)
 {
     // TODO: Implement OnHscroll
 }

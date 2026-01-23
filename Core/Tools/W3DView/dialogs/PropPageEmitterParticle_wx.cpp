@@ -29,7 +29,9 @@ EVT_BUTTON(XRCID("IDC_SPECIFY_CREATION_VOLUME"), PropPageEmitterParticle::OnSpec
 wxEND_EVENT_TABLE()
 
 PropPageEmitterParticle::PropPageEmitterParticle(wxWindow *parent)
-    : PropPageEmitterParticleBase(parent)
+    : PropPageEmitterParticleBase(parent),
+      m_Rate(0.0f),
+      m_MaxParticles(0)
 {
     // Initialize dialog
     // TransferDataToWindow();

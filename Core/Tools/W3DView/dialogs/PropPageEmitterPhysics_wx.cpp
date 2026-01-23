@@ -28,7 +28,11 @@ EVT_BUTTON(XRCID("IDC_SPECIFY_VELOCITY_RANDOM"), PropPageEmitterPhysics::OnSpeci
 wxEND_EVENT_TABLE()
 
 PropPageEmitterPhysics::PropPageEmitterPhysics(wxWindow *parent)
-    : PropPageEmitterPhysicsBase(parent)
+    : PropPageEmitterPhysicsBase(parent),
+      m_OutFactor(0.0f),
+      m_InheritanceFactor(0.0f),
+      m_Velocity(0.0f, 0.0f, 0.0f),
+      m_Acceleration(0.0f, 0.0f, 0.0f)
 {
     // Initialize dialog
     // TransferDataToWindow();
@@ -81,30 +85,30 @@ void PropPageEmitterPhysics::OnInitDialog(wxInitDialogEvent& event)
     }
     if (m_idc_velocity_x_spin) {
         m_idc_velocity_x_spin->SetRange(-10000, 10000);
-        m_idc_velocity_x_spin->SetValue(static_cast<int>(m_Velocity.X));
+        m_idc_velocity_x_spin->SetValue(static_cast<int>(m_Velocity.x));
     }
     if (m_idc_velocity_y_spin) {
         m_idc_velocity_y_spin->SetRange(-10000, 10000);
-        m_idc_velocity_y_spin->SetValue(static_cast<int>(m_Velocity.Y));
+        m_idc_velocity_y_spin->SetValue(static_cast<int>(m_Velocity.y));
     }
     if (m_idc_velocity_z_spin) {
         m_idc_velocity_z_spin->SetRange(-10000, 10000);
-        m_idc_velocity_z_spin->SetValue(static_cast<int>(m_Velocity.Z));
+        m_idc_velocity_z_spin->SetValue(static_cast<int>(m_Velocity.z));
     }
     //
     //	Setup the acceleration controls
     //
     if (m_idc_acceleration_x_spin) {
         m_idc_acceleration_x_spin->SetRange(-10000, 10000);
-        m_idc_acceleration_x_spin->SetValue(static_cast<int>(m_Acceleration.X));
+        m_idc_acceleration_x_spin->SetValue(static_cast<int>(m_Acceleration.x));
     }
     if (m_idc_acceleration_y_spin) {
         m_idc_acceleration_y_spin->SetRange(-10000, 10000);
-        m_idc_acceleration_y_spin->SetValue(static_cast<int>(m_Acceleration.Y));
+        m_idc_acceleration_y_spin->SetValue(static_cast<int>(m_Acceleration.y));
     }
     if (m_idc_acceleration_z_spin) {
         m_idc_acceleration_z_spin->SetRange(-10000, 10000);
-        m_idc_acceleration_z_spin->SetValue(static_cast<int>(m_Acceleration.Z));
+        m_idc_acceleration_z_spin->SetValue(static_cast<int>(m_Acceleration.z));
     }
     // TODO: Convert: return TRUE;
 

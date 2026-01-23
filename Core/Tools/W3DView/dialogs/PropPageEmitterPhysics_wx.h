@@ -23,6 +23,7 @@
 #include <wx/button.h>
 #include <wx/dialog.h>
 #include <wx/panel.h>
+#include "../w3dcompat_wx.h"  // For Vector3
 #include <wx/spinbutt.h>
 #include <wx/statbmp.h>
 #include <wx/stattext.h>
@@ -124,6 +125,12 @@ class PropPageEmitterPhysics : public PropPageEmitterPhysicsBase
 {
 public:
     PropPageEmitterPhysics(wxWindow *parent);
+    
+    // Dialog data (MFC compatibility)
+    float m_OutFactor;             // Outward velocity factor
+    float m_InheritanceFactor;     // Velocity inheritance factor
+    Vector3 m_Velocity;            // Particle velocity vector
+    Vector3 m_Acceleration;        // Particle acceleration vector
 
 protected:
     // Override for data transfer if needed

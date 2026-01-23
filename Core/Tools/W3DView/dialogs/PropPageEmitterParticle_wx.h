@@ -97,6 +97,10 @@ class PropPageEmitterParticle : public PropPageEmitterParticleBase
 {
 public:
     PropPageEmitterParticle(wxWindow *parent);
+    
+    // Dialog data (MFC compatibility)
+    float m_Rate;                  // Particle emission rate
+    int m_MaxParticles;            // Maximum particles allowed
 
 protected:
     // Override for data transfer if needed

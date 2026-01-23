@@ -27,6 +27,16 @@
 
 #include "Vector.h"
 
+// wxWidgets compatibility layer for MFC types
+#ifdef USE_WXWIDGETS
+    #include <wx/string.h>
+    #include <windows.h>
+    
+    // MFC type aliases for wxWidgets compatibility
+    typedef wxString CString;
+    // LPCTSTR, HBITMAP, LPFILETIME are already defined in windows.h
+#endif
+
 // Forward declarations
 class RenderObjClass;
 
@@ -62,16 +72,16 @@ class RenderObjClass;
 
 __inline void Delimit_Path (LPTSTR path)
 {
-	if (::lstrlen (path) > 0 && path[::lstrlen (path) - 1] != '\\') {
-		::lstrcat (path, "\\");
+	if (::lstrlen (path) > 0 && path[::lstrlen (path) - 1] != TEXT('\\')) {
+		::lstrcat (path, TEXT("\\"));
 	}
 	return ;
 }
 
 __inline void Delimit_Path (CString &path)
 {
-	if (path[::lstrlen (path) - 1] != '\\') {
-		path += CString ("\\");
+	if (path[::lstrlen (path) - 1] != TEXT('\\')) {
+		path += CString (TEXT("\\"));
 	}
 	return ;
 }
@@ -98,8 +108,10 @@ void						SetDlgItemFloat (HWND hdlg, UINT child_id, float value);
 float						GetDlgItemFloat (HWND hdlg, UINT child_id);
 void						SetWindowFloat (HWND hwnd, float value);
 float						GetWindowFloat (HWND hwnd);
+#ifndef USE_WXWIDGETS
 void						Initialize_Spinner (CSpinButtonCtrl &ctrl, float pos = 0, float min = 0, float max = 1);
 void						Update_Spinner_Buddy (CSpinButtonCtrl &ctrl);
+#endif
 void						Update_Spinner_Buddy (HWND hspinner, int delta);
 void						Enable_Dialog_Controls (HWND dlg,bool onoff);
 

@@ -27,6 +27,33 @@
 
 #ifndef USE_FULL_W3D_ENGINE
 
+// Basic math types
+class Vector3
+{
+public:
+    Vector3() : x(0), y(0), z(0) {}
+    Vector3(float _x, float _y, float _z) : x(_x), y(_y), z(_z) {}
+    float x, y, z;
+};
+
+class SphereClass
+{
+public:
+    SphereClass() : radius(0) {}
+    Vector3 center;
+    float radius;
+};
+
+class CameraClass
+{
+public:
+    CameraClass() {}
+    virtual ~CameraClass() {}
+    
+    virtual void Set_Position(const Vector3& pos) {}
+    virtual Vector3 Get_Position() const { return Vector3(); }
+};
+
 class RenderObjClass
 {
 public:

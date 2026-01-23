@@ -46,6 +46,15 @@
 #include <tchar.h>
 #endif
 
+// DEBUG: Show TCHAR mode for wwstring.h
+#if defined(UNICODE) || defined(_UNICODE)
+#pragma message("wwstring.h: UNICODE mode - TCHAR is wchar_t")
+#pragma message("wwstring.h: operator const TCHAR * will return const wchar_t *")
+#else
+#pragma message("wwstring.h: ANSI mode - TCHAR is char")
+#pragma message("wwstring.h: operator const TCHAR * will return const char *")
+#endif
+
 
 
 //////////////////////////////////////////////////////////////////////

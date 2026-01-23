@@ -8,9 +8,9 @@
       <object class="sizeritem">
         <flag>wxALL</flag>
         <border>5</border>
-        <object class="wxStaticText" name="20627,7,7,92">
+        <object class="wxStaticText" name="20627">
           <label>Directory &amp;name:</label>
-          <size>0,0</size>
+          <size>138,24</size>
         </object>
       </object>
       <object class="sizeritem">
@@ -31,9 +31,9 @@
       <object class="sizeritem">
         <flag>wxALL</flag>
         <border>5</border>
-        <object class="wxStaticText" name="-1,7,107,92">
+        <object class="wxStaticText" name="-1">
           <label>Dri&amp;ves:</label>
-          <size>0,0</size>
+          <size>138,13</size>
         </object>
       </object>
       <object class="sizeritem">

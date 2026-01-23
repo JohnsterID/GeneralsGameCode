@@ -45,41 +45,39 @@ public:
         }
 
         // Get references to controls
-        m_20627,7,7,92 = XRCCTRL(*this, "20627,7,7,92", wxStaticText);
-        m_20626 = XRCCTRL(*this, "20626", wxTextCtrl);
-        m_1121 = XRCCTRL(*this, "1121", wxListBox);
-        m_-1,7,107,92 = XRCCTRL(*this, "-1,7,107,92", wxStaticText);
-        m_1137 = XRCCTRL(*this, "1137", wxComboBox);
-        m_1 = XRCCTRL(*this, "1", wxButton);
-        m_2 = XRCCTRL(*this, "2", wxButton);
-        m_1090 = XRCCTRL(*this, "1090", wxStaticText);
-        m_1152 = XRCCTRL(*this, "1152", wxTextCtrl);
-        m_1088 = XRCCTRL(*this, "1088", wxStaticText);
-        m_1120 = XRCCTRL(*this, "1120", wxListBox);
-        m_1089 = XRCCTRL(*this, "1089", wxStaticText);
-        m_1136 = XRCCTRL(*this, "1136", wxComboBox);
-        m_1037 = XRCCTRL(*this, "1037", wxButton);
-        m_21251 = XRCCTRL(*this, "21251", wxStaticText);
+        m__20627 = XRCCTRL(*this, "20627", wxStaticText);
+        m__20626 = XRCCTRL(*this, "20626", wxTextCtrl);
+        m__1121 = XRCCTRL(*this, "1121", wxListBox);
+        m__1137 = XRCCTRL(*this, "1137", wxComboBox);
+        m__1 = XRCCTRL(*this, "1", wxButton);
+        m__2 = XRCCTRL(*this, "2", wxButton);
+        m__1090 = XRCCTRL(*this, "1090", wxStaticText);
+        m__1152 = XRCCTRL(*this, "1152", wxTextCtrl);
+        m__1088 = XRCCTRL(*this, "1088", wxStaticText);
+        m__1120 = XRCCTRL(*this, "1120", wxListBox);
+        m__1089 = XRCCTRL(*this, "1089", wxStaticText);
+        m__1136 = XRCCTRL(*this, "1136", wxComboBox);
+        m__1037 = XRCCTRL(*this, "1037", wxButton);
+        m__21251 = XRCCTRL(*this, "21251", wxStaticText);
 
         return true;
     }
 
 protected:
-    wxStaticText *m_20627,7,7,92;
-    wxTextCtrl *m_20626;
-    wxListBox *m_1121;
-    wxStaticText *m_-1,7,107,92;
-    wxComboBox *m_1137;
-    wxButton *m_1;
-    wxButton *m_2;
-    wxStaticText *m_1090;
-    wxTextCtrl *m_1152;
-    wxStaticText *m_1088;
-    wxListBox *m_1120;
-    wxStaticText *m_1089;
-    wxComboBox *m_1136;
-    wxButton *m_1037;
-    wxStaticText *m_21251;
+    wxStaticText *m__20627;
+    wxTextCtrl *m__20626;
+    wxListBox *m__1121;
+    wxComboBox *m__1137;
+    wxButton *m__1;
+    wxButton *m__2;
+    wxStaticText *m__1090;
+    wxTextCtrl *m__1152;
+    wxStaticText *m__1088;
+    wxListBox *m__1120;
+    wxStaticText *m__1089;
+    wxComboBox *m__1136;
+    wxButton *m__1037;
+    wxStaticText *m__21251;
 };
 
 // Derived class for event handlers and custom logic

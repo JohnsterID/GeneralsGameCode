@@ -15,14 +15,17 @@ from analyze_mfc_dialog import analyze_dialog
 from mfc_to_wx_patterns import convert_mfc_line, detect_required_includes, map_control_ids_to_members
 
 def convert_oninitdialog_body(init_body, control_mappings, class_name):
-    """Convert OnInitDialog body using pattern database"""
+    """Convert OnInitDialog body using pattern database with smart variable handling"""
     
     lines = []
     lines.append(f"void {class_name}::OnInitDialog(wxInitDialogEvent& event)")
     lines.append("{")
     lines.append("    // Initialize controls after they're created")
     
-    # Process each line of the MFC OnInitDialog
+    # First pass: collect all lines and identify variable declarations
+    pending_lines = []
+    variable_declarations = {}  # var_name -> declaration line
+    
     for line in init_body.split('\n'):
         line_stripped = line.strip()
         
@@ -32,19 +35,58 @@ def convert_oninitdialog_body(init_body, control_mappings, class_name):
         
         # Preserve comments
         if line_stripped.startswith('//'):
-            lines.append(f"    {line_stripped}")
+            pending_lines.append(('comment', line_stripped, None))
+            continue
+        
+        # Check if this is a variable declaration (float/int/double var = ...)
+        var_decl_match = re.match(r'(float|int|double|bool)\s+(\w+)\s*=', line_stripped)
+        if var_decl_match:
+            var_type = var_decl_match.group(1)
+            var_name = var_decl_match.group(2)
+            variable_declarations[var_name] = (var_type, line_stripped)
+            pending_lines.append(('var_decl', line_stripped, var_name))
             continue
         
         # Try pattern conversion
         wx_code = convert_mfc_line(line_stripped, control_mappings)
         if wx_code:
-            # Indent the converted code
-            for wx_line in wx_code.split('\n'):
-                lines.append(f"    {wx_line}")
+            pending_lines.append(('converted', wx_code, line_stripped))
         else:
             # Fallback: preserve as TODO
             if line_stripped and not line_stripped.endswith('{') and not line_stripped == '}':
-                lines.append(f"    // TODO: Convert: {line_stripped}")
+                pending_lines.append(('todo', line_stripped, None))
+    
+    # Second pass: output lines with variable declarations moved before first use
+    declared_vars = set()
+    for line_type, content, original in pending_lines:
+        if line_type == 'comment':
+            lines.append(f"    {content}")
+        
+        elif line_type == 'var_decl':
+            # Output variable declaration as TODO
+            lines.append(f"    // TODO: Declare: {content}")
+            declared_vars.add(original)  # var_name
+        
+        elif line_type == 'converted':
+            # Check if this uses any undeclared variables
+            used_vars = []
+            for var_name in variable_declarations.keys():
+                if var_name in content and var_name not in declared_vars:
+                    used_vars.append(var_name)
+            
+            # Declare variables before use
+            for var_name in used_vars:
+                var_type, var_line = variable_declarations[var_name]
+                lines.append(f"    // Declare variable before use")
+                lines.append(f"    {var_type} {var_name} = 0;  // TODO: Get actual value from: {var_line}")
+                declared_vars.add(var_name)
+            
+            # Output converted code
+            for wx_line in content.split('\n'):
+                lines.append(f"    {wx_line}")
+        
+        elif line_type == 'todo':
+            lines.append(f"    // TODO: Convert: {content}")
     
     lines.append("")
     lines.append("    event.Skip();")

@@ -8,6 +8,69 @@ common MFC patterns to wxWidgets equivalents.
 
 import re
 
+def _generate_checkbox_setvalue(match, ctrl_name):
+    """
+    Generate checkbox SetValue with proper boolean conversion
+    
+    Handles:
+    - BST_CHECKED / BST_UNCHECKED → true / false
+    - condition ? BST_CHECKED : BST_UNCHECKED → condition
+    - (WPARAM)function_call() → function_call() != 0
+    - WPARAM(...) wrappers
+    """
+    value_expr = match.group(2).strip()
+    
+    # Remove (WPARAM) or WPARAM cast
+    value_expr = re.sub(r'\(WPARAM\)\s*', '', value_expr)
+    if value_expr.startswith('WPARAM'):
+        value_expr = value_expr[6:].strip()
+    
+    # Remove outer parentheses if present
+    if value_expr.startswith('(') and value_expr.endswith(')'):
+        # Check if these are wrapping parens or function call parens
+        inner = value_expr[1:-1]
+        if not inner.endswith(')'):  # Not a function call
+            value_expr = inner.strip()
+    
+    # Handle ternary: condition ? BST_CHECKED : BST_UNCHECKED
+    ternary_match = re.match(r'(.+?)\s*\?\s*BST_CHECKED\s*:\s*BST_UNCHECKED', value_expr)
+    if ternary_match:
+        condition = ternary_match.group(1).strip()
+        return f"""if ({ctrl_name}) {{
+    {ctrl_name}->SetValue({condition});
+}}"""
+    
+    # Handle direct BST_CHECKED / BST_UNCHECKED
+    if 'BST_CHECKED' in value_expr:
+        return f"""if ({ctrl_name}) {{
+    {ctrl_name}->SetValue(true);
+}}"""
+    elif 'BST_UNCHECKED' in value_expr:
+        return f"""if ({ctrl_name}) {{
+    {ctrl_name}->SetValue(false);
+}}"""
+    
+    # Handle TRUE/FALSE
+    if value_expr in ['TRUE', 'true', '1']:
+        return f"""if ({ctrl_name}) {{
+    {ctrl_name}->SetValue(true);
+}}"""
+    elif value_expr in ['FALSE', 'false', '0']:
+        return f"""if ({ctrl_name}) {{
+    {ctrl_name}->SetValue(false);
+}}"""
+    
+    # Handle function calls ending with ()
+    if value_expr.endswith('()') or '(' in value_expr:
+        return f"""if ({ctrl_name}) {{
+    {ctrl_name}->SetValue({value_expr} != 0);
+}}"""
+    
+    # Fallback: treat as boolean expression
+    return f"""if ({ctrl_name}) {{
+    {ctrl_name}->SetValue({value_expr} != 0);  // TODO: Verify boolean logic
+}}"""
+
 # Pattern database: MFC function → wxWidgets code generator
 PATTERNS = {
     'Initialize_Spinner': {
@@ -59,10 +122,8 @@ if ({ctrl_name} && {ctrl_name}->GetValue().ToDouble(&{var_name})) {{
     },
     
     'SendDlgItemMessage_BM_SETCHECK': {
-        'regex': r'SendDlgItemMessage\s*\(\s*(\w+)\s*,\s*BM_SETCHECK\s*,\s*(?:WPARAM\s*)?\(([^)]+)\)',
-        'generator': lambda m, ctrl_name: f"""if ({ctrl_name}) {{
-    {ctrl_name}->SetValue({m.group(2)} != 0);
-}}"""
+        'regex': r'SendDlgItemMessage\s*\(\s*(\w+)\s*,\s*BM_SETCHECK\s*,\s*(.+)\s*\)\s*;',
+        'generator': lambda m, ctrl_name: _generate_checkbox_setvalue(m, ctrl_name)
     },
 }
 

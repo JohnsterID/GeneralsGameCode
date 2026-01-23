@@ -20,6 +20,7 @@
 
 #include "AnimatedSoundDialog_wx.h"
 #include <wx/xrc/xmlres.h>
+#include <wx/config.h>
 
 wxBEGIN_EVENT_TABLE(AnimatedSoundDialog, AnimatedSoundDialogBase)
 EVT_BUTTON(XRCID("IDC_SOUND_DEFINITION_LIBRARY_BROWSE_BUTTON"), AnimatedSoundDialog::OnSoundDefinitionLibraryBrowseButton)  // Button/Checkbox click
@@ -80,9 +81,12 @@ void AnimatedSoundDialog::OnSoundPathBrowseButton(wxCommandEvent &event)
 void AnimatedSoundDialog::OnInitDialog(wxInitDialogEvent& event)
 {
     // Initialize controls after they're created
-    // TODO: Convert: StringClass sound_def_lib_path	= static_cast<const TCHAR*>(theApp.GetProfileString ("Config", "SoundDefLibPath"));
-    // TODO: Convert: StringClass sound_ini_path			= static_cast<const TCHAR*>(theApp.GetProfileString ("Config", "AnimSoundINIPath"));
-    // TODO: Convert: StringClass sound_data_path		= static_cast<const TCHAR*>(theApp.GetProfileString ("Config", "AnimSoundDataPath"));
+    // Load configuration values from wxConfig
+    wxConfigBase* config = wxConfig::Get();
+    wxString sound_def_lib_path = config->Read("Config/SoundDefLibPath", "");
+    wxString sound_ini_path = config->Read("Config/AnimSoundINIPath", "");
+    wxString sound_data_path = config->Read("Config/AnimSoundDataPath", "");
+    
     //
     //	Fill in the default values
     //
@@ -95,7 +99,6 @@ void AnimatedSoundDialog::OnInitDialog(wxInitDialogEvent& event)
     if (m_idc_sound_file_path_edit) {
         m_idc_sound_file_path_edit->SetValue(sound_data_path);
     }
-    // TODO: Convert: return TRUE;
 
     event.Skip();
 }

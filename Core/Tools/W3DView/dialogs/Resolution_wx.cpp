@@ -21,7 +21,7 @@
 #include "Resolution_wx.h"
 #include <wx/xrc/xmlres.h>
 #include "../Utils.h"
-#include "../GraphicView.h"
+#include "../GraphicView_wx.h"
 
 wxBEGIN_EVENT_TABLE(Resolution, ResolutionBase)
 EVT_LIST_ITEM_ACTIVATED(XRCID("IDC_RESOLUTION_LIST_CTRL"), Resolution::OnDblclkResolutionListCtrl)  // List item double-click

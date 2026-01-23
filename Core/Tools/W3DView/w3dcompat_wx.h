@@ -22,106 +22,42 @@
 
 #include <string>
 
-// Stub classes for W3D engine types when full engine is not available
-// These allow compilation of the wxWidgets UI without requiring the full W3D engine
+// Phase 3A.2: Include engine types needed by dialog headers
+// CRITICAL: Undefine CString before including engine headers
+#ifdef CString
+#undef CString
+#endif
 
-#ifndef USE_FULL_W3D_ENGINE
+#include "vector2.h"
+#include "vector3.h"
 
-// Basic math types
-class Vector2
-{
-public:
-    Vector2() : X(0), Y(0) {}
-    Vector2(float _x, float _y) : X(_x), Y(_y) {}
-    float X, Y;
-};
+// Redefine CString for wxWidgets compatibility
+#define CString wxString
 
-class Vector3
-{
-public:
-    Vector3() : x(0), y(0), z(0) {}
-    Vector3(float _x, float _y, float _z) : x(_x), y(_y), z(_z) {}
-    float x, y, z;
-};
+// Forward declarations for other engine types
+class SphereClass;
+class ViewerSceneClass;
+class ViewerAssetMgrClass;
+class AssetInfoClass;
+class RenderObjClass;
+class CameraClass;
+class ParticleEmitterClass;
 
-class SphereClass
-{
-public:
-    SphereClass() : radius(0) {}
-    Vector3 center;
-    float radius;
-};
+// ============================================================================
+// Phase 3A: Helper Functions for Dialog Integration
+// ============================================================================
 
-class CameraClass
-{
-public:
-    CameraClass() {}
-    virtual ~CameraClass() {}
-    
-    virtual void Set_Position(const Vector3& pos) {}
-    virtual Vector3 Get_Position() const { return Vector3(); }
-};
+// Forward declarations
+class W3DViewDoc;
+class wxTextCtrl;
+class wxSpinCtrl;
 
-class RenderObjClass
-{
-public:
-    RenderObjClass() {}
-    virtual ~RenderObjClass() {}
-    
-    virtual void Render() {}
-    virtual const char* Get_Name() const { return ""; }
-};
+// Document access helper for wxWidgets dialogs
+// Note: MFC code uses GetCurrentDocument() which returns CW3DViewDoc*
+// wxWidgets dialogs should use this function which returns W3DViewDoc*
+W3DViewDoc* GetCurrentDocument_wx();
 
-class ViewerSceneClass
-{
-public:
-    ViewerSceneClass() {}
-    virtual ~ViewerSceneClass() {}
-    
-    virtual void Add_Render_Object(RenderObjClass* obj) {}
-    virtual void Remove_Render_Object(RenderObjClass* obj) {}
-    virtual void Render() {}
-};
-
-class AssetInfoClass
-{
-public:
-    AssetInfoClass() : m_renderObj(nullptr) {}
-    virtual ~AssetInfoClass() { delete m_renderObj; }
-    
-    const char* Get_Name() const { return m_name.c_str(); }
-    void Set_Name(const char* name) { m_name = name; }
-    
-    RenderObjClass* Get_Render_Obj() { return m_renderObj; }
-    void Set_Render_Obj(RenderObjClass* obj) { m_renderObj = obj; }
-    
-private:
-    std::string m_name;
-    RenderObjClass* m_renderObj;
-};
-
-class WW3DAssetManager
-{
-public:
-    WW3DAssetManager() {}
-    virtual ~WW3DAssetManager() {}
-    
-    virtual AssetInfoClass* Load_W3D_Asset(const char* filename) { return nullptr; }
-    virtual int Get_Asset_Count() const { return 0; }
-    virtual AssetInfoClass* Get_Asset_Info(int index) { return nullptr; }
-};
-
-// Stub for ViewerAssetMgrClass
-class ViewerAssetMgrClass : public WW3DAssetManager
-{
-public:
-    ViewerAssetMgrClass() {}
-    virtual ~ViewerAssetMgrClass() {}
-};
-
-#else
-// When using full W3D engine, include the real headers
-#include "ViewerScene.h"
-#include "ViewerAssetMgr.h"
-#include "AssetInfo.h"
-#endif // USE_FULL_W3D_ENGINE
+// Control helper functions (wxWidgets equivalents of MFC helpers)
+float GetDlgItemFloat(wxTextCtrl* ctrl);
+void SetDlgItemFloat(wxTextCtrl* ctrl, float value);
+void Initialize_Spinner(wxSpinCtrl* spin, float value, float min, float max);

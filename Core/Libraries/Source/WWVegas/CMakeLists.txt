@@ -51,7 +51,7 @@ target_link_libraries(core_wwvegas INTERFACE
     # core_wwaudio
     core_wwdebug
     # core_wwdownload
-    core_wwlib
     core_wwmath
+    core_wwlib
     core_wwsaveload
 )

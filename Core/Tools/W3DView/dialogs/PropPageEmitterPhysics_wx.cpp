@@ -85,30 +85,30 @@ void PropPageEmitterPhysics::OnInitDialog(wxInitDialogEvent& event)
     }
     if (m_idc_velocity_x_spin) {
         m_idc_velocity_x_spin->SetRange(-10000, 10000);
-        m_idc_velocity_x_spin->SetValue(static_cast<int>(m_Velocity.x));
+        m_idc_velocity_x_spin->SetValue(static_cast<int>(m_Velocity.X));
     }
     if (m_idc_velocity_y_spin) {
         m_idc_velocity_y_spin->SetRange(-10000, 10000);
-        m_idc_velocity_y_spin->SetValue(static_cast<int>(m_Velocity.y));
+        m_idc_velocity_y_spin->SetValue(static_cast<int>(m_Velocity.Y));
     }
     if (m_idc_velocity_z_spin) {
         m_idc_velocity_z_spin->SetRange(-10000, 10000);
-        m_idc_velocity_z_spin->SetValue(static_cast<int>(m_Velocity.z));
+        m_idc_velocity_z_spin->SetValue(static_cast<int>(m_Velocity.Z));
     }
     //
     //	Setup the acceleration controls
     //
     if (m_idc_acceleration_x_spin) {
         m_idc_acceleration_x_spin->SetRange(-10000, 10000);
-        m_idc_acceleration_x_spin->SetValue(static_cast<int>(m_Acceleration.x));
+        m_idc_acceleration_x_spin->SetValue(static_cast<int>(m_Acceleration.X));
     }
     if (m_idc_acceleration_y_spin) {
         m_idc_acceleration_y_spin->SetRange(-10000, 10000);
-        m_idc_acceleration_y_spin->SetValue(static_cast<int>(m_Acceleration.y));
+        m_idc_acceleration_y_spin->SetValue(static_cast<int>(m_Acceleration.Y));
     }
     if (m_idc_acceleration_z_spin) {
         m_idc_acceleration_z_spin->SetRange(-10000, 10000);
-        m_idc_acceleration_z_spin->SetValue(static_cast<int>(m_Acceleration.z));
+        m_idc_acceleration_z_spin->SetValue(static_cast<int>(m_Acceleration.Z));
     }
     // TODO: Convert: return TRUE;
 

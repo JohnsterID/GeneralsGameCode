@@ -75,15 +75,15 @@ void PropPageSphereScale::OnInitDialog(wxInitDialogEvent& event)
     //
     if (m_idc_size_x_spin) {
         m_idc_size_x_spin->SetRange(0, 10000);
-        m_idc_size_x_spin->SetValue(static_cast<int>(m_Size.x));
+        m_idc_size_x_spin->SetValue(static_cast<int>(m_Size.X));
     }
     if (m_idc_size_y_spin) {
         m_idc_size_y_spin->SetRange(0, 10000);
-        m_idc_size_y_spin->SetValue(static_cast<int>(m_Size.y));
+        m_idc_size_y_spin->SetValue(static_cast<int>(m_Size.Y));
     }
     if (m_idc_size_z_spin) {
         m_idc_size_z_spin->SetRange(0, 10000);
-        m_idc_size_z_spin->SetValue(static_cast<int>(m_Size.z));
+        m_idc_size_z_spin->SetValue(static_cast<int>(m_Size.Z));
     }
     //
     // Setup the timelines

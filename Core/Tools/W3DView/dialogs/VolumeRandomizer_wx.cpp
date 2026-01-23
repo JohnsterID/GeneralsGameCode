@@ -85,11 +85,11 @@ void VolumeRandomizer::OnInitDialog(wxInitDialogEvent& event)
     //
     //	Start with some default values
     //
-    // TODO: Convert: Vector3 initial_box (1, 1, 1);
-    // TODO: Declare: float initial_sphere_radius = 1.0F;
-    // TODO: Declare: bool initial_sphere_hollow = false;
-    // TODO: Declare: float initial_cylinder_radius = 1.0F;
-    // TODO: Declare: float initial_cylinder_height = 1.0F;
+    Vector3 initial_box(1, 1, 1);
+    float initial_sphere_radius = 1.0F;
+    bool initial_sphere_hollow = false;
+    float initial_cylinder_radius = 1.0F;
+    float initial_cylinder_height = 1.0F;
     // TODO: Convert: UINT initial_type = IDC_BOX_RADIO;
     //
     //	Initialize from the provided randomizer
@@ -123,15 +123,15 @@ void VolumeRandomizer::OnInitDialog(wxInitDialogEvent& event)
     //
     if (m_idc_box_x_spin) {
         m_idc_box_x_spin->SetRange(-10000, 10000);
-        m_idc_box_x_spin->SetValue(static_cast<int>(initial_box.x));
+        m_idc_box_x_spin->SetValue(static_cast<int>(initial_box.X));
     }
     if (m_idc_box_y_spin) {
         m_idc_box_y_spin->SetRange(-10000, 10000);
-        m_idc_box_y_spin->SetValue(static_cast<int>(initial_box.y));
+        m_idc_box_y_spin->SetValue(static_cast<int>(initial_box.Y));
     }
     if (m_idc_box_z_spin) {
         m_idc_box_z_spin->SetRange(-10000, 10000);
-        m_idc_box_z_spin->SetValue(static_cast<int>(initial_box.z));
+        m_idc_box_z_spin->SetValue(static_cast<int>(initial_box.Z));
     }
     //
     //	Initialize the sphere controls

@@ -50,8 +50,8 @@ private:
     void OnGammaSettings(wxCommandEvent &event);
 
     void CreateMenuBar();
-    void CreateToolBar();
-    void CreateStatusBar();
+    void InitToolBar();
+    void InitStatusBar();
     void CreateUI();
 
 private:

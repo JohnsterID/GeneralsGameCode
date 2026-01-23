@@ -69,8 +69,8 @@ W3DViewFrame::W3DViewFrame(wxDocManager *manager)
     , m_statusBar(nullptr)
 {
     CreateMenuBar();
-    CreateToolBar();
-    CreateStatusBar();
+    InitToolBar();
+    InitStatusBar();
     CreateUI();
 
     Centre();
@@ -141,7 +141,7 @@ void W3DViewFrame::CreateMenuBar()
     SetMenuBar(menuBar);
 }
 
-void W3DViewFrame::CreateToolBar()
+void W3DViewFrame::InitToolBar()
 {
     wxToolBar *toolBar = CreateToolBar(wxTB_HORIZONTAL | wxTB_FLAT);
     toolBar->AddTool(wxID_NEW, "New", wxNullBitmap, "New file");
@@ -152,7 +152,7 @@ void W3DViewFrame::CreateToolBar()
     toolBar->Realize();
 }
 
-void W3DViewFrame::CreateStatusBar()
+void W3DViewFrame::InitStatusBar()
 {
     m_statusBar = CreateStatusBar(3);
     int widths[] = {-1, 100, 100};

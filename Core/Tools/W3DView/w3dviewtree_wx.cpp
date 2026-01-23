@@ -25,6 +25,16 @@
 
 extern ViewerAssetMgrClass *_TheAssetMgr;
 
+// Custom tree item data to store asset index
+class TreeItemDataInt : public wxTreeItemData
+{
+public:
+    TreeItemDataInt(int value) : m_value(value) {}
+    int GetValue() const { return m_value; }
+private:
+    int m_value;
+};
+
 wxBEGIN_EVENT_TABLE(W3DViewTreeCtrl, wxTreeCtrl)
     EVT_TREE_SEL_CHANGED(wxID_ANY, W3DViewTreeCtrl::OnSelectionChanged)
     EVT_TREE_ITEM_ACTIVATED(wxID_ANY, W3DViewTreeCtrl::OnItemActivated)
@@ -59,7 +69,7 @@ void W3DViewTreeCtrl::BuildTree()
             {
                 wxString assetName = info->Get_Name();
                 wxTreeItemId item = AppendItem(root, assetName);
-                SetItemData(item, new wxTreeItemData((void *)(intptr_t)i));
+                SetItemData(item, new TreeItemDataInt(i));
             }
         }
     }
@@ -83,11 +93,11 @@ void W3DViewTreeCtrl::OnSelectionChanged(wxTreeEvent &event)
     if (!item.IsOk())
         return;
 
-    wxTreeItemData *data = GetItemData(item);
+    TreeItemDataInt *data = dynamic_cast<TreeItemDataInt*>(GetItemData(item));
     if (data)
     {
         // TODO: Update the current selection in the document
-        int assetIndex = (int)(intptr_t)data;
+        int assetIndex = data->GetValue();
         // Notify views to update
     }
 }

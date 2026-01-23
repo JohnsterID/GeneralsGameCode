@@ -87,7 +87,7 @@ bool W3DViewApp::OnInit()
 
     // Check if another instance is already running
 #ifdef _WIN32
-    HWND hprev = FindWindow(nullptr, "W3DView");
+    HWND hprev = FindWindow(nullptr, L"W3DView");
     if (hprev != nullptr)
     {
         ShowWindow(hprev, SW_NORMAL);
@@ -99,8 +99,9 @@ bool W3DViewApp::OnInit()
 
     // Register custom controls
 #ifdef _WIN32
-    RegisterColorPicker((HINSTANCE)wxGetInstance());
-    RegisterColorBar((HINSTANCE)wxGetInstance());
+    HINSTANCE hInstance = GetModuleHandle(NULL);
+    RegisterColorPicker(hInstance);
+    RegisterColorBar(hInstance);
 #else
     RegisterColorPicker(nullptr);
     RegisterColorBar(nullptr);

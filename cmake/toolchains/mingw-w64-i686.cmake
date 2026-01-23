@@ -16,7 +16,7 @@ set(CMAKE_DLLTOOL i686-w64-mingw32-dlltool)
 # Target environment
 set(CMAKE_FIND_ROOT_PATH 
     /usr/i686-w64-mingw32
-    /opt/wxwidgets-3.2.6-mingw-i686
+    /opt/wxwidgets-3.2.9-mingw-i686
 )
 
 # Adjust the default behavior of the FIND_XXX() commands:

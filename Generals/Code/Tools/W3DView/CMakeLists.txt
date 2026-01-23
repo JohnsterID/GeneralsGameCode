@@ -14,7 +14,7 @@ if(wxWidgets_FOUND)
         d3dx8
         imm32
         milesstub
-        Version
+        version  # MinGW: libversion.a, MSVC: Version.lib (case-insensitive on Windows)
         vfw32
         winmm
         g_wwaudio
@@ -69,7 +69,7 @@ elseif(WIN32 OR "${CMAKE_SYSTEM}" MATCHES "Windows")
         d3dx8
         imm32
         milesstub
-        Version
+        version  # MinGW: libversion.a, MSVC: Version.lib (case-insensitive on Windows)
         vfw32
         winmm
         g_wwaudio

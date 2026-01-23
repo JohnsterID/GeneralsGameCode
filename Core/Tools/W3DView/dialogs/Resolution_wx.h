@@ -90,4 +90,7 @@ private:
 
     // Event handlers (Phase 2)
 void OnDblclkResolutionListCtrl(wxListEvent &event);  // Notification message (needs analysis)
+
+    // Phase 2.5: Member variables
+    bool curr_windowed;
 };

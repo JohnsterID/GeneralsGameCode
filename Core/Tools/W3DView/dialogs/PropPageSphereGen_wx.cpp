@@ -32,7 +32,10 @@ EVT_BUTTON(XRCID("IDC_BROWSE_BUTTON"), PropPageSphereGen::OnBrowseButton)  // Bu
 wxEND_EVENT_TABLE()
 
 PropPageSphereGen::PropPageSphereGen(wxWindow *parent)
-    : PropPageSphereGenBase(parent)
+    : PropPageSphereGenBase(parent),
+      m_Name(wxEmptyString),
+      m_TextureFilename(wxEmptyString),
+      m_Lifetime(1.0f)
 {
     // Initialize dialog
     // TransferDataToWindow();

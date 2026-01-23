@@ -27,7 +27,9 @@ EVT_WINDOW_DESTROY(PropPageRingScale::OnDestroy)  // Window destruction
 wxEND_EVENT_TABLE()
 
 PropPageRingScale::PropPageRingScale(wxWindow *parent)
-    : PropPageRingScaleBase(parent)
+    : PropPageRingScaleBase(parent),
+      m_InnerSize(0.0f, 0.0f),
+      m_OuterSize(0.0f, 0.0f)
 {
     // Initialize dialog
     // TransferDataToWindow();

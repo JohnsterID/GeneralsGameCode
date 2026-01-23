@@ -25,6 +25,7 @@
 #include <wx/spinbutt.h>
 #include <wx/textctrl.h>
 #include <wx/xrc/xmlres.h>
+#include "../w3dcompat_wx.h"
 
 // Base class that loads from XRC
 class PropPageRingScaleBase : public wxDialog
@@ -79,6 +80,10 @@ class PropPageRingScale : public PropPageRingScaleBase
 {
 public:
     PropPageRingScale(wxWindow *parent);
+
+    // Dialog data (MFC compatibility)
+    Vector2 m_InnerSize;
+    Vector2 m_OuterSize;
 
 protected:
     // Override for data transfer if needed

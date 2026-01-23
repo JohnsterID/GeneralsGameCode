@@ -99,6 +99,11 @@ class PropPageRingGen : public PropPageRingGenBase
 public:
     PropPageRingGen(wxWindow *parent);
 
+    // Dialog data (MFC compatibility)
+    wxString m_Name;
+    wxString m_TextureFilename;
+    float m_Lifetime;
+
 protected:
     // Override for data transfer if needed
     // bool TransferDataToWindow() override;

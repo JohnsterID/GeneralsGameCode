@@ -27,7 +27,8 @@ EVT_WINDOW_DESTROY(PropPageSphereScale::OnDestroy)  // Window destruction
 wxEND_EVENT_TABLE()
 
 PropPageSphereScale::PropPageSphereScale(wxWindow *parent)
-    : PropPageSphereScaleBase(parent)
+    : PropPageSphereScaleBase(parent),
+      m_Size(0.0f, 0.0f, 0.0f)
 {
     // Initialize dialog
     // TransferDataToWindow();
@@ -74,15 +75,15 @@ void PropPageSphereScale::OnInitDialog(wxInitDialogEvent& event)
     //
     if (m_idc_size_x_spin) {
         m_idc_size_x_spin->SetRange(0, 10000);
-        m_idc_size_x_spin->SetValue(static_cast<int>(m_Size.X));
+        m_idc_size_x_spin->SetValue(static_cast<int>(m_Size.x));
     }
     if (m_idc_size_y_spin) {
         m_idc_size_y_spin->SetRange(0, 10000);
-        m_idc_size_y_spin->SetValue(static_cast<int>(m_Size.Y));
+        m_idc_size_y_spin->SetValue(static_cast<int>(m_Size.y));
     }
     if (m_idc_size_z_spin) {
         m_idc_size_z_spin->SetRange(0, 10000);
-        m_idc_size_z_spin->SetValue(static_cast<int>(m_Size.Z));
+        m_idc_size_z_spin->SetValue(static_cast<int>(m_Size.z));
     }
     //
     // Setup the timelines

@@ -29,6 +29,7 @@
 #include <wx/stattext.h>
 #include <wx/textctrl.h>
 #include <wx/xrc/xmlres.h>
+#include "w3dcompat_wx.h"
 
 // Base class that loads from XRC
 class VolumeRandomizerBase : public wxDialog
@@ -138,4 +139,12 @@ private:
 void OnBoxRadio(wxCommandEvent &event);  // Button/Checkbox click
     void OnCylinderRadio(wxCommandEvent &event);  // Button/Checkbox click
     void OnSphereRadio(wxCommandEvent &event);  // Button/Checkbox click
+
+    // Phase 2.5: Member variables
+    Vector3 initial_box;
+    float initial_sphere_radius;
+    bool initial_sphere_hollow;
+    float initial_cylinder_radius;
+    float initial_cylinder_height;
+    int m_initial_type;
 };

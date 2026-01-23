@@ -88,5 +88,8 @@ private:
     void OnOK(wxCommandEvent &event);
     void OnCancel(wxCommandEvent &event);
 
+    // Phase 2.5: Member variables
+    wxString m_Prompt;
+
     wxDECLARE_EVENT_TABLE();
 };

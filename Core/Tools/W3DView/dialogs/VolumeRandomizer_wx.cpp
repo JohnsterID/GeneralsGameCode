@@ -123,15 +123,15 @@ void VolumeRandomizer::OnInitDialog(wxInitDialogEvent& event)
     //
     if (m_idc_box_x_spin) {
         m_idc_box_x_spin->SetRange(-10000, 10000);
-        m_idc_box_x_spin->SetValue(static_cast<int>(initial_box.X));
+        m_idc_box_x_spin->SetValue(static_cast<int>(initial_box.x));
     }
     if (m_idc_box_y_spin) {
         m_idc_box_y_spin->SetRange(-10000, 10000);
-        m_idc_box_y_spin->SetValue(static_cast<int>(initial_box.Y));
+        m_idc_box_y_spin->SetValue(static_cast<int>(initial_box.y));
     }
     if (m_idc_box_z_spin) {
         m_idc_box_z_spin->SetRange(-10000, 10000);
-        m_idc_box_z_spin->SetValue(static_cast<int>(initial_box.Z));
+        m_idc_box_z_spin->SetValue(static_cast<int>(initial_box.z));
     }
     //
     //	Initialize the sphere controls
@@ -157,9 +157,14 @@ void VolumeRandomizer::OnInitDialog(wxInitDialogEvent& event)
     //
     //	Check the appropriate radio
     //
-    if (m_initial_type) {
-        m_initial_type->SetValue(true);
-    }
+    // TODO: Phase 2.5: Set the appropriate radio button based on m_initial_type
+    // if (m_initial_type == BOX_TYPE && m_idc_box_radio) {
+    //     m_idc_box_radio->SetValue(true);
+    // } else if (m_initial_type == SPHERE_TYPE && m_idc_sphere_radio) {
+    //     m_idc_sphere_radio->SetValue(true);
+    // } else if (m_initial_type == CYLINDER_TYPE && m_idc_cylinder_radio) {
+    //     m_idc_cylinder_radio->SetValue(true);
+    // }
     // TODO: Convert: Update_Enable_State ();
     // TODO: Convert: return TRUE;
 
@@ -189,7 +194,6 @@ bool VolumeRandomizer::TransferDataFromWindow()
                      wxOK | wxICON_ERROR, this);
         return false;
     }
-    double value;
     if (m_idc_box_y_edit && m_idc_box_y_edit->GetValue().ToDouble(&value)) {
         // Use value (cast to float if needed)
     } else {
@@ -197,7 +201,6 @@ bool VolumeRandomizer::TransferDataFromWindow()
                      wxOK | wxICON_ERROR, this);
         return false;
     }
-    double value;
     if (m_idc_box_z_edit && m_idc_box_z_edit->GetValue().ToDouble(&value)) {
         // Use value (cast to float if needed)
     } else {
@@ -210,7 +213,6 @@ bool VolumeRandomizer::TransferDataFromWindow()
     // TODO: Convert: //
     // TODO: Convert: //	What type of sphere is this, hollow or solid?
     // TODO: Convert: //
-    double value;
     if (m_idc_sphere_radius_edit && m_idc_sphere_radius_edit->GetValue().ToDouble(&value)) {
         // Use value (cast to float if needed)
     } else {
@@ -227,7 +229,6 @@ bool VolumeRandomizer::TransferDataFromWindow()
     // TODO: Convert: //
     // TODO: Convert: //	Create a cylinder randomizer
     // TODO: Convert: //
-    double value;
     if (m_idc_cylinder_radius_edit && m_idc_cylinder_radius_edit->GetValue().ToDouble(&value)) {
         // Use value (cast to float if needed)
     } else {
@@ -235,7 +236,6 @@ bool VolumeRandomizer::TransferDataFromWindow()
                      wxOK | wxICON_ERROR, this);
         return false;
     }
-    double value;
     if (m_idc_cylinder_height_edit && m_idc_cylinder_height_edit->GetValue().ToDouble(&value)) {
         // Use value (cast to float if needed)
     } else {

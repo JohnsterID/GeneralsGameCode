@@ -60,8 +60,8 @@ void ScaleKey::OnInitDialog(wxInitDialogEvent& event)
     // TODO: Convert: m_ScaleSpin.SetPos (int(m_Scale * 100.0F));
     // If we were given a different prompt upon creation, apply it now.
     // TODO: Convert: if (!m_Prompt.IsEmpty())
-    if (m_idc_prompt) {
-        m_idc_prompt->SetValue(m_Prompt);
+    if (m_idc_prompt && !m_Prompt.IsEmpty()) {
+        m_idc_prompt->SetLabel(m_Prompt);
     }
     // TODO: Convert: return TRUE;
 

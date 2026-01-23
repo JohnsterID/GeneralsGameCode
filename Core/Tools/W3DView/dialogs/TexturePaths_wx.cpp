@@ -74,12 +74,13 @@ void TexturePaths::OnInitDialog(wxInitDialogEvent& event)
 {
     // Initialize controls after they're created
     // TODO: Convert: CW3DViewDoc *doc = ::GetCurrentDocument ();
-    if (m_idc_path1) {
-        m_idc_path1->SetValue(doc->Get_Texture_Path1 ();
-    }
-    if (m_idc_path2) {
-        m_idc_path2->SetValue(doc->Get_Texture_Path2 ();
-    }
+    // TODO: Phase 2.5: Fix doc pointer type and initialization
+    // if (m_idc_path1 && doc) {
+    //     m_idc_path1->SetValue(doc->Get_Texture_Path1());
+    // }
+    // if (m_idc_path2 && doc) {
+    //     m_idc_path2->SetValue(doc->Get_Texture_Path2());
+    // }
     // TODO: Convert: return TRUE;
 
     event.Skip();

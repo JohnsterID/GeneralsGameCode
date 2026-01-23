@@ -144,4 +144,14 @@ void OnBrowse(wxCommandEvent &event);  // Button/Checkbox click
     void On3DRadio(wxCommandEvent &event);  // Button/Checkbox click
     void OnPlay(wxCommandEvent &event);  // Button/Checkbox click
     void OnHscroll(wxCommandEvent &event);  // Horizontal scroll (slider)
+
+    // Phase 2.5: Member variables
+    wxString OldName;
+    wxString filename;
+    int loop_count;
+    bool is_3d;
+    bool is_music;
+    bool stop_on_hide;
+    float drop_off_radius;
+    float max_vol_radius;
 };

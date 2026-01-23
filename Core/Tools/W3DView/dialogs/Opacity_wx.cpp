@@ -45,4 +45,42 @@ void Opacity::OnCancel(wxCommandEvent &event)
 {
     // Close without saving
     EndModal(wxID_CANCEL);
+
+// ============================================================================
+// Phase 2.5: Dialog Infrastructure (Auto-generated)
+// ============================================================================
+
+void OpacityBase::OnInitDialog(wxInitDialogEvent& event)
+{
+    // Initialize controls after they're created
+    // TODO: Convert: m_OpacityBar = ColorBarClass::Get_Color_Bar (::GetDlgItem (m_hWnd, IDC_OPACITY_BAR));
+    // TODO: Convert: ASSERT (m_OpacityBar);
+    //
+    // Setup the opacity bar
+    //
+    // TODO: Convert: m_OpacityBar->Set_Range (0, 1);
+    // TODO: Convert: m_OpacityBar->Modify_Point (0, 0, 0, 0, 0);
+    // TODO: Convert: m_OpacityBar->Insert_Point (1, 1, 255, 255, 255);
+    // TODO: Convert: m_OpacityBar->Set_Selection_Pos (m_Opacity);
+    // TODO: Convert: return TRUE;
+
+    event.Skip();
+}
+
+bool OpacityBase::TransferDataToWindow()
+{
+    // Data is transferred in OnInitDialog for this dialog
+    return true;
+}
+
+bool OpacityBase::TransferDataFromWindow()
+{
+    // Extract data from controls and apply to business logic
+
+    // TODO: Convert: m_Opacity = m_OpacityBar->Get_Selection_Pos ();
+    // TODO: Convert: return ;
+
+    return true;
+}
+
 }

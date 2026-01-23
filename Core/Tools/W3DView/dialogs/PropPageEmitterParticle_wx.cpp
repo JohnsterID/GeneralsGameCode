@@ -20,6 +20,7 @@
 
 #include "PropPageEmitterParticle_wx.h"
 #include <wx/xrc/xmlres.h>
+#include <wx/spinbutt.h>
 
 wxBEGIN_EVENT_TABLE(PropPageEmitterParticle, PropPageEmitterParticleBase)
 EVT_BUTTON(XRCID("IDC_SPECIFY_CREATION_VOLUME"), PropPageEmitterParticle::OnSpecifyCreationVolume)  // Button/Checkbox click
@@ -62,4 +63,52 @@ void PropPageEmitterParticle::OnMaxParticlesCheck(wxCommandEvent &event)
 {
     // TODO: Implement OnMaxParticlesCheck
     // Control ID: IDC_MAX_PARTICLES_CHECK
+
+// ============================================================================
+// Phase 2.5: Dialog Infrastructure (Auto-generated)
+// ============================================================================
+
+void PropPageEmitterParticleBase::OnInitDialog(wxInitDialogEvent& event)
+{
+    // Initialize controls after they're created
+    // Allow the base class to process this message
+    //
+    //	Setup the burst controls
+    //
+    // TODO: Convert: m_BurstSizeSpin.SetRange (0, 10000);
+    // TODO: Convert: m_BurstSizeSpin.SetPos (m_BurstSize);
+    if (m_idc_emission_rate_spin) {
+        m_idc_emission_rate_spin->SetRange(-10000, 10000);
+        m_idc_emission_rate_spin->SetValue(static_cast<int>(m_Rate));
+    }
+    //
+    //	Setup the max particles spin
+    //
+    // TODO: Convert: m_MaxParticlesSpin.SetRange (0, 10000);
+    // TODO: Convert: m_MaxParticlesSpin.SetPos (m_MaxParticles);
+    if (m_idc_max_particles_check) {
+        m_idc_max_particles_check->SetValue(m_MaxParticles != 0 != 0);  // TODO: Verify boolean logic
+    }
+    // TODO: Convert: ::EnableWindow (::GetDlgItem (m_hWnd, IDC_MAX_PARTICLES_EDIT), m_MaxParticles != 0);
+    // TODO: Convert: ::EnableWindow (::GetDlgItem (m_hWnd, IDC_MAX_PARTICLES_SPIN), m_MaxParticles != 0);
+    // TODO: Convert: return TRUE;
+
+    event.Skip();
+}
+
+bool PropPageEmitterParticleBase::TransferDataToWindow()
+{
+    // Data is transferred in OnInitDialog for this dialog
+    return true;
+}
+
+bool PropPageEmitterParticleBase::TransferDataFromWindow()
+{
+    // Extract data from controls and apply to business logic
+
+    // TODO: Extract data from controls
+
+    return true;
+}
+
 }

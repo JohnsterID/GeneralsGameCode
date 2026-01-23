@@ -62,4 +62,43 @@ void PropPageEmitterUser::OnSelchangeTypeCombo(wxCommandEvent &event)
 {
     // TODO: Implement OnSelchangeTypeCombo
     // Control ID: IDC_TYPE_COMBO
+
+// ============================================================================
+// Phase 2.5: Dialog Infrastructure (Auto-generated)
+// ============================================================================
+
+void PropPageEmitterUserBase::OnInitDialog(wxInitDialogEvent& event)
+{
+    // Initialize controls after they're created
+    // Allow the base class to process this message
+    // Add the list of user-types to the combobox
+    // TODO: Convert: m_TypeCombo.AddString (EMITTER_TYPE_NAMES[index]);
+    // Select the correct entry in the combobox
+    if (m_idc_type_combo) {
+        m_idc_type_combo->SetSelection(m_iType);
+    }
+    // Fill in the user-box
+    if (m_idc_programmer_settings_edit) {
+        m_idc_programmer_settings_edit->SetValue(m_UserString);
+    }
+    // TODO: Convert: return TRUE;
+
+    event.Skip();
+}
+
+bool PropPageEmitterUserBase::TransferDataToWindow()
+{
+    // Data is transferred in OnInitDialog for this dialog
+    return true;
+}
+
+bool PropPageEmitterUserBase::TransferDataFromWindow()
+{
+    // Extract data from controls and apply to business logic
+
+    // TODO: Extract data from controls
+
+    return true;
+}
+
 }

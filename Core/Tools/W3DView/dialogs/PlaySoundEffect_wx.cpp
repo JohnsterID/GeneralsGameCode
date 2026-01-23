@@ -62,4 +62,47 @@ void PlaySoundEffect::OnStopSoundEffect(wxCommandEvent &event)
 {
     // TODO: Implement OnStopSoundEffect
     // Control ID: IDC_STOP_SOUND_EFFECT
+
+// ============================================================================
+// Phase 2.5: Dialog Infrastructure (Auto-generated)
+// ============================================================================
+
+void PlaySoundEffectBase::OnInitDialog(wxInitDialogEvent& event)
+{
+    // Initialize controls after they're created
+    //
+    //	Put the filename into the dialog
+    //
+    if (m_idc_filename) {
+        m_idc_filename->SetValue(Filename);
+    }
+    //
+    //	Create the sound effect so we can play it
+    //
+    // TODO: Convert: SoundObj = WWAudioClass::Get_Instance ()->Create_Sound_Effect (Filename);
+    // TODO: Convert: CString message;
+    // TODO: Convert: message.Format ("Cannot find sound file: %s!", (LPCTSTR)Filename, MB_OK);
+    // TODO: Convert: MessageBox (message, "File Not Found", MB_ICONEXCLAMATION | MB_OK);
+    // TODO: Convert: EndDialog (IDCANCEL);
+    // TODO: Convert: OnPlaySoundEffect ();
+    // TODO: Convert: return TRUE;
+
+    event.Skip();
+}
+
+bool PlaySoundEffectBase::TransferDataToWindow()
+{
+    // Data is transferred in OnInitDialog for this dialog
+    return true;
+}
+
+bool PlaySoundEffectBase::TransferDataFromWindow()
+{
+    // Extract data from controls and apply to business logic
+
+    // TODO: Extract data from controls
+
+    return true;
+}
+
 }

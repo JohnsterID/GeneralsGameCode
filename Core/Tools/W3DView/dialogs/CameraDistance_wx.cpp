@@ -23,6 +23,7 @@
 #include <wx/xrc/xmlres.h>
 #include "../GraphicView.h"
 #include "../Utils.h"
+#include <wx/msgdlg.h>
 
 wxBEGIN_EVENT_TABLE(CameraDistance, CameraDistanceBase)
     EVT_INIT_DIALOG(CameraDistance::OnInitDialog)
@@ -116,4 +117,50 @@ void CameraDistance::OnCancel(wxCommandEvent &event)
 {
     // Close without saving
     EndModal(wxID_CANCEL);
+
+// ============================================================================
+// Phase 2.5: Dialog Infrastructure (Auto-generated)
+// ============================================================================
+
+void CameraDistanceBase::OnInitDialog(wxInitDialogEvent& event)
+{
+    // Initialize controls after they're created
+    // TODO: Convert: CGraphicView *graphic_view = ::Get_Graphic_View ();
+    if (m_idc_distance_spin) {
+        m_idc_distance_spin->SetRange(0, 25000.0F);
+        m_idc_distance_spin->SetValue(static_cast<int>(graphic_view->Get_Camera_Distance ()));
+    }
+    if (m_idc_distance_edit) {
+        m_idc_distance_edit->SetValue(wxString::Format("%.2f", graphic_view->Get_Camera_Distance ());
+    }
+    // TODO: Convert: return TRUE;
+
+    event.Skip();
+}
+
+bool CameraDistanceBase::TransferDataToWindow()
+{
+    // Data is transferred in OnInitDialog for this dialog
+    return true;
+}
+
+bool CameraDistanceBase::TransferDataFromWindow()
+{
+    // Extract data from controls and apply to business logic
+
+    double value;
+    if (m_idc_distance_edit && m_idc_distance_edit->GetValue().ToDouble(&value)) {
+        // Use value (cast to float if needed)
+    } else {
+        wxMessageBox("Please enter a valid numeric value", "Invalid Input", 
+                     wxOK | wxICON_ERROR, this);
+        return false;
+    }
+    // TODO: Convert: CGraphicView *graphic_view = ::Get_Graphic_View ();
+    // TODO: Convert: graphic_view->Set_Camera_Distance (distance);
+    // TODO: Convert: return ;
+
+    return true;
+}
+
 }

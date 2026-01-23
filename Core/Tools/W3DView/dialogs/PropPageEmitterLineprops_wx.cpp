@@ -20,6 +20,7 @@
 
 #include "PropPageEmitterLineprops_wx.h"
 #include <wx/xrc/xmlres.h>
+#include <wx/spinbutt.h>
 
 wxBEGIN_EVENT_TABLE(PropPageEmitterLineprops, PropPageEmitterLinepropsBase)
 
@@ -45,4 +46,71 @@ void PropPageEmitterLineprops::OnCancel(wxCommandEvent &event)
 {
     // Close without saving
     EndModal(wxID_CANCEL);
+
+// ============================================================================
+// Phase 2.5: Dialog Infrastructure (Auto-generated)
+// ============================================================================
+
+void PropPageEmitterLinepropsBase::OnInitDialog(wxInitDialogEvent& event)
+{
+    // Initialize controls after they're created
+    // Set up the spinner ranges
+    // TODO: Convert: m_SubdivisionLevelSpin.SetRange(0,8);
+    // TODO: Convert: m_SubdivisionLevelSpin.SetPos(m_SubdivisionLevel);
+    if (m_idc_noise_amplitude_spin) {
+        m_idc_noise_amplitude_spin->SetRange(-10000, 10000);
+        m_idc_noise_amplitude_spin->SetValue(static_cast<int>(m_NoiseAmplitude));
+    }
+    if (m_idc_merge_abort_factor_spin) {
+        m_idc_merge_abort_factor_spin->SetRange(-10000, 10000);
+        m_idc_merge_abort_factor_spin->SetValue(static_cast<int>(m_MergeAbortFactor));
+    }
+    if (m_idc_uvtiling_spin) {
+        m_idc_uvtiling_spin->SetRange(0.0f, 8.0f);
+        m_idc_uvtiling_spin->SetValue(static_cast<int>(m_TextureTileFactor));
+    }
+    if (m_idc_upersec_spin) {
+        m_idc_upersec_spin->SetRange(0.0f, 32.0f);
+        m_idc_upersec_spin->SetValue(static_cast<int>(m_UPerSec));
+    }
+    if (m_idc_vpersec_spin) {
+        m_idc_vpersec_spin->SetRange(0.0f, 32.0f);
+        m_idc_vpersec_spin->SetValue(static_cast<int>(m_VPerSec));
+    }
+    // Set the combo box
+    if (m_idc_mapmode_combo) {
+        m_idc_mapmode_combo->SetSelection(m_MappingMode);
+    }
+    // Set the checkboxes
+    if (m_idc_merge_intersections_check) {
+        m_idc_merge_intersections_check->SetValue(m_MergeIntersections != 0 != 0);  // TODO: Verify boolean logic
+    }
+    if (m_idc_end_caps_check) {
+        m_idc_end_caps_check->SetValue(m_EndCaps != 0 != 0);  // TODO: Verify boolean logic
+    }
+    if (m_idc_disable_sorting_check) {
+        m_idc_disable_sorting_check->SetValue(m_DisableSorting != 0 != 0);  // TODO: Verify boolean logic
+    }
+    // TODO: Declare: bool enable = (m_pEmitterList->Get_Render_Mode() == W3D_EMITTER_RENDER_MODE_LINE);
+    // TODO: Convert: ::Enable_Dialog_Controls(m_hWnd,enable);
+    // TODO: Convert: return TRUE;
+
+    event.Skip();
+}
+
+bool PropPageEmitterLinepropsBase::TransferDataToWindow()
+{
+    // Data is transferred in OnInitDialog for this dialog
+    return true;
+}
+
+bool PropPageEmitterLinepropsBase::TransferDataFromWindow()
+{
+    // Extract data from controls and apply to business logic
+
+    // TODO: Extract data from controls
+
+    return true;
+}
+
 }

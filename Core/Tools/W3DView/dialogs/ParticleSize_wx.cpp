@@ -20,6 +20,7 @@
 
 #include "ParticleSize_wx.h"
 #include <wx/xrc/xmlres.h>
+#include <wx/spinbutt.h>
 
 wxBEGIN_EVENT_TABLE(ParticleSize, ParticleSizeBase)
 
@@ -45,4 +46,34 @@ void ParticleSize::OnCancel(wxCommandEvent &event)
 {
     // Close without saving
     EndModal(wxID_CANCEL);
+
+// ============================================================================
+// Phase 2.5: Dialog Infrastructure (Auto-generated)
+// ============================================================================
+
+void ParticleSizeBase::OnInitDialog(wxInitDialogEvent& event)
+{
+    // Initialize controls after they're created
+    // TODO: Convert: Initialize_Spinner (m_SizeSpin, m_Size, 0, 10000);
+    // TODO: Convert: return TRUE;
+
+    event.Skip();
+}
+
+bool ParticleSizeBase::TransferDataToWindow()
+{
+    // Data is transferred in OnInitDialog for this dialog
+    return true;
+}
+
+bool ParticleSizeBase::TransferDataFromWindow()
+{
+    // Extract data from controls and apply to business logic
+
+    // TODO: Convert: m_Size = GetDlgItemFloat (m_hWnd, IDC_SIZE_EDIT);
+    // TODO: Convert: return ;
+
+    return true;
+}
+
 }

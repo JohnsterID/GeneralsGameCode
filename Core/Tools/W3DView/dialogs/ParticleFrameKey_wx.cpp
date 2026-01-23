@@ -20,6 +20,7 @@
 
 #include "ParticleFrameKey_wx.h"
 #include <wx/xrc/xmlres.h>
+#include <wx/spinbutt.h>
 
 wxBEGIN_EVENT_TABLE(ParticleFrameKey, ParticleFrameKeyBase)
 
@@ -45,4 +46,34 @@ void ParticleFrameKey::OnCancel(wxCommandEvent &event)
 {
     // Close without saving
     EndModal(wxID_CANCEL);
+
+// ============================================================================
+// Phase 2.5: Dialog Infrastructure (Auto-generated)
+// ============================================================================
+
+void ParticleFrameKeyBase::OnInitDialog(wxInitDialogEvent& event)
+{
+    // Initialize controls after they're created
+    // TODO: Convert: Initialize_Spinner (m_FrameSpin, m_Frame, -1024, 1024);
+    // TODO: Convert: return TRUE;  // return TRUE unless you set the focus to a control
+    // EXCEPTION: OCX Property Pages should return FALSE
+
+    event.Skip();
+}
+
+bool ParticleFrameKeyBase::TransferDataToWindow()
+{
+    // Data is transferred in OnInitDialog for this dialog
+    return true;
+}
+
+bool ParticleFrameKeyBase::TransferDataFromWindow()
+{
+    // Extract data from controls and apply to business logic
+
+    // TODO: Convert: m_Frame = GetDlgItemFloat(m_hWnd,IDC_FRAME_EDIT);
+
+    return true;
+}
+
 }

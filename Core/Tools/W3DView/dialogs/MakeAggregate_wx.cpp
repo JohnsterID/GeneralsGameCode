@@ -45,4 +45,39 @@ void MakeAggregate::OnCancel(wxCommandEvent &event)
 {
     // Close without saving
     EndModal(wxID_CANCEL);
+
+// ============================================================================
+// Phase 2.5: Dialog Infrastructure (Auto-generated)
+// ============================================================================
+
+void MakeAggregateBase::OnInitDialog(wxInitDialogEvent& event)
+{
+    // Initialize controls after they're created
+    // Allow the base class to process this message
+    // Restrict the amount of text a user can type into the control
+    // TODO: Convert: SendDlgItemMessage (IDC_AGGREGATE_NAME, EM_LIMITTEXT, (WPARAM)W3D_NAME_LEN-1);
+    if (m_idc_aggregate_name) {
+        m_idc_aggregate_name->SetValue(m_Name);
+    }
+    // TODO: Convert: return TRUE;
+
+    event.Skip();
+}
+
+bool MakeAggregateBase::TransferDataToWindow()
+{
+    // Data is transferred in OnInitDialog for this dialog
+    return true;
+}
+
+bool MakeAggregateBase::TransferDataFromWindow()
+{
+    // Extract data from controls and apply to business logic
+
+    // TODO: Convert: GetDlgItemText (IDC_AGGREGATE_NAME, m_Name);
+    // TODO: Convert: return ;
+
+    return true;
+}
+
 }

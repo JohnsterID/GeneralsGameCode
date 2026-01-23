@@ -20,6 +20,7 @@
 
 #include "ParticleRotationKey_wx.h"
 #include <wx/xrc/xmlres.h>
+#include <wx/spinbutt.h>
 
 wxBEGIN_EVENT_TABLE(ParticleRotationKey, ParticleRotationKeyBase)
 
@@ -45,4 +46,34 @@ void ParticleRotationKey::OnCancel(wxCommandEvent &event)
 {
     // Close without saving
     EndModal(wxID_CANCEL);
+
+// ============================================================================
+// Phase 2.5: Dialog Infrastructure (Auto-generated)
+// ============================================================================
+
+void ParticleRotationKeyBase::OnInitDialog(wxInitDialogEvent& event)
+{
+    // Initialize controls after they're created
+    // TODO: Convert: Initialize_Spinner (m_RotationSpin, m_Rotation, -10000, 10000);
+    // TODO: Convert: return TRUE;  // return TRUE unless you set the focus to a control
+    // EXCEPTION: OCX Property Pages should return FALSE
+
+    event.Skip();
+}
+
+bool ParticleRotationKeyBase::TransferDataToWindow()
+{
+    // Data is transferred in OnInitDialog for this dialog
+    return true;
+}
+
+bool ParticleRotationKeyBase::TransferDataFromWindow()
+{
+    // Extract data from controls and apply to business logic
+
+    // TODO: Convert: m_Rotation = GetDlgItemFloat (m_hWnd, IDC_ROTATION_EDIT);
+
+    return true;
+}
+
 }

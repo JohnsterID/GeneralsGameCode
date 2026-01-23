@@ -20,6 +20,7 @@
 
 #include "PropPageSphereGen_wx.h"
 #include <wx/xrc/xmlres.h>
+#include <wx/spinbutt.h>
 
 wxBEGIN_EVENT_TABLE(PropPageSphereGen, PropPageSphereGenBase)
 EVT_BUTTON(XRCID("IDC_BROWSE_BUTTON"), PropPageSphereGen::OnBrowseButton)  // Button/Checkbox click
@@ -83,4 +84,58 @@ void PropPageSphereGen::OnSelchangeShaderCombo(wxCommandEvent &event)
 {
     // TODO: Implement OnSelchangeShaderCombo
     // Control ID: IDC_SHADER_COMBO
+
+// ============================================================================
+// Phase 2.5: Dialog Infrastructure (Auto-generated)
+// ============================================================================
+
+void PropPageSphereGenBase::OnInitDialog(wxInitDialogEvent& event)
+{
+    // Initialize controls after they're created
+    // Allow the base class to process this message
+    //
+    //	Add the known shaders to the combobox
+    //
+    // TODO: Convert: Add_Shader_To_Combo (ShaderClass::_PresetAdditiveShader, "Additive");
+    // TODO: Convert: Add_Shader_To_Combo (ShaderClass::_PresetAlphaShader, "Alpha");
+    // TODO: Convert: Add_Shader_To_Combo (ShaderClass::_PresetOpaqueShader, "Opaque");
+    // TODO: Convert: Add_Shader_To_Combo (ShaderClass::_PresetMultiplicativeShader, "Multiplicative");
+    // TODO: Convert: CheckDlgButton (IDC_CAMERA_ALIGNED_CHECK, (m_RenderObj->Get_Flags () & SphereRenderObjClass::USE_CAMERA_ALIGN) != 0);
+    // TODO: Convert: CheckDlgButton (IDC_LOOPING_CHECK, (m_RenderObj->Get_Flags () & SphereRenderObjClass::USE_ANIMATION_LOOP) != 0);
+    //
+    // Fill the edit controls with the default values
+    //
+    if (m_idc_name_edit) {
+        m_idc_name_edit->SetValue(m_Name);
+    }
+    if (m_idc_filename_edit) {
+        m_idc_filename_edit->SetValue(m_TextureFilename);
+    }
+    //
+    // Initialize the lifetime control
+    //
+    if (m_idc_lifetime_spin) {
+        m_idc_lifetime_spin->SetRange(0, 1000);
+        m_idc_lifetime_spin->SetValue(static_cast<int>(m_Lifetime));
+    }
+    // TODO: Convert: return TRUE;
+
+    event.Skip();
+}
+
+bool PropPageSphereGenBase::TransferDataToWindow()
+{
+    // Data is transferred in OnInitDialog for this dialog
+    return true;
+}
+
+bool PropPageSphereGenBase::TransferDataFromWindow()
+{
+    // Extract data from controls and apply to business logic
+
+    // TODO: Extract data from controls
+
+    return true;
+}
+
 }

@@ -62,4 +62,46 @@ void TexturePaths::OnBrowse2(wxCommandEvent &event)
 {
     // TODO: Implement OnBrowse2
     // Control ID: IDC_BROWSE2
+
+// ============================================================================
+// Phase 2.5: Dialog Infrastructure (Auto-generated)
+// ============================================================================
+
+void TexturePathsBase::OnInitDialog(wxInitDialogEvent& event)
+{
+    // Initialize controls after they're created
+    // TODO: Convert: CW3DViewDoc *doc = ::GetCurrentDocument ();
+    if (m_idc_path1) {
+        m_idc_path1->SetValue(doc->Get_Texture_Path1 ();
+    }
+    if (m_idc_path2) {
+        m_idc_path2->SetValue(doc->Get_Texture_Path2 ();
+    }
+    // TODO: Convert: return TRUE;
+
+    event.Skip();
+}
+
+bool TexturePathsBase::TransferDataToWindow()
+{
+    // Data is transferred in OnInitDialog for this dialog
+    return true;
+}
+
+bool TexturePathsBase::TransferDataFromWindow()
+{
+    // Extract data from controls and apply to business logic
+
+    // TODO: Convert: CString path1;
+    // TODO: Convert: CString path2;
+    // TODO: Convert: GetDlgItemText (IDC_PATH1, path1);
+    // TODO: Convert: GetDlgItemText (IDC_PATH2, path2);
+    // TODO: Convert: CW3DViewDoc *doc = ::GetCurrentDocument ();
+    // TODO: Convert: doc->Set_Texture_Path1 (path1);
+    // TODO: Convert: doc->Set_Texture_Path2 (path2);
+    // TODO: Convert: return ;
+
+    return true;
+}
+
 }

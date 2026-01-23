@@ -20,6 +20,7 @@
 
 #include "PropPageEmitterPhysics_wx.h"
 #include <wx/xrc/xmlres.h>
+#include <wx/spinbutt.h>
 
 wxBEGIN_EVENT_TABLE(PropPageEmitterPhysics, PropPageEmitterPhysicsBase)
 EVT_BUTTON(XRCID("IDC_SPECIFY_VELOCITY_RANDOM"), PropPageEmitterPhysics::OnSpecifyVelocityRandom)  // Button/Checkbox click
@@ -55,4 +56,71 @@ void PropPageEmitterPhysics::OnSpecifyVelocityRandom(wxCommandEvent &event)
 {
     // TODO: Implement OnSpecifyVelocityRandom
     // Control ID: IDC_SPECIFY_VELOCITY_RANDOM
+
+// ============================================================================
+// Phase 2.5: Dialog Infrastructure (Auto-generated)
+// ============================================================================
+
+void PropPageEmitterPhysicsBase::OnInitDialog(wxInitDialogEvent& event)
+{
+    // Initialize controls after they're created
+    // Allow the base class to process this message
+    //
+    //	Setup the velocity controls
+    //
+    if (m_idc_out_factor_spin) {
+        m_idc_out_factor_spin->SetRange(-10000, 10000);
+        m_idc_out_factor_spin->SetValue(static_cast<int>(m_OutFactor));
+    }
+    if (m_idc_inheritance_factor_spin) {
+        m_idc_inheritance_factor_spin->SetRange(-10000, 10000);
+        m_idc_inheritance_factor_spin->SetValue(static_cast<int>(m_InheritanceFactor));
+    }
+    if (m_idc_velocity_x_spin) {
+        m_idc_velocity_x_spin->SetRange(-10000, 10000);
+        m_idc_velocity_x_spin->SetValue(static_cast<int>(m_Velocity.X));
+    }
+    if (m_idc_velocity_y_spin) {
+        m_idc_velocity_y_spin->SetRange(-10000, 10000);
+        m_idc_velocity_y_spin->SetValue(static_cast<int>(m_Velocity.Y));
+    }
+    if (m_idc_velocity_z_spin) {
+        m_idc_velocity_z_spin->SetRange(-10000, 10000);
+        m_idc_velocity_z_spin->SetValue(static_cast<int>(m_Velocity.Z));
+    }
+    //
+    //	Setup the acceleration controls
+    //
+    if (m_idc_acceleration_x_spin) {
+        m_idc_acceleration_x_spin->SetRange(-10000, 10000);
+        m_idc_acceleration_x_spin->SetValue(static_cast<int>(m_Acceleration.X));
+    }
+    if (m_idc_acceleration_y_spin) {
+        m_idc_acceleration_y_spin->SetRange(-10000, 10000);
+        m_idc_acceleration_y_spin->SetValue(static_cast<int>(m_Acceleration.Y));
+    }
+    if (m_idc_acceleration_z_spin) {
+        m_idc_acceleration_z_spin->SetRange(-10000, 10000);
+        m_idc_acceleration_z_spin->SetValue(static_cast<int>(m_Acceleration.Z));
+    }
+    // TODO: Convert: return TRUE;
+
+    event.Skip();
+}
+
+bool PropPageEmitterPhysicsBase::TransferDataToWindow()
+{
+    // Data is transferred in OnInitDialog for this dialog
+    return true;
+}
+
+bool PropPageEmitterPhysicsBase::TransferDataFromWindow()
+{
+    // Extract data from controls and apply to business logic
+
+    // TODO: Extract data from controls
+
+    return true;
+}
+
 }

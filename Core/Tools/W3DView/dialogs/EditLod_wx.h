@@ -94,6 +94,10 @@ private:
 
     wxDECLARE_EVENT_TABLE();
 private:
+    // Phase 2.5: Dialog infrastructure
+    bool TransferDataToWindow() override;
+    bool TransferDataFromWindow() override;
+
     // Event handlers (Phase 2)
 void OnDeltaposSwitchUpSpin(wxSpinEvent &event);  // Notification message (needs analysis)
     void OnDeltaposSwitchDnSpin(wxSpinEvent &event);  // Notification message (needs analysis)

@@ -116,15 +116,35 @@ def generate_enhanced_infrastructure(cpp_file, h_file, wx_h_file, class_name):
     cpp_content = cpp_file.read_text()
     h_content = h_file.read_text()
     
-    # Extract control mappings from wxWidgets header
-    control_mappings = {}
+    # Build MFC → wx member variable mapping
+    # Step 1: Get MFC member → Control ID from DDX_Control
+    mfc_to_ctrl_id = {}
+    if analysis['dodataexchange']:
+        for ddx in analysis['dodataexchange']['ddx_controls']:
+            ctrl_id = ddx['control_id']
+            mfc_member = ddx['member_var']
+            mfc_to_ctrl_id[mfc_member] = ctrl_id
+    
+    # Step 2: Get Control ID → wx member from XRCCTRL
+    ctrl_id_to_wx = {}
     if wx_h_file and wx_h_file.exists():
         wx_h_content = wx_h_file.read_text()
-        control_mappings = map_control_ids_to_members(wx_h_content)
+        ctrl_id_to_wx = map_control_ids_to_members(wx_h_content)
+    
+    # Step 3: Combine: MFC member → wx member
+    mfc_to_wx_member = {}
+    for mfc_member, ctrl_id in mfc_to_ctrl_id.items():
+        if ctrl_id in ctrl_id_to_wx:
+            mfc_to_wx_member[mfc_member] = ctrl_id_to_wx[ctrl_id]
     
     print(f"Generating enhanced Phase 2.5 for {class_name}")
     print("=" * 70)
-    print(f"Control mappings: {len(control_mappings)} controls")
+    print(f"Control ID mappings: {len(ctrl_id_to_wx)} controls")
+    print(f"MFC → wx member mappings: {len(mfc_to_wx_member)} controls")
+    if mfc_to_wx_member:
+        print("  Sample mappings:")
+        for mfc_m, wx_m in list(mfc_to_wx_member.items())[:3]:
+            print(f"    {mfc_m:25} → {wx_m}")
     print()
     
     all_code = []
@@ -133,7 +153,7 @@ def generate_enhanced_infrastructure(cpp_file, h_file, wx_h_file, class_name):
     if analysis['oninitdialog']:
         init_code = convert_oninitdialog_body(
             analysis['oninitdialog']['body'],
-            control_mappings,
+            mfc_to_wx_member,
             class_name
         )
         all_code.append("// ============================================================================")
@@ -157,7 +177,7 @@ def generate_enhanced_infrastructure(cpp_file, h_file, wx_h_file, class_name):
     
     # Generate TransferDataFromWindow from OnOK logic
     onok_logic = extract_onok_logic(cpp_content, class_name)
-    transfer_from_code = generate_transfer_from_window(class_name, onok_logic, control_mappings)
+    transfer_from_code = generate_transfer_from_window(class_name, onok_logic, mfc_to_wx_member)
     all_code.append("// ============================================================================")
     all_code.append("// Phase 2.5: TransferDataFromWindow")
     all_code.append("// ============================================================================")

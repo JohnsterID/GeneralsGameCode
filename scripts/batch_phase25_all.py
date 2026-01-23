@@ -81,6 +81,28 @@ def convert_dialog(mfc_cpp, mfc_h, mfc_class, wx_name, temp_dir, repo_root):
     # Run enhanced generator
     output_file = temp_dir / f"{wx_name}_phase25.cpp"
     
+    # Extract wxWidgets header from feat branch for control mapping
+    wx_h_git_path = f"Core/Tools/W3DView/dialogs/{wx_name}_wx.h"
+    wx_h_temp_path = temp_dir / f"{wx_name}_wx.h"
+    
+    # Try to get wx header from feat branch
+    wx_h_found = False
+    for branch in ['feat/w3dview-wxwidgets-conversion', 'origin/feat/w3dview-wxwidgets-conversion']:
+        result = subprocess.run(
+            ['git', 'show', f'{branch}:{wx_h_git_path}'],
+            cwd=repo_root,
+            capture_output=True,
+            text=True
+        )
+        if result.returncode == 0:
+            wx_h_temp_path.write_text(result.stdout)
+            wx_h_found = True
+            print(f"  📋 Extracted wx header from {branch}")
+            break
+    
+    if not wx_h_found:
+        print(f"  ⚠️  wx header not found in git: {wx_h_git_path}")
+    
     try:
         cmd = [
             'python3',
@@ -89,6 +111,10 @@ def convert_dialog(mfc_cpp, mfc_h, mfc_class, wx_name, temp_dir, repo_root):
             str(mfc_h_path),
             mfc_class
         ]
+        
+        # Add wx header path if extracted for control name mapping
+        if wx_h_found:
+            cmd.append(str(wx_h_temp_path))
         
         result = subprocess.run(cmd, capture_output=True, text=True, cwd=repo_root)
         

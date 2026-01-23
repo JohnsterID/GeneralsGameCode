@@ -14,7 +14,10 @@ set(CMAKE_RANLIB i686-w64-mingw32-ranlib)
 set(CMAKE_DLLTOOL i686-w64-mingw32-dlltool)
 
 # Target environment
-set(CMAKE_FIND_ROOT_PATH /usr/i686-w64-mingw32)
+set(CMAKE_FIND_ROOT_PATH 
+    /usr/i686-w64-mingw32
+    /opt/wxwidgets-3.2.6-mingw-i686
+)
 
 # Adjust the default behavior of the FIND_XXX() commands:
 # search programs in the host environment
@@ -27,7 +30,8 @@ set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
 # Force 32-bit pointer size
 set(CMAKE_SIZEOF_VOID_P 4)
 
-# Disable MFC-dependent tools (not compatible with MinGW-w64)
+# Tool build flags (MFC tools disabled, wxWidgets tools enabled if wxWidgets found)
+# W3DView and DebugWindow have wxWidgets alternatives and can be built with MinGW
 set(RTS_BUILD_CORE_TOOLS OFF CACHE BOOL "Disable MFC-dependent core tools for MinGW" FORCE)
-set(RTS_BUILD_GENERALS_TOOLS OFF CACHE BOOL "Disable MFC-dependent Generals tools for MinGW" FORCE)
-set(RTS_BUILD_ZEROHOUR_TOOLS OFF CACHE BOOL "Disable MFC-dependent Zero Hour tools for MinGW" FORCE)
+set(RTS_BUILD_GENERALS_TOOLS ON CACHE BOOL "Enable wxWidgets-based tools for MinGW" FORCE)
+set(RTS_BUILD_ZEROHOUR_TOOLS ON CACHE BOOL "Enable wxWidgets-based tools for MinGW" FORCE)

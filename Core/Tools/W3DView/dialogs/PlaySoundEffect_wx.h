@@ -70,6 +70,10 @@ class PlaySoundEffect : public PlaySoundEffectBase
 {
 public:
     PlaySoundEffect(wxWindow *parent);
+    
+    // Dialog data (MFC compatibility)
+    wxString Filename;  // Sound effect filename
+    // TODO: Phase 3 - Add: SoundEffectClass* SoundObj;  // Sound object for playback
 
 protected:
     // Override for data transfer if needed

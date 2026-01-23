@@ -92,6 +92,12 @@ class PropPageEmitterGen : public PropPageEmitterGenBase
 {
 public:
     PropPageEmitterGen(wxWindow *parent);
+    
+    // Dialog data (MFC compatibility)
+    wxString m_EmitterName;         // Particle emitter name
+    wxString m_TextureFilename;     // Texture filename for particles
+    float m_Lifetime;               // Particle lifetime value
+    // TODO: Phase 3 - Add: ParticleEmitterDefClass* m_pEmitterList;  // Emitter definition
 
 protected:
     // Override for data transfer if needed

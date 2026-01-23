@@ -55,13 +55,12 @@ void MakeAggregate::OnCancel(wxCommandEvent &event)
 void MakeAggregate::OnInitDialog(wxInitDialogEvent& event)
 {
     // Initialize controls after they're created
-    // Allow the base class to process this message
     // Restrict the amount of text a user can type into the control
-    // TODO: Convert: SendDlgItemMessage (IDC_AGGREGATE_NAME, EM_LIMITTEXT, (WPARAM)W3D_NAME_LEN-1);
+    const int W3D_NAME_LEN = 16;  // TODO: Phase 3 - get from W3D engine header
     if (m_idc_aggregate_name) {
+        m_idc_aggregate_name->SetMaxLength(W3D_NAME_LEN - 1);
         m_idc_aggregate_name->SetValue(m_Name);
     }
-    // TODO: Convert: return TRUE;
 
     event.Skip();
 }
@@ -75,9 +74,9 @@ bool MakeAggregate::TransferDataToWindow()
 bool MakeAggregate::TransferDataFromWindow()
 {
     // Extract data from controls and apply to business logic
-
-    // TODO: Convert: GetDlgItemText (IDC_AGGREGATE_NAME, m_Name);
-    // TODO: Convert: return ;
+    if (m_idc_aggregate_name) {
+        m_Name = m_idc_aggregate_name->GetValue();
+    }
 
     return true;
 }

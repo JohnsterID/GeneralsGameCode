@@ -27,7 +27,16 @@ wxBEGIN_EVENT_TABLE(PropPageEmitterLineprops, PropPageEmitterLinepropsBase)
 wxEND_EVENT_TABLE()
 
 PropPageEmitterLineprops::PropPageEmitterLineprops(wxWindow *parent)
-    : PropPageEmitterLinepropsBase(parent)
+    : PropPageEmitterLinepropsBase(parent),
+      m_NoiseAmplitude(0.0f),
+      m_MergeAbortFactor(0.0f),
+      m_TextureTileFactor(1.0f),
+      m_UPerSec(0.0f),
+      m_VPerSec(0.0f),
+      m_MappingMode(0),
+      m_MergeIntersections(false),
+      m_EndCaps(false),
+      m_DisableSorting(false)
 {
     // Initialize dialog
     // TransferDataToWindow();

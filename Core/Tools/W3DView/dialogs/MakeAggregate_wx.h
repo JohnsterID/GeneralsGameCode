@@ -68,6 +68,9 @@ class MakeAggregate : public MakeAggregateBase
 {
 public:
     MakeAggregate(wxWindow *parent);
+    
+    // Dialog data (MFC compatibility)
+    wxString m_Name;  // Aggregate name from user input
 
 protected:
     // Override for data transfer if needed

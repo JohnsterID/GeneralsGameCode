@@ -117,6 +117,17 @@ class PropPageEmitterLineprops : public PropPageEmitterLinepropsBase
 {
 public:
     PropPageEmitterLineprops(wxWindow *parent);
+    
+    // Dialog data (MFC compatibility)
+    float m_NoiseAmplitude;        // Noise amplitude value
+    float m_MergeAbortFactor;      // Merge abort factor value
+    float m_TextureTileFactor;     // Texture tile factor
+    float m_UPerSec;               // U coordinate scroll speed
+    float m_VPerSec;               // V coordinate scroll speed
+    int m_MappingMode;             // Texture mapping mode
+    bool m_MergeIntersections;     // Merge intersections flag
+    bool m_EndCaps;                // End caps flag
+    bool m_DisableSorting;         // Disable sorting flag
 
 protected:
     // Override for data transfer if needed

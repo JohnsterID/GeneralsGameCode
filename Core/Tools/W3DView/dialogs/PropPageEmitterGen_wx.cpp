@@ -33,7 +33,10 @@ EVT_BUTTON(XRCID("IDC_BROWSE_BUTTON"), PropPageEmitterGen::OnBrowseButton)  // B
 wxEND_EVENT_TABLE()
 
 PropPageEmitterGen::PropPageEmitterGen(wxWindow *parent)
-    : PropPageEmitterGenBase(parent)
+    : PropPageEmitterGenBase(parent),
+      m_EmitterName(wxEmptyString),
+      m_TextureFilename(wxEmptyString),
+      m_Lifetime(0.0f)
 {
     // Initialize dialog
     // TransferDataToWindow();
@@ -137,8 +140,12 @@ void PropPageEmitterGen::OnInitDialog(wxInitDialogEvent& event)
     //
     // Initialize the render mode combo
     //
+    // TODO: Phase 3 - Initialize from emitter list when available
+    // if (m_idc_render_mode_combo && m_pEmitterList) {
+    //     m_idc_render_mode_combo->SetSelection(m_pEmitterList->Get_Render_Mode());
+    // }
     if (m_idc_render_mode_combo) {
-        m_idc_render_mode_combo->SetSelection(m_pEmitterList->Get_Render_Mode();
+        m_idc_render_mode_combo->SetSelection(0);  // Default selection
     }
     // TODO: Convert: return TRUE;
 

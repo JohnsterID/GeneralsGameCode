@@ -22,6 +22,7 @@
 #include <wx/xrc/xmlres.h>
 #include <wx/spinbutt.h>
 #include <wx/msgdlg.h>
+#include <cmath>
 
 wxBEGIN_EVENT_TABLE(CameraSettings, CameraSettingsBase)
 EVT_CHECKBOX(XRCID("IDC_FOV_CHECK"), CameraSettings::OnFovCheck)  // Button/Checkbox click
@@ -82,57 +83,69 @@ void CameraSettings::OnReset(wxCommandEvent &event)
 void CameraSettings::OnInitDialog(wxInitDialogEvent& event)
 {
     // Initialize controls after they're created
-    // TODO: Convert: CW3DViewDoc *doc				= ::GetCurrentDocument ();
-    // TODO: Convert: CGraphicView *graphic_view = doc->GetGraphicView ();
-    // TODO: Convert: CameraClass *camera			= graphic_view->GetCamera ();
+    // TODO: Phase 3 - Get actual document, view, and camera when available
+    // CW3DViewDoc *doc = ::GetCurrentDocument();
+    // CGraphicView *graphic_view = doc->GetGraphicView();
+    // CameraClass *camera = graphic_view->GetCamera();
+    
+    // For now, use placeholder values until full engine integration
+    bool manual_fov = false;  // TODO: doc->Is_FOV_Manual()
+    bool manual_planes = false;  // TODO: doc->Are_Clip_Planes_Manual()
+    float znear = 1.0f;  // TODO: camera->Get_Clip_Planes(znear, zfar)
+    float zfar = 10000.0f;
+    float hfov = 1.0f;  // TODO: camera->Get_Horizontal_FOV()
+    float vfov = 0.75f;  // TODO: camera->Get_Vertical_FOV()
+    
+    // Convert radians to degrees for UI
+    const float RAD_TO_DEG = 57.2957795f;  // 180/PI
+    int hfov_deg = static_cast<int>(hfov * RAD_TO_DEG);
+    int vfov_deg = static_cast<int>(vfov * RAD_TO_DEG);
+    
+    // Calculate lens from hfov
+    const float constant = (18.0f / 1000.0f);
+    float lens = (constant / (::tan(hfov / 2))) * 1000.0f;
+    
     //
     //	Enable/disable the group boxes
     //
     if (m_idc_fov_check) {
-        m_idc_fov_check->SetValue(doc->Is_FOV_Manual () != 0);
+        m_idc_fov_check->SetValue(manual_fov);
     }
     if (m_idc_clip_plane_check) {
-        m_idc_clip_plane_check->SetValue(doc->Are_Clip_Planes_Manual () != 0);
+        m_idc_clip_plane_check->SetValue(manual_planes);
     }
-    // TODO: Declare: float znear = 0;
-    // TODO: Declare: float zfar = 0;
-    // TODO: Convert: camera->Get_Clip_Planes (znear, zfar);
+    
+    // Setup clip plane controls
     if (m_idc_near_clip_spin) {
-        m_idc_near_clip_spin->SetRange(0.0F, 999999.0F);
+        m_idc_near_clip_spin->SetRange(0.0f, 999999.0f);
         m_idc_near_clip_spin->SetValue(static_cast<int>(znear));
     }
     if (m_idc_far_clip_spin) {
-        m_idc_far_clip_spin->SetRange(1.0F, 999999.0F);
+        m_idc_far_clip_spin->SetRange(1.0f, 999999.0f);
         m_idc_far_clip_spin->SetValue(static_cast<int>(zfar));
     }
+    
     //
     //	Setup the FOV controls
     //
-    // TODO: Declare: int hfov_deg = (int)RAD_TO_DEG (camera->Get_Horizontal_FOV ());
-    // TODO: Declare: int vfov_deg = (int)RAD_TO_DEG (camera->Get_Vertical_FOV ());
-    // Declare variable before use
-    float hfov = 0;  // TODO: Get actual value from: float hfov = camera->Get_Horizontal_FOV ();
     if (m_idc_hfov_spin) {
-        m_idc_hfov_spin->SetRange(0.0F, 180.0F);
-        m_idc_hfov_spin->SetValue(static_cast<int>(hfov_deg));
+        m_idc_hfov_spin->SetRange(0.0f, 180.0f);
+        m_idc_hfov_spin->SetValue(hfov_deg);
     }
     if (m_idc_vfov_spin) {
-        m_idc_vfov_spin->SetRange(0.0F, 180.0F);
-        m_idc_vfov_spin->SetValue(static_cast<int>(vfov_deg));
+        m_idc_vfov_spin->SetRange(0.0f, 180.0f);
+        m_idc_vfov_spin->SetValue(vfov_deg);
     }
+    
     //
     //	Setup the camera lens controls
     //
-    // TODO: Declare: float hfov = camera->Get_Horizontal_FOV ();
-    // TODO: Convert: const float constant	= (18.0F / 1000.0F);
-    // TODO: Declare: float lens				= (constant / (::tan (hfov / 2))) * 1000.0F;
     if (m_idc_lens_spin) {
-        m_idc_lens_spin->SetRange(1.0F, 200.0F);
+        m_idc_lens_spin->SetRange(1.0f, 200.0f);
         m_idc_lens_spin->SetValue(static_cast<int>(lens));
     }
-    // TODO: Convert: OnFovCheck ();
-    // TODO: Convert: OnClipPlaneCheck ();
-    // TODO: Convert: return TRUE;
+    
+    // TODO: Phase 3 - Implement OnFovCheck() and OnClipPlaneCheck()
 
     event.Skip();
 }
@@ -152,52 +165,45 @@ bool CameraSettings::TransferDataFromWindow()
     // TODO: Convert: CameraClass *camera			= graphic_view->GetCamera ();
     // TODO: Convert: bool manual_fov		= (SendDlgItemMessage (IDC_FOV_CHECK, BM_GETCHECK) == 1);
     // TODO: Convert: bool manual_planes	= (SendDlgItemMessage (IDC_CLIP_PLANE_CHECK, BM_GETCHECK) == 1);
-    // TODO: Convert: doc->Set_Manual_FOV (manual_fov);
-    // TODO: Convert: doc->Set_Manul_Clip_Planes (manual_planes);
-    // TODO: Convert: if (manual_fov == false) {
-    // TODO: Convert: graphic_view->Reset_FOV ();
-    // TODO: Convert: } else {
-    // TODO: Convert: //
-    // TODO: Convert: //	Update the camera's FOV
-    // TODO: Convert: //
-    double value;
-    if (m_idc_hfov_edit && m_idc_hfov_edit->GetValue().ToDouble(&value)) {
-        // Use value (cast to float if needed)
+    // TODO: Phase 3 - Apply settings to document/camera when available
+    // doc->Set_Manual_FOV(manual_fov);
+    // doc->Set_Manual_Clip_Planes(manual_planes);
+    
+    // Extract FOV values
+    double hfov_value, vfov_value;
+    if (m_idc_hfov_edit && m_idc_hfov_edit->GetValue().ToDouble(&hfov_value)) {
+        // TODO: Phase 3 - camera->Set_View_Plane(DEG_TO_RAD(hfov_value), ...)
     } else {
-        wxMessageBox("Please enter a valid numeric value", "Invalid Input", 
+        wxMessageBox("Please enter a valid horizontal FOV value", "Invalid Input", 
                      wxOK | wxICON_ERROR, this);
         return false;
     }
-    double value;
-    if (m_idc_vfov_edit && m_idc_vfov_edit->GetValue().ToDouble(&value)) {
-        // Use value (cast to float if needed)
+    
+    if (m_idc_vfov_edit && m_idc_vfov_edit->GetValue().ToDouble(&vfov_value)) {
+        // TODO: Phase 3 - camera->Set_View_Plane(..., DEG_TO_RAD(vfov_value))
     } else {
-        wxMessageBox("Please enter a valid numeric value", "Invalid Input", 
+        wxMessageBox("Please enter a valid vertical FOV value", "Invalid Input", 
                      wxOK | wxICON_ERROR, this);
         return false;
     }
-    // TODO: Convert: camera->Set_View_Plane (DEG_TO_RAD (hfov_deg), DEG_TO_RAD (vfov_deg));
-    // TODO: Convert: }
-    // TODO: Convert: //
-    // TODO: Convert: //	Update the camera's clip planes
-    // TODO: Convert: //
-    double value;
-    if (m_idc_near_clip_edit && m_idc_near_clip_edit->GetValue().ToDouble(&value)) {
-        // Use value (cast to float if needed)
+    
+    // Extract clip plane values
+    double znear_value, zfar_value;
+    if (m_idc_near_clip_edit && m_idc_near_clip_edit->GetValue().ToDouble(&znear_value)) {
+        // TODO: Phase 3 - camera->Set_Clip_Planes(znear_value, ...)
     } else {
-        wxMessageBox("Please enter a valid numeric value", "Invalid Input", 
+        wxMessageBox("Please enter a valid near clip plane value", "Invalid Input", 
                      wxOK | wxICON_ERROR, this);
         return false;
     }
-    double value;
-    if (m_idc_far_clip_edit && m_idc_far_clip_edit->GetValue().ToDouble(&value)) {
-        // Use value (cast to float if needed)
+    
+    if (m_idc_far_clip_edit && m_idc_far_clip_edit->GetValue().ToDouble(&zfar_value)) {
+        // TODO: Phase 3 - camera->Set_Clip_Planes(..., zfar_value)
     } else {
-        wxMessageBox("Please enter a valid numeric value", "Invalid Input", 
+        wxMessageBox("Please enter a valid far clip plane value", "Invalid Input", 
                      wxOK | wxICON_ERROR, this);
         return false;
     }
-    // TODO: Convert: camera->Set_Clip_Planes (znear, zfar);
     // TODO: Convert: doc->Save_Camera_Settings ();
     // TODO: Convert: //
     // TODO: Convert: // Update the fog settings. The fog near clip plane should always be equal

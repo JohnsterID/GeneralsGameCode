@@ -67,27 +67,35 @@ void GammaDialog::OnInitDialog(wxInitDialogEvent& event)
 {
     // Initialize controls after they're created
     // TODO: Add extra initialization here
-    // TODO: Convert: m_gamma=AfxGetApp()->GetProfileInt("Config","Gamma",10);
-    // TODO: Convert: if (m_gamma<10) m_gamma=10;
-    // TODO: Convert: if (m_gamma>30) m_gamma=30;
-    // TODO: Convert: m_gammaslider.SetRange(10,30);
-    // TODO: Convert: m_gammaslider.SetPos(m_gamma);
-    // TODO: Convert: CString string;
-    // TODO: Convert: string.Format("%3.2f",m_gamma/10.0f);
+    // Load gamma setting from config (TODO: Phase 3 - use wxConfig)
+    // For now, use default value
+    int m_gamma = 10;  // AfxGetApp()->GetProfileInt("Config", "Gamma", 10);
+    if (m_gamma < 10) m_gamma = 10;
+    if (m_gamma > 30) m_gamma = 30;
+    
+    // Setup gamma slider
+    if (m_idc_gamma_slider) {
+        m_idc_gamma_slider->SetRange(10, 30);
+        m_idc_gamma_slider->SetValue(m_gamma);
+    }
+    
+    // Display current gamma value
+    wxString gamma_text = wxString::Format("%3.2f", m_gamma / 10.0f);
     if (m_idc_gamma_display) {
-        m_idc_gamma_display->SetValue(string);
+        m_idc_gamma_display->SetLabel(gamma_text);  // wxStaticText uses SetLabel()
     }
-    // TODO: Convert: string.Format("Calibration instructions\n");
-    // TODO: Convert: string+="A. Set Gamma to 1.0 and Monitor Contrast and Brightness to maximum\n";
-    // TODO: Convert: string+="B. Adjust Monitor Brightness down so Bar 3 is barely visible\n";
-    // TODO: Convert: string+="C. Adjust Monitor Contrast as preferred but Bars 1,2,3,4 must be distinguishable from each other\n";
-    // TODO: Convert: string+="D. Set the Gamma using the Slider below so the gray box on the left matches it's checkered surroundings\n";
-    // TODO: Convert: string+="E. Press OK to save settings";
+    
+    // Setup calibration instructions
+    wxString instructions = "Calibration instructions\n";
+    instructions += "A. Set Gamma to 1.0 and Monitor Contrast and Brightness to maximum\n";
+    instructions += "B. Adjust Monitor Brightness down so Bar 3 is barely visible\n";
+    instructions += "C. Adjust Monitor Contrast as preferred but Bars 1,2,3,4 must be distinguishable from each other\n";
+    instructions += "D. Set the Gamma using the Slider below so the gray box on the left matches it's checkered surroundings\n";
+    instructions += "E. Press OK to save settings";
+    
     if (m_idc_instructions) {
-        m_idc_instructions->SetValue(string);
+        m_idc_instructions->SetLabel(instructions);  // wxStaticText uses SetLabel()
     }
-    // TODO: Convert: return TRUE;  // return TRUE unless you set the focus to a control
-    // EXCEPTION: OCX Property Pages should return FALSE
 
     event.Skip();
 }

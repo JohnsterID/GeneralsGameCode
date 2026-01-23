@@ -17,7 +17,18 @@ if(wxWidgets_FOUND)
         "GraphicView_wx.h"
         "w3dcompat_wx.h"
         "w3dcompat_wx.cpp"
+        "EngineString.h"
         "StdAfx_wx.h"
+        
+        # Engine classes (shared with MFC build) - Phase 3A.3
+        "AssetInfo.cpp"
+        "AssetInfo.h"
+        "ViewerAssetMgr.cpp"
+        "ViewerAssetMgr.h"
+        "ViewerScene.cpp"
+        "ViewerScene.h"
+        "Utils_wx.cpp"  # wxWidgets-compatible subset of Utils.cpp
+        "Utils.h"
         
         # XRC resource initialization (auto-generated)
         "W3DViewUI.cpp"

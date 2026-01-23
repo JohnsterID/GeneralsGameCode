@@ -73,7 +73,11 @@ public:
 	StringClass (const StringClass &string, bool hint_temporary = false);
 	StringClass (const TCHAR *string, bool hint_temporary = false);
 	StringClass (TCHAR ch, bool hint_temporary = false);
+#if !defined(UNICODE) && !defined(_UNICODE)
+	// Only provide WCHAR overload when TCHAR != WCHAR (ANSI builds)
+	// In UNICODE builds, TCHAR is already wchar_t, so WCHAR overload would be duplicate
 	StringClass (const WCHAR *string, bool hint_temporary = false);
+#endif
 	~StringClass (void);
 
 	////////////////////////////////////////////////////////////
@@ -85,7 +89,10 @@ public:
 	inline const StringClass &operator= (const StringClass &string);
 	inline const StringClass &operator= (const TCHAR *string);
 	inline const StringClass &operator= (TCHAR ch);
+#if !defined(UNICODE) && !defined(_UNICODE)
+	// Only provide WCHAR overload when TCHAR != WCHAR (ANSI builds)
 	inline const StringClass &operator= (const WCHAR *string);
+#endif
 
 	const StringClass &operator+= (const StringClass &string);
 	const StringClass &operator+= (const TCHAR *string);
@@ -220,7 +227,8 @@ StringClass::operator= (const TCHAR *string)
 	return (*this);
 }
 
-
+#if !defined(UNICODE) && !defined(_UNICODE)
+// Only provide WCHAR overload when TCHAR != WCHAR (ANSI builds)
 ///////////////////////////////////////////////////////////////////
 //	operator=
 ///////////////////////////////////////////////////////////////////
@@ -233,6 +241,7 @@ StringClass::operator= (const WCHAR *string)
 
 	return (*this);
 }
+#endif
 
 
 ///////////////////////////////////////////////////////////////////
@@ -319,6 +328,8 @@ StringClass::StringClass (const TCHAR *string, bool hint_temporary)
 	return ;
 }
 
+#if !defined(UNICODE) && !defined(_UNICODE)
+// Only provide WCHAR overload when TCHAR != WCHAR (ANSI builds)
 ///////////////////////////////////////////////////////////////////
 //	StringClass
 ///////////////////////////////////////////////////////////////////
@@ -334,6 +345,7 @@ StringClass::StringClass (const WCHAR *string, bool hint_temporary)
 	(*this) = string;
 	return ;
 }
+#endif
 
 ///////////////////////////////////////////////////////////////////
 //	~StringClass
@@ -487,7 +499,11 @@ StringClass::Erase (int start_index, int char_count)
 ///////////////////////////////////////////////////////////////////
 inline void StringClass::Trim(void)
 {
+#if defined(UNICODE) || defined(_UNICODE)
+	wcstrim(m_Buffer);
+#else
 	strtrim(m_Buffer);
+#endif
 }
 
 

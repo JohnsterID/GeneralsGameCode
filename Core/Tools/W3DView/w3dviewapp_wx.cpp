@@ -52,14 +52,15 @@ const char *g_strFile = "data/Generals.str";
 const char *g_csfFile = "data/%s/Generals.csf";
 
 // Phase 3A.2: Include engine headers properly
-// CRITICAL: Undefine CString before including MFC-dependent headers
+// Phase 3A.3: Include engine headers
+// CRITICAL: Undefine CString before including engine headers
+// EngineString typedef + wwstring.h fix allows ViewerAssetMgr to work with wxWidgets
 #ifdef CString
 #undef CString
 #endif
 
 #include "wwmath.h"
-// TODO: ViewerAssetMgr.h has MFC CString dependencies - fix in Phase 3A.3
-// #include "ViewerAssetMgr.h"
+#include "ViewerAssetMgr.h"
 
 // Redefine CString for wxWidgets compatibility
 #define CString wxString
@@ -136,10 +137,8 @@ bool W3DViewApp::OnInit()
         CLASSINFO(W3DViewView)
     );
 
-    // TODO: Phase 3A.2 - ViewerAssetMgrClass has MFC CString dependencies
-    // Allocate asset manager
-    // _TheAssetMgr = new ViewerAssetMgrClass;
-    _TheAssetMgr = nullptr;
+    // Phase 3A.3: Allocate asset manager (EngineString + wwstring.h fix enables this)
+    _TheAssetMgr = new ViewerAssetMgrClass;
 
     // Create main frame
     m_frame = new W3DViewFrame(m_docManager);

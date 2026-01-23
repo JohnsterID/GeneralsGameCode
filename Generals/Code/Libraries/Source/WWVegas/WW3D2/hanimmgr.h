@@ -55,7 +55,19 @@ public:
 	MissingAnimClass( const char * name ) : Name( name ) {}
 	virtual	~MissingAnimClass( void ) {}
 
-	virtual	const char * Get_Key( void )	{ return Name;	}
+	virtual	const char * Get_Key( void )	{ 
+#if defined(UNICODE) || defined(_UNICODE)
+		// In UNICODE builds, convert StringClass (wchar_t) to narrow string
+		// NOTE: This is safe because hash table only uses key during lookup,
+		// and the static buffer persists for the lifetime of the lookup
+		static char narrowBuffer[512];
+		wcstombs(narrowBuffer, Name, sizeof(narrowBuffer) - 1);
+		narrowBuffer[sizeof(narrowBuffer) - 1] = '\0';
+		return narrowBuffer;
+#else
+		return Name;
+#endif
+	}
 
 private:
 	StringClass	Name;

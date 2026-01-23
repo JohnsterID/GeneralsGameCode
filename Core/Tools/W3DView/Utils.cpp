@@ -24,7 +24,12 @@
 //
 
 
+// Phase 3A.3: Conditional precompiled header for dual MFC/wxWidgets build
+#ifdef USE_WXWIDGETS
+#include "StdAfx_wx.h"
+#else
 #include "StdAfx.h"
+#endif
 #include "W3DViewDoc.h"
 #include "MainFrm.h"
 #include "DataTreeView.h"

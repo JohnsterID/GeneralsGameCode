@@ -33,35 +33,5 @@
 // MFC-to-wxWidgets compatibility types
 typedef wxString CString;
 
-template<class T>
-class DynamicVectorClass {
-public:
-    DynamicVectorClass() {}
-    ~DynamicVectorClass() {}
-    
-    void Delete_All() { m_data.clear(); }
-    void Add(const T& item) { m_data.push_back(item); }
-    int Count() const { return (int)m_data.size(); }
-    T& operator[](int index) { return m_data[index]; }
-    const T& operator[](int index) const { return m_data[index]; }
-    
-private:
-    std::vector<T> m_data;
-};
-
-// Specialization for CString/wxString
-template<>
-class DynamicVectorClass<CString> {
-public:
-    DynamicVectorClass() {}
-    ~DynamicVectorClass() {}
-    
-    void Delete_All() { m_data.Clear(); }
-    void Add(const CString& item) { m_data.Add(item); }
-    int Count() const { return (int)m_data.GetCount(); }
-    CString& operator[](size_t index) { return m_data[index]; }
-    const CString& operator[](size_t index) const { return m_data[index]; }
-    
-private:
-    wxArrayString m_data;
-};
+// NOTE: DynamicVectorClass is provided by Vector.h from engine headers
+// Previous stub removed in Phase 3A.3 - now using real implementation

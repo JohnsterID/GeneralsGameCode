@@ -39,6 +39,7 @@
 #include "rendobj.h"
 #include "Utils.h"
 #include "AssetTypes.h"
+#include "EngineString.h"  // Dual MFC/wxWidgets string type
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -77,12 +78,12 @@ class AssetInfoClass
 		//
 		//  Inline accessors
 		//
-		const CString &	Get_Name (void) const						{ return m_Name; }
-		const CString &	Get_Hierarchy_Name (void) const			{ return m_HierarchyName; }
-		const CString &	Get_Original_Name (void) const			{ return m_OriginalName; }
+		const EngineString &	Get_Name (void) const						{ return m_Name; }
+		const EngineString &	Get_Hierarchy_Name (void) const			{ return m_HierarchyName; }
+		const EngineString &	Get_Original_Name (void) const			{ return m_OriginalName; }
 		ASSET_TYPE			Get_Type (void) const						{ return m_AssetType; }
 		DWORD					Get_User_Number (void) const				{ return m_dwUserData; }
-		const CString &	Get_User_String (void) const				{ return m_UserString; }
+		const EngineString &	Get_User_String (void) const				{ return m_UserString; }
 		RenderObjClass *	Get_Render_Obj (void) const				{ if (m_pRenderObj) m_pRenderObj->Add_Ref(); return m_pRenderObj; }
 		RenderObjClass *	Peek_Render_Obj (void) const				{ return m_pRenderObj; }
 		void					Set_Name (LPCTSTR pname)					{ m_Name = pname; }
@@ -95,7 +96,11 @@ class AssetInfoClass
 		//
 		//	Information methods
 		//
-		bool					Can_Asset_Have_Animations (void) const	{ return bool(m_HierarchyName.GetLength () > 0); }
+#ifdef USE_WXWIDGETS
+		bool					Can_Asset_Have_Animations (void) const	{ return bool(EngineStringGetLength(m_HierarchyName) > 0); }
+#else
+		bool					Can_Asset_Have_Animations (void) const	{ return bool(m_HierarchyName.GetLength() > 0); }
+#endif
 
 	protected:
 
@@ -112,10 +117,10 @@ class AssetInfoClass
 		//
 		//  Private member data
 		//
-		CString				m_Name;
-		CString				m_HierarchyName;
-		CString				m_UserString;
-		CString				m_OriginalName;
+		EngineString		m_Name;
+		EngineString		m_HierarchyName;
+		EngineString		m_UserString;
+		EngineString		m_OriginalName;
 		ASSET_TYPE			m_AssetType;
 		DWORD					m_dwUserData;
 		RenderObjClass *	m_pRenderObj;

@@ -35,7 +35,12 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
 
+// Phase 3A.3: Conditional precompiled header for dual MFC/wxWidgets build
+#ifdef USE_WXWIDGETS
+#include "StdAfx_wx.h"
+#else
 #include "StdAfx.h"
+#endif
 
 #include "ViewerAssetMgr.h"
 #include "texture.h"
@@ -76,14 +81,20 @@ ViewerAssetMgrClass::Get_Texture (const char * tga_filename, MipCountType mip_le
 	//
 
 	StringClass lower_case_name(tga_filename,true);
+#ifdef UNICODE
+	_wcslwr(lower_case_name.Peek_Buffer());
+#else
 	_strlwr(lower_case_name.Peek_Buffer());
+#endif
 	TextureClass* tex = TextureHash.Get(lower_case_name);
 
 	//
 	//	Check to see if this texture is "missing"
 	//
 	if (!tex) {
-		Find_Missing_Textures  (m_MissingTextureList, tga_filename);
+		// Convert char* to TCHAR* for UNICODE compatibility
+		StringClass temp_filename(tga_filename, true);
+		Find_Missing_Textures(m_MissingTextureList, temp_filename.Peek_Buffer());
 	}
 
 	//

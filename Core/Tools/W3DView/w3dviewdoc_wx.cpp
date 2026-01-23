@@ -24,21 +24,19 @@
 
 #include <wx/msgdlg.h>
 
-// Phase 3A.2: Include real engine headers in .cpp
-// CRITICAL: Undefine CString macro before including MFC-dependent engine headers
+// Phase 3A.3: Include real engine headers in .cpp
+// CRITICAL: Undefine CString macro before including engine headers
+// EngineString typedef + wwstring.h fix allows these to work with wxWidgets
 #ifdef CString
 #undef CString
 #endif
 
 #include "vector3.h"
-// TODO: ViewerScene.h, ViewerAssetMgr.h and AssetInfo.h have MFC CString dependencies
-// or require complete RenderObjClass types. These will be fixed in Phase 3A.3 
-// or when actually needed by specific dialogs.
-// #include "ViewerScene.h"
-// #include "ViewerAssetMgr.h"
-// #include "AssetInfo.h"
+#include "ViewerScene.h"
+#include "ViewerAssetMgr.h"
+#include "AssetInfo.h"
 
-// Redefine CString for wxWidgets compatibility (if needed later)
+// Redefine CString for wxWidgets compatibility
 #define CString wxString
 
 extern ViewerAssetMgrClass *_TheAssetMgr;
@@ -68,9 +66,8 @@ bool W3DViewDoc::OnNewDocument()
     if (!wxDocument::OnNewDocument())
         return false;
 
-    // TODO: Phase 3A.2 - ViewerSceneClass requires complete RenderObjClass
-    // m_scene = new ViewerSceneClass();
-    m_scene = nullptr;
+    // Phase 3A.3: Create scene (EngineString + wwstring.h fix enables this)
+    m_scene = new ViewerSceneClass();
     return true;
 }
 
@@ -79,12 +76,11 @@ bool W3DViewDoc::OnOpenDocument(const wxString &filename)
     if (!wxDocument::OnOpenDocument(filename))
         return false;
 
-    // TODO: Phase 3A.2 - ViewerSceneClass requires complete RenderObjClass
-    // Create scene if not already created
-    // if (!m_scene)
-    // {
-    //     m_scene = new ViewerSceneClass();
-    // }
+    // Phase 3A.3: Create scene if not already created
+    if (!m_scene)
+    {
+        m_scene = new ViewerSceneClass();
+    }
 
     // Load the W3D file
     wxString ext = filename.AfterLast('.').Lower();

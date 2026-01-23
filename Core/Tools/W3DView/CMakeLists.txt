@@ -1,4 +1,154 @@
-set(W3DVIEW_SRC
+if(wxWidgets_FOUND)
+    # wxWidgets INTERFACE library - source files only
+    # Executable built in Generals/Code/Tools/W3DView/CMakeLists.txt
+    set(W3DVIEW_WX_SRC
+        # Main application files
+        "w3dviewapp_wx.cpp"
+        "w3dviewapp_wx.h"
+        "w3dviewframe_wx.cpp"
+        "w3dviewframe_wx.h"
+        "w3dviewdoc_wx.cpp"
+        "w3dviewdoc_wx.h"
+        "w3dviewview_wx.cpp"
+        "w3dviewview_wx.h"
+        "w3dviewtree_wx.cpp"
+        "w3dviewtree_wx.h"
+        "w3dcompat_wx.h"
+        "StdAfx_wx.h"
+        
+        # XRC resource initialization (auto-generated)
+        "W3DViewUI.cpp"
+        "W3DViewUI.h"
+        
+        # Auto-generated dialog classes from XRC (118 files)
+        "dialogs/Aboutbox_wx.cpp"
+        "dialogs/Aboutbox_wx.h"
+        "dialogs/AddToLineup_wx.cpp"
+        "dialogs/AddToLineup_wx.h"
+        "dialogs/AnimatedSoundDialog_wx.cpp"
+        "dialogs/AnimatedSoundDialog_wx.h"
+        "dialogs/BackgroundBmp_wx.cpp"
+        "dialogs/BackgroundBmp_wx.h"
+        "dialogs/BackgroundColor_wx.cpp"
+        "dialogs/BackgroundColor_wx.h"
+        "dialogs/BackgroundObject_wx.cpp"
+        "dialogs/BackgroundObject_wx.h"
+        "dialogs/BoneManagement_wx.cpp"
+        "dialogs/BoneManagement_wx.h"
+        "dialogs/CameraDistance_wx.cpp"
+        "dialogs/CameraDistance_wx.h"
+        "dialogs/CameraSettings_wx.cpp"
+        "dialogs/CameraSettings_wx.h"
+        "dialogs/ColorForm_wx.cpp"
+        "dialogs/ColorForm_wx.h"
+        "dialogs/ColorPicker_wx.cpp"
+        "dialogs/ColorPicker_wx.h"
+        "dialogs/ColorSel_wx.cpp"
+        "dialogs/ColorSel_wx.h"
+        "dialogs/Displayspeed_wx.cpp"
+        "dialogs/Displayspeed_wx.h"
+        "dialogs/EditLod_wx.cpp"
+        "dialogs/EditLod_wx.h"
+        "dialogs/Formview_wx.cpp"
+        "dialogs/Formview_wx.h"
+        "dialogs/GammaDialog_wx.cpp"
+        "dialogs/GammaDialog_wx.h"
+        "dialogs/LightAmbientDialog_wx.cpp"
+        "dialogs/LightAmbientDialog_wx.h"
+        "dialogs/LightSceneDialog_wx.cpp"
+        "dialogs/LightSceneDialog_wx.h"
+        "dialogs/MakeAggregate_wx.cpp"
+        "dialogs/MakeAggregate_wx.h"
+        "dialogs/Opacity_wx.cpp"
+        "dialogs/Opacity_wx.h"
+        "dialogs/OpacityVector_wx.cpp"
+        "dialogs/OpacityVector_wx.h"
+        "dialogs/ParticleBlurTimeKey_wx.cpp"
+        "dialogs/ParticleBlurTimeKey_wx.h"
+        "dialogs/ParticleFrameKey_wx.cpp"
+        "dialogs/ParticleFrameKey_wx.h"
+        "dialogs/ParticleRotationKey_wx.cpp"
+        "dialogs/ParticleRotationKey_wx.h"
+        "dialogs/ParticleSize_wx.cpp"
+        "dialogs/ParticleSize_wx.h"
+        "dialogs/PlaySoundEffect_wx.cpp"
+        "dialogs/PlaySoundEffect_wx.h"
+        "dialogs/PropPageAdvanimMixing_wx.cpp"
+        "dialogs/PropPageAdvanimMixing_wx.h"
+        "dialogs/PropPageAdvanimReport_wx.cpp"
+        "dialogs/PropPageAdvanimReport_wx.h"
+        "dialogs/PropPageAnimation_wx.cpp"
+        "dialogs/PropPageAnimation_wx.h"
+        "dialogs/PropPageEmitterColor_wx.cpp"
+        "dialogs/PropPageEmitterColor_wx.h"
+        "dialogs/PropPageEmitterFrame_wx.cpp"
+        "dialogs/PropPageEmitterFrame_wx.h"
+        "dialogs/PropPageEmitterGen_wx.cpp"
+        "dialogs/PropPageEmitterGen_wx.h"
+        "dialogs/PropPageEmitterLinegroup_wx.cpp"
+        "dialogs/PropPageEmitterLinegroup_wx.h"
+        "dialogs/PropPageEmitterLineprops_wx.cpp"
+        "dialogs/PropPageEmitterLineprops_wx.h"
+        "dialogs/PropPageEmitterParticle_wx.cpp"
+        "dialogs/PropPageEmitterParticle_wx.h"
+        "dialogs/PropPageEmitterPhysics_wx.cpp"
+        "dialogs/PropPageEmitterPhysics_wx.h"
+        "dialogs/PropPageEmitterRotation_wx.cpp"
+        "dialogs/PropPageEmitterRotation_wx.h"
+        "dialogs/PropPageEmitterSize_wx.cpp"
+        "dialogs/PropPageEmitterSize_wx.h"
+        "dialogs/PropPageEmitterUser_wx.cpp"
+        "dialogs/PropPageEmitterUser_wx.h"
+        "dialogs/PropPageHierarchy_wx.cpp"
+        "dialogs/PropPageHierarchy_wx.h"
+        "dialogs/PropPageMesh_wx.cpp"
+        "dialogs/PropPageMesh_wx.h"
+        "dialogs/PropPageRingColor_wx.cpp"
+        "dialogs/PropPageRingColor_wx.h"
+        "dialogs/PropPageRingGen_wx.cpp"
+        "dialogs/PropPageRingGen_wx.h"
+        "dialogs/PropPageRingScale_wx.cpp"
+        "dialogs/PropPageRingScale_wx.h"
+        "dialogs/PropPageSphereColor_wx.cpp"
+        "dialogs/PropPageSphereColor_wx.h"
+        "dialogs/PropPageSphereGen_wx.cpp"
+        "dialogs/PropPageSphereGen_wx.h"
+        "dialogs/PropPageSphereScale_wx.cpp"
+        "dialogs/PropPageSphereScale_wx.h"
+        "dialogs/RenameAggregate_wx.cpp"
+        "dialogs/RenameAggregate_wx.h"
+        "dialogs/RenderDeviceSelector_wx.cpp"
+        "dialogs/RenderDeviceSelector_wx.h"
+        "dialogs/Resolution_wx.cpp"
+        "dialogs/Resolution_wx.h"
+        "dialogs/SaveSettings_wx.cpp"
+        "dialogs/SaveSettings_wx.h"
+        "dialogs/ScaleKey_wx.cpp"
+        "dialogs/ScaleKey_wx.h"
+        "dialogs/SoundEdit_wx.cpp"
+        "dialogs/SoundEdit_wx.h"
+        "dialogs/TextureManagment_wx.cpp"
+        "dialogs/TextureManagment_wx.h"
+        "dialogs/TextureManagment1_wx.cpp"
+        "dialogs/TextureManagment1_wx.h"
+        "dialogs/TexturePaths_wx.cpp"
+        "dialogs/TexturePaths_wx.h"
+        "dialogs/TextureSettings_wx.cpp"
+        "dialogs/TextureSettings_wx.h"
+        "dialogs/VolumeRandomizer_wx.cpp"
+        "dialogs/VolumeRandomizer_wx.h"
+        "dialogs/XxxBrowseDirectory_wx.cpp"
+        "dialogs/XxxBrowseDirectory_wx.h"
+    )
+    
+    add_library(corei_w3dview_wx INTERFACE)
+    target_sources(corei_w3dview_wx INTERFACE ${W3DVIEW_WX_SRC})
+endif()
+
+if(WIN32 OR "${CMAKE_SYSTEM}" MATCHES "Windows")
+    # MFC INTERFACE library - source files only (from PR #709)
+    # Executable built in Generals/Code/Tools/W3DView/CMakeLists.txt
+    set(W3DVIEW_SRC
     "AddToLineupDialog.cpp"
     "AddToLineupDialog.h"
     "AdvancedAnimSheet.cpp"
@@ -170,14 +320,19 @@ add_library(corei_w3dview INTERFACE)
 
 target_sources(corei_w3dview INTERFACE ${W3DVIEW_SRC})
 
-target_precompile_headers(corei_w3dview INTERFACE
-    [["Utility/CppMacros.h"]] # Must be first, to be removed when abandoning VC6
-    "StdAfx.h"
-    [["always.h"]]
-    [["STLUtils.h"]]
-    [["WWCommon.h"]]
-)
+    target_precompile_headers(corei_w3dview INTERFACE
+        [["Utility/CppMacros.h"]] # Must be first, to be removed when abandoning VC6
+        "StdAfx.h"
+        [["always.h"]]
+        [["STLUtils.h"]]
+        [["WWCommon.h"]]
+    )
 
-if(WIN32 OR "${CMAKE_SYSTEM}" MATCHES "Windows")
-    target_sources(corei_w3dview INTERFACE W3DView.rc)
+    if(WIN32 OR "${CMAKE_SYSTEM}" MATCHES "Windows")
+        target_sources(corei_w3dview INTERFACE W3DView.rc)
+    endif()
+
+else()
+    # No GUI tools available on this platform
+    message(STATUS "W3DView: No GUI framework available, skipping build")
 endif()

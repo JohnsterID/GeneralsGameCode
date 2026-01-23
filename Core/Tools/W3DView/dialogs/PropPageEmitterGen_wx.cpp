@@ -20,6 +20,7 @@
 
 #include "PropPageEmitterGen_wx.h"
 #include <wx/xrc/xmlres.h>
+#include <wx/spinbutt.h>
 
 wxBEGIN_EVENT_TABLE(PropPageEmitterGen, PropPageEmitterGenBase)
 EVT_BUTTON(XRCID("IDC_BROWSE_BUTTON"), PropPageEmitterGen::OnBrowseButton)  // Button/Checkbox click
@@ -90,4 +91,70 @@ void PropPageEmitterGen::OnParticleLifetimeCheck(wxCommandEvent &event)
 {
     // TODO: Implement OnParticleLifetimeCheck
     // Control ID: IDC_PARTICLE_LIFETIME_CHECK
+
+// ============================================================================
+// Phase 2.5: Dialog Infrastructure (Auto-generated)
+// ============================================================================
+
+void PropPageEmitterGenBase::OnInitDialog(wxInitDialogEvent& event)
+{
+    // Initialize controls after they're created
+    // Allow the base class to process this message
+    //
+    //	Add the known shaders to the combobox
+    //
+    // TODO: Convert: Add_Shader_To_Combo (ShaderClass::_PresetAdditiveSpriteShader, "Additive");
+    // TODO: Convert: Add_Shader_To_Combo (ShaderClass::_PresetAlphaSpriteShader, "Alpha");
+    // TODO: Convert: Add_Shader_To_Combo (ShaderClass::_PresetATestSpriteShader, "Alpha-Test");
+    // TODO: Convert: Add_Shader_To_Combo (ShaderClass::_PresetATestBlendSpriteShader, "Alpha-Test-Blend");
+    // TODO: Convert: Add_Shader_To_Combo (ShaderClass::_PresetScreenSpriteShader, "Screen");
+    // TODO: Convert: Add_Shader_To_Combo (ShaderClass::_PresetMultiplicativeSpriteShader, "Multiplicative");
+    // TODO: Convert: Add_Shader_To_Combo (ShaderClass::_PresetOpaqueSpriteShader, "Opaque");
+    //
+    // Fill the edit controls with the default values
+    //
+    if (m_idc_name_edit) {
+        m_idc_name_edit->SetValue(m_EmitterName);
+    }
+    if (m_idc_filename_edit) {
+        m_idc_filename_edit->SetValue(m_TextureFilename);
+    }
+    //
+    // Initialize the lifetime control
+    //
+    if (m_idc_particle_lifetime_check) {
+        m_idc_particle_lifetime_check->SetValue(m_Lifetime < 100 != 0);  // TODO: Verify boolean logic
+    }
+    // TODO: Convert: m_Lifetime = 0;
+    if (m_idc_particle_lifetime_spin) {
+        m_idc_particle_lifetime_spin->SetRange(0, 1000);
+        m_idc_particle_lifetime_spin->SetValue(static_cast<int>(m_Lifetime));
+    }
+    // TODO: Convert: OnParticleLifetimeCheck ();
+    //
+    // Initialize the render mode combo
+    //
+    if (m_idc_render_mode_combo) {
+        m_idc_render_mode_combo->SetSelection(m_pEmitterList->Get_Render_Mode();
+    }
+    // TODO: Convert: return TRUE;
+
+    event.Skip();
+}
+
+bool PropPageEmitterGenBase::TransferDataToWindow()
+{
+    // Data is transferred in OnInitDialog for this dialog
+    return true;
+}
+
+bool PropPageEmitterGenBase::TransferDataFromWindow()
+{
+    // Extract data from controls and apply to business logic
+
+    // TODO: Extract data from controls
+
+    return true;
+}
+
 }

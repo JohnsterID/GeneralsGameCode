@@ -20,6 +20,7 @@
 
 #include "PropPageEmitterLinegroup_wx.h"
 #include <wx/xrc/xmlres.h>
+#include <wx/spinbutt.h>
 
 wxBEGIN_EVENT_TABLE(PropPageEmitterLinegroup, PropPageEmitterLinegroupBase)
 
@@ -45,4 +46,57 @@ void PropPageEmitterLinegroup::OnCancel(wxCommandEvent &event)
 {
     // Close without saving
     EndModal(wxID_CANCEL);
+
+// ============================================================================
+// Phase 2.5: Dialog Infrastructure (Auto-generated)
+// ============================================================================
+
+void PropPageEmitterLinegroupBase::OnInitDialog(wxInitDialogEvent& event)
+{
+    // Initialize controls after they're created
+    //
+    // Create the keyframe control
+    //
+    // TODO: Convert: m_BlurTimeBar = ColorBarClass::Get_Color_Bar (::GetDlgItem (m_hWnd, IDC_BLUR_TIME_BAR));
+    //
+    // Setup the spinners
+    //
+    // TODO: Convert: Initialize_Spinner (m_BlurTimeRandomSpin, m_BlurTimes.Rand, 0, 10000);
+    //
+    //	Reset the keyframe control
+    //
+    // TODO: Convert: m_BlurTimeBar->Set_Range (0, 1);
+    // TODO: Convert: m_BlurTimeBar->Clear_Points ();
+    // TODO: Convert: m_BlurTimeBar->Modify_Point (0, 0, 0, 0, 0);
+    // TODO: Convert: m_BlurTimeBar->Set_Graph_Percent (0, Normalize_Blur_Time(m_BlurTimes.Start));
+    //
+    // Load the current set of frame keyframes into the control
+    //
+    // TODO: Convert: m_BlurTimeBar->Modify_Point (index + 1,
+    // TODO: Convert: m_BlurTimes.KeyTimes[index] / m_Lifetime,
+    // TODO: Convert: 0,
+    // TODO: Convert: 0,
+    // TODO: Convert: 0);
+    // TODO: Convert: m_BlurTimeBar->Set_Graph_Percent (index + 1, Normalize_Blur_Time(m_BlurTimes.Values[index]));
+    // TODO: Convert: return TRUE;  // return TRUE unless you set the focus to a control
+    // EXCEPTION: OCX Property Pages should return FALSE
+
+    event.Skip();
+}
+
+bool PropPageEmitterLinegroupBase::TransferDataToWindow()
+{
+    // Data is transferred in OnInitDialog for this dialog
+    return true;
+}
+
+bool PropPageEmitterLinegroupBase::TransferDataFromWindow()
+{
+    // Extract data from controls and apply to business logic
+
+    // TODO: Extract data from controls
+
+    return true;
+}
+
 }

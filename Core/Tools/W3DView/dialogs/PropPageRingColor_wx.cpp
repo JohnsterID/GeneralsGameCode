@@ -54,4 +54,62 @@ void PropPageRingColor::OnCancel(wxCommandEvent &event)
 void PropPageRingColor::OnDestroy(wxWindowDestroyEvent &event)
 {
     // TODO: Implement OnDestroy
+
+// ============================================================================
+// Phase 2.5: Dialog Infrastructure (Auto-generated)
+// ============================================================================
+
+void PropPageRingColorBase::OnInitDialog(wxInitDialogEvent& event)
+{
+    // Initialize controls after they're created
+    // Allow the base class to process this message
+    // TODO: Convert: m_ColorBar		= ColorBarClass::Get_Color_Bar (::GetDlgItem (m_hWnd, IDC_COLOR_BAR));
+    // TODO: Convert: m_OpacityBar	= ColorBarClass::Get_Color_Bar (::GetDlgItem (m_hWnd, IDC_OPACITY_BAR));
+    //
+    // Setup the color bars
+    //
+    // TODO: Convert: m_ColorBar->Set_Range (0, 1);
+    // TODO: Convert: m_OpacityBar->Set_Range (0, 1);
+    //
+    //	Set-up the color bar
+    //
+    // TODO: Convert: int index;
+    // TODO: Convert: m_ColorBar->Modify_Point (	index,
+    // TODO: Convert: m_OrigColorChannel[index].Get_Time (),
+    // TODO: Convert: m_OrigColorChannel[index].Get_Value ().X * 255,
+    // TODO: Convert: m_OrigColorChannel[index].Get_Value ().Y * 255,
+    // TODO: Convert: m_OrigColorChannel[index].Get_Value ().Z * 255);
+    //
+    //	Set-up the opacity bar
+    //
+    // TODO: Convert: m_OpacityBar->Modify_Point (	index,
+    // TODO: Convert: m_OrigAlphaChannel[index].Get_Time (),
+    // TODO: Convert: m_OrigAlphaChannel[index].Get_Value () * 255,
+    // TODO: Convert: m_OrigAlphaChannel[index].Get_Value () * 255,
+    // TODO: Convert: m_OrigAlphaChannel[index].Get_Value () * 255);
+    //
+    //	Ensure our initial 'current' values are up-to-date
+    //
+    // TODO: Convert: Update_Colors ();
+    // TODO: Convert: Update_Opacities ();
+    // TODO: Convert: return TRUE;
+
+    event.Skip();
+}
+
+bool PropPageRingColorBase::TransferDataToWindow()
+{
+    // Data is transferred in OnInitDialog for this dialog
+    return true;
+}
+
+bool PropPageRingColorBase::TransferDataFromWindow()
+{
+    // Extract data from controls and apply to business logic
+
+    // TODO: Extract data from controls
+
+    return true;
+}
+
 }

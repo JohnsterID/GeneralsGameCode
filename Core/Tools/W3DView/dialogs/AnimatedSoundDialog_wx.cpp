@@ -69,4 +69,63 @@ void AnimatedSoundDialog::OnSoundPathBrowseButton(wxCommandEvent &event)
 {
     // TODO: Implement OnSoundPathBrowseButton
     // Control ID: IDC_SOUND_PATH_BROWSE_BUTTON
+
+// ============================================================================
+// Phase 2.5: Dialog Infrastructure (Auto-generated)
+// ============================================================================
+
+void AnimatedSoundDialogBase::OnInitDialog(wxInitDialogEvent& event)
+{
+    // Initialize controls after they're created
+    // TODO: Convert: StringClass sound_def_lib_path	= static_cast<const TCHAR*>(theApp.GetProfileString ("Config", "SoundDefLibPath"));
+    // TODO: Convert: StringClass sound_ini_path			= static_cast<const TCHAR*>(theApp.GetProfileString ("Config", "AnimSoundINIPath"));
+    // TODO: Convert: StringClass sound_data_path		= static_cast<const TCHAR*>(theApp.GetProfileString ("Config", "AnimSoundDataPath"));
+    //
+    //	Fill in the default values
+    //
+    if (m_idc_sound_definition_library_edit) {
+        m_idc_sound_definition_library_edit->SetValue(sound_def_lib_path);
+    }
+    if (m_idc_sound_ini_edit) {
+        m_idc_sound_ini_edit->SetValue(sound_ini_path);
+    }
+    if (m_idc_sound_file_path_edit) {
+        m_idc_sound_file_path_edit->SetValue(sound_data_path);
+    }
+    // TODO: Convert: return TRUE;
+
+    event.Skip();
+}
+
+bool AnimatedSoundDialogBase::TransferDataToWindow()
+{
+    // Data is transferred in OnInitDialog for this dialog
+    return true;
+}
+
+bool AnimatedSoundDialogBase::TransferDataFromWindow()
+{
+    // Extract data from controls and apply to business logic
+
+    // TODO: Convert: //
+    // TODO: Convert: //	Get the user's response
+    // TODO: Convert: //
+    // TODO: Convert: CString sound_def_lib_path;
+    // TODO: Convert: CString sound_ini_path;
+    // TODO: Convert: CString sound_data_path;
+    // TODO: Convert: GetDlgItemText (IDC_SOUND_DEFINITION_LIBRARY_EDIT, sound_def_lib_path);
+    // TODO: Convert: GetDlgItemText (IDC_SOUND_INI_EDIT, sound_ini_path);
+    // TODO: Convert: GetDlgItemText (IDC_SOUND_FILE_PATH_EDIT, sound_data_path);
+    // TODO: Convert: //
+    // TODO: Convert: //	Store this information in the registry
+    // TODO: Convert: //
+    // TODO: Convert: theApp.WriteProfileString ("Config", "SoundDefLibPath", sound_def_lib_path);
+    // TODO: Convert: theApp.WriteProfileString ("Config", "AnimSoundINIPath", sound_ini_path);
+    // TODO: Convert: theApp.WriteProfileString ("Config", "AnimSoundDataPath", sound_data_path);
+    // TODO: Convert: Load_Animated_Sound_Settings ();
+    // TODO: Convert: return ;
+
+    return true;
+}
+
 }

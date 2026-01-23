@@ -20,6 +20,7 @@
 
 #include "PropPageRingGen_wx.h"
 #include <wx/xrc/xmlres.h>
+#include <wx/spinbutt.h>
 
 wxBEGIN_EVENT_TABLE(PropPageRingGen, PropPageRingGenBase)
 EVT_BUTTON(XRCID("IDC_BROWSE_BUTTON"), PropPageRingGen::OnBrowseButton)  // Button/Checkbox click
@@ -90,4 +91,63 @@ void PropPageRingGen::OnChangeTextureTileEdit(wxCommandEvent &event)
 {
     // TODO: Implement OnChangeTextureTileEdit
     // Control ID: IDC_TEXTURE_TILE_EDIT
+
+// ============================================================================
+// Phase 2.5: Dialog Infrastructure (Auto-generated)
+// ============================================================================
+
+void PropPageRingGenBase::OnInitDialog(wxInitDialogEvent& event)
+{
+    // Initialize controls after they're created
+    // Allow the base class to process this message
+    //
+    //	Add the known shaders to the combobox
+    //
+    // TODO: Convert: Add_Shader_To_Combo (ShaderClass::_PresetAdditiveShader, "Additive");
+    // TODO: Convert: Add_Shader_To_Combo (ShaderClass::_PresetAlphaShader, "Alpha");
+    // TODO: Convert: Add_Shader_To_Combo (ShaderClass::_PresetOpaqueShader, "Opaque");
+    // TODO: Convert: Add_Shader_To_Combo (ShaderClass::_PresetMultiplicativeShader, "Multiplicative");
+    // TODO: Convert: CheckDlgButton (IDC_CAMERA_ALIGNED_CHECK, (m_RenderObj->Get_Flags () & RingRenderObjClass::USE_CAMERA_ALIGN) != 0);
+    // TODO: Convert: CheckDlgButton (IDC_LOOPING_CHECK, (m_RenderObj->Get_Flags () & RingRenderObjClass::USE_ANIMATION_LOOP) != 0);
+    //
+    // Fill the edit controls with the default values
+    //
+    if (m_idc_name_edit) {
+        m_idc_name_edit->SetValue(m_Name);
+    }
+    if (m_idc_filename_edit) {
+        m_idc_filename_edit->SetValue(m_TextureFilename);
+    }
+    //
+    //	Initialize the texture tiling controls...
+    //
+    // TODO: Convert: m_TextureTileSpin.SetRange (0, 8);
+    // TODO: Convert: m_TextureTileSpin.SetPos (m_RenderObj->Get_Texture_Tiling ());
+    //
+    // Initialize the lifetime control
+    //
+    if (m_idc_lifetime_spin) {
+        m_idc_lifetime_spin->SetRange(0, 1000);
+        m_idc_lifetime_spin->SetValue(static_cast<int>(m_Lifetime));
+    }
+    // TODO: Convert: return TRUE;
+
+    event.Skip();
+}
+
+bool PropPageRingGenBase::TransferDataToWindow()
+{
+    // Data is transferred in OnInitDialog for this dialog
+    return true;
+}
+
+bool PropPageRingGenBase::TransferDataFromWindow()
+{
+    // Extract data from controls and apply to business logic
+
+    // TODO: Extract data from controls
+
+    return true;
+}
+
 }

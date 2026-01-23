@@ -20,6 +20,7 @@
 
 #include "PropPageEmitterFrame_wx.h"
 #include <wx/xrc/xmlres.h>
+#include <wx/spinbutt.h>
 
 wxBEGIN_EVENT_TABLE(PropPageEmitterFrame, PropPageEmitterFrameBase)
 
@@ -45,4 +46,81 @@ void PropPageEmitterFrame::OnCancel(wxCommandEvent &event)
 {
     // Close without saving
     EndModal(wxID_CANCEL);
+
+// ============================================================================
+// Phase 2.5: Dialog Infrastructure (Auto-generated)
+// ============================================================================
+
+void PropPageEmitterFrameBase::OnInitDialog(wxInitDialogEvent& event)
+{
+    // Initialize controls after they're created
+    //
+    // Set the frame layout combo box
+    //
+    // TODO: Declare: int mode = m_pEmitterList->Get_Frame_Mode();
+    if (m_idc_frame_layout_combo) {
+        m_idc_frame_layout_combo->SetSelection(0);
+    }
+    if (m_idc_frame_layout_combo) {
+        m_idc_frame_layout_combo->SetSelection(1);
+    }
+    if (m_idc_frame_layout_combo) {
+        m_idc_frame_layout_combo->SetSelection(2);
+    }
+    if (m_idc_frame_layout_combo) {
+        m_idc_frame_layout_combo->SetSelection(3);
+    }
+    if (m_idc_frame_layout_combo) {
+        m_idc_frame_layout_combo->SetSelection(4);
+    }
+    // TODO: Convert: default:
+    if (m_idc_frame_layout_combo) {
+        m_idc_frame_layout_combo->SetSelection(4);
+    }
+    // TODO: Convert: break;
+    //
+    // Create the keyframe control
+    //
+    // TODO: Convert: m_FrameBar = ColorBarClass::Get_Color_Bar (::GetDlgItem (m_hWnd, IDC_FRAME_BAR));
+    //
+    // Setup the spinners
+    //
+    // TODO: Convert: Initialize_Spinner (m_FrameRandomSpin, m_Frames.Rand, 0, 10000);
+    //
+    //	Reset the keyframe control
+    //
+    // TODO: Convert: m_FrameBar->Set_Range (0, 1);
+    // TODO: Convert: m_FrameBar->Clear_Points ();
+    // TODO: Convert: m_FrameBar->Modify_Point (0, 0, 0, 0, 0);
+    // TODO: Convert: m_FrameBar->Set_Graph_Percent (0, Normalize_Frame(m_Frames.Start));
+    //
+    // Load the current set of frame keyframes into the control
+    //
+    // TODO: Convert: m_FrameBar->Modify_Point (index + 1,
+    // TODO: Convert: m_Frames.KeyTimes[index] / m_Lifetime,
+    // TODO: Convert: 0,
+    // TODO: Convert: 0,
+    // TODO: Convert: 0);
+    // TODO: Convert: m_FrameBar->Set_Graph_Percent (index + 1, Normalize_Frame(m_Frames.Values[index]));
+    // TODO: Convert: return TRUE;  // return TRUE unless you set the focus to a control
+    // EXCEPTION: OCX Property Pages should return FALSE
+
+    event.Skip();
+}
+
+bool PropPageEmitterFrameBase::TransferDataToWindow()
+{
+    // Data is transferred in OnInitDialog for this dialog
+    return true;
+}
+
+bool PropPageEmitterFrameBase::TransferDataFromWindow()
+{
+    // Extract data from controls and apply to business logic
+
+    // TODO: Extract data from controls
+
+    return true;
+}
+
 }

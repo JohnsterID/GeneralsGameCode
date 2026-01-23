@@ -55,4 +55,58 @@ void GammaDialog::OnReleasedcaptureGammaSlider(wxCommandEvent &event)
 {
     // TODO: Implement OnReleasedcaptureGammaSlider
     // Control ID: IDC_GAMMA_SLIDER
+
+// ============================================================================
+// Phase 2.5: Dialog Infrastructure (Auto-generated)
+// ============================================================================
+
+void GammaDialogBase::OnInitDialog(wxInitDialogEvent& event)
+{
+    // Initialize controls after they're created
+    // TODO: Add extra initialization here
+    // TODO: Convert: m_gamma=AfxGetApp()->GetProfileInt("Config","Gamma",10);
+    // TODO: Convert: if (m_gamma<10) m_gamma=10;
+    // TODO: Convert: if (m_gamma>30) m_gamma=30;
+    // TODO: Convert: m_gammaslider.SetRange(10,30);
+    // TODO: Convert: m_gammaslider.SetPos(m_gamma);
+    // TODO: Convert: CString string;
+    // TODO: Convert: string.Format("%3.2f",m_gamma/10.0f);
+    if (m_idc_gamma_display) {
+        m_idc_gamma_display->SetValue(string);
+    }
+    // TODO: Convert: string.Format("Calibration instructions\n");
+    // TODO: Convert: string+="A. Set Gamma to 1.0 and Monitor Contrast and Brightness to maximum\n";
+    // TODO: Convert: string+="B. Adjust Monitor Brightness down so Bar 3 is barely visible\n";
+    // TODO: Convert: string+="C. Adjust Monitor Contrast as preferred but Bars 1,2,3,4 must be distinguishable from each other\n";
+    // TODO: Convert: string+="D. Set the Gamma using the Slider below so the gray box on the left matches it's checkered surroundings\n";
+    // TODO: Convert: string+="E. Press OK to save settings";
+    if (m_idc_instructions) {
+        m_idc_instructions->SetValue(string);
+    }
+    // TODO: Convert: return TRUE;  // return TRUE unless you set the focus to a control
+    // EXCEPTION: OCX Property Pages should return FALSE
+
+    event.Skip();
+}
+
+bool GammaDialogBase::TransferDataToWindow()
+{
+    // Data is transferred in OnInitDialog for this dialog
+    return true;
+}
+
+bool GammaDialogBase::TransferDataFromWindow()
+{
+    // Extract data from controls and apply to business logic
+
+    // TODO: Convert: // TODO: Add extra validation here
+    // TODO: Convert: m_gamma=m_gammaslider.GetPos();
+    // TODO: Convert: if (m_gamma<10) m_gamma=10;
+    // TODO: Convert: if (m_gamma>30) m_gamma=30;
+    // TODO: Convert: ::AfxGetApp()->WriteProfileInt("Config","Gamma",m_gamma);
+    // TODO: Convert: DX8Wrapper::Set_Gamma(m_gamma/10.0f,0.0f,1.0f);
+
+    return true;
+}
+
 }

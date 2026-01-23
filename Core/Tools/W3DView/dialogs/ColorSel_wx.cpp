@@ -84,4 +84,59 @@ void ColorSel::OnChangeRedEdit(wxCommandEvent &event)
 {
     // TODO: Implement OnChangeRedEdit
     // Control ID: IDC_RED_EDIT
+
+// ============================================================================
+// Phase 2.5: Dialog Infrastructure (Auto-generated)
+// ============================================================================
+
+void ColorSelBase::OnInitDialog(wxInitDialogEvent& event)
+{
+    // Initialize controls after they're created
+    // Allow the base class to process this message
+    // Set the ranges of the slider and spin controls
+    // TODO: Convert: m_RedSlider.SetRange (0, 255);
+    // TODO: Convert: m_GreenSlider.SetRange (0, 255);
+    // TODO: Convert: m_BlueSlider.SetRange (0, 255);
+    // TODO: Convert: m_RedSpin.SetRange (0, 255);
+    // TODO: Convert: m_GreenSpin.SetRange (0, 255);
+    // TODO: Convert: m_BlueSpin.SetRange (0, 255);
+    // Determine the initial settings (in integers)
+    // TODO: Declare: int red_value = int(m_Color.X * 255.00F);
+    // TODO: Declare: int green_value = int(m_Color.Y * 255.00F);
+    // TODO: Declare: int blue_value = int(m_Color.Z * 255.00F);
+    // TODO: Convert: if ((red_value == green_value) &&
+    // Check the grayscale checkbox
+    if (m_idc_grayscale_check) {
+        m_idc_grayscale_check->SetValue(true);
+    }
+    // Set the initial slider positions
+    // TODO: Convert: m_RedSlider.SetPos (red_value);
+    // TODO: Convert: m_GreenSlider.SetPos (green_value);
+    // TODO: Convert: m_BlueSlider.SetPos (blue_value);
+    // TODO: Convert: m_RedSpin.SetPos (red_value);
+    // TODO: Convert: m_GreenSpin.SetPos (green_value);
+    // TODO: Convert: m_BlueSpin.SetPos (blue_value);
+    // TODO: Convert: return TRUE;
+
+    event.Skip();
+}
+
+bool ColorSelBase::TransferDataToWindow()
+{
+    // Data is transferred in OnInitDialog for this dialog
+    return true;
+}
+
+bool ColorSelBase::TransferDataFromWindow()
+{
+    // Extract data from controls and apply to business logic
+
+    // TODO: Convert: // Record the color
+    // TODO: Convert: m_Color = m_PaintColor;
+    // TODO: Convert: // Allow the base class to process this message
+    // TODO: Convert: return ;
+
+    return true;
+}
+
 }

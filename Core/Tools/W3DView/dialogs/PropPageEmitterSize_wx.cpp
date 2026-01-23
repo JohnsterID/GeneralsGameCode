@@ -20,6 +20,7 @@
 
 #include "PropPageEmitterSize_wx.h"
 #include <wx/xrc/xmlres.h>
+#include <wx/spinbutt.h>
 
 wxBEGIN_EVENT_TABLE(PropPageEmitterSize, PropPageEmitterSizeBase)
 
@@ -45,4 +46,55 @@ void PropPageEmitterSize::OnCancel(wxCommandEvent &event)
 {
     // Close without saving
     EndModal(wxID_CANCEL);
+
+// ============================================================================
+// Phase 2.5: Dialog Infrastructure (Auto-generated)
+// ============================================================================
+
+void PropPageEmitterSizeBase::OnInitDialog(wxInitDialogEvent& event)
+{
+    // Initialize controls after they're created
+    // Allow the base class to process this message
+    // TODO: Convert: m_SizeBar = ColorBarClass::Get_Color_Bar (::GetDlgItem (m_hWnd, IDC_SIZE_BAR));
+    // TODO: Convert: m_SizeBar->Set_Range (0, 1);
+    //
+    // Setup the spinners
+    //
+    // TODO: Convert: Initialize_Spinner (m_SizeRandomSpin, m_OrigSizes.Rand, 0, 10000);
+    //
+    //	Reset the color bars
+    //
+    // TODO: Convert: m_SizeBar->Set_Range (0, 1);
+    // TODO: Convert: m_SizeBar->Clear_Points ();
+    // TODO: Convert: m_SizeBar->Modify_Point (0, 0, 0, 0, 0);
+    // TODO: Convert: m_SizeBar->Set_Graph_Percent (0, m_OrigSizes.Start / m_MaxSize);
+    //
+    //	Set-up the color bar
+    //
+    // TODO: Convert: m_SizeBar->Modify_Point (index + 1,
+    // TODO: Convert: m_OrigSizes.KeyTimes[index] / m_Lifetime,
+    // TODO: Convert: 0,
+    // TODO: Convert: 0,
+    // TODO: Convert: 0);
+    // TODO: Convert: m_SizeBar->Set_Graph_Percent (index + 1, m_OrigSizes.Values[index] / m_MaxSize);
+    // TODO: Convert: return TRUE;
+
+    event.Skip();
+}
+
+bool PropPageEmitterSizeBase::TransferDataToWindow()
+{
+    // Data is transferred in OnInitDialog for this dialog
+    return true;
+}
+
+bool PropPageEmitterSizeBase::TransferDataFromWindow()
+{
+    // Extract data from controls and apply to business logic
+
+    // TODO: Extract data from controls
+
+    return true;
+}
+
 }

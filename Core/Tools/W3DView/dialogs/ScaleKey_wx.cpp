@@ -20,6 +20,7 @@
 
 #include "ScaleKey_wx.h"
 #include <wx/xrc/xmlres.h>
+#include <wx/spinbutt.h>
 
 wxBEGIN_EVENT_TABLE(ScaleKey, ScaleKeyBase)
 
@@ -45,4 +46,53 @@ void ScaleKey::OnCancel(wxCommandEvent &event)
 {
     // Close without saving
     EndModal(wxID_CANCEL);
+
+// ============================================================================
+// Phase 2.5: Dialog Infrastructure (Auto-generated)
+// ============================================================================
+
+void ScaleKeyBase::OnInitDialog(wxInitDialogEvent& event)
+{
+    // Initialize controls after they're created
+    // TODO: Convert: m_ScaleSpin.SetRange (1, 10000);
+    // TODO: Convert: m_ScaleSpin.SetPos (int(m_Scale * 100.0F));
+    // If we were given a different prompt upon creation, apply it now.
+    // TODO: Convert: if (!m_Prompt.IsEmpty())
+    if (m_idc_prompt) {
+        m_idc_prompt->SetValue(m_Prompt);
+    }
+    // TODO: Convert: return TRUE;
+
+    event.Skip();
+}
+
+bool ScaleKeyBase::TransferDataToWindow()
+{
+    // Data is transferred in OnInitDialog for this dialog
+    return true;
+}
+
+bool ScaleKeyBase::TransferDataFromWindow()
+{
+    // Extract data from controls and apply to business logic
+
+    // TODO: Convert: int pos = m_ScaleSpin.GetPos();
+    // TODO: Convert: if (pos & 0xffff0000) {
+    // TODO: Convert: // Error condition. Most likely the value is out of range.
+    // TODO: Convert: MessageBox("Invalid scale value. Please enter a number between 1 and 10,000",
+    // TODO: Convert: "Invalid Scale", MB_OK | MB_ICONINFORMATION);
+    // TODO: Convert: return;
+    // TODO: Convert: }
+    // TODO: Convert: m_Scale = ((float)pos) / 100.0F;
+    // TODO: Convert: // We cannot accept this value if it is less than or equal to zero.
+    // TODO: Convert: if (m_Scale <= 0.0f) {
+    // TODO: Convert: MessageBox("Scale must be a value greater than zero!", "Invalid Scale",
+    // TODO: Convert: MB_OK | MB_ICONINFORMATION);
+    // TODO: Convert: return;
+    // TODO: Convert: }
+    // TODO: Convert: return ;
+
+    return true;
+}
+
 }

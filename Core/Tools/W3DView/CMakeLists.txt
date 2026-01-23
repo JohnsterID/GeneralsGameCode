@@ -13,6 +13,8 @@ if(wxWidgets_FOUND)
         "w3dviewview_wx.h"
         "w3dviewtree_wx.cpp"
         "w3dviewtree_wx.h"
+        "GraphicView_wx.cpp"
+        "GraphicView_wx.h"
         "w3dcompat_wx.h"
         "StdAfx_wx.h"
         

@@ -69,6 +69,10 @@ class PropPageEmitterUser : public PropPageEmitterUserBase
 public:
     PropPageEmitterUser(wxWindow *parent);
 
+    // Dialog data (MFC compatibility)
+    int m_iType;
+    wxString m_UserString;
+
 protected:
     // Override for data transfer if needed
     // bool TransferDataToWindow() override;

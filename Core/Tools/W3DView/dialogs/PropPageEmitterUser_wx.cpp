@@ -28,7 +28,9 @@ EVT_TEXT(XRCID("IDC_PROGRAMMER_SETTINGS_EDIT"), PropPageEmitterUser::OnChangePro
 wxEND_EVENT_TABLE()
 
 PropPageEmitterUser::PropPageEmitterUser(wxWindow *parent)
-    : PropPageEmitterUserBase(parent)
+    : PropPageEmitterUserBase(parent),
+      m_iType(0),
+      m_UserString(wxEmptyString)
 {
     // Initialize dialog
     // TransferDataToWindow();

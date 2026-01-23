@@ -68,6 +68,9 @@ protected:
     wxButton *m_idcancel;
 };
 
+// Forward declarations
+class CGraphicView;
+
 // Derived class for event handlers and custom logic
 class CameraDistance : public CameraDistanceBase
 {
@@ -75,13 +78,16 @@ public:
     CameraDistance(wxWindow *parent);
 
 protected:
-    // Override for data transfer if needed
-    // bool TransferDataToWindow() override;
-    // bool TransferDataFromWindow() override;
+    // Phase 2.5: Initialization and data transfer
+    void OnInitDialog(wxInitDialogEvent& event);
+    bool TransferDataToWindow() override;
+    bool TransferDataFromWindow() override;
 
 private:
+    // Phase 2: Event handlers
     void OnOK(wxCommandEvent &event);
     void OnCancel(wxCommandEvent &event);
+    void OnDistanceSpin(wxSpinEvent& event);
 
     wxDECLARE_EVENT_TABLE();
 };

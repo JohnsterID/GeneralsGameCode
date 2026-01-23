@@ -10,6 +10,29 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 from collections import Counter
 
+def sanitize_cpp_identifier(name):
+    """
+    Convert a control name to a valid C++ identifier.
+    - Replace invalid characters (commas, hyphens, etc.) with underscores
+    - Ensure it doesn't start with a digit
+    - Ensure it's not empty
+    """
+    if not name:
+        return "ctrl"
+    
+    # Replace invalid characters with underscores
+    sanitized = re.sub(r'[^a-zA-Z0-9_]', '_', name)
+    
+    # Ensure it doesn't start with a digit
+    if sanitized and sanitized[0].isdigit():
+        sanitized = '_' + sanitized
+    
+    # Ensure it's not empty
+    if not sanitized:
+        return "ctrl"
+    
+    return sanitized
+
 # Map XRC control classes to wxWidgets C++ types and headers
 CONTROL_TYPE_MAP = {
     'wxButton': ('wxButton', 'wx/button.h'),
@@ -98,7 +121,8 @@ def make_unique_var_names(controls):
     
     for ctrl in controls:
         ctrl_name = ctrl['name']
-        var_name = f"m_{ctrl_name.lower()}"
+        # Sanitize control name to ensure valid C++ identifier
+        var_name = f"m_{sanitize_cpp_identifier(ctrl_name).lower()}"
         
         # If this name appears multiple times, add index
         if name_counts[ctrl_name] > 1:

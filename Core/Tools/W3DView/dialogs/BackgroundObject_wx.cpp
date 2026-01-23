@@ -22,7 +22,7 @@
 #include <wx/xrc/xmlres.h>
 
 wxBEGIN_EVENT_TABLE(BackgroundObject, BackgroundObjectBase)
-EVT_TREE_SEL_CHANGED(XRCID("IDC_HIERARCHY_LIST"), BackgroundObject::OnItemChangedHierarchyList)  // Notification message (needs analysis)
+EVT_LIST_ITEM_SELECTED(XRCID("IDC_HIERARCHY_LIST"), BackgroundObject::OnItemChangedHierarchyList)  // List item selection changed
     EVT_BUTTON(XRCID("IDC_CLEAR"), BackgroundObject::OnClear)  // Button/Checkbox click
 wxEND_EVENT_TABLE()
 
@@ -52,7 +52,7 @@ void BackgroundObject::OnCancel(wxCommandEvent &event)
 // Event Handlers (Phase 2 - Auto-integrated)
 // ============================================================================
 
-void BackgroundObject::OnItemChangedHierarchyList(various &event)
+void BackgroundObject::OnItemChangedHierarchyList(wxListEvent &event)
 {
     // TODO: Implement OnItemChangedHierarchyList
     // Control ID: IDC_HIERARCHY_LIST

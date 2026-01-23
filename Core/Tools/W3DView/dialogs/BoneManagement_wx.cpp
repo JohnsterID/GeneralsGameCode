@@ -22,7 +22,7 @@
 #include <wx/xrc/xmlres.h>
 
 wxBEGIN_EVENT_TABLE(BoneManagement, BoneManagementBase)
-EVT_TREE_SEL_CHANGED(XRCID("IDC_BONE_TREE"), BoneManagement::OnSelchangedBoneTree)  // Notification message (needs analysis)
+EVT_TREE_SEL_CHANGED(XRCID("IDC_BONE_TREE"), BoneManagement::OnSelchangedBoneTree)  // Tree item selection changed
     EVT_COMBOBOX(XRCID("IDC_OBJECT_COMBO"), BoneManagement::OnSelchangeObjectCombo)  // Combobox selection change
     EVT_WINDOW_DESTROY(BoneManagement::OnDestroy)  // Window destruction
     EVT_BUTTON(XRCID("IDC_ATTACH_BUTTON"), BoneManagement::OnAttachButton)  // Button/Checkbox click
@@ -54,7 +54,7 @@ void BoneManagement::OnCancel(wxCommandEvent &event)
 // Event Handlers (Phase 2 - Auto-integrated)
 // ============================================================================
 
-void BoneManagement::OnSelchangedBoneTree(various &event)
+void BoneManagement::OnSelchangedBoneTree(wxTreeEvent &event)
 {
     // TODO: Implement OnSelchangedBoneTree
     // Control ID: IDC_BONE_TREE

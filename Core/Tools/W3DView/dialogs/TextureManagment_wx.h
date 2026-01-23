@@ -81,7 +81,7 @@ private:
     wxDECLARE_EVENT_TABLE();
 private:
     // Event handlers (Phase 2)
-void OnDblclkMeshTextureListCtrl(various &event);  // Notification message (needs analysis)
-    void OnKeydownMeshTextureListCtrl(various &event);  // Notification message (needs analysis)
+void OnDblclkMeshTextureListCtrl(wxListEvent &event);  // Notification message (needs analysis)
+    void OnKeydownMeshTextureListCtrl(wxListEvent &event);  // Notification message (needs analysis)
     void OnDestroy(wxWindowDestroyEvent &event);  // Window destruction
 };

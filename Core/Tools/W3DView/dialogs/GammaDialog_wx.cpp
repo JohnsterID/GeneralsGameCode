@@ -22,7 +22,7 @@
 #include <wx/xrc/xmlres.h>
 
 wxBEGIN_EVENT_TABLE(GammaDialog, GammaDialogBase)
-EVT_TREE_SEL_CHANGED(XRCID("IDC_GAMMA_SLIDER"), GammaDialog::OnReleasedcaptureGammaSlider)  // Notification message (needs analysis)
+EVT_SLIDER(XRCID("IDC_GAMMA_SLIDER"), GammaDialog::OnReleasedcaptureGammaSlider)  // Slider capture released
 wxEND_EVENT_TABLE()
 
 GammaDialog::GammaDialog(wxWindow *parent)
@@ -51,7 +51,7 @@ void GammaDialog::OnCancel(wxCommandEvent &event)
 // Event Handlers (Phase 2 - Auto-integrated)
 // ============================================================================
 
-void GammaDialog::OnReleasedcaptureGammaSlider(various &event)
+void GammaDialog::OnReleasedcaptureGammaSlider(wxCommandEvent &event)
 {
     // TODO: Implement OnReleasedcaptureGammaSlider
     // Control ID: IDC_GAMMA_SLIDER

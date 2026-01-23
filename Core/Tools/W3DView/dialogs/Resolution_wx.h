@@ -84,5 +84,5 @@ private:
     wxDECLARE_EVENT_TABLE();
 private:
     // Event handlers (Phase 2)
-void OnDblclkResolutionListCtrl(various &event);  // Notification message (needs analysis)
+void OnDblclkResolutionListCtrl(wxListEvent &event);  // Notification message (needs analysis)
 };

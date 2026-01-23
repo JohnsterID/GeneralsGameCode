@@ -115,5 +115,5 @@ private:
 private:
     // Event handlers (Phase 2)
 void OnDestroy(wxWindowDestroyEvent &event);  // Window destruction
-    void OnDeltaposRedRandomSpin(various &event);  // Notification message (needs analysis)
+    void OnDeltaposRedRandomSpin(wxSpinEvent &event);  // Notification message (needs analysis)
 };

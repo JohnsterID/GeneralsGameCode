@@ -22,7 +22,7 @@
 #include <wx/xrc/xmlres.h>
 
 wxBEGIN_EVENT_TABLE(Resolution, ResolutionBase)
-EVT_TREE_SEL_CHANGED(XRCID("IDC_RESOLUTION_LIST_CTRL"), Resolution::OnDblclkResolutionListCtrl)  // Notification message (needs analysis)
+EVT_LIST_ITEM_ACTIVATED(XRCID("IDC_RESOLUTION_LIST_CTRL"), Resolution::OnDblclkResolutionListCtrl)  // List item double-click
 wxEND_EVENT_TABLE()
 
 Resolution::Resolution(wxWindow *parent)
@@ -51,7 +51,7 @@ void Resolution::OnCancel(wxCommandEvent &event)
 // Event Handlers (Phase 2 - Auto-integrated)
 // ============================================================================
 
-void Resolution::OnDblclkResolutionListCtrl(various &event)
+void Resolution::OnDblclkResolutionListCtrl(wxListEvent &event)
 {
     // TODO: Implement OnDblclkResolutionListCtrl
     // Control ID: IDC_RESOLUTION_LIST_CTRL

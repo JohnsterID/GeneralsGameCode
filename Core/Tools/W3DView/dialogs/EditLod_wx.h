@@ -95,8 +95,8 @@ private:
     wxDECLARE_EVENT_TABLE();
 private:
     // Event handlers (Phase 2)
-void OnDeltaposSwitchUpSpin(various &event);  // Notification message (needs analysis)
-    void OnDeltaposSwitchDnSpin(various &event);  // Notification message (needs analysis)
-    void OnItemChangedHierarchyList(various &event);  // Notification message (needs analysis)
+void OnDeltaposSwitchUpSpin(wxSpinEvent &event);  // Notification message (needs analysis)
+    void OnDeltaposSwitchDnSpin(wxSpinEvent &event);  // Notification message (needs analysis)
+    void OnItemChangedHierarchyList(wxListEvent &event);  // Notification message (needs analysis)
     void OnRecalc(wxCommandEvent &event);  // Button/Checkbox click
 };

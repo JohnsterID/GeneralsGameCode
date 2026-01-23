@@ -75,5 +75,5 @@ private:
     wxDECLARE_EVENT_TABLE();
 private:
     // Event handlers (Phase 2)
-void OnDblclkSubObjectList(various &event);  // Notification message (needs analysis)
+void OnDblclkSubObjectList(wxListEvent &event);  // Notification message (needs analysis)
 };

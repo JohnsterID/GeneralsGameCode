@@ -22,9 +22,9 @@
 #include <wx/xrc/xmlres.h>
 
 wxBEGIN_EVENT_TABLE(EditLod, EditLodBase)
-EVT_TREE_SEL_CHANGED(XRCID("IDC_SWITCH_UP_SPIN"), EditLod::OnDeltaposSwitchUpSpin)  // Notification message (needs analysis)
-    EVT_TREE_SEL_CHANGED(XRCID("IDC_SWITCH_DN_SPIN"), EditLod::OnDeltaposSwitchDnSpin)  // Notification message (needs analysis)
-    EVT_TREE_SEL_CHANGED(XRCID("IDC_HIERARCHY_LIST"), EditLod::OnItemChangedHierarchyList)  // Notification message (needs analysis)
+EVT_SPIN(XRCID("IDC_SWITCH_UP_SPIN"), EditLod::OnDeltaposSwitchUpSpin)  // Spin button change
+    EVT_SPIN(XRCID("IDC_SWITCH_DN_SPIN"), EditLod::OnDeltaposSwitchDnSpin)  // Spin button change
+    EVT_LIST_ITEM_SELECTED(XRCID("IDC_HIERARCHY_LIST"), EditLod::OnItemChangedHierarchyList)  // List item selection changed
     // TODO: Map ON_EN_UPDATE manually
     // MFC: ON_EN_UPDATE(IDC_SWITCH_DN_EDIT, OnUpdateSwitchDnEdit)
     // TODO: Map ON_EN_UPDATE manually
@@ -58,19 +58,19 @@ void EditLod::OnCancel(wxCommandEvent &event)
 // Event Handlers (Phase 2 - Auto-integrated)
 // ============================================================================
 
-void EditLod::OnDeltaposSwitchUpSpin(various &event)
+void EditLod::OnDeltaposSwitchUpSpin(wxSpinEvent &event)
 {
     // TODO: Implement OnDeltaposSwitchUpSpin
     // Control ID: IDC_SWITCH_UP_SPIN
 }
 
-void EditLod::OnDeltaposSwitchDnSpin(various &event)
+void EditLod::OnDeltaposSwitchDnSpin(wxSpinEvent &event)
 {
     // TODO: Implement OnDeltaposSwitchDnSpin
     // Control ID: IDC_SWITCH_DN_SPIN
 }
 
-void EditLod::OnItemChangedHierarchyList(various &event)
+void EditLod::OnItemChangedHierarchyList(wxListEvent &event)
 {
     // TODO: Implement OnItemChangedHierarchyList
     // Control ID: IDC_HIERARCHY_LIST

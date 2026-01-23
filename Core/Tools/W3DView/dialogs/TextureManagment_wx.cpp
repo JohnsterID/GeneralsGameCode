@@ -22,8 +22,8 @@
 #include <wx/xrc/xmlres.h>
 
 wxBEGIN_EVENT_TABLE(TextureManagment, TextureManagmentBase)
-EVT_TREE_SEL_CHANGED(XRCID("IDC_MESH_TEXTURE_LIST_CTRL"), TextureManagment::OnDblclkMeshTextureListCtrl)  // Notification message (needs analysis)
-    EVT_TREE_SEL_CHANGED(XRCID("IDC_MESH_TEXTURE_LIST_CTRL"), TextureManagment::OnKeydownMeshTextureListCtrl)  // Notification message (needs analysis)
+EVT_LIST_ITEM_ACTIVATED(XRCID("IDC_MESH_TEXTURE_LIST_CTRL"), TextureManagment::OnDblclkMeshTextureListCtrl)  // List item double-click
+    EVT_LIST_KEY_DOWN(XRCID("IDC_MESH_TEXTURE_LIST_CTRL"), TextureManagment::OnKeydownMeshTextureListCtrl)  // List key press
     EVT_WINDOW_DESTROY(TextureManagment::OnDestroy)  // Window destruction
     // TODO: Map ON_COMMAND manually
     // MFC: ON_COMMAND(IDC_BACK, OnBack)
@@ -65,13 +65,13 @@ void TextureManagment::OnCancel(wxCommandEvent &event)
 // Event Handlers (Phase 2 - Auto-integrated)
 // ============================================================================
 
-void TextureManagment::OnDblclkMeshTextureListCtrl(various &event)
+void TextureManagment::OnDblclkMeshTextureListCtrl(wxListEvent &event)
 {
     // TODO: Implement OnDblclkMeshTextureListCtrl
     // Control ID: IDC_MESH_TEXTURE_LIST_CTRL
 }
 
-void TextureManagment::OnKeydownMeshTextureListCtrl(various &event)
+void TextureManagment::OnKeydownMeshTextureListCtrl(wxListEvent &event)
 {
     // TODO: Implement OnKeydownMeshTextureListCtrl
     // Control ID: IDC_MESH_TEXTURE_LIST_CTRL

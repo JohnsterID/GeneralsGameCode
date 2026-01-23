@@ -22,7 +22,7 @@
 #include <wx/xrc/xmlres.h>
 
 wxBEGIN_EVENT_TABLE(PropPageHierarchy, PropPageHierarchyBase)
-EVT_TREE_SEL_CHANGED(XRCID("IDC_SUBOBJECT_LIST"), PropPageHierarchy::OnDblclkSubObjectList)  // Notification message (needs analysis)
+EVT_LIST_ITEM_ACTIVATED(XRCID("IDC_SUBOBJECT_LIST"), PropPageHierarchy::OnDblclkSubObjectList)  // List item double-click
 wxEND_EVENT_TABLE()
 
 PropPageHierarchy::PropPageHierarchy(wxWindow *parent)
@@ -51,7 +51,7 @@ void PropPageHierarchy::OnCancel(wxCommandEvent &event)
 // Event Handlers (Phase 2 - Auto-integrated)
 // ============================================================================
 
-void PropPageHierarchy::OnDblclkSubObjectList(various &event)
+void PropPageHierarchy::OnDblclkSubObjectList(wxListEvent &event)
 {
     // TODO: Implement OnDblclkSubObjectList
     // Control ID: IDC_SUBOBJECT_LIST

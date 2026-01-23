@@ -87,6 +87,6 @@ private:
     wxDECLARE_EVENT_TABLE();
 private:
     // Event handlers (Phase 2)
-void OnItemChangedHierarchyList(various &event);  // Notification message (needs analysis)
+void OnItemChangedHierarchyList(wxListEvent &event);  // Notification message (needs analysis)
     void OnClear(wxCommandEvent &event);  // Button/Checkbox click
 };

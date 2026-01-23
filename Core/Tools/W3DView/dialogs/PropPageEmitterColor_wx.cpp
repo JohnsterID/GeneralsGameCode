@@ -23,7 +23,7 @@
 
 wxBEGIN_EVENT_TABLE(PropPageEmitterColor, PropPageEmitterColorBase)
 EVT_WINDOW_DESTROY(PropPageEmitterColor::OnDestroy)  // Window destruction
-    EVT_TREE_SEL_CHANGED(XRCID("IDC_RED_RANDOM_SPIN"), PropPageEmitterColor::OnDeltaposRedRandomSpin)  // Notification message (needs analysis)
+    EVT_SPIN(XRCID("IDC_RED_RANDOM_SPIN"), PropPageEmitterColor::OnDeltaposRedRandomSpin)  // Spin button change
 wxEND_EVENT_TABLE()
 
 PropPageEmitterColor::PropPageEmitterColor(wxWindow *parent)
@@ -57,7 +57,7 @@ void PropPageEmitterColor::OnDestroy(wxWindowDestroyEvent &event)
     // TODO: Implement OnDestroy
 }
 
-void PropPageEmitterColor::OnDeltaposRedRandomSpin(various &event)
+void PropPageEmitterColor::OnDeltaposRedRandomSpin(wxSpinEvent &event)
 {
     // TODO: Implement OnDeltaposRedRandomSpin
     // Control ID: IDC_RED_RANDOM_SPIN

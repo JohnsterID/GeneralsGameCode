@@ -87,5 +87,5 @@ private:
     wxDECLARE_EVENT_TABLE();
 private:
     // Event handlers (Phase 2)
-void OnReleasedcaptureGammaSlider(various &event);  // Notification message (needs analysis)
+void OnReleasedcaptureGammaSlider(wxCommandEvent &event);  // Notification message (needs analysis)
 };

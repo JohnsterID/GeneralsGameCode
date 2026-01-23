@@ -57,24 +57,24 @@ void SaveSettings::OnBrowseButton(wxCommandEvent &event)
 {
     // TODO: Implement OnBrowseButton
     // Control ID: IDC_BROWSE_BUTTON
+}
+
 
 // ============================================================================
 // Phase 2.5: Dialog Infrastructure (Auto-generated)
 // ============================================================================
 
-bool SaveSettingsBase::TransferDataToWindow()
+bool SaveSettings::TransferDataToWindow()
 {
     // Data is transferred in OnInitDialog for this dialog
     return true;
 }
 
-bool SaveSettingsBase::TransferDataFromWindow()
+bool SaveSettings::TransferDataFromWindow()
 {
     // Extract data from controls and apply to business logic
 
     // TODO: Extract data from controls
 
     return true;
-}
-
 }

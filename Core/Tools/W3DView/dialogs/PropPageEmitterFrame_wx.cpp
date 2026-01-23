@@ -23,7 +23,7 @@
 #include <wx/spinbutt.h>
 
 wxBEGIN_EVENT_TABLE(PropPageEmitterFrame, PropPageEmitterFrameBase)
-
+    EVT_INIT_DIALOG(PropPageEmitterFrame::OnInitDialog)
 wxEND_EVENT_TABLE()
 
 PropPageEmitterFrame::PropPageEmitterFrame(wxWindow *parent)
@@ -46,12 +46,14 @@ void PropPageEmitterFrame::OnCancel(wxCommandEvent &event)
 {
     // Close without saving
     EndModal(wxID_CANCEL);
+}
+
 
 // ============================================================================
 // Phase 2.5: Dialog Infrastructure (Auto-generated)
 // ============================================================================
 
-void PropPageEmitterFrameBase::OnInitDialog(wxInitDialogEvent& event)
+void PropPageEmitterFrame::OnInitDialog(wxInitDialogEvent& event)
 {
     // Initialize controls after they're created
     //
@@ -108,19 +110,17 @@ void PropPageEmitterFrameBase::OnInitDialog(wxInitDialogEvent& event)
     event.Skip();
 }
 
-bool PropPageEmitterFrameBase::TransferDataToWindow()
+bool PropPageEmitterFrame::TransferDataToWindow()
 {
     // Data is transferred in OnInitDialog for this dialog
     return true;
 }
 
-bool PropPageEmitterFrameBase::TransferDataFromWindow()
+bool PropPageEmitterFrame::TransferDataFromWindow()
 {
     // Extract data from controls and apply to business logic
 
     // TODO: Extract data from controls
 
     return true;
-}
-
 }

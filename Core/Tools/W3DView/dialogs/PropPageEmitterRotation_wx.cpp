@@ -23,7 +23,7 @@
 #include <wx/spinbutt.h>
 
 wxBEGIN_EVENT_TABLE(PropPageEmitterRotation, PropPageEmitterRotationBase)
-
+    EVT_INIT_DIALOG(PropPageEmitterRotation::OnInitDialog)
 wxEND_EVENT_TABLE()
 
 PropPageEmitterRotation::PropPageEmitterRotation(wxWindow *parent)
@@ -46,12 +46,14 @@ void PropPageEmitterRotation::OnCancel(wxCommandEvent &event)
 {
     // Close without saving
     EndModal(wxID_CANCEL);
+}
+
 
 // ============================================================================
 // Phase 2.5: Dialog Infrastructure (Auto-generated)
 // ============================================================================
 
-void PropPageEmitterRotationBase::OnInitDialog(wxInitDialogEvent& event)
+void PropPageEmitterRotation::OnInitDialog(wxInitDialogEvent& event)
 {
     // Initialize controls after they're created
     //
@@ -84,19 +86,17 @@ void PropPageEmitterRotationBase::OnInitDialog(wxInitDialogEvent& event)
     event.Skip();
 }
 
-bool PropPageEmitterRotationBase::TransferDataToWindow()
+bool PropPageEmitterRotation::TransferDataToWindow()
 {
     // Data is transferred in OnInitDialog for this dialog
     return true;
 }
 
-bool PropPageEmitterRotationBase::TransferDataFromWindow()
+bool PropPageEmitterRotation::TransferDataFromWindow()
 {
     // Extract data from controls and apply to business logic
 
     // TODO: Extract data from controls
 
     return true;
-}
-
 }

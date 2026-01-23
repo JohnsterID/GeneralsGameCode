@@ -25,6 +25,7 @@
 
 wxBEGIN_EVENT_TABLE(Resolution, ResolutionBase)
 EVT_LIST_ITEM_ACTIVATED(XRCID("IDC_RESOLUTION_LIST_CTRL"), Resolution::OnDblclkResolutionListCtrl)  // List item double-click
+    EVT_INIT_DIALOG(Resolution::OnInitDialog)
 wxEND_EVENT_TABLE()
 
 Resolution::Resolution(wxWindow *parent)
@@ -57,12 +58,14 @@ void Resolution::OnDblclkResolutionListCtrl(wxListEvent &event)
 {
     // TODO: Implement OnDblclkResolutionListCtrl
     // Control ID: IDC_RESOLUTION_LIST_CTRL
+}
+
 
 // ============================================================================
 // Phase 2.5: Dialog Infrastructure (Auto-generated)
 // ============================================================================
 
-void ResolutionBase::OnInitDialog(wxInitDialogEvent& event)
+void Resolution::OnInitDialog(wxInitDialogEvent& event)
 {
     // Initialize controls after they're created
     //
@@ -134,13 +137,13 @@ void ResolutionBase::OnInitDialog(wxInitDialogEvent& event)
     event.Skip();
 }
 
-bool ResolutionBase::TransferDataToWindow()
+bool Resolution::TransferDataToWindow()
 {
     // Data is transferred in OnInitDialog for this dialog
     return true;
 }
 
-bool ResolutionBase::TransferDataFromWindow()
+bool Resolution::TransferDataFromWindow()
 {
     // Extract data from controls and apply to business logic
 
@@ -178,6 +181,4 @@ bool ResolutionBase::TransferDataFromWindow()
     // TODO: Convert: return ;
 
     return true;
-}
-
 }

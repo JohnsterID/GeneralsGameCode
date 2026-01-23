@@ -117,12 +117,14 @@ void CameraDistance::OnCancel(wxCommandEvent &event)
 {
     // Close without saving
     EndModal(wxID_CANCEL);
+}
+
 
 // ============================================================================
 // Phase 2.5: Dialog Infrastructure (Auto-generated)
 // ============================================================================
 
-void CameraDistanceBase::OnInitDialog(wxInitDialogEvent& event)
+void CameraDistance::OnInitDialog(wxInitDialogEvent& event)
 {
     // Initialize controls after they're created
     // TODO: Convert: CGraphicView *graphic_view = ::Get_Graphic_View ();
@@ -138,13 +140,13 @@ void CameraDistanceBase::OnInitDialog(wxInitDialogEvent& event)
     event.Skip();
 }
 
-bool CameraDistanceBase::TransferDataToWindow()
+bool CameraDistance::TransferDataToWindow()
 {
     // Data is transferred in OnInitDialog for this dialog
     return true;
 }
 
-bool CameraDistanceBase::TransferDataFromWindow()
+bool CameraDistance::TransferDataFromWindow()
 {
     // Extract data from controls and apply to business logic
 
@@ -161,6 +163,4 @@ bool CameraDistanceBase::TransferDataFromWindow()
     // TODO: Convert: return ;
 
     return true;
-}
-
 }

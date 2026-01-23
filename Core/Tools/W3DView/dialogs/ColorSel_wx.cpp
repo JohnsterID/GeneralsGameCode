@@ -29,6 +29,7 @@ EVT_SLIDER(XRCID("IDC_SLIDER_BLUE"), ColorSel::OnHscroll)  // Horizontal scroll 
     EVT_TEXT(XRCID("IDC_BLUE_EDIT"), ColorSel::OnChangeBlueEdit)  // Text control change
     EVT_TEXT(XRCID("IDC_GREEN_EDIT"), ColorSel::OnChangeGreenEdit)  // Text control change
     EVT_TEXT(XRCID("IDC_RED_EDIT"), ColorSel::OnChangeRedEdit)  // Text control change
+    EVT_INIT_DIALOG(ColorSel::OnInitDialog)
 wxEND_EVENT_TABLE()
 
 ColorSel::ColorSel(wxWindow *parent)
@@ -84,12 +85,14 @@ void ColorSel::OnChangeRedEdit(wxCommandEvent &event)
 {
     // TODO: Implement OnChangeRedEdit
     // Control ID: IDC_RED_EDIT
+}
+
 
 // ============================================================================
 // Phase 2.5: Dialog Infrastructure (Auto-generated)
 // ============================================================================
 
-void ColorSelBase::OnInitDialog(wxInitDialogEvent& event)
+void ColorSel::OnInitDialog(wxInitDialogEvent& event)
 {
     // Initialize controls after they're created
     // Allow the base class to process this message
@@ -121,13 +124,13 @@ void ColorSelBase::OnInitDialog(wxInitDialogEvent& event)
     event.Skip();
 }
 
-bool ColorSelBase::TransferDataToWindow()
+bool ColorSel::TransferDataToWindow()
 {
     // Data is transferred in OnInitDialog for this dialog
     return true;
 }
 
-bool ColorSelBase::TransferDataFromWindow()
+bool ColorSel::TransferDataFromWindow()
 {
     // Extract data from controls and apply to business logic
 
@@ -137,6 +140,4 @@ bool ColorSelBase::TransferDataFromWindow()
     // TODO: Convert: return ;
 
     return true;
-}
-
 }

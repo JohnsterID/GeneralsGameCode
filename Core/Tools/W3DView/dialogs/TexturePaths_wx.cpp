@@ -24,6 +24,7 @@
 wxBEGIN_EVENT_TABLE(TexturePaths, TexturePathsBase)
 EVT_BUTTON(XRCID("IDC_BROWSE1"), TexturePaths::OnBrowse1)  // Button/Checkbox click
     EVT_BUTTON(XRCID("IDC_BROWSE2"), TexturePaths::OnBrowse2)  // Button/Checkbox click
+    EVT_INIT_DIALOG(TexturePaths::OnInitDialog)
 wxEND_EVENT_TABLE()
 
 TexturePaths::TexturePaths(wxWindow *parent)
@@ -62,12 +63,14 @@ void TexturePaths::OnBrowse2(wxCommandEvent &event)
 {
     // TODO: Implement OnBrowse2
     // Control ID: IDC_BROWSE2
+}
+
 
 // ============================================================================
 // Phase 2.5: Dialog Infrastructure (Auto-generated)
 // ============================================================================
 
-void TexturePathsBase::OnInitDialog(wxInitDialogEvent& event)
+void TexturePaths::OnInitDialog(wxInitDialogEvent& event)
 {
     // Initialize controls after they're created
     // TODO: Convert: CW3DViewDoc *doc = ::GetCurrentDocument ();
@@ -82,13 +85,13 @@ void TexturePathsBase::OnInitDialog(wxInitDialogEvent& event)
     event.Skip();
 }
 
-bool TexturePathsBase::TransferDataToWindow()
+bool TexturePaths::TransferDataToWindow()
 {
     // Data is transferred in OnInitDialog for this dialog
     return true;
 }
 
-bool TexturePathsBase::TransferDataFromWindow()
+bool TexturePaths::TransferDataFromWindow()
 {
     // Extract data from controls and apply to business logic
 
@@ -102,6 +105,4 @@ bool TexturePathsBase::TransferDataFromWindow()
     // TODO: Convert: return ;
 
     return true;
-}
-
 }

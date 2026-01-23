@@ -28,6 +28,7 @@ EVT_BUTTON(XRCID("IDC_BROWSE_BUTTON"), PropPageSphereGen::OnBrowseButton)  // Bu
     EVT_TEXT(XRCID("IDC_NAME_EDIT"), PropPageSphereGen::OnChangeNameEdit)  // Text control change
     EVT_TEXT(XRCID("IDC_LIFETIME_EDIT"), PropPageSphereGen::OnChangeLifetimeEdit)  // Text control change
     EVT_COMBOBOX(XRCID("IDC_SHADER_COMBO"), PropPageSphereGen::OnSelchangeShaderCombo)  // Combobox selection change
+    EVT_INIT_DIALOG(PropPageSphereGen::OnInitDialog)
 wxEND_EVENT_TABLE()
 
 PropPageSphereGen::PropPageSphereGen(wxWindow *parent)
@@ -84,12 +85,14 @@ void PropPageSphereGen::OnSelchangeShaderCombo(wxCommandEvent &event)
 {
     // TODO: Implement OnSelchangeShaderCombo
     // Control ID: IDC_SHADER_COMBO
+}
+
 
 // ============================================================================
 // Phase 2.5: Dialog Infrastructure (Auto-generated)
 // ============================================================================
 
-void PropPageSphereGenBase::OnInitDialog(wxInitDialogEvent& event)
+void PropPageSphereGen::OnInitDialog(wxInitDialogEvent& event)
 {
     // Initialize controls after they're created
     // Allow the base class to process this message
@@ -123,19 +126,17 @@ void PropPageSphereGenBase::OnInitDialog(wxInitDialogEvent& event)
     event.Skip();
 }
 
-bool PropPageSphereGenBase::TransferDataToWindow()
+bool PropPageSphereGen::TransferDataToWindow()
 {
     // Data is transferred in OnInitDialog for this dialog
     return true;
 }
 
-bool PropPageSphereGenBase::TransferDataFromWindow()
+bool PropPageSphereGen::TransferDataFromWindow()
 {
     // Extract data from controls and apply to business logic
 
     // TODO: Extract data from controls
 
     return true;
-}
-
 }

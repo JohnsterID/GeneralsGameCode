@@ -25,6 +25,7 @@
 wxBEGIN_EVENT_TABLE(PropPageEmitterParticle, PropPageEmitterParticleBase)
 EVT_BUTTON(XRCID("IDC_SPECIFY_CREATION_VOLUME"), PropPageEmitterParticle::OnSpecifyCreationVolume)  // Button/Checkbox click
     EVT_CHECKBOX(XRCID("IDC_MAX_PARTICLES_CHECK"), PropPageEmitterParticle::OnMaxParticlesCheck)  // Button/Checkbox click
+    EVT_INIT_DIALOG(PropPageEmitterParticle::OnInitDialog)
 wxEND_EVENT_TABLE()
 
 PropPageEmitterParticle::PropPageEmitterParticle(wxWindow *parent)
@@ -63,12 +64,14 @@ void PropPageEmitterParticle::OnMaxParticlesCheck(wxCommandEvent &event)
 {
     // TODO: Implement OnMaxParticlesCheck
     // Control ID: IDC_MAX_PARTICLES_CHECK
+}
+
 
 // ============================================================================
 // Phase 2.5: Dialog Infrastructure (Auto-generated)
 // ============================================================================
 
-void PropPageEmitterParticleBase::OnInitDialog(wxInitDialogEvent& event)
+void PropPageEmitterParticle::OnInitDialog(wxInitDialogEvent& event)
 {
     // Initialize controls after they're created
     // Allow the base class to process this message
@@ -96,19 +99,17 @@ void PropPageEmitterParticleBase::OnInitDialog(wxInitDialogEvent& event)
     event.Skip();
 }
 
-bool PropPageEmitterParticleBase::TransferDataToWindow()
+bool PropPageEmitterParticle::TransferDataToWindow()
 {
     // Data is transferred in OnInitDialog for this dialog
     return true;
 }
 
-bool PropPageEmitterParticleBase::TransferDataFromWindow()
+bool PropPageEmitterParticle::TransferDataFromWindow()
 {
     // Extract data from controls and apply to business logic
 
     // TODO: Extract data from controls
 
     return true;
-}
-
 }

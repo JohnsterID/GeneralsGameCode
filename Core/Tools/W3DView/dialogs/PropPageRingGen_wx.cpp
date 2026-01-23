@@ -29,6 +29,7 @@ EVT_BUTTON(XRCID("IDC_BROWSE_BUTTON"), PropPageRingGen::OnBrowseButton)  // Butt
     EVT_TEXT(XRCID("IDC_LIFETIME_EDIT"), PropPageRingGen::OnChangeLifetimeEdit)  // Text control change
     EVT_COMBOBOX(XRCID("IDC_SHADER_COMBO"), PropPageRingGen::OnSelchangeShaderCombo)  // Combobox selection change
     EVT_TEXT(XRCID("IDC_TEXTURE_TILE_EDIT"), PropPageRingGen::OnChangeTextureTileEdit)  // Text control change
+    EVT_INIT_DIALOG(PropPageRingGen::OnInitDialog)
 wxEND_EVENT_TABLE()
 
 PropPageRingGen::PropPageRingGen(wxWindow *parent)
@@ -91,12 +92,14 @@ void PropPageRingGen::OnChangeTextureTileEdit(wxCommandEvent &event)
 {
     // TODO: Implement OnChangeTextureTileEdit
     // Control ID: IDC_TEXTURE_TILE_EDIT
+}
+
 
 // ============================================================================
 // Phase 2.5: Dialog Infrastructure (Auto-generated)
 // ============================================================================
 
-void PropPageRingGenBase::OnInitDialog(wxInitDialogEvent& event)
+void PropPageRingGen::OnInitDialog(wxInitDialogEvent& event)
 {
     // Initialize controls after they're created
     // Allow the base class to process this message
@@ -135,19 +138,17 @@ void PropPageRingGenBase::OnInitDialog(wxInitDialogEvent& event)
     event.Skip();
 }
 
-bool PropPageRingGenBase::TransferDataToWindow()
+bool PropPageRingGen::TransferDataToWindow()
 {
     // Data is transferred in OnInitDialog for this dialog
     return true;
 }
 
-bool PropPageRingGenBase::TransferDataFromWindow()
+bool PropPageRingGen::TransferDataFromWindow()
 {
     // Extract data from controls and apply to business logic
 
     // TODO: Extract data from controls
 
     return true;
-}
-
 }

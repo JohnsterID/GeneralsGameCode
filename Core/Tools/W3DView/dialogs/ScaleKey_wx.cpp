@@ -23,7 +23,7 @@
 #include <wx/spinbutt.h>
 
 wxBEGIN_EVENT_TABLE(ScaleKey, ScaleKeyBase)
-
+    EVT_INIT_DIALOG(ScaleKey::OnInitDialog)
 wxEND_EVENT_TABLE()
 
 ScaleKey::ScaleKey(wxWindow *parent)
@@ -46,12 +46,14 @@ void ScaleKey::OnCancel(wxCommandEvent &event)
 {
     // Close without saving
     EndModal(wxID_CANCEL);
+}
+
 
 // ============================================================================
 // Phase 2.5: Dialog Infrastructure (Auto-generated)
 // ============================================================================
 
-void ScaleKeyBase::OnInitDialog(wxInitDialogEvent& event)
+void ScaleKey::OnInitDialog(wxInitDialogEvent& event)
 {
     // Initialize controls after they're created
     // TODO: Convert: m_ScaleSpin.SetRange (1, 10000);
@@ -66,13 +68,13 @@ void ScaleKeyBase::OnInitDialog(wxInitDialogEvent& event)
     event.Skip();
 }
 
-bool ScaleKeyBase::TransferDataToWindow()
+bool ScaleKey::TransferDataToWindow()
 {
     // Data is transferred in OnInitDialog for this dialog
     return true;
 }
 
-bool ScaleKeyBase::TransferDataFromWindow()
+bool ScaleKey::TransferDataFromWindow()
 {
     // Extract data from controls and apply to business logic
 
@@ -93,6 +95,4 @@ bool ScaleKeyBase::TransferDataFromWindow()
     // TODO: Convert: return ;
 
     return true;
-}
-
 }

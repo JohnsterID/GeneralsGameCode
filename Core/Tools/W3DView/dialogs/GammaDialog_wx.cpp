@@ -23,6 +23,7 @@
 
 wxBEGIN_EVENT_TABLE(GammaDialog, GammaDialogBase)
 EVT_SLIDER(XRCID("IDC_GAMMA_SLIDER"), GammaDialog::OnReleasedcaptureGammaSlider)  // Slider capture released
+    EVT_INIT_DIALOG(GammaDialog::OnInitDialog)
 wxEND_EVENT_TABLE()
 
 GammaDialog::GammaDialog(wxWindow *parent)
@@ -55,12 +56,14 @@ void GammaDialog::OnReleasedcaptureGammaSlider(wxCommandEvent &event)
 {
     // TODO: Implement OnReleasedcaptureGammaSlider
     // Control ID: IDC_GAMMA_SLIDER
+}
+
 
 // ============================================================================
 // Phase 2.5: Dialog Infrastructure (Auto-generated)
 // ============================================================================
 
-void GammaDialogBase::OnInitDialog(wxInitDialogEvent& event)
+void GammaDialog::OnInitDialog(wxInitDialogEvent& event)
 {
     // Initialize controls after they're created
     // TODO: Add extra initialization here
@@ -89,13 +92,13 @@ void GammaDialogBase::OnInitDialog(wxInitDialogEvent& event)
     event.Skip();
 }
 
-bool GammaDialogBase::TransferDataToWindow()
+bool GammaDialog::TransferDataToWindow()
 {
     // Data is transferred in OnInitDialog for this dialog
     return true;
 }
 
-bool GammaDialogBase::TransferDataFromWindow()
+bool GammaDialog::TransferDataFromWindow()
 {
     // Extract data from controls and apply to business logic
 
@@ -107,6 +110,4 @@ bool GammaDialogBase::TransferDataFromWindow()
     // TODO: Convert: DX8Wrapper::Set_Gamma(m_gamma/10.0f,0.0f,1.0f);
 
     return true;
-}
-
 }

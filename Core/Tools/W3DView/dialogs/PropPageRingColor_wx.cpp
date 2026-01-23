@@ -23,6 +23,7 @@
 
 wxBEGIN_EVENT_TABLE(PropPageRingColor, PropPageRingColorBase)
 EVT_WINDOW_DESTROY(PropPageRingColor::OnDestroy)  // Window destruction
+    EVT_INIT_DIALOG(PropPageRingColor::OnInitDialog)
 wxEND_EVENT_TABLE()
 
 PropPageRingColor::PropPageRingColor(wxWindow *parent)
@@ -54,12 +55,14 @@ void PropPageRingColor::OnCancel(wxCommandEvent &event)
 void PropPageRingColor::OnDestroy(wxWindowDestroyEvent &event)
 {
     // TODO: Implement OnDestroy
+}
+
 
 // ============================================================================
 // Phase 2.5: Dialog Infrastructure (Auto-generated)
 // ============================================================================
 
-void PropPageRingColorBase::OnInitDialog(wxInitDialogEvent& event)
+void PropPageRingColor::OnInitDialog(wxInitDialogEvent& event)
 {
     // Initialize controls after they're created
     // Allow the base class to process this message
@@ -97,19 +100,17 @@ void PropPageRingColorBase::OnInitDialog(wxInitDialogEvent& event)
     event.Skip();
 }
 
-bool PropPageRingColorBase::TransferDataToWindow()
+bool PropPageRingColor::TransferDataToWindow()
 {
     // Data is transferred in OnInitDialog for this dialog
     return true;
 }
 
-bool PropPageRingColorBase::TransferDataFromWindow()
+bool PropPageRingColor::TransferDataFromWindow()
 {
     // Extract data from controls and apply to business logic
 
     // TODO: Extract data from controls
 
     return true;
-}
-
 }

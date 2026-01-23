@@ -27,6 +27,7 @@ EVT_CHECKBOX(XRCID("IDC_ANIMATION_CHECK"), TextureSettings::OnAnimationCheck)  /
     EVT_BUTTON(XRCID("IDC_BROWSE_BUTTON"), TextureSettings::OnBrowseButton)  // Button/Checkbox click
     EVT_BUTTON(XRCID("IDC_RESTORE"), TextureSettings::OnRestore)  // Button/Checkbox click
     EVT_BUTTON(XRCID("IDC_APPLY"), TextureSettings::OnApply)  // Button/Checkbox click
+    EVT_INIT_DIALOG(TextureSettings::OnInitDialog)
 wxEND_EVENT_TABLE()
 
 TextureSettings::TextureSettings(wxWindow *parent)
@@ -82,12 +83,14 @@ void TextureSettings::OnApply(wxCommandEvent &event)
 {
     // TODO: Implement OnApply
     // Control ID: IDC_APPLY
+}
+
 
 // ============================================================================
 // Phase 2.5: Dialog Infrastructure (Auto-generated)
 // ============================================================================
 
-void TextureSettingsBase::OnInitDialog(wxInitDialogEvent& event)
+void TextureSettings::OnInitDialog(wxInitDialogEvent& event)
 {
     // Initialize controls after they're created
     // Allow the base class to process this message
@@ -114,13 +117,13 @@ void TextureSettingsBase::OnInitDialog(wxInitDialogEvent& event)
     event.Skip();
 }
 
-bool TextureSettingsBase::TransferDataToWindow()
+bool TextureSettings::TransferDataToWindow()
 {
     // Data is transferred in OnInitDialog for this dialog
     return true;
 }
 
-bool TextureSettingsBase::TransferDataFromWindow()
+bool TextureSettings::TransferDataFromWindow()
 {
     // Extract data from controls and apply to business logic
 
@@ -130,6 +133,4 @@ bool TextureSettingsBase::TransferDataFromWindow()
     // TODO: Convert: return ;
 
     return true;
-}
-
 }

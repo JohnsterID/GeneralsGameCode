@@ -25,6 +25,7 @@ wxBEGIN_EVENT_TABLE(PropPageSphereColor, PropPageSphereColorBase)
 EVT_WINDOW_DESTROY(PropPageSphereColor::OnDestroy)  // Window destruction
     EVT_CHECKBOX(XRCID("IDC_OPACITY_VECTOR_CHECK"), PropPageSphereColor::OnOpacityVectorCheck)  // Button/Checkbox click
     EVT_CHECKBOX(XRCID("IDC_INVERT_VECTOR_CHECK"), PropPageSphereColor::OnInvertVectorCheck)  // Button/Checkbox click
+    EVT_INIT_DIALOG(PropPageSphereColor::OnInitDialog)
 wxEND_EVENT_TABLE()
 
 PropPageSphereColor::PropPageSphereColor(wxWindow *parent)
@@ -68,12 +69,14 @@ void PropPageSphereColor::OnInvertVectorCheck(wxCommandEvent &event)
 {
     // TODO: Implement OnInvertVectorCheck
     // Control ID: IDC_INVERT_VECTOR_CHECK
+}
+
 
 // ============================================================================
 // Phase 2.5: Dialog Infrastructure (Auto-generated)
 // ============================================================================
 
-void PropPageSphereColorBase::OnInitDialog(wxInitDialogEvent& event)
+void PropPageSphereColor::OnInitDialog(wxInitDialogEvent& event)
 {
     // Initialize controls after they're created
     // Allow the base class to process this message
@@ -130,19 +133,17 @@ void PropPageSphereColorBase::OnInitDialog(wxInitDialogEvent& event)
     event.Skip();
 }
 
-bool PropPageSphereColorBase::TransferDataToWindow()
+bool PropPageSphereColor::TransferDataToWindow()
 {
     // Data is transferred in OnInitDialog for this dialog
     return true;
 }
 
-bool PropPageSphereColorBase::TransferDataFromWindow()
+bool PropPageSphereColor::TransferDataFromWindow()
 {
     // Extract data from controls and apply to business logic
 
     // TODO: Extract data from controls
 
     return true;
-}
-
 }

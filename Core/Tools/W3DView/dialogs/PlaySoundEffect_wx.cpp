@@ -24,6 +24,7 @@
 wxBEGIN_EVENT_TABLE(PlaySoundEffect, PlaySoundEffectBase)
 EVT_BUTTON(XRCID("IDC_PLAY_SOUND_EFFECT"), PlaySoundEffect::OnPlaySoundEffect)  // Button/Checkbox click
     EVT_BUTTON(XRCID("IDC_STOP_SOUND_EFFECT"), PlaySoundEffect::OnStopSoundEffect)  // Button/Checkbox click
+    EVT_INIT_DIALOG(PlaySoundEffect::OnInitDialog)
 wxEND_EVENT_TABLE()
 
 PlaySoundEffect::PlaySoundEffect(wxWindow *parent)
@@ -62,12 +63,14 @@ void PlaySoundEffect::OnStopSoundEffect(wxCommandEvent &event)
 {
     // TODO: Implement OnStopSoundEffect
     // Control ID: IDC_STOP_SOUND_EFFECT
+}
+
 
 // ============================================================================
 // Phase 2.5: Dialog Infrastructure (Auto-generated)
 // ============================================================================
 
-void PlaySoundEffectBase::OnInitDialog(wxInitDialogEvent& event)
+void PlaySoundEffect::OnInitDialog(wxInitDialogEvent& event)
 {
     // Initialize controls after they're created
     //
@@ -90,19 +93,17 @@ void PlaySoundEffectBase::OnInitDialog(wxInitDialogEvent& event)
     event.Skip();
 }
 
-bool PlaySoundEffectBase::TransferDataToWindow()
+bool PlaySoundEffect::TransferDataToWindow()
 {
     // Data is transferred in OnInitDialog for this dialog
     return true;
 }
 
-bool PlaySoundEffectBase::TransferDataFromWindow()
+bool PlaySoundEffect::TransferDataFromWindow()
 {
     // Extract data from controls and apply to business logic
 
     // TODO: Extract data from controls
 
     return true;
-}
-
 }

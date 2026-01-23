@@ -27,6 +27,7 @@ wxBEGIN_EVENT_TABLE(VolumeRandomizer, VolumeRandomizerBase)
 EVT_CHECKBOX(XRCID("IDC_BOX_RADIO"), VolumeRandomizer::OnBoxRadio)  // Button/Checkbox click
     EVT_CHECKBOX(XRCID("IDC_CYLINDER_RADIO"), VolumeRandomizer::OnCylinderRadio)  // Button/Checkbox click
     EVT_CHECKBOX(XRCID("IDC_SPHERE_RADIO"), VolumeRandomizer::OnSphereRadio)  // Button/Checkbox click
+    EVT_INIT_DIALOG(VolumeRandomizer::OnInitDialog)
 wxEND_EVENT_TABLE()
 
 VolumeRandomizer::VolumeRandomizer(wxWindow *parent)
@@ -71,12 +72,14 @@ void VolumeRandomizer::OnSphereRadio(wxCommandEvent &event)
 {
     // TODO: Implement OnSphereRadio
     // Control ID: IDC_SPHERE_RADIO
+}
+
 
 // ============================================================================
 // Phase 2.5: Dialog Infrastructure (Auto-generated)
 // ============================================================================
 
-void VolumeRandomizerBase::OnInitDialog(wxInitDialogEvent& event)
+void VolumeRandomizer::OnInitDialog(wxInitDialogEvent& event)
 {
     // Initialize controls after they're created
     //
@@ -163,13 +166,13 @@ void VolumeRandomizerBase::OnInitDialog(wxInitDialogEvent& event)
     event.Skip();
 }
 
-bool VolumeRandomizerBase::TransferDataToWindow()
+bool VolumeRandomizer::TransferDataToWindow()
 {
     // Data is transferred in OnInitDialog for this dialog
     return true;
 }
 
-bool VolumeRandomizerBase::TransferDataFromWindow()
+bool VolumeRandomizer::TransferDataFromWindow()
 {
     // Extract data from controls and apply to business logic
 
@@ -245,6 +248,4 @@ bool VolumeRandomizerBase::TransferDataFromWindow()
     // TODO: Convert: return ;
 
     return true;
-}
-
 }

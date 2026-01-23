@@ -25,6 +25,7 @@ wxBEGIN_EVENT_TABLE(AnimatedSoundDialog, AnimatedSoundDialogBase)
 EVT_BUTTON(XRCID("IDC_SOUND_DEFINITION_LIBRARY_BROWSE_BUTTON"), AnimatedSoundDialog::OnSoundDefinitionLibraryBrowseButton)  // Button/Checkbox click
     EVT_BUTTON(XRCID("IDC_SOUND_INI_BROWSE_BUTTON"), AnimatedSoundDialog::OnSoundIniBrowseButton)  // Button/Checkbox click
     EVT_BUTTON(XRCID("IDC_SOUND_PATH_BROWSE_BUTTON"), AnimatedSoundDialog::OnSoundPathBrowseButton)  // Button/Checkbox click
+    EVT_INIT_DIALOG(AnimatedSoundDialog::OnInitDialog)
 wxEND_EVENT_TABLE()
 
 AnimatedSoundDialog::AnimatedSoundDialog(wxWindow *parent)
@@ -69,12 +70,14 @@ void AnimatedSoundDialog::OnSoundPathBrowseButton(wxCommandEvent &event)
 {
     // TODO: Implement OnSoundPathBrowseButton
     // Control ID: IDC_SOUND_PATH_BROWSE_BUTTON
+}
+
 
 // ============================================================================
 // Phase 2.5: Dialog Infrastructure (Auto-generated)
 // ============================================================================
 
-void AnimatedSoundDialogBase::OnInitDialog(wxInitDialogEvent& event)
+void AnimatedSoundDialog::OnInitDialog(wxInitDialogEvent& event)
 {
     // Initialize controls after they're created
     // TODO: Convert: StringClass sound_def_lib_path	= static_cast<const TCHAR*>(theApp.GetProfileString ("Config", "SoundDefLibPath"));
@@ -97,13 +100,13 @@ void AnimatedSoundDialogBase::OnInitDialog(wxInitDialogEvent& event)
     event.Skip();
 }
 
-bool AnimatedSoundDialogBase::TransferDataToWindow()
+bool AnimatedSoundDialog::TransferDataToWindow()
 {
     // Data is transferred in OnInitDialog for this dialog
     return true;
 }
 
-bool AnimatedSoundDialogBase::TransferDataFromWindow()
+bool AnimatedSoundDialog::TransferDataFromWindow()
 {
     // Extract data from controls and apply to business logic
 
@@ -126,6 +129,4 @@ bool AnimatedSoundDialogBase::TransferDataFromWindow()
     // TODO: Convert: return ;
 
     return true;
-}
-
 }

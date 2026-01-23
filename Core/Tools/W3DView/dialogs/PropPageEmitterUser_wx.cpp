@@ -24,6 +24,7 @@
 wxBEGIN_EVENT_TABLE(PropPageEmitterUser, PropPageEmitterUserBase)
 EVT_TEXT(XRCID("IDC_PROGRAMMER_SETTINGS_EDIT"), PropPageEmitterUser::OnChangeProgrammerSettingsEdit)  // Text control change
     EVT_COMBOBOX(XRCID("IDC_TYPE_COMBO"), PropPageEmitterUser::OnSelchangeTypeCombo)  // Combobox selection change
+    EVT_INIT_DIALOG(PropPageEmitterUser::OnInitDialog)
 wxEND_EVENT_TABLE()
 
 PropPageEmitterUser::PropPageEmitterUser(wxWindow *parent)
@@ -62,12 +63,14 @@ void PropPageEmitterUser::OnSelchangeTypeCombo(wxCommandEvent &event)
 {
     // TODO: Implement OnSelchangeTypeCombo
     // Control ID: IDC_TYPE_COMBO
+}
+
 
 // ============================================================================
 // Phase 2.5: Dialog Infrastructure (Auto-generated)
 // ============================================================================
 
-void PropPageEmitterUserBase::OnInitDialog(wxInitDialogEvent& event)
+void PropPageEmitterUser::OnInitDialog(wxInitDialogEvent& event)
 {
     // Initialize controls after they're created
     // Allow the base class to process this message
@@ -86,19 +89,17 @@ void PropPageEmitterUserBase::OnInitDialog(wxInitDialogEvent& event)
     event.Skip();
 }
 
-bool PropPageEmitterUserBase::TransferDataToWindow()
+bool PropPageEmitterUser::TransferDataToWindow()
 {
     // Data is transferred in OnInitDialog for this dialog
     return true;
 }
 
-bool PropPageEmitterUserBase::TransferDataFromWindow()
+bool PropPageEmitterUser::TransferDataFromWindow()
 {
     // Extract data from controls and apply to business logic
 
     // TODO: Extract data from controls
 
     return true;
-}
-
 }

@@ -23,6 +23,7 @@
 
 wxBEGIN_EVENT_TABLE(PropPageRingScale, PropPageRingScaleBase)
 EVT_WINDOW_DESTROY(PropPageRingScale::OnDestroy)  // Window destruction
+    EVT_INIT_DIALOG(PropPageRingScale::OnInitDialog)
 wxEND_EVENT_TABLE()
 
 PropPageRingScale::PropPageRingScale(wxWindow *parent)
@@ -54,12 +55,14 @@ void PropPageRingScale::OnCancel(wxCommandEvent &event)
 void PropPageRingScale::OnDestroy(wxWindowDestroyEvent &event)
 {
     // TODO: Implement OnDestroy
+}
+
 
 // ============================================================================
 // Phase 2.5: Dialog Infrastructure (Auto-generated)
 // ============================================================================
 
-void PropPageRingScaleBase::OnInitDialog(wxInitDialogEvent& event)
+void PropPageRingScale::OnInitDialog(wxInitDialogEvent& event)
 {
     // Initialize controls after they're created
     // Allow the base class to process this message
@@ -203,19 +206,17 @@ void PropPageRingScaleBase::OnInitDialog(wxInitDialogEvent& event)
     event.Skip();
 }
 
-bool PropPageRingScaleBase::TransferDataToWindow()
+bool PropPageRingScale::TransferDataToWindow()
 {
     // Data is transferred in OnInitDialog for this dialog
     return true;
 }
 
-bool PropPageRingScaleBase::TransferDataFromWindow()
+bool PropPageRingScale::TransferDataFromWindow()
 {
     // Extract data from controls and apply to business logic
 
     // TODO: Extract data from controls
 
     return true;
-}
-
 }

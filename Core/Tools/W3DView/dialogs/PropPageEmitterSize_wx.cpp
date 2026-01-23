@@ -23,7 +23,7 @@
 #include <wx/spinbutt.h>
 
 wxBEGIN_EVENT_TABLE(PropPageEmitterSize, PropPageEmitterSizeBase)
-
+    EVT_INIT_DIALOG(PropPageEmitterSize::OnInitDialog)
 wxEND_EVENT_TABLE()
 
 PropPageEmitterSize::PropPageEmitterSize(wxWindow *parent)
@@ -46,12 +46,14 @@ void PropPageEmitterSize::OnCancel(wxCommandEvent &event)
 {
     // Close without saving
     EndModal(wxID_CANCEL);
+}
+
 
 // ============================================================================
 // Phase 2.5: Dialog Infrastructure (Auto-generated)
 // ============================================================================
 
-void PropPageEmitterSizeBase::OnInitDialog(wxInitDialogEvent& event)
+void PropPageEmitterSize::OnInitDialog(wxInitDialogEvent& event)
 {
     // Initialize controls after they're created
     // Allow the base class to process this message
@@ -82,19 +84,17 @@ void PropPageEmitterSizeBase::OnInitDialog(wxInitDialogEvent& event)
     event.Skip();
 }
 
-bool PropPageEmitterSizeBase::TransferDataToWindow()
+bool PropPageEmitterSize::TransferDataToWindow()
 {
     // Data is transferred in OnInitDialog for this dialog
     return true;
 }
 
-bool PropPageEmitterSizeBase::TransferDataFromWindow()
+bool PropPageEmitterSize::TransferDataFromWindow()
 {
     // Extract data from controls and apply to business logic
 
     // TODO: Extract data from controls
 
     return true;
-}
-
 }

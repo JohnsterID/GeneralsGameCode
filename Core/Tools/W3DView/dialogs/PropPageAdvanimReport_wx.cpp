@@ -45,24 +45,24 @@ void PropPageAdvanimReport::OnCancel(wxCommandEvent &event)
 {
     // Close without saving
     EndModal(wxID_CANCEL);
+}
+
 
 // ============================================================================
 // Phase 2.5: Dialog Infrastructure (Auto-generated)
 // ============================================================================
 
-bool PropPageAdvanimReportBase::TransferDataToWindow()
+bool PropPageAdvanimReport::TransferDataToWindow()
 {
     // Data is transferred in OnInitDialog for this dialog
     return true;
 }
 
-bool PropPageAdvanimReportBase::TransferDataFromWindow()
+bool PropPageAdvanimReport::TransferDataFromWindow()
 {
     // Extract data from controls and apply to business logic
 
     // TODO: Extract data from controls
 
     return true;
-}
-
 }

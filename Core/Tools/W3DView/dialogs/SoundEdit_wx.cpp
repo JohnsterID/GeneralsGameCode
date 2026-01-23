@@ -27,6 +27,7 @@ EVT_BUTTON(XRCID("IDC_BROWSE"), SoundEdit::OnBrowse)  // Button/Checkbox click
     EVT_CHECKBOX(XRCID("IDC_3D_RADIO"), SoundEdit::On3DRadio)  // Button/Checkbox click
     EVT_BUTTON(XRCID("IDC_PLAY"), SoundEdit::OnPlay)  // Button/Checkbox click
     EVT_SLIDER(XRCID("IDC_VOLUME_SLIDER"), SoundEdit::OnHscroll)  // Horizontal scroll (slider)
+    EVT_INIT_DIALOG(SoundEdit::OnInitDialog)
 wxEND_EVENT_TABLE()
 
 SoundEdit::SoundEdit(wxWindow *parent)
@@ -82,12 +83,14 @@ void SoundEdit::OnPlay(wxCommandEvent &event)
 void SoundEdit::OnHscroll(wxCommandEvent &event)
 {
     // TODO: Implement OnHscroll
+}
+
 
 // ============================================================================
 // Phase 2.5: Dialog Infrastructure (Auto-generated)
 // ============================================================================
 
-void SoundEditBase::OnInitDialog(wxInitDialogEvent& event)
+void SoundEdit::OnInitDialog(wxInitDialogEvent& event)
 {
     // Initialize controls after they're created
     //
@@ -178,13 +181,13 @@ void SoundEditBase::OnInitDialog(wxInitDialogEvent& event)
     event.Skip();
 }
 
-bool SoundEditBase::TransferDataToWindow()
+bool SoundEdit::TransferDataToWindow()
 {
     // Data is transferred in OnInitDialog for this dialog
     return true;
 }
 
-bool SoundEditBase::TransferDataFromWindow()
+bool SoundEdit::TransferDataFromWindow()
 {
     // Extract data from controls and apply to business logic
 
@@ -251,6 +254,4 @@ bool SoundEditBase::TransferDataFromWindow()
     // TODO: Convert: return ;
 
     return true;
-}
-
 }

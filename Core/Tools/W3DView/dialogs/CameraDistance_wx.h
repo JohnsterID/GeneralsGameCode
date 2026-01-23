@@ -84,11 +84,6 @@ protected:
     bool TransferDataFromWindow() override;
 
 private:
-    // Phase 2.5: Dialog infrastructure
-    void OnInitDialog(wxInitDialogEvent& event);
-    bool TransferDataToWindow() override;
-    bool TransferDataFromWindow() override;
-
     // Phase 2: Event handlers
     void OnOK(wxCommandEvent &event);
     void OnCancel(wxCommandEvent &event);

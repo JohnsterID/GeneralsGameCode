@@ -23,6 +23,7 @@
 
 wxBEGIN_EVENT_TABLE(OpacityVector, OpacityVectorBase)
 EVT_SLIDER(XRCID("IDC_SLIDER_Z"), OpacityVector::OnHscroll)  // Horizontal scroll (slider)
+    EVT_INIT_DIALOG(OpacityVector::OnInitDialog)
 wxEND_EVENT_TABLE()
 
 OpacityVector::OpacityVector(wxWindow *parent)
@@ -54,12 +55,14 @@ void OpacityVector::OnCancel(wxCommandEvent &event)
 void OpacityVector::OnHscroll(wxCommandEvent &event)
 {
     // TODO: Implement OnHscroll
+}
+
 
 // ============================================================================
 // Phase 2.5: Dialog Infrastructure (Auto-generated)
 // ============================================================================
 
-void OpacityVectorBase::OnInitDialog(wxInitDialogEvent& event)
+void OpacityVector::OnInitDialog(wxInitDialogEvent& event)
 {
     // Initialize controls after they're created
     // TODO: Convert: m_OpacityBar = ColorBarClass::Get_Color_Bar (::GetDlgItem (m_hWnd, IDC_OPACITY_BAR));
@@ -130,13 +133,13 @@ void OpacityVectorBase::OnInitDialog(wxInitDialogEvent& event)
     event.Skip();
 }
 
-bool OpacityVectorBase::TransferDataToWindow()
+bool OpacityVector::TransferDataToWindow()
 {
     // Data is transferred in OnInitDialog for this dialog
     return true;
 }
 
-bool OpacityVectorBase::TransferDataFromWindow()
+bool OpacityVector::TransferDataFromWindow()
 {
     // Extract data from controls and apply to business logic
 
@@ -144,6 +147,4 @@ bool OpacityVectorBase::TransferDataFromWindow()
     // TODO: Convert: return ;
 
     return true;
-}
-
 }

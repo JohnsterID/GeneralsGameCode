@@ -23,7 +23,7 @@
 #include <wx/spinbutt.h>
 
 wxBEGIN_EVENT_TABLE(ParticleFrameKey, ParticleFrameKeyBase)
-
+    EVT_INIT_DIALOG(ParticleFrameKey::OnInitDialog)
 wxEND_EVENT_TABLE()
 
 ParticleFrameKey::ParticleFrameKey(wxWindow *parent)
@@ -46,12 +46,14 @@ void ParticleFrameKey::OnCancel(wxCommandEvent &event)
 {
     // Close without saving
     EndModal(wxID_CANCEL);
+}
+
 
 // ============================================================================
 // Phase 2.5: Dialog Infrastructure (Auto-generated)
 // ============================================================================
 
-void ParticleFrameKeyBase::OnInitDialog(wxInitDialogEvent& event)
+void ParticleFrameKey::OnInitDialog(wxInitDialogEvent& event)
 {
     // Initialize controls after they're created
     // TODO: Convert: Initialize_Spinner (m_FrameSpin, m_Frame, -1024, 1024);
@@ -61,19 +63,17 @@ void ParticleFrameKeyBase::OnInitDialog(wxInitDialogEvent& event)
     event.Skip();
 }
 
-bool ParticleFrameKeyBase::TransferDataToWindow()
+bool ParticleFrameKey::TransferDataToWindow()
 {
     // Data is transferred in OnInitDialog for this dialog
     return true;
 }
 
-bool ParticleFrameKeyBase::TransferDataFromWindow()
+bool ParticleFrameKey::TransferDataFromWindow()
 {
     // Extract data from controls and apply to business logic
 
     // TODO: Convert: m_Frame = GetDlgItemFloat(m_hWnd,IDC_FRAME_EDIT);
 
     return true;
-}
-
 }

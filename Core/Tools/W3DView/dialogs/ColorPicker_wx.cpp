@@ -55,24 +55,24 @@ void ColorPicker::OnReset(wxCommandEvent &event)
 {
     // TODO: Implement OnReset
     // Control ID: IDC_RESET
+}
+
 
 // ============================================================================
 // Phase 2.5: Dialog Infrastructure (Auto-generated)
 // ============================================================================
 
-bool ColorPickerBase::TransferDataToWindow()
+bool ColorPicker::TransferDataToWindow()
 {
     // Data is transferred in OnInitDialog for this dialog
     return true;
 }
 
-bool ColorPickerBase::TransferDataFromWindow()
+bool ColorPicker::TransferDataFromWindow()
 {
     // Extract data from controls and apply to business logic
 
     // TODO: Extract data from controls
 
     return true;
-}
-
 }

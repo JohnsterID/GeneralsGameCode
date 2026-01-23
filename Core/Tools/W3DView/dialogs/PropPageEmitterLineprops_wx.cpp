@@ -23,7 +23,7 @@
 #include <wx/spinbutt.h>
 
 wxBEGIN_EVENT_TABLE(PropPageEmitterLineprops, PropPageEmitterLinepropsBase)
-
+    EVT_INIT_DIALOG(PropPageEmitterLineprops::OnInitDialog)
 wxEND_EVENT_TABLE()
 
 PropPageEmitterLineprops::PropPageEmitterLineprops(wxWindow *parent)
@@ -46,12 +46,14 @@ void PropPageEmitterLineprops::OnCancel(wxCommandEvent &event)
 {
     // Close without saving
     EndModal(wxID_CANCEL);
+}
+
 
 // ============================================================================
 // Phase 2.5: Dialog Infrastructure (Auto-generated)
 // ============================================================================
 
-void PropPageEmitterLinepropsBase::OnInitDialog(wxInitDialogEvent& event)
+void PropPageEmitterLineprops::OnInitDialog(wxInitDialogEvent& event)
 {
     // Initialize controls after they're created
     // Set up the spinner ranges
@@ -98,19 +100,17 @@ void PropPageEmitterLinepropsBase::OnInitDialog(wxInitDialogEvent& event)
     event.Skip();
 }
 
-bool PropPageEmitterLinepropsBase::TransferDataToWindow()
+bool PropPageEmitterLineprops::TransferDataToWindow()
 {
     // Data is transferred in OnInitDialog for this dialog
     return true;
 }
 
-bool PropPageEmitterLinepropsBase::TransferDataFromWindow()
+bool PropPageEmitterLineprops::TransferDataFromWindow()
 {
     // Extract data from controls and apply to business logic
 
     // TODO: Extract data from controls
 
     return true;
-}
-
 }

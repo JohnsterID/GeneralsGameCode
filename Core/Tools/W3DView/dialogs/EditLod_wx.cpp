@@ -80,24 +80,24 @@ void EditLod::OnRecalc(wxCommandEvent &event)
 {
     // TODO: Implement OnRecalc
     // Control ID: IDC_RECALC
+}
+
 
 // ============================================================================
 // Phase 2.5: Dialog Infrastructure (Auto-generated)
 // ============================================================================
 
-bool EditLodBase::TransferDataToWindow()
+bool EditLod::TransferDataToWindow()
 {
     // Data is transferred in OnInitDialog for this dialog
     return true;
 }
 
-bool EditLodBase::TransferDataFromWindow()
+bool EditLod::TransferDataFromWindow()
 {
     // Extract data from controls and apply to business logic
 
     // TODO: Extract data from controls
 
     return true;
-}
-
 }

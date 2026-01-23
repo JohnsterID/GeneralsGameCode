@@ -23,7 +23,7 @@
 #include <wx/spinbutt.h>
 
 wxBEGIN_EVENT_TABLE(ParticleSize, ParticleSizeBase)
-
+    EVT_INIT_DIALOG(ParticleSize::OnInitDialog)
 wxEND_EVENT_TABLE()
 
 ParticleSize::ParticleSize(wxWindow *parent)
@@ -46,12 +46,14 @@ void ParticleSize::OnCancel(wxCommandEvent &event)
 {
     // Close without saving
     EndModal(wxID_CANCEL);
+}
+
 
 // ============================================================================
 // Phase 2.5: Dialog Infrastructure (Auto-generated)
 // ============================================================================
 
-void ParticleSizeBase::OnInitDialog(wxInitDialogEvent& event)
+void ParticleSize::OnInitDialog(wxInitDialogEvent& event)
 {
     // Initialize controls after they're created
     // TODO: Convert: Initialize_Spinner (m_SizeSpin, m_Size, 0, 10000);
@@ -60,13 +62,13 @@ void ParticleSizeBase::OnInitDialog(wxInitDialogEvent& event)
     event.Skip();
 }
 
-bool ParticleSizeBase::TransferDataToWindow()
+bool ParticleSize::TransferDataToWindow()
 {
     // Data is transferred in OnInitDialog for this dialog
     return true;
 }
 
-bool ParticleSizeBase::TransferDataFromWindow()
+bool ParticleSize::TransferDataFromWindow()
 {
     // Extract data from controls and apply to business logic
 
@@ -74,6 +76,4 @@ bool ParticleSizeBase::TransferDataFromWindow()
     // TODO: Convert: return ;
 
     return true;
-}
-
 }

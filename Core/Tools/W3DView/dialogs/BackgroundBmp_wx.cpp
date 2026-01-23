@@ -55,24 +55,24 @@ void BackgroundBmp::OnBrowse(wxCommandEvent &event)
 {
     // TODO: Implement OnBrowse
     // Control ID: IDC_BROWSE
+}
+
 
 // ============================================================================
 // Phase 2.5: Dialog Infrastructure (Auto-generated)
 // ============================================================================
 
-bool BackgroundBmpBase::TransferDataToWindow()
+bool BackgroundBmp::TransferDataToWindow()
 {
     // Data is transferred in OnInitDialog for this dialog
     return true;
 }
 
-bool BackgroundBmpBase::TransferDataFromWindow()
+bool BackgroundBmp::TransferDataFromWindow()
 {
     // Extract data from controls and apply to business logic
 
     // TODO: Extract data from controls
 
     return true;
-}
-
 }

@@ -22,7 +22,7 @@
 #include <wx/xrc/xmlres.h>
 
 wxBEGIN_EVENT_TABLE(Opacity, OpacityBase)
-
+    EVT_INIT_DIALOG(Opacity::OnInitDialog)
 wxEND_EVENT_TABLE()
 
 Opacity::Opacity(wxWindow *parent)
@@ -45,12 +45,14 @@ void Opacity::OnCancel(wxCommandEvent &event)
 {
     // Close without saving
     EndModal(wxID_CANCEL);
+}
+
 
 // ============================================================================
 // Phase 2.5: Dialog Infrastructure (Auto-generated)
 // ============================================================================
 
-void OpacityBase::OnInitDialog(wxInitDialogEvent& event)
+void Opacity::OnInitDialog(wxInitDialogEvent& event)
 {
     // Initialize controls after they're created
     // TODO: Convert: m_OpacityBar = ColorBarClass::Get_Color_Bar (::GetDlgItem (m_hWnd, IDC_OPACITY_BAR));
@@ -67,13 +69,13 @@ void OpacityBase::OnInitDialog(wxInitDialogEvent& event)
     event.Skip();
 }
 
-bool OpacityBase::TransferDataToWindow()
+bool Opacity::TransferDataToWindow()
 {
     // Data is transferred in OnInitDialog for this dialog
     return true;
 }
 
-bool OpacityBase::TransferDataFromWindow()
+bool Opacity::TransferDataFromWindow()
 {
     // Extract data from controls and apply to business logic
 
@@ -81,6 +83,4 @@ bool OpacityBase::TransferDataFromWindow()
     // TODO: Convert: return ;
 
     return true;
-}
-
 }

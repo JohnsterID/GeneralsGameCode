@@ -22,7 +22,7 @@
 #include <wx/xrc/xmlres.h>
 
 wxBEGIN_EVENT_TABLE(MakeAggregate, MakeAggregateBase)
-
+    EVT_INIT_DIALOG(MakeAggregate::OnInitDialog)
 wxEND_EVENT_TABLE()
 
 MakeAggregate::MakeAggregate(wxWindow *parent)
@@ -45,12 +45,14 @@ void MakeAggregate::OnCancel(wxCommandEvent &event)
 {
     // Close without saving
     EndModal(wxID_CANCEL);
+}
+
 
 // ============================================================================
 // Phase 2.5: Dialog Infrastructure (Auto-generated)
 // ============================================================================
 
-void MakeAggregateBase::OnInitDialog(wxInitDialogEvent& event)
+void MakeAggregate::OnInitDialog(wxInitDialogEvent& event)
 {
     // Initialize controls after they're created
     // Allow the base class to process this message
@@ -64,13 +66,13 @@ void MakeAggregateBase::OnInitDialog(wxInitDialogEvent& event)
     event.Skip();
 }
 
-bool MakeAggregateBase::TransferDataToWindow()
+bool MakeAggregate::TransferDataToWindow()
 {
     // Data is transferred in OnInitDialog for this dialog
     return true;
 }
 
-bool MakeAggregateBase::TransferDataFromWindow()
+bool MakeAggregate::TransferDataFromWindow()
 {
     // Extract data from controls and apply to business logic
 
@@ -78,6 +80,4 @@ bool MakeAggregateBase::TransferDataFromWindow()
     // TODO: Convert: return ;
 
     return true;
-}
-
 }

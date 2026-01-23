@@ -60,23 +60,21 @@ def extract_methods(phase25_content):
     return methods, includes
 
 def find_insertion_point_cpp(cpp_content):
-    """Find where to insert methods in .cpp file (before final })"""
+    """Find where to insert methods in .cpp file (at the end)"""
     lines = cpp_content.split('\n')
     
-    # Find the last non-empty, non-comment line with }
-    for i in range(len(lines) - 1, -1, -1):
-        line = lines[i].strip()
-        if line == '}' or (line.startswith('}') and not line.startswith('//')):
-            # Check if this is likely the end of a method or the file
-            # Look back to see if there are other methods nearby
-            return i
-    
-    # Fallback: add at the end
+    # Simply insert at the end of the file
+    # This is safest and works for all file structures
     return len(lines)
 
 def add_methods_to_cpp(cpp_path, methods, includes, target_class_name):
     """Add Phase 2.5 methods to _wx.cpp file"""
     content = cpp_path.read_text()
+    
+    # Check if Phase 2.5 methods already exist
+    if '// Phase 2.5: Dialog Infrastructure (Auto-generated)' in content:
+        print(f"  ℹ️  Phase 2.5 methods already exist, skipping")
+        return content
     
     # Replace MFC class names with wx class name in methods
     for method_name, method_code in methods.items():
@@ -131,6 +129,42 @@ def add_declarations_to_header(header_path, methods, class_name):
     """Add method declarations to _wx.h file"""
     content = header_path.read_text()
     
+    # Check if Phase 2.5 declarations already exist
+    if '// Phase 2.5: Dialog infrastructure' in content:
+        print(f"  ℹ️  Phase 2.5 declarations already exist, skipping")
+        return content
+    
+    # Check for individual declarations (in case they exist without the comment)
+    # Need to check for uncommented declarations only
+    needs_declarations = []
+    
+    # Check each line to see if declaration exists and is not commented
+    lines = content.split('\n')
+    
+    has_uncommented_oninit = any(
+        'void OnInitDialog(wxInitDialogEvent& event)' in line and not line.strip().startswith('//')
+        for line in lines
+    )
+    has_uncommented_transfer_to = any(
+        'bool TransferDataToWindow() override' in line and not line.strip().startswith('//')
+        for line in lines
+    )
+    has_uncommented_transfer_from = any(
+        'bool TransferDataFromWindow() override' in line and not line.strip().startswith('//')
+        for line in lines
+    )
+    
+    if 'OnInitDialog' in methods and not has_uncommented_oninit:
+        needs_declarations.append('OnInitDialog')
+    if 'TransferDataToWindow' in methods and not has_uncommented_transfer_to:
+        needs_declarations.append('TransferDataToWindow')
+    if 'TransferDataFromWindow' in methods and not has_uncommented_transfer_from:
+        needs_declarations.append('TransferDataFromWindow')
+    
+    if not needs_declarations:
+        print(f"  ℹ️  All declarations already exist, skipping")
+        return content
+    
     # Find the class definition
     class_match = re.search(rf'class\s+{class_name}\s*:\s*public\s+\w+\s*\{{', content)
     if not class_match:
@@ -157,13 +191,13 @@ def add_declarations_to_header(header_path, methods, class_name):
         insertion_point = class_match.end() + private_match.end()
         new_section = '\n    // Phase 2.5: Dialog infrastructure\n'
     
-    # Generate declarations
+    # Generate declarations only for methods that don't exist
     declarations = []
-    if 'OnInitDialog' in methods:
+    if 'OnInitDialog' in needs_declarations:
         declarations.append('    void OnInitDialog(wxInitDialogEvent& event);')
-    if 'TransferDataToWindow' in methods:
+    if 'TransferDataToWindow' in needs_declarations:
         declarations.append('    bool TransferDataToWindow() override;')
-    if 'TransferDataFromWindow' in methods:
+    if 'TransferDataFromWindow' in needs_declarations:
         declarations.append('    bool TransferDataFromWindow() override;')
     
     if not declarations:
@@ -248,13 +282,27 @@ def integrate_dialog(dialog_name, phase25_dir, dialogs_dir):
         return False
     
     # Extract class name from header
+    # We want the derived class (not the Base class)
+    # The derived class typically comes after the base class and doesn't end with "Base"
     h_content = h_file.read_text()
-    class_match = re.search(r'class\s+(\w+)\s*:\s*public', h_content)
-    if not class_match:
-        print(f"  ❌ Could not find class name in header")
-        return False
     
-    class_name = class_match.group(1)
+    # Find all classes
+    all_classes = re.findall(r'class\s+(\w+)\s*:\s*public', h_content)
+    
+    # Filter out classes ending with "Base"
+    derived_classes = [c for c in all_classes if not c.endswith('Base')]
+    
+    if not derived_classes:
+        # Fallback: use the first class
+        if all_classes:
+            class_name = all_classes[0]
+        else:
+            print(f"  ❌ Could not find class name in header")
+            return False
+    else:
+        # Use the first derived class (not ending with Base)
+        class_name = derived_classes[0]
+    
     print(f"  🎯 Target class: {class_name}")
     
     # Backup original files

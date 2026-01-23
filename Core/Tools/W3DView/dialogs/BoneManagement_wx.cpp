@@ -26,6 +26,7 @@ EVT_TREE_SEL_CHANGED(XRCID("IDC_BONE_TREE"), BoneManagement::OnSelchangedBoneTre
     EVT_COMBOBOX(XRCID("IDC_OBJECT_COMBO"), BoneManagement::OnSelchangeObjectCombo)  // Combobox selection change
     EVT_WINDOW_DESTROY(BoneManagement::OnDestroy)  // Window destruction
     EVT_BUTTON(XRCID("IDC_ATTACH_BUTTON"), BoneManagement::OnAttachButton)  // Button/Checkbox click
+    EVT_INIT_DIALOG(BoneManagement::OnInitDialog)
 wxEND_EVENT_TABLE()
 
 BoneManagement::BoneManagement(wxWindow *parent)
@@ -75,12 +76,14 @@ void BoneManagement::OnAttachButton(wxCommandEvent &event)
 {
     // TODO: Implement OnAttachButton
     // Control ID: IDC_ATTACH_BUTTON
+}
+
 
 // ============================================================================
 // Phase 2.5: Dialog Infrastructure (Auto-generated)
 // ============================================================================
 
-void BoneManagementBase::OnInitDialog(wxInitDialogEvent& event)
+void BoneManagement::OnInitDialog(wxInitDialogEvent& event)
 {
     // Initialize controls after they're created
     // Allow the base class to process this message
@@ -138,13 +141,13 @@ void BoneManagementBase::OnInitDialog(wxInitDialogEvent& event)
     event.Skip();
 }
 
-bool BoneManagementBase::TransferDataToWindow()
+bool BoneManagement::TransferDataToWindow()
 {
     // Data is transferred in OnInitDialog for this dialog
     return true;
 }
 
-bool BoneManagementBase::TransferDataFromWindow()
+bool BoneManagement::TransferDataFromWindow()
 {
     // Extract data from controls and apply to business logic
 
@@ -157,6 +160,4 @@ bool BoneManagementBase::TransferDataFromWindow()
     // TODO: Convert: return ;
 
     return true;
-}
-
 }

@@ -88,24 +88,24 @@ void Displayspeed::On8bit(wxCommandEvent &event)
 {
     // TODO: Implement On8bit
     // Control ID: IDC_8BIT
+}
+
 
 // ============================================================================
 // Phase 2.5: Dialog Infrastructure (Auto-generated)
 // ============================================================================
 
-bool DisplayspeedBase::TransferDataToWindow()
+bool Displayspeed::TransferDataToWindow()
 {
     // Data is transferred in OnInitDialog for this dialog
     return true;
 }
 
-bool DisplayspeedBase::TransferDataFromWindow()
+bool Displayspeed::TransferDataFromWindow()
 {
     // Extract data from controls and apply to business logic
 
     // TODO: Extract data from controls
 
     return true;
-}
-
 }

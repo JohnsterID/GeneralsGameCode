@@ -24,6 +24,7 @@
 
 wxBEGIN_EVENT_TABLE(ParticleBlurTimeKey, ParticleBlurTimeKeyBase)
 EVT_BUTTON(XRCID("IDOK2"), ParticleBlurTimeKey::OnOk2)  // Button/Checkbox click
+    EVT_INIT_DIALOG(ParticleBlurTimeKey::OnInitDialog)
 wxEND_EVENT_TABLE()
 
 ParticleBlurTimeKey::ParticleBlurTimeKey(wxWindow *parent)
@@ -56,12 +57,14 @@ void ParticleBlurTimeKey::OnOk2(wxCommandEvent &event)
 {
     // TODO: Implement OnOk2
     // Control ID: IDOK2
+}
+
 
 // ============================================================================
 // Phase 2.5: Dialog Infrastructure (Auto-generated)
 // ============================================================================
 
-void ParticleBlurTimeKeyBase::OnInitDialog(wxInitDialogEvent& event)
+void ParticleBlurTimeKey::OnInitDialog(wxInitDialogEvent& event)
 {
     // Initialize controls after they're created
     // TODO: Convert: Initialize_Spinner (m_BlurTimeSpin, m_BlurTime, -1024, 1024);
@@ -71,19 +74,17 @@ void ParticleBlurTimeKeyBase::OnInitDialog(wxInitDialogEvent& event)
     event.Skip();
 }
 
-bool ParticleBlurTimeKeyBase::TransferDataToWindow()
+bool ParticleBlurTimeKey::TransferDataToWindow()
 {
     // Data is transferred in OnInitDialog for this dialog
     return true;
 }
 
-bool ParticleBlurTimeKeyBase::TransferDataFromWindow()
+bool ParticleBlurTimeKey::TransferDataFromWindow()
 {
     // Extract data from controls and apply to business logic
 
     // TODO: Extract data from controls
 
     return true;
-}
-
 }

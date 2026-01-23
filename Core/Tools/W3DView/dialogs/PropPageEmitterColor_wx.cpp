@@ -25,6 +25,7 @@
 wxBEGIN_EVENT_TABLE(PropPageEmitterColor, PropPageEmitterColorBase)
 EVT_WINDOW_DESTROY(PropPageEmitterColor::OnDestroy)  // Window destruction
     EVT_SPIN(XRCID("IDC_RED_RANDOM_SPIN"), PropPageEmitterColor::OnDeltaposRedRandomSpin)  // Spin button change
+    EVT_INIT_DIALOG(PropPageEmitterColor::OnInitDialog)
 wxEND_EVENT_TABLE()
 
 PropPageEmitterColor::PropPageEmitterColor(wxWindow *parent)
@@ -62,12 +63,14 @@ void PropPageEmitterColor::OnDeltaposRedRandomSpin(wxSpinEvent &event)
 {
     // TODO: Implement OnDeltaposRedRandomSpin
     // Control ID: IDC_RED_RANDOM_SPIN
+}
+
 
 // ============================================================================
 // Phase 2.5: Dialog Infrastructure (Auto-generated)
 // ============================================================================
 
-void PropPageEmitterColorBase::OnInitDialog(wxInitDialogEvent& event)
+void PropPageEmitterColor::OnInitDialog(wxInitDialogEvent& event)
 {
     // Initialize controls after they're created
     // Allow the base class to process this message
@@ -131,19 +134,17 @@ void PropPageEmitterColorBase::OnInitDialog(wxInitDialogEvent& event)
     event.Skip();
 }
 
-bool PropPageEmitterColorBase::TransferDataToWindow()
+bool PropPageEmitterColor::TransferDataToWindow()
 {
     // Data is transferred in OnInitDialog for this dialog
     return true;
 }
 
-bool PropPageEmitterColorBase::TransferDataFromWindow()
+bool PropPageEmitterColor::TransferDataFromWindow()
 {
     // Extract data from controls and apply to business logic
 
     // TODO: Extract data from controls
 
     return true;
-}
-
 }

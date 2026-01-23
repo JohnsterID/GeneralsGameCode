@@ -24,6 +24,7 @@
 
 wxBEGIN_EVENT_TABLE(PropPageEmitterPhysics, PropPageEmitterPhysicsBase)
 EVT_BUTTON(XRCID("IDC_SPECIFY_VELOCITY_RANDOM"), PropPageEmitterPhysics::OnSpecifyVelocityRandom)  // Button/Checkbox click
+    EVT_INIT_DIALOG(PropPageEmitterPhysics::OnInitDialog)
 wxEND_EVENT_TABLE()
 
 PropPageEmitterPhysics::PropPageEmitterPhysics(wxWindow *parent)
@@ -56,12 +57,14 @@ void PropPageEmitterPhysics::OnSpecifyVelocityRandom(wxCommandEvent &event)
 {
     // TODO: Implement OnSpecifyVelocityRandom
     // Control ID: IDC_SPECIFY_VELOCITY_RANDOM
+}
+
 
 // ============================================================================
 // Phase 2.5: Dialog Infrastructure (Auto-generated)
 // ============================================================================
 
-void PropPageEmitterPhysicsBase::OnInitDialog(wxInitDialogEvent& event)
+void PropPageEmitterPhysics::OnInitDialog(wxInitDialogEvent& event)
 {
     // Initialize controls after they're created
     // Allow the base class to process this message
@@ -108,19 +111,17 @@ void PropPageEmitterPhysicsBase::OnInitDialog(wxInitDialogEvent& event)
     event.Skip();
 }
 
-bool PropPageEmitterPhysicsBase::TransferDataToWindow()
+bool PropPageEmitterPhysics::TransferDataToWindow()
 {
     // Data is transferred in OnInitDialog for this dialog
     return true;
 }
 
-bool PropPageEmitterPhysicsBase::TransferDataFromWindow()
+bool PropPageEmitterPhysics::TransferDataFromWindow()
 {
     // Extract data from controls and apply to business logic
 
     // TODO: Extract data from controls
 
     return true;
-}
-
 }

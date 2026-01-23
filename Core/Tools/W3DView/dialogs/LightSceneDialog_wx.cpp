@@ -89,24 +89,24 @@ void LightSceneDialog::OnAttenuationCheck(wxCommandEvent &event)
 {
     // TODO: Implement OnAttenuationCheck
     // Control ID: IDC_ATTENUATION_CHECK
+}
+
 
 // ============================================================================
 // Phase 2.5: Dialog Infrastructure (Auto-generated)
 // ============================================================================
 
-bool LightSceneDialogBase::TransferDataToWindow()
+bool LightSceneDialog::TransferDataToWindow()
 {
     // Data is transferred in OnInitDialog for this dialog
     return true;
 }
 
-bool LightSceneDialogBase::TransferDataFromWindow()
+bool LightSceneDialog::TransferDataFromWindow()
 {
     // Extract data from controls and apply to business logic
 
     // TODO: Extract data from controls
 
     return true;
-}
-
 }

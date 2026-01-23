@@ -37,6 +37,7 @@ EVT_LIST_ITEM_ACTIVATED(XRCID("IDC_MESH_TEXTURE_LIST_CTRL"), TextureManagment::O
     // MFC: ON_COMMAND(IDC_SMALL, OnSmall)
     // TODO: Map ON_COMMAND manually
     // MFC: ON_COMMAND(IDC_PROPAGATE, OnPropagate)
+    EVT_INIT_DIALOG(TextureManagment::OnInitDialog)
 wxEND_EVENT_TABLE()
 
 TextureManagment::TextureManagment(wxWindow *parent)
@@ -80,12 +81,14 @@ void TextureManagment::OnKeydownMeshTextureListCtrl(wxListEvent &event)
 void TextureManagment::OnDestroy(wxWindowDestroyEvent &event)
 {
     // TODO: Implement OnDestroy
+}
+
 
 // ============================================================================
 // Phase 2.5: Dialog Infrastructure (Auto-generated)
 // ============================================================================
 
-void TextureManagmentBase::OnInitDialog(wxInitDialogEvent& event)
+void TextureManagment::OnInitDialog(wxInitDialogEvent& event)
 {
     // Initialize controls after they're created
     // TODO: Convert: CWaitCursor wait_cursor;
@@ -135,13 +138,13 @@ void TextureManagmentBase::OnInitDialog(wxInitDialogEvent& event)
     event.Skip();
 }
 
-bool TextureManagmentBase::TransferDataToWindow()
+bool TextureManagment::TransferDataToWindow()
 {
     // Data is transferred in OnInitDialog for this dialog
     return true;
 }
 
-bool TextureManagmentBase::TransferDataFromWindow()
+bool TextureManagment::TransferDataFromWindow()
 {
     // Extract data from controls and apply to business logic
 
@@ -149,6 +152,4 @@ bool TextureManagmentBase::TransferDataFromWindow()
     // TODO: Convert: return ;
 
     return true;
-}
-
 }

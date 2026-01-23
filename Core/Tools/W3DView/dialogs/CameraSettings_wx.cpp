@@ -27,6 +27,7 @@ wxBEGIN_EVENT_TABLE(CameraSettings, CameraSettingsBase)
 EVT_CHECKBOX(XRCID("IDC_FOV_CHECK"), CameraSettings::OnFovCheck)  // Button/Checkbox click
     EVT_CHECKBOX(XRCID("IDC_CLIP_PLANE_CHECK"), CameraSettings::OnClipPlaneCheck)  // Button/Checkbox click
     EVT_BUTTON(XRCID("IDC_RESET"), CameraSettings::OnReset)  // Button/Checkbox click
+    EVT_INIT_DIALOG(CameraSettings::OnInitDialog)
 wxEND_EVENT_TABLE()
 
 CameraSettings::CameraSettings(wxWindow *parent)
@@ -71,12 +72,14 @@ void CameraSettings::OnReset(wxCommandEvent &event)
 {
     // TODO: Implement OnReset
     // Control ID: IDC_RESET
+}
+
 
 // ============================================================================
 // Phase 2.5: Dialog Infrastructure (Auto-generated)
 // ============================================================================
 
-void CameraSettingsBase::OnInitDialog(wxInitDialogEvent& event)
+void CameraSettings::OnInitDialog(wxInitDialogEvent& event)
 {
     // Initialize controls after they're created
     // TODO: Convert: CW3DViewDoc *doc				= ::GetCurrentDocument ();
@@ -134,13 +137,13 @@ void CameraSettingsBase::OnInitDialog(wxInitDialogEvent& event)
     event.Skip();
 }
 
-bool CameraSettingsBase::TransferDataToWindow()
+bool CameraSettings::TransferDataToWindow()
 {
     // Data is transferred in OnInitDialog for this dialog
     return true;
 }
 
-bool CameraSettingsBase::TransferDataFromWindow()
+bool CameraSettings::TransferDataFromWindow()
 {
     // Extract data from controls and apply to business logic
 
@@ -215,6 +218,4 @@ bool CameraSettingsBase::TransferDataFromWindow()
     // TODO: Convert: return ;
 
     return true;
-}
-
 }

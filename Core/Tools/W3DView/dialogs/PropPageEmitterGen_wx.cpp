@@ -29,6 +29,7 @@ EVT_BUTTON(XRCID("IDC_BROWSE_BUTTON"), PropPageEmitterGen::OnBrowseButton)  // B
     EVT_TEXT(XRCID("IDC_PARTICLE_LIFETIME_EDIT"), PropPageEmitterGen::OnChangeParticleLifetimeEdit)  // Text control change
     EVT_COMBOBOX(XRCID("IDC_SHADER_COMBO"), PropPageEmitterGen::OnSelchangeShaderCombo)  // Combobox selection change
     EVT_CHECKBOX(XRCID("IDC_PARTICLE_LIFETIME_CHECK"), PropPageEmitterGen::OnParticleLifetimeCheck)  // Button/Checkbox click
+    EVT_INIT_DIALOG(PropPageEmitterGen::OnInitDialog)
 wxEND_EVENT_TABLE()
 
 PropPageEmitterGen::PropPageEmitterGen(wxWindow *parent)
@@ -91,12 +92,14 @@ void PropPageEmitterGen::OnParticleLifetimeCheck(wxCommandEvent &event)
 {
     // TODO: Implement OnParticleLifetimeCheck
     // Control ID: IDC_PARTICLE_LIFETIME_CHECK
+}
+
 
 // ============================================================================
 // Phase 2.5: Dialog Infrastructure (Auto-generated)
 // ============================================================================
 
-void PropPageEmitterGenBase::OnInitDialog(wxInitDialogEvent& event)
+void PropPageEmitterGen::OnInitDialog(wxInitDialogEvent& event)
 {
     // Initialize controls after they're created
     // Allow the base class to process this message
@@ -142,19 +145,17 @@ void PropPageEmitterGenBase::OnInitDialog(wxInitDialogEvent& event)
     event.Skip();
 }
 
-bool PropPageEmitterGenBase::TransferDataToWindow()
+bool PropPageEmitterGen::TransferDataToWindow()
 {
     // Data is transferred in OnInitDialog for this dialog
     return true;
 }
 
-bool PropPageEmitterGenBase::TransferDataFromWindow()
+bool PropPageEmitterGen::TransferDataFromWindow()
 {
     // Extract data from controls and apply to business logic
 
     // TODO: Extract data from controls
 
     return true;
-}
-
 }

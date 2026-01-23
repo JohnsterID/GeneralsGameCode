@@ -92,6 +92,11 @@ private:
 
     wxDECLARE_EVENT_TABLE();
 private:
+    // Phase 2.5: Dialog infrastructure
+    void OnInitDialog(wxInitDialogEvent& event);
+    bool TransferDataToWindow() override;
+    bool TransferDataFromWindow() override;
+
     // Event handlers (Phase 2)
 void OnDestroy(wxWindowDestroyEvent &event);  // Window destruction
     void OnOpacityVectorCheck(wxCommandEvent &event);  // Button/Checkbox click

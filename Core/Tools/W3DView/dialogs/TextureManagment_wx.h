@@ -80,6 +80,11 @@ private:
 
     wxDECLARE_EVENT_TABLE();
 private:
+    // Phase 2.5: Dialog infrastructure
+    void OnInitDialog(wxInitDialogEvent& event);
+    bool TransferDataToWindow() override;
+    bool TransferDataFromWindow() override;
+
     // Event handlers (Phase 2)
 void OnDblclkMeshTextureListCtrl(wxListEvent &event);  // Notification message (needs analysis)
     void OnKeydownMeshTextureListCtrl(wxListEvent &event);  // Notification message (needs analysis)

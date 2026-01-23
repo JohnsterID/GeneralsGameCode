@@ -125,6 +125,11 @@ private:
 
     wxDECLARE_EVENT_TABLE();
 private:
+    // Phase 2.5: Dialog infrastructure
+    void OnInitDialog(wxInitDialogEvent& event);
+    bool TransferDataToWindow() override;
+    bool TransferDataFromWindow() override;
+
     // Event handlers (Phase 2)
 void OnFovCheck(wxCommandEvent &event);  // Button/Checkbox click
     void OnClipPlaneCheck(wxCommandEvent &event);  // Button/Checkbox click

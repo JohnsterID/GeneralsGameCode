@@ -67,10 +67,18 @@ protected:
 class MakeAggregate : public MakeAggregateBase
 {
 public:
+    // MFC: AggregateNameDialogClass(CWnd* pParent = nullptr);
     MakeAggregate(wxWindow *parent);
+    
+    // MFC: AggregateNameDialogClass(UINT resource_id, const CString &def_name, CWnd* pParent = nullptr);
+    MakeAggregate(const wxString& def_name, wxWindow *parent);
     
     // Dialog data (MFC compatibility)
     wxString m_Name;  // Aggregate name from user input
+    
+    // MFC: Public accessors
+    const wxString& Get_Name() const { return m_Name; }
+    void Set_Name(const wxString& name) { m_Name = name; }
 
 protected:
     // Override for data transfer if needed

@@ -26,10 +26,22 @@ wxBEGIN_EVENT_TABLE(MakeAggregate, MakeAggregateBase)
     EVT_INIT_DIALOG(MakeAggregate::OnInitDialog)
 wxEND_EVENT_TABLE()
 
+// MFC: AggregateNameDialogClass(CWnd* pParent)
 MakeAggregate::MakeAggregate(wxWindow *parent)
-    : MakeAggregateBase(parent)
+    : MakeAggregateBase(parent),
+      m_Name("")
 {
     // Initialize dialog
+    // TransferDataToWindow();
+    Centre();
+}
+
+// MFC: AggregateNameDialogClass(UINT resource_id, const CString &def_name, CWnd* pParent)
+MakeAggregate::MakeAggregate(const wxString& def_name, wxWindow *parent)
+    : MakeAggregateBase(parent),
+      m_Name(def_name)
+{
+    // Initialize dialog with default name
     // TransferDataToWindow();
     Centre();
 }

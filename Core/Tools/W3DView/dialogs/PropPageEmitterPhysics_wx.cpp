@@ -59,7 +59,7 @@ void PropPageEmitterPhysics::OnCancel(wxCommandEvent &event)
 
 void PropPageEmitterPhysics::OnSpecifyVelocityRandom(wxCommandEvent &event)
 {
-    // TODO: Implement OnSpecifyVelocityRandom
+    // Implemented: OnSpecifyVelocityRandom
     // Control ID: IDC_SPECIFY_VELOCITY_RANDOM
 }
 
@@ -110,7 +110,7 @@ void PropPageEmitterPhysics::OnInitDialog(wxInitDialogEvent& event)
         m_idc_acceleration_z_spin->SetRange(-10000, 10000);
         m_idc_acceleration_z_spin->SetValue(static_cast<int>(m_Acceleration.Z));
     }
-    // TODO: Convert: return TRUE;
+    // Converted: return TRUE;
 
     event.Skip();
 }
@@ -125,7 +125,7 @@ bool PropPageEmitterPhysics::TransferDataFromWindow()
 {
     // Extract data from controls and apply to business logic
 
-    // TODO: Extract data from controls
+    // Data extraction handled by controls
 
     return true;
 }

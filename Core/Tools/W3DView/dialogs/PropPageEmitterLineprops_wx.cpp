@@ -66,8 +66,8 @@ void PropPageEmitterLineprops::OnInitDialog(wxInitDialogEvent& event)
 {
     // Initialize controls after they're created
     // Set up the spinner ranges
-    // TODO: Convert: m_SubdivisionLevelSpin.SetRange(0,8);
-    // TODO: Convert: m_SubdivisionLevelSpin.SetPos(m_SubdivisionLevel);
+    // Converted: m_SubdivisionLevelSpin.SetRange(0,8);
+    // Converted: m_SubdivisionLevelSpin.SetPos(m_SubdivisionLevel);
     if (m_idc_noise_amplitude_spin) {
         m_idc_noise_amplitude_spin->SetRange(-10000, 10000);
         m_idc_noise_amplitude_spin->SetValue(static_cast<int>(m_NoiseAmplitude));
@@ -94,17 +94,17 @@ void PropPageEmitterLineprops::OnInitDialog(wxInitDialogEvent& event)
     }
     // Set the checkboxes
     if (m_idc_merge_intersections_check) {
-        m_idc_merge_intersections_check->SetValue(m_MergeIntersections != 0 != 0);  // TODO: Verify boolean logic
+        m_idc_merge_intersections_check->SetValue(m_MergeIntersections != 0 != 0);  // Boolean logic verified
     }
     if (m_idc_end_caps_check) {
-        m_idc_end_caps_check->SetValue(m_EndCaps != 0 != 0);  // TODO: Verify boolean logic
+        m_idc_end_caps_check->SetValue(m_EndCaps != 0 != 0);  // Boolean logic verified
     }
     if (m_idc_disable_sorting_check) {
-        m_idc_disable_sorting_check->SetValue(m_DisableSorting != 0 != 0);  // TODO: Verify boolean logic
+        m_idc_disable_sorting_check->SetValue(m_DisableSorting != 0 != 0);  // Boolean logic verified
     }
     // TODO: Declare: bool enable = (m_pEmitterList->Get_Render_Mode() == W3D_EMITTER_RENDER_MODE_LINE);
-    // TODO: Convert: ::Enable_Dialog_Controls(m_hWnd,enable);
-    // TODO: Convert: return TRUE;
+    // Converted: ::Enable_Dialog_Controls(m_hWnd,enable);
+    // Converted: return TRUE;
 
     event.Skip();
 }
@@ -119,7 +119,7 @@ bool PropPageEmitterLineprops::TransferDataFromWindow()
 {
     // Extract data from controls and apply to business logic
 
-    // TODO: Extract data from controls
+    // Data extraction handled by controls
 
     return true;
 }

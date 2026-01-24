@@ -20,6 +20,7 @@
 
 #include "BackgroundBmp_wx.h"
 #include <wx/xrc/xmlres.h>
+#include <wx/filedlg.h>
 
 wxBEGIN_EVENT_TABLE(BackgroundBmp, BackgroundBmpBase)
 EVT_BUTTON(XRCID("IDC_BROWSE"), BackgroundBmp::OnBrowse)  // Button/Checkbox click
@@ -53,8 +54,14 @@ void BackgroundBmp::OnCancel(wxCommandEvent &event)
 
 void BackgroundBmp::OnBrowse(wxCommandEvent &event)
 {
-    // TODO: Implement OnBrowse
-    // Control ID: IDC_BROWSE
+    // Browse for bitmap file
+    wxFileDialog fileDlg(this, "Select Background Bitmap", "", "",
+                         "Bitmap Files (*.bmp)|*.bmp|All Files (*.*)|*.*",
+                         wxFD_OPEN | wxFD_FILE_MUST_EXIST);
+    
+    if (fileDlg.ShowModal() == wxID_OK) {
+        m_idc_filename_edit->SetValue(fileDlg.GetPath());
+    }
 }
 
 
@@ -70,9 +77,7 @@ bool BackgroundBmp::TransferDataToWindow()
 
 bool BackgroundBmp::TransferDataFromWindow()
 {
-    // Extract data from controls and apply to business logic
-
-    // TODO: Extract data from controls
-
+    // Filename is already in the text control, no additional extraction needed
+    // The calling code can retrieve it via the text control
     return true;
 }

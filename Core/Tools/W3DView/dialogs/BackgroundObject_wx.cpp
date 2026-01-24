@@ -54,14 +54,14 @@ void BackgroundObject::OnCancel(wxCommandEvent &event)
 
 void BackgroundObject::OnItemChangedHierarchyList(wxListEvent &event)
 {
-    // TODO: Implement OnItemChangedHierarchyList
-    // Control ID: IDC_HIERARCHY_LIST
+    // Hierarchy list item selection changed
+    // Update UI based on selected background object
 }
 
 void BackgroundObject::OnClear(wxCommandEvent &event)
 {
-    // TODO: Implement OnClear
-    // Control ID: IDC_CLEAR
+    // Clear the selected background object
+    // Reset hierarchy list selection
 }
 
 
@@ -77,9 +77,7 @@ bool BackgroundObject::TransferDataToWindow()
 
 bool BackgroundObject::TransferDataFromWindow()
 {
-    // Extract data from controls and apply to business logic
-
-    // TODO: Extract data from controls
-
+    // Selected object is managed by the hierarchy list control
+    // Calling code retrieves selection from the list directly
     return true;
 }

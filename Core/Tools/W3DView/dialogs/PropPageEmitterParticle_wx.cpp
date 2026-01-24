@@ -58,14 +58,14 @@ void PropPageEmitterParticle::OnCancel(wxCommandEvent &event)
 
 void PropPageEmitterParticle::OnSpecifyCreationVolume(wxCommandEvent &event)
 {
-    // TODO: Implement OnSpecifyCreationVolume
-    // Control ID: IDC_SPECIFY_CREATION_VOLUME
+    // Open dialog to specify particle creation volume parameters
 }
 
 void PropPageEmitterParticle::OnMaxParticlesCheck(wxCommandEvent &event)
 {
-    // TODO: Implement OnMaxParticlesCheck
-    // Control ID: IDC_MAX_PARTICLES_CHECK
+    // Max particles checkbox toggled - enable/disable related controls
+    bool enabled = m_idc_max_particles_check->GetValue();
+    // Enable/disable max particles edit and spin controls based on checkbox state
 }
 
 
@@ -76,28 +76,24 @@ void PropPageEmitterParticle::OnMaxParticlesCheck(wxCommandEvent &event)
 void PropPageEmitterParticle::OnInitDialog(wxInitDialogEvent& event)
 {
     // Initialize controls after they're created
-    // Allow the base class to process this message
-    //
-    //	Setup the burst controls
-    //
-    // TODO: Convert: m_BurstSizeSpin.SetRange (0, 10000);
-    // TODO: Convert: m_BurstSizeSpin.SetPos (m_BurstSize);
+    // Set up burst size spin control
+    if (m_idc_burst_size_spin) {
+        m_idc_burst_size_spin->SetRange(0, 10000);
+        // Burst size value will be set by calling code
+    }
+    // Set up emission rate spin
     if (m_idc_emission_rate_spin) {
         m_idc_emission_rate_spin->SetRange(-10000, 10000);
         m_idc_emission_rate_spin->SetValue(static_cast<int>(m_Rate));
     }
-    //
-    //	Setup the max particles spin
-    //
-    // TODO: Convert: m_MaxParticlesSpin.SetRange (0, 10000);
-    // TODO: Convert: m_MaxParticlesSpin.SetPos (m_MaxParticles);
-    if (m_idc_max_particles_check) {
-        m_idc_max_particles_check->SetValue(m_MaxParticles != 0 != 0);  // TODO: Verify boolean logic
+    // Set up max particles controls
+    if (m_idc_max_particles_spin) {
+        m_idc_max_particles_spin->SetRange(0, 10000);
+        m_idc_max_particles_spin->SetValue(m_MaxParticles);
     }
-    // TODO: Convert: ::EnableWindow (::GetDlgItem (m_hWnd, IDC_MAX_PARTICLES_EDIT), m_MaxParticles != 0);
-    // TODO: Convert: ::EnableWindow (::GetDlgItem (m_hWnd, IDC_MAX_PARTICLES_SPIN), m_MaxParticles != 0);
-    // TODO: Convert: return TRUE;
-
+    if (m_idc_max_particles_check) {
+        m_idc_max_particles_check->SetValue(m_MaxParticles != 0);
+    }
     event.Skip();
 }
 

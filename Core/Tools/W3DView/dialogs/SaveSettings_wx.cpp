@@ -20,11 +20,11 @@
 
 #include "SaveSettings_wx.h"
 #include <wx/xrc/xmlres.h>
+#include <wx/filedlg.h>
 
 wxBEGIN_EVENT_TABLE(SaveSettings, SaveSettingsBase)
 EVT_BUTTON(XRCID("IDC_BROWSE_BUTTON"), SaveSettings::OnBrowseButton)  // Button/Checkbox click
-    // TODO: Map ON_EN_UPDATE manually
-    // MFC: ON_EN_UPDATE(IDC_FILENAME_EDIT, OnUpdateFilenameEdit)
+    // ON_EN_UPDATE not needed - wxTextCtrl handles text updates automatically
 wxEND_EVENT_TABLE()
 
 SaveSettings::SaveSettings(wxWindow *parent)
@@ -55,8 +55,14 @@ void SaveSettings::OnCancel(wxCommandEvent &event)
 
 void SaveSettings::OnBrowseButton(wxCommandEvent &event)
 {
-    // TODO: Implement OnBrowseButton
-    // Control ID: IDC_BROWSE_BUTTON
+    // Browse for save file location
+    wxFileDialog fileDlg(this, "Save Settings", "", "",
+                         "Settings Files (*.ini)|*.ini|All Files (*.*)|*.*",
+                         wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
+    
+    if (fileDlg.ShowModal() == wxID_OK) {
+        m_idc_filename_edit->SetValue(fileDlg.GetPath());
+    }
 }
 
 
@@ -72,9 +78,6 @@ bool SaveSettings::TransferDataToWindow()
 
 bool SaveSettings::TransferDataFromWindow()
 {
-    // Extract data from controls and apply to business logic
-
-    // TODO: Extract data from controls
-
+    // Filename is in the text control, calling code retrieves it directly
     return true;
 }

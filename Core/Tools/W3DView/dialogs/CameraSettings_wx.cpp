@@ -301,70 +301,116 @@ bool CameraSettings::TransferDataToWindow()
 
 bool CameraSettings::TransferDataFromWindow()
 {
-    // Extract data from controls and apply to business logic
-
-    // TODO: Convert: CW3DViewDoc *doc				= ::GetCurrentDocument ();
-    // TODO: Convert: CGraphicView *graphic_view = doc->GetGraphicView ();
-    // TODO: Convert: CameraClass *camera			= graphic_view->GetCamera ();
-    // TODO: Convert: bool manual_fov		= (SendDlgItemMessage (IDC_FOV_CHECK, BM_GETCHECK) == 1);
-    // TODO: Convert: bool manual_planes	= (SendDlgItemMessage (IDC_CLIP_PLANE_CHECK, BM_GETCHECK) == 1);
-    // TODO: Phase 3 - Apply settings to document/camera when available
-    // doc->Set_Manual_FOV(manual_fov);
-    // doc->Set_Manual_Clip_Planes(manual_planes);
+    // MFC: CW3DViewDoc *doc                             = ::GetCurrentDocument ();
+    // MFC: CGraphicView *graphic_view = doc->GetGraphicView ();
+    // MFC: CameraClass *camera                  = graphic_view->GetCamera ();
     
-    // Extract FOV values
-    double hfov_value, vfov_value;
-    if (m_idc_hfov_edit && m_idc_hfov_edit->GetValue().ToDouble(&hfov_value)) {
-        // TODO: Phase 3 - camera->Set_View_Plane(DEG_TO_RAD(hfov_value), ...)
-    } else {
-        wxMessageBox("Please enter a valid horizontal FOV value", "Invalid Input", 
-                     wxOK | wxICON_ERROR, this);
+    W3DViewDoc *doc = GetCurrentDocument_wx();
+    if (!doc)
+    {
+        wxLogError("Cannot apply camera settings: No document available");
         return false;
     }
     
-    if (m_idc_vfov_edit && m_idc_vfov_edit->GetValue().ToDouble(&vfov_value)) {
-        // TODO: Phase 3 - camera->Set_View_Plane(..., DEG_TO_RAD(vfov_value))
-    } else {
-        wxMessageBox("Please enter a valid vertical FOV value", "Invalid Input", 
-                     wxOK | wxICON_ERROR, this);
+    CGraphicView *graphic_view = doc->GetGraphicView();
+    if (!graphic_view)
+    {
+        wxLogError("Cannot apply camera settings: No graphic view available");
         return false;
     }
     
-    // Extract clip plane values
-    double znear_value, zfar_value;
-    if (m_idc_near_clip_edit && m_idc_near_clip_edit->GetValue().ToDouble(&znear_value)) {
-        // TODO: Phase 3 - camera->Set_Clip_Planes(znear_value, ...)
-    } else {
-        wxMessageBox("Please enter a valid near clip plane value", "Invalid Input", 
-                     wxOK | wxICON_ERROR, this);
+    CameraClass *camera = graphic_view->GetCamera();
+    if (!camera)
+    {
+        wxLogError("Cannot apply camera settings: No camera available");
         return false;
     }
     
-    if (m_idc_far_clip_edit && m_idc_far_clip_edit->GetValue().ToDouble(&zfar_value)) {
-        // TODO: Phase 3 - camera->Set_Clip_Planes(..., zfar_value)
-    } else {
-        wxMessageBox("Please enter a valid far clip plane value", "Invalid Input", 
-                     wxOK | wxICON_ERROR, this);
-        return false;
+    // MFC: bool manual_fov         = (SendDlgItemMessage (IDC_FOV_CHECK, BM_GETCHECK) == 1);
+    // MFC: bool manual_planes      = (SendDlgItemMessage (IDC_CLIP_PLANE_CHECK, BM_GETCHECK) == 1);
+    
+    bool manual_fov = m_idc_fov_check->GetValue();
+    bool manual_planes = m_idc_clip_plane_check->GetValue();
+    
+    // MFC: doc->Set_Manual_FOV (manual_fov);
+    // MFC: doc->Set_Manul_Clip_Planes (manual_planes);
+    doc->Set_Manual_FOV(manual_fov);
+    doc->Set_Manul_Clip_Planes(manual_planes);  // Note: MFC typo preserved
+    
+    // MFC: if (manual_fov == false) {
+    // MFC:     graphic_view->Reset_FOV ();
+    // MFC: } else {
+    // MFC:     //
+    // MFC:     //      Update the camera's FOV
+    // MFC:     //
+    // MFC:     float hfov_deg = ::GetDlgItemFloat (m_hWnd, IDC_HFOV_EDIT);
+    // MFC:     float vfov_deg = ::GetDlgItemFloat (m_hWnd, IDC_VFOV_EDIT);
+    // MFC:     camera->Set_View_Plane (DEG_TO_RAD (hfov_deg), DEG_TO_RAD (vfov_deg));
+    // MFC: }
+    
+    if (manual_fov == false)
+    {
+        graphic_view->Reset_FOV();
     }
-    // TODO: Convert: doc->Save_Camera_Settings ();
-    // TODO: Convert: //
-    // TODO: Convert: // Update the fog settings. The fog near clip plane should always be equal
-    // TODO: Convert: // to the camera near clip plane, but the fog far clip plane is scene
-    // TODO: Convert: // dependent. We will be sure to modify only the near clip plane here.
-    // TODO: Convert: //
-    // TODO: Convert: float fog_near, fog_far;
-    // TODO: Convert: doc->GetScene()->Get_Fog_Range(&fog_near, &fog_far);
-    // TODO: Convert: doc->GetScene()->Set_Fog_Range(znear, fog_far);
-    // TODO: Convert: doc->GetScene()->Recalculate_Fog_Planes();
-    // TODO: Convert: //
-    // TODO: Convert: //	Refresh the camera settings
-    // TODO: Convert: //
-    // TODO: Convert: RenderObjClass *render_obj = doc->GetDisplayedObject ();
-    // TODO: Convert: if (render_obj != nullptr) {
-    // TODO: Convert: graphic_view->Reset_Camera_To_Display_Object (*render_obj);
-    // TODO: Convert: }
-    // TODO: Convert: return ;
-
-    return true;
+    else
+    {
+        // Update the camera's FOV from manual values
+        float hfov_deg = GetDlgItemFloat(m_idc_hfov_edit);
+        float vfov_deg = GetDlgItemFloat(m_idc_vfov_edit);
+        camera->Set_View_Plane(DEG_TO_RAD(hfov_deg), DEG_TO_RAD(vfov_deg));
+    }
+    
+    // MFC: //
+    // MFC: //      Update the camera's clip planes
+    // MFC: //
+    // MFC: float znear = ::GetDlgItemFloat (m_hWnd, IDC_NEAR_CLIP_EDIT);
+    // MFC: float zfar = ::GetDlgItemFloat (m_hWnd, IDC_FAR_CLIP_EDIT);
+    // MFC: camera->Set_Clip_Planes (znear, zfar);
+    // MFC: doc->Save_Camera_Settings ();
+    
+    float znear = GetDlgItemFloat(m_idc_near_clip_edit);
+    float zfar = GetDlgItemFloat(m_idc_far_clip_edit);
+    camera->Set_Clip_Planes(znear, zfar);
+    
+    // TODO: Phase 4.2 - Implement Save_Camera_Settings() in W3DViewDoc
+    // This saves settings to registry/config. For now, settings are applied but not persisted.
+    // doc->Save_Camera_Settings();
+    
+    // MFC: //
+    // MFC: // Update the fog settings. The fog near clip plane should always be equal
+    // MFC: // to the camera near clip plane, but the fog far clip plane is scene
+    // MFC: // dependent. We will be sure to modify only the near clip plane here.
+    // MFC: //
+    // MFC: float fog_near, fog_far;
+    // MFC: doc->GetScene()->Get_Fog_Range(&fog_near, &fog_far);
+    // MFC: doc->GetScene()->Set_Fog_Range(znear, fog_far);
+    // MFC: doc->GetScene()->Recalculate_Fog_Planes();
+    
+    ViewerSceneClass *scene = doc->GetScene();
+    if (scene)
+    {
+        float fog_near, fog_far;
+        scene->Get_Fog_Range(&fog_near, &fog_far);
+        scene->Set_Fog_Range(znear, fog_far);  // Update near clip to match camera
+        scene->Recalculate_Fog_Planes();
+    }
+    
+    // MFC: //
+    // MFC: //      Refresh the camera settings
+    // MFC: //
+    // MFC: RenderObjClass *render_obj = doc->GetDisplayedObject ();
+    // MFC: if (render_obj != nullptr) {
+    // MFC:     graphic_view->Reset_Camera_To_Display_Object (*render_obj);
+    // MFC: }
+    
+    RenderObjClass *render_obj = doc->GetDisplayedObject();
+    if (render_obj != nullptr)
+    {
+        graphic_view->Reset_Camera_To_Display_Object(*render_obj);
+    }
+    
+    // MFC: CDialog::OnOK ();
+    // MFC: return ;
+    
+    return true;  // Success
 }

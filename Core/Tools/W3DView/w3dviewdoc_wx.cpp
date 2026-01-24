@@ -48,6 +48,7 @@ wxIMPLEMENT_DYNAMIC_CLASS(W3DViewDoc, wxDocument);
 W3DViewDoc::W3DViewDoc()
     : m_scene(nullptr)
     , m_currentObject(nullptr)
+    , m_sceneLight(nullptr)  // Phase 4: Initialize scene light
     , m_backgroundColor(0.0f, 0.0f, 0.0f)  // Black by default
     , m_manualFOV(false)
     , m_manualClipPlanes(false)
@@ -56,6 +57,11 @@ W3DViewDoc::W3DViewDoc()
 
 W3DViewDoc::~W3DViewDoc()
 {
+    // Phase 4: Clean up scene light (MFC: deletes light in scene destructor)
+    // Note: Light is added to scene via Add_Render_Object, so scene owns it
+    // We just need to null our pointer
+    m_sceneLight = nullptr;
+    
     if (m_scene)
     {
         delete m_scene;
@@ -70,6 +76,19 @@ bool W3DViewDoc::OnNewDocument()
 
     // Phase 3A.3: Create scene (EngineString + wwstring.h fix enables this)
     m_scene = new ViewerSceneClass();
+    
+    // TODO: Phase 4 - Create and initialize scene light (MFC: W3DViewDoc.cpp lines 374-390)
+    // m_sceneLight = new LightClass;
+    // m_sceneLight->Set_Position(Vector3(0, 5000, 3000));
+    // m_sceneLight->Set_Intensity(1.0F);
+    // m_sceneLight->Set_Force_Visible(true);
+    // m_sceneLight->Set_Flag(LightClass::NEAR_ATTENUATION, false);
+    // m_sceneLight->Set_Far_Attenuation_Range(1000000, 1000000);
+    // m_sceneLight->Set_Ambient(Vector3(0, 0, 0));
+    // m_sceneLight->Set_Diffuse(Vector3(1, 1, 1));
+    // m_sceneLight->Set_Specular(Vector3(1, 1, 1));
+    // m_scene->Add_Render_Object(m_sceneLight);
+    
     return true;
 }
 
@@ -139,6 +158,7 @@ bool W3DViewDoc::OnCloseDocument()
         m_scene = nullptr;
     }
     m_currentObject = nullptr;
+    m_sceneLight = nullptr;  // Phase 4: Clear scene light pointer (owned by scene)
 
     return wxDocument::OnCloseDocument();
 }

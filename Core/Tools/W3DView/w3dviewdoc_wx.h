@@ -40,6 +40,7 @@ class ViewerSceneClass;
 class RenderObjClass;
 class AssetInfoClass;
 class CGraphicView;
+class LightClass;
 
 class W3DViewDoc : public wxDocument
 {
@@ -58,6 +59,9 @@ public:
     RenderObjClass *GetCurrentObject() { return m_currentObject; }
     RenderObjClass *GetDisplayedObject() { return m_currentObject; }  // Alias for MFC compatibility
     void SetCurrentObject(RenderObjClass *obj) { m_currentObject = obj; }
+    
+    // Phase 4: Scene light accessor (MFC: GetSceneLight)
+    LightClass *GetSceneLight() { return m_sceneLight; }
 
     AssetInfoClass *GetAssetInfo(int index);
     int GetAssetCount() const;
@@ -93,6 +97,7 @@ private:
     // Scene and object data
     ViewerSceneClass *m_scene;
     RenderObjClass *m_currentObject;
+    LightClass *m_sceneLight;  // Phase 4: Scene light (MFC: m_pCSceneLight)
 
     // Phase 3A: Dialog settings storage
     Vector3 m_backgroundColor;

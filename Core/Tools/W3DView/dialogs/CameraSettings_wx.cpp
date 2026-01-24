@@ -59,14 +59,38 @@ void CameraSettings::OnCancel(wxCommandEvent &event)
 
 void CameraSettings::OnFovCheck(wxCommandEvent &event)
 {
-    // TODO: Implement OnFovCheck
-    // Control ID: IDC_FOV_CHECK
+    // MFC: bool manual_fov = (SendDlgItemMessage (IDC_FOV_CHECK, BM_GETCHECK) == 1);
+    // MFC: ::EnableWindow (m_VFOVSpin, manual_fov);
+    // MFC: ::EnableWindow (m_HFOVSpin, manual_fov);
+    // MFC: ::EnableWindow (m_LensSpin, manual_fov);
+    // MFC: ::EnableWindow (::GetDlgItem (m_hWnd, IDC_VFOV_EDIT), manual_fov);
+    // MFC: ::EnableWindow (::GetDlgItem (m_hWnd, IDC_HFOV_EDIT), manual_fov);
+    // MFC: ::EnableWindow (::GetDlgItem (m_hWnd, IDC_LENS_EDIT), manual_fov);
+    
+    bool manual_fov = m_idc_fov_check->GetValue();
+    
+    m_idc_vfov_spin->Enable(manual_fov);
+    m_idc_hfov_spin->Enable(manual_fov);
+    m_idc_lens_spin->Enable(manual_fov);
+    m_idc_vfov_edit->Enable(manual_fov);
+    m_idc_hfov_edit->Enable(manual_fov);
+    m_idc_lens_edit->Enable(manual_fov);
 }
 
 void CameraSettings::OnClipPlaneCheck(wxCommandEvent &event)
 {
-    // TODO: Implement OnClipPlaneCheck
-    // Control ID: IDC_CLIP_PLANE_CHECK
+    // MFC: bool manual_planes = (SendDlgItemMessage (IDC_CLIP_PLANE_CHECK, BM_GETCHECK) == 1);
+    // MFC: ::EnableWindow (m_NearClipSpin, manual_planes);
+    // MFC: ::EnableWindow (m_FarClipSpin, manual_planes);
+    // MFC: ::EnableWindow (::GetDlgItem (m_hWnd, IDC_NEAR_CLIP_EDIT), manual_planes);
+    // MFC: ::EnableWindow (::GetDlgItem (m_hWnd, IDC_FAR_CLIP_EDIT), manual_planes);
+    
+    bool manual_planes = m_idc_clip_plane_check->GetValue();
+    
+    m_idc_near_clip_spin->Enable(manual_planes);
+    m_idc_far_clip_spin->Enable(manual_planes);
+    m_idc_near_clip_edit->Enable(manual_planes);
+    m_idc_far_clip_edit->Enable(manual_planes);
 }
 
 void CameraSettings::OnReset(wxCommandEvent &event)
@@ -145,7 +169,12 @@ void CameraSettings::OnInitDialog(wxInitDialogEvent& event)
         m_idc_lens_spin->SetValue(static_cast<int>(lens));
     }
     
-    // TODO: Phase 3 - Implement OnFovCheck() and OnClipPlaneCheck()
+    // MFC: OnFovCheck();
+    // MFC: OnClipPlaneCheck();
+    // Set initial enable/disable state for controls based on checkboxes
+    wxCommandEvent dummy_event;
+    OnFovCheck(dummy_event);
+    OnClipPlaneCheck(dummy_event);
 
     event.Skip();
 }

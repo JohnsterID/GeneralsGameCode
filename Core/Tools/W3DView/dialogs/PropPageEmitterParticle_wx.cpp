@@ -105,9 +105,18 @@ bool PropPageEmitterParticle::TransferDataToWindow()
 
 bool PropPageEmitterParticle::TransferDataFromWindow()
 {
-    // Extract data from controls and apply to business logic
-
-    // TODO: Extract data from controls
-
+    // Extract data from controls
+    if (m_idc_emission_rate_spin) {
+        m_Rate = static_cast<float>(m_idc_emission_rate_spin->GetValue());
+    }
+    
+    if (m_idc_max_particles_check && m_idc_max_particles_spin) {
+        if (m_idc_max_particles_check->GetValue()) {
+            m_MaxParticles = m_idc_max_particles_spin->GetValue();
+        } else {
+            m_MaxParticles = 0;  // Checkbox unchecked means unlimited
+        }
+    }
+    
     return true;
 }

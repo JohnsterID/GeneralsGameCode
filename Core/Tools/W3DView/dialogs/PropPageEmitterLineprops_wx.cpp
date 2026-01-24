@@ -102,9 +102,12 @@ void PropPageEmitterLineprops::OnInitDialog(wxInitDialogEvent& event)
     if (m_idc_disable_sorting_check) {
         m_idc_disable_sorting_check->SetValue(m_DisableSorting != 0 != 0);  // Boolean logic verified
     }
-    // TODO: Declare: bool enable = (m_pEmitterList->Get_Render_Mode() == W3D_EMITTER_RENDER_MODE_LINE);
-    // Converted: ::Enable_Dialog_Controls(m_hWnd,enable);
-    // Converted: return TRUE;
+    
+    // NOTE: Control enable/disable logic requires m_pEmitterList which should be
+    // set via a SetEmitterList() method before showing the dialog. Implementation:
+    //   bool enable = (m_pEmitterList && m_pEmitterList->Get_Render_Mode() == W3D_EMITTER_RENDER_MODE_LINE);
+    //   Enable(enable);  // Enable/disable all dialog controls
+    // This will be implemented when the emitter list is wired to the dialog.
 
     event.Skip();
 }
@@ -117,9 +120,42 @@ bool PropPageEmitterLineprops::TransferDataToWindow()
 
 bool PropPageEmitterLineprops::TransferDataFromWindow()
 {
-    // Extract data from controls and apply to business logic
-
-    // Data extraction handled by controls
+    // Extract data from controls
+    if (m_idc_noise_amplitude_spin) {
+        m_NoiseAmplitude = static_cast<float>(m_idc_noise_amplitude_spin->GetValue());
+    }
+    
+    if (m_idc_merge_abort_factor_spin) {
+        m_MergeAbortFactor = static_cast<float>(m_idc_merge_abort_factor_spin->GetValue());
+    }
+    
+    if (m_idc_uvtiling_spin) {
+        m_TextureTileFactor = static_cast<float>(m_idc_uvtiling_spin->GetValue());
+    }
+    
+    if (m_idc_upersec_spin) {
+        m_UPerSec = static_cast<float>(m_idc_upersec_spin->GetValue());
+    }
+    
+    if (m_idc_vpersec_spin) {
+        m_VPerSec = static_cast<float>(m_idc_vpersec_spin->GetValue());
+    }
+    
+    if (m_idc_mapmode_combo) {
+        m_MappingMode = m_idc_mapmode_combo->GetSelection();
+    }
+    
+    if (m_idc_merge_intersections_check) {
+        m_MergeIntersections = m_idc_merge_intersections_check->GetValue();
+    }
+    
+    if (m_idc_end_caps_check) {
+        m_EndCaps = m_idc_end_caps_check->GetValue();
+    }
+    
+    if (m_idc_disable_sorting_check) {
+        m_DisableSorting = m_idc_disable_sorting_check->GetValue();
+    }
 
     return true;
 }

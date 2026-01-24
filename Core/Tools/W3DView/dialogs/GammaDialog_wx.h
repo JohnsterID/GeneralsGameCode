@@ -92,5 +92,8 @@ private:
     bool TransferDataFromWindow() override;
 
     // Event handlers (Phase 2)
-void OnReleasedcaptureGammaSlider(wxCommandEvent &event);  // Notification message (needs analysis)
+    void OnReleasedcaptureGammaSlider(wxCommandEvent &event);  // Slider value changed
+
+    // Member data (matches MFC m_gamma)
+    int m_gamma;
 };

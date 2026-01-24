@@ -19,15 +19,21 @@
 // Auto-generated from XRC by xrc2cpp.py
 
 #include "GammaDialog_wx.h"
+// TODO: dx8wrapper.h inclusion causes StringClass/const char* conflict in vertmaterial.h
+// Need to investigate MFC/wxWidgets header ordering or add forward declarations
+// #include "dx8wrapper.h"
 #include <wx/xrc/xmlres.h>
+#include <wx/slider.h>
+#include <wx/config.h>
 
 wxBEGIN_EVENT_TABLE(GammaDialog, GammaDialogBase)
-EVT_SLIDER(XRCID("IDC_GAMMA_SLIDER"), GammaDialog::OnReleasedcaptureGammaSlider)  // Slider capture released
+EVT_SLIDER(XRCID("IDC_GAMMA_SLIDER"), GammaDialog::OnReleasedcaptureGammaSlider)  // Slider value changed
     EVT_INIT_DIALOG(GammaDialog::OnInitDialog)
 wxEND_EVENT_TABLE()
 
 GammaDialog::GammaDialog(wxWindow *parent)
-    : GammaDialogBase(parent)
+    : GammaDialogBase(parent),
+      m_gamma(10)
 {
     // Initialize dialog
     // TransferDataToWindow();
@@ -54,8 +60,17 @@ void GammaDialog::OnCancel(wxCommandEvent &event)
 
 void GammaDialog::OnReleasedcaptureGammaSlider(wxCommandEvent &event)
 {
-    // TODO: Implement OnReleasedcaptureGammaSlider
-    // Control ID: IDC_GAMMA_SLIDER
+    // Update gamma preview when slider moves
+    // MFC: m_gamma = m_gammaslider.GetPos(); DX8Wrapper::Set_Gamma(...); SetDlgItemText(...)
+    m_gamma = m_idc_gamma_slider->GetValue();
+    
+    // Apply gamma immediately for preview
+    // TODO: Re-enable after fixing dx8wrapper.h include issue
+    // DX8Wrapper::Set_Gamma(m_gamma / 10.0f, 0.0f, 1.0f);
+    
+    // Update display text
+    wxString gamma_text = wxString::Format("%3.2f", m_gamma / 10.0f);
+    m_idc_gamma_display->SetLabel(gamma_text);
 }
 
 
@@ -66,36 +81,29 @@ void GammaDialog::OnReleasedcaptureGammaSlider(wxCommandEvent &event)
 void GammaDialog::OnInitDialog(wxInitDialogEvent& event)
 {
     // Initialize controls after they're created
-    // TODO: Add extra initialization here
-    // Load gamma setting from config (TODO: Phase 3 - use wxConfig)
-    // For now, use default value
-    int m_gamma = 10;  // AfxGetApp()->GetProfileInt("Config", "Gamma", 10);
+    // MFC: m_gamma = AfxGetApp()->GetProfileInt("Config", "Gamma", 10);
+    wxConfig config("W3DView");
+    m_gamma = config.Read("/Config/Gamma", 10L);
+    
     if (m_gamma < 10) m_gamma = 10;
     if (m_gamma > 30) m_gamma = 30;
     
     // Setup gamma slider
-    if (m_idc_gamma_slider) {
-        m_idc_gamma_slider->SetRange(10, 30);
-        m_idc_gamma_slider->SetValue(m_gamma);
-    }
+    m_idc_gamma_slider->SetRange(10, 30);
+    m_idc_gamma_slider->SetValue(m_gamma);
     
     // Display current gamma value
     wxString gamma_text = wxString::Format("%3.2f", m_gamma / 10.0f);
-    if (m_idc_gamma_display) {
-        m_idc_gamma_display->SetLabel(gamma_text);  // wxStaticText uses SetLabel()
-    }
+    m_idc_gamma_display->SetLabel(gamma_text);
     
-    // Setup calibration instructions
+    // Setup calibration instructions (exact MFC text)
     wxString instructions = "Calibration instructions\n";
     instructions += "A. Set Gamma to 1.0 and Monitor Contrast and Brightness to maximum\n";
     instructions += "B. Adjust Monitor Brightness down so Bar 3 is barely visible\n";
     instructions += "C. Adjust Monitor Contrast as preferred but Bars 1,2,3,4 must be distinguishable from each other\n";
     instructions += "D. Set the Gamma using the Slider below so the gray box on the left matches it's checkered surroundings\n";
     instructions += "E. Press OK to save settings";
-    
-    if (m_idc_instructions) {
-        m_idc_instructions->SetLabel(instructions);  // wxStaticText uses SetLabel()
-    }
+    m_idc_instructions->SetLabel(instructions);
 
     event.Skip();
 }
@@ -109,13 +117,22 @@ bool GammaDialog::TransferDataToWindow()
 bool GammaDialog::TransferDataFromWindow()
 {
     // Extract data from controls and apply to business logic
-
-    // TODO: Convert: // TODO: Add extra validation here
-    // TODO: Convert: m_gamma=m_gammaslider.GetPos();
-    // TODO: Convert: if (m_gamma<10) m_gamma=10;
-    // TODO: Convert: if (m_gamma>30) m_gamma=30;
-    // TODO: Convert: ::AfxGetApp()->WriteProfileInt("Config","Gamma",m_gamma);
-    // TODO: Convert: DX8Wrapper::Set_Gamma(m_gamma/10.0f,0.0f,1.0f);
+    // MFC: m_gamma = m_gammaslider.GetPos();
+    m_gamma = m_idc_gamma_slider->GetValue();
+    
+    // Validate range
+    if (m_gamma < 10) m_gamma = 10;
+    if (m_gamma > 30) m_gamma = 30;
+    
+    // Save to config
+    // MFC: AfxGetApp()->WriteProfileInt("Config", "Gamma", m_gamma);
+    wxConfig config("W3DView");
+    config.Write("/Config/Gamma", m_gamma);
+    
+    // Apply gamma setting
+    // MFC: DX8Wrapper::Set_Gamma(m_gamma/10.0f, 0.0f, 1.0f);
+    // TODO: Re-enable after fixing dx8wrapper.h include issue  
+    // DX8Wrapper::Set_Gamma(m_gamma / 10.0f, 0.0f, 1.0f);
 
     return true;
 }

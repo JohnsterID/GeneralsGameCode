@@ -55,14 +55,22 @@ void TexturePaths::OnCancel(wxCommandEvent &event)
 
 void TexturePaths::OnBrowse1(wxCommandEvent &event)
 {
-    // TODO: Implement OnBrowse1
-    // Control ID: IDC_BROWSE1
+    // MFC: CString initial_path; GetDlgItemText(IDC_PATH1, initial_path);
+    // MFC: if (::Browse_For_Folder(m_hWnd, initial_path, path)) { SetDlgItemText(IDC_PATH1, path); }
+    // TODO: BLOCKER - Requires Browse_For_Folder() wxWidgets equivalent
+    // TODO: Use wxDirDialog to browse for folder
+    // TODO: Get initial path from m_idc_path1->GetValue()
+    // TODO: Set selected path to m_idc_path1->SetValue(path)
 }
 
 void TexturePaths::OnBrowse2(wxCommandEvent &event)
 {
-    // TODO: Implement OnBrowse2
-    // Control ID: IDC_BROWSE2
+    // MFC: CString initial_path; GetDlgItemText(IDC_PATH2, initial_path);
+    // MFC: if (::Browse_For_Folder(m_hWnd, initial_path, path)) { SetDlgItemText(IDC_PATH2, path); }
+    // TODO: BLOCKER - Requires Browse_For_Folder() wxWidgets equivalent
+    // TODO: Use wxDirDialog to browse for folder
+    // TODO: Get initial path from m_idc_path2->GetValue()
+    // TODO: Set selected path to m_idc_path2->SetValue(path)
 }
 
 
@@ -73,15 +81,12 @@ void TexturePaths::OnBrowse2(wxCommandEvent &event)
 void TexturePaths::OnInitDialog(wxInitDialogEvent& event)
 {
     // Initialize controls after they're created
-    // TODO: Convert: CW3DViewDoc *doc = ::GetCurrentDocument ();
-    // TODO: Phase 2.5: Fix doc pointer type and initialization
-    // if (m_idc_path1 && doc) {
-    //     m_idc_path1->SetValue(doc->Get_Texture_Path1());
-    // }
-    // if (m_idc_path2 && doc) {
-    //     m_idc_path2->SetValue(doc->Get_Texture_Path2());
-    // }
-    // TODO: Convert: return TRUE;
+    // MFC: CW3DViewDoc *doc = ::GetCurrentDocument ();
+    // TODO: BLOCKER - Requires document access mechanism in wxWidgets
+    // TODO: MFC uses GetCurrentDocument() to access CW3DViewDoc
+    // TODO: Need to implement wxWidgets equivalent (pass doc pointer in constructor?)
+    // TODO: Once available: m_idc_path1->SetValue(doc->Get_Texture_Path1());
+    // TODO: Once available: m_idc_path2->SetValue(doc->Get_Texture_Path2());
 
     event.Skip();
 }
@@ -95,15 +100,15 @@ bool TexturePaths::TransferDataToWindow()
 bool TexturePaths::TransferDataFromWindow()
 {
     // Extract data from controls and apply to business logic
-
-    // TODO: Convert: CString path1;
-    // TODO: Convert: CString path2;
-    // TODO: Convert: GetDlgItemText (IDC_PATH1, path1);
-    // TODO: Convert: GetDlgItemText (IDC_PATH2, path2);
-    // TODO: Convert: CW3DViewDoc *doc = ::GetCurrentDocument ();
-    // TODO: Convert: doc->Set_Texture_Path1 (path1);
-    // TODO: Convert: doc->Set_Texture_Path2 (path2);
-    // TODO: Convert: return ;
+    // MFC: GetDlgItemText(IDC_PATH1, path1); GetDlgItemText(IDC_PATH2, path2);
+    // MFC: CW3DViewDoc *doc = ::GetCurrentDocument();
+    // MFC: doc->Set_Texture_Path1(path1); doc->Set_Texture_Path2(path2);
+    
+    // TODO: BLOCKER - Requires document access mechanism in wxWidgets
+    // TODO: Get path1 = m_idc_path1->GetValue()
+    // TODO: Get path2 = m_idc_path2->GetValue()
+    // TODO: Once doc available: doc->Set_Texture_Path1(path1)
+    // TODO: Once doc available: doc->Set_Texture_Path2(path2)
 
     return true;
 }

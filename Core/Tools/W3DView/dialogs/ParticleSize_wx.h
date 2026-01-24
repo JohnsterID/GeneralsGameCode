@@ -72,7 +72,10 @@ protected:
 class ParticleSize : public ParticleSizeBase
 {
 public:
-    ParticleSize(wxWindow *parent);
+    ParticleSize(float size, wxWindow *parent);
+
+    // Public accessor (matches MFC Get_Size())
+    float Get_Size() const { return m_Size; }
 
 protected:
     // Override for data transfer if needed
@@ -87,6 +90,10 @@ private:
 
     void OnOK(wxCommandEvent &event);
     void OnCancel(wxCommandEvent &event);
+    void OnSizeSpinChange(wxSpinEvent& event);  // Spinner update
+
+    // Member data (matches MFC m_Size)
+    float m_Size;
 
     wxDECLARE_EVENT_TABLE();
 };

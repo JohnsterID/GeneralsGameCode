@@ -19,15 +19,20 @@
 // Auto-generated from XRC by xrc2cpp.py
 
 #include "ParticleSize_wx.h"
+#include "Utils.h"
 #include <wx/xrc/xmlres.h>
 #include <wx/spinbutt.h>
+#include <wx/spinctrl.h>
+#include <wx/textctrl.h>
 
 wxBEGIN_EVENT_TABLE(ParticleSize, ParticleSizeBase)
     EVT_INIT_DIALOG(ParticleSize::OnInitDialog)
+    EVT_SPIN(XRCID("IDC_SIZE_SPIN"), ParticleSize::OnSizeSpinChange)
 wxEND_EVENT_TABLE()
 
-ParticleSize::ParticleSize(wxWindow *parent)
-    : ParticleSizeBase(parent)
+ParticleSize::ParticleSize(float size, wxWindow *parent)
+    : ParticleSizeBase(parent),
+      m_Size(size)
 {
     // Initialize dialog
     // TransferDataToWindow();
@@ -55,9 +60,13 @@ void ParticleSize::OnCancel(wxCommandEvent &event)
 
 void ParticleSize::OnInitDialog(wxInitDialogEvent& event)
 {
-    // Initialize controls after they're created
-    // TODO: Convert: Initialize_Spinner (m_SizeSpin, m_Size, 0, 10000);
-    // TODO: Convert: return TRUE;
+    // Initialize spinner control with range and initial value
+    // MFC: Initialize_Spinner(m_SizeSpin, m_Size, 0, 10000)
+    m_idc_size_spin->SetRange(0, 10000);
+    m_idc_size_spin->SetValue((int)m_Size);
+    
+    // Set initial text value
+    m_idc_size_edit->SetValue(wxString::Format("%.2f", m_Size));
 
     event.Skip();
 }
@@ -71,9 +80,24 @@ bool ParticleSize::TransferDataToWindow()
 bool ParticleSize::TransferDataFromWindow()
 {
     // Extract data from controls and apply to business logic
-
-    // TODO: Convert: m_Size = GetDlgItemFloat (m_hWnd, IDC_SIZE_EDIT);
-    // TODO: Convert: return ;
+    // MFC: m_Size = GetDlgItemFloat(m_hWnd, IDC_SIZE_EDIT)
+    
+    wxString value = m_idc_size_edit->GetValue();
+    double temp;
+    if (value.ToDouble(&temp)) {
+        m_Size = (float)temp;
+    }
 
     return true;
+}
+
+void ParticleSize::OnSizeSpinChange(wxSpinEvent& event)
+{
+    // Handle spinner updates (matches MFC OnNotify with UDN_DELTAPOS)
+    // MFC: Update_Spinner_Buddy(pheader->hwndFrom, pupdown->iDelta)
+    
+    int newValue = m_idc_size_spin->GetValue();
+    m_idc_size_edit->SetValue(wxString::Format("%d", newValue));
+    
+    event.Skip();
 }

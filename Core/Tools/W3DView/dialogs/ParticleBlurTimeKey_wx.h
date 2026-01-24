@@ -65,7 +65,10 @@ protected:
 class ParticleBlurTimeKey : public ParticleBlurTimeKeyBase
 {
 public:
-    ParticleBlurTimeKey(wxWindow *parent);
+    ParticleBlurTimeKey(float blur_time, wxWindow *parent);
+
+    // Public accessor (matches MFC Get_Blur_Time())
+    float Get_Blur_Time() const { return m_BlurTime; }
 
 protected:
     // Override for data transfer if needed
@@ -84,5 +87,9 @@ private:
     bool TransferDataFromWindow() override;
 
     // Event handlers (Phase 2)
-void OnOk2(wxCommandEvent &event);  // Button/Checkbox click
+    void OnOk2(wxCommandEvent &event);  // OK button handler
+    void OnBlurTimeSpinChange(wxSpinEvent& event);  // Spinner update
+
+    // Member data (matches MFC m_BlurTime)
+    float m_BlurTime;
 };

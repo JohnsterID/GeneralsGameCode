@@ -19,16 +19,21 @@
 // Auto-generated from XRC by xrc2cpp.py
 
 #include "ParticleBlurTimeKey_wx.h"
+#include "Utils.h"
 #include <wx/xrc/xmlres.h>
 #include <wx/spinbutt.h>
+#include <wx/spinctrl.h>
+#include <wx/textctrl.h>
 
 wxBEGIN_EVENT_TABLE(ParticleBlurTimeKey, ParticleBlurTimeKeyBase)
-EVT_BUTTON(XRCID("IDOK2"), ParticleBlurTimeKey::OnOk2)  // Button/Checkbox click
+EVT_BUTTON(XRCID("IDOK2"), ParticleBlurTimeKey::OnOk2)  // OK button
     EVT_INIT_DIALOG(ParticleBlurTimeKey::OnInitDialog)
+    EVT_SPIN(XRCID("IDC_BLUR_TIME_SPIN"), ParticleBlurTimeKey::OnBlurTimeSpinChange)
 wxEND_EVENT_TABLE()
 
-ParticleBlurTimeKey::ParticleBlurTimeKey(wxWindow *parent)
-    : ParticleBlurTimeKeyBase(parent)
+ParticleBlurTimeKey::ParticleBlurTimeKey(float blur_time, wxWindow *parent)
+    : ParticleBlurTimeKeyBase(parent),
+      m_BlurTime(blur_time)
 {
     // Initialize dialog
     // TransferDataToWindow();
@@ -55,8 +60,10 @@ void ParticleBlurTimeKey::OnCancel(wxCommandEvent &event)
 
 void ParticleBlurTimeKey::OnOk2(wxCommandEvent &event)
 {
-    // TODO: Implement OnOk2
-    // Control ID: IDOK2
+    // MFC: m_BlurTime = GetDlgItemFloat(m_hWnd, IDC_BLUR_TIME_EDIT); CDialog::OnOK();
+    if (Validate() && TransferDataFromWindow()) {
+        EndModal(wxID_OK);
+    }
 }
 
 
@@ -66,10 +73,13 @@ void ParticleBlurTimeKey::OnOk2(wxCommandEvent &event)
 
 void ParticleBlurTimeKey::OnInitDialog(wxInitDialogEvent& event)
 {
-    // Initialize controls after they're created
-    // TODO: Convert: Initialize_Spinner (m_BlurTimeSpin, m_BlurTime, -1024, 1024);
-    // TODO: Convert: return TRUE;  // return TRUE unless you set the focus to a control
-    // EXCEPTION: OCX Property Pages should return FALSE
+    // Initialize spinner control with range and initial value
+    // MFC: Initialize_Spinner(m_BlurTimeSpin, m_BlurTime, -1024, 1024)
+    m_idc_blur_time_spin->SetRange(-1024, 1024);
+    m_idc_blur_time_spin->SetValue((int)m_BlurTime);
+    
+    // Set initial text value
+    m_idc_blur_time_edit->SetValue(wxString::Format("%.2f", m_BlurTime));
 
     event.Skip();
 }
@@ -83,8 +93,24 @@ bool ParticleBlurTimeKey::TransferDataToWindow()
 bool ParticleBlurTimeKey::TransferDataFromWindow()
 {
     // Extract data from controls and apply to business logic
-
-    // TODO: Extract data from controls
+    // MFC: m_BlurTime = GetDlgItemFloat(m_hWnd, IDC_BLUR_TIME_EDIT)
+    
+    wxString value = m_idc_blur_time_edit->GetValue();
+    double temp;
+    if (value.ToDouble(&temp)) {
+        m_BlurTime = (float)temp;
+    }
 
     return true;
+}
+
+void ParticleBlurTimeKey::OnBlurTimeSpinChange(wxSpinEvent& event)
+{
+    // Handle spinner updates (matches MFC OnNotify with UDN_DELTAPOS)
+    // MFC: Update_Spinner_Buddy(pheader->hwndFrom, pupdown->iDelta)
+    
+    int newValue = m_idc_blur_time_spin->GetValue();
+    m_idc_blur_time_edit->SetValue(wxString::Format("%d", newValue));
+    
+    event.Skip();
 }

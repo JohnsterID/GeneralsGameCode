@@ -72,7 +72,10 @@ protected:
 class ParticleRotationKey : public ParticleRotationKeyBase
 {
 public:
-    ParticleRotationKey(wxWindow *parent);
+    ParticleRotationKey(float rotation, wxWindow *parent);
+
+    // Public accessor (matches MFC Get_Rotation())
+    float Get_Rotation() const { return m_Rotation; }
 
 protected:
     // Override for data transfer if needed
@@ -87,6 +90,12 @@ private:
 
     void OnOK(wxCommandEvent &event);
     void OnCancel(wxCommandEvent &event);
+
+    // Spinner update handler (matches MFC OnNotify for UDN_DELTAPOS)
+    void OnRotationSpinChange(wxSpinEvent& event);
+
+    // Member data (matches MFC m_Rotation)
+    float m_Rotation;
 
     wxDECLARE_EVENT_TABLE();
 };

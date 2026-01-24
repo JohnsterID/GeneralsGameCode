@@ -19,15 +19,20 @@
 // Auto-generated from XRC by xrc2cpp.py
 
 #include "ParticleRotationKey_wx.h"
+#include "Utils.h"
 #include <wx/xrc/xmlres.h>
 #include <wx/spinbutt.h>
+#include <wx/spinctrl.h>
+#include <wx/textctrl.h>
 
 wxBEGIN_EVENT_TABLE(ParticleRotationKey, ParticleRotationKeyBase)
     EVT_INIT_DIALOG(ParticleRotationKey::OnInitDialog)
+    EVT_SPIN(XRCID("IDC_ROTATION_SPIN"), ParticleRotationKey::OnRotationSpinChange)
 wxEND_EVENT_TABLE()
 
-ParticleRotationKey::ParticleRotationKey(wxWindow *parent)
-    : ParticleRotationKeyBase(parent)
+ParticleRotationKey::ParticleRotationKey(float rotation, wxWindow *parent)
+    : ParticleRotationKeyBase(parent),
+      m_Rotation(rotation)
 {
     // Initialize dialog
     // TransferDataToWindow();
@@ -55,10 +60,13 @@ void ParticleRotationKey::OnCancel(wxCommandEvent &event)
 
 void ParticleRotationKey::OnInitDialog(wxInitDialogEvent& event)
 {
-    // Initialize controls after they're created
-    // TODO: Convert: Initialize_Spinner (m_RotationSpin, m_Rotation, -10000, 10000);
-    // TODO: Convert: return TRUE;  // return TRUE unless you set the focus to a control
-    // EXCEPTION: OCX Property Pages should return FALSE
+    // Initialize spinner control with range and initial value
+    // MFC: Initialize_Spinner(m_RotationSpin, m_Rotation, -10000, 10000)
+    m_idc_rotation_spin->SetRange(-10000, 10000);
+    m_idc_rotation_spin->SetValue((int)m_Rotation);
+    
+    // Set initial text value
+    m_idc_rotation_edit->SetValue(wxString::Format("%.2f", m_Rotation));
 
     event.Skip();
 }
@@ -72,8 +80,24 @@ bool ParticleRotationKey::TransferDataToWindow()
 bool ParticleRotationKey::TransferDataFromWindow()
 {
     // Extract data from controls and apply to business logic
-
-    // TODO: Convert: m_Rotation = GetDlgItemFloat (m_hWnd, IDC_ROTATION_EDIT);
+    // MFC: m_Rotation = GetDlgItemFloat(m_hWnd, IDC_ROTATION_EDIT)
+    
+    wxString value = m_idc_rotation_edit->GetValue();
+    double temp;
+    if (value.ToDouble(&temp)) {
+        m_Rotation = (float)temp;
+    }
 
     return true;
+}
+
+void ParticleRotationKey::OnRotationSpinChange(wxSpinEvent& event)
+{
+    // Handle spinner updates (matches MFC OnNotify with UDN_DELTAPOS)
+    // MFC: Update_Spinner_Buddy(pheader->hwndFrom, pupdown->iDelta)
+    
+    int newValue = m_idc_rotation_spin->GetValue();
+    m_idc_rotation_edit->SetValue(wxString::Format("%d", newValue));
+    
+    event.Skip();
 }

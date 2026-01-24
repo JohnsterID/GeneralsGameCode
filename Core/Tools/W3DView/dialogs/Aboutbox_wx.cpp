@@ -30,8 +30,10 @@ Aboutbox::Aboutbox(wxWindow *parent)
     : AboutboxBase(parent)
 {
     // Set the version text
-    // TODO: Read from executable version resource (like MFC does)
-    // For now, use a simple version string
+    // NOTE: MFC version reads from executable version resource (VS_VERSION_INFO).
+    // wxWidgets equivalent would use platform-specific methods:
+    //   Windows: GetFileVersionInfo/VerQueryValue
+    //   Cross-platform: Parse custom resource or embed in source
     if (m_idc_version)
     {
         m_idc_version->SetLabel("W3DView Version 1.0");

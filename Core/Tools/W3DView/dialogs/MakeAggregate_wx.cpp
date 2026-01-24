@@ -20,6 +20,7 @@
 
 #include "MakeAggregate_wx.h"
 #include <wx/xrc/xmlres.h>
+#include "w3d_file.h"  // For W3D_NAME_LEN
 
 wxBEGIN_EVENT_TABLE(MakeAggregate, MakeAggregateBase)
     EVT_INIT_DIALOG(MakeAggregate::OnInitDialog)
@@ -56,7 +57,7 @@ void MakeAggregate::OnInitDialog(wxInitDialogEvent& event)
 {
     // Initialize controls after they're created
     // Restrict the amount of text a user can type into the control
-    const int W3D_NAME_LEN = 16;  // TODO: Phase 3 - get from W3D engine header
+    // W3D_NAME_LEN is defined in w3d_file.h as 16 characters
     if (m_idc_aggregate_name) {
         m_idc_aggregate_name->SetMaxLength(W3D_NAME_LEN - 1);
         m_idc_aggregate_name->SetValue(m_Name);

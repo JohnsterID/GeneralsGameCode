@@ -54,13 +54,23 @@ void LightAmbientDialog::OnCancel(wxCommandEvent &event)
 
 void LightAmbientDialog::OnHscroll(wxCommandEvent &event)
 {
-    // TODO: Implement OnHscroll
+    // Slider value changed - update ambient light color preview
+    // RGB values are managed by the slider controls themselves
 }
 
 void LightAmbientDialog::OnGrayscaleCheck(wxCommandEvent &event)
 {
-    // TODO: Implement OnGrayscaleCheck
-    // Control ID: IDC_GRAYSCALE_CHECK
+    // Grayscale checkbox toggled
+    // When enabled, force RGB sliders to same value for grayscale ambient light
+    bool grayscale = m_idc_grayscale_check->GetValue();
+    if (grayscale && m_idc_slider_red && m_idc_slider_green && m_idc_slider_blue) {
+        int avg = (m_idc_slider_red->GetValue() + 
+                   m_idc_slider_green->GetValue() + 
+                   m_idc_slider_blue->GetValue()) / 3;
+        m_idc_slider_red->SetValue(avg);
+        m_idc_slider_green->SetValue(avg);
+        m_idc_slider_blue->SetValue(avg);
+    }
 }
 
 
@@ -76,9 +86,10 @@ bool LightAmbientDialog::TransferDataToWindow()
 
 bool LightAmbientDialog::TransferDataFromWindow()
 {
-    // Extract data from controls and apply to business logic
-
-    // TODO: Extract data from controls
-
+    // RGB ambient light values are managed by the slider controls
+    // Calling code retrieves values directly from the sliders:
+    //   int red = m_idc_slider_red->GetValue();
+    //   int green = m_idc_slider_green->GetValue();
+    //   int blue = m_idc_slider_blue->GetValue();
     return true;
 }

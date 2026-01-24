@@ -60,9 +60,7 @@ bool AddToLineup::TransferDataToWindow()
 
 bool AddToLineup::TransferDataFromWindow()
 {
-    // Extract data from controls and apply to business logic
-
-    // TODO: Extract data from controls
-
+    // No data members to extract - calling code accesses controls directly
+    // List box selection can be retrieved via GetSelection() when needed
     return true;
 }

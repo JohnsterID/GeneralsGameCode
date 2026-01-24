@@ -61,3 +61,45 @@ W3DViewDoc* GetCurrentDocument_wx();
 float GetDlgItemFloat(wxTextCtrl* ctrl);
 void SetDlgItemFloat(wxTextCtrl* ctrl, float value);
 void Initialize_Spinner(wxSpinCtrl* spin, float value, float min, float max);
+
+// ============================================================================
+// Phase 4: Engine Integration Macros (for .cpp files)
+// ============================================================================
+
+// Common engine macros that may not be available when including engine headers
+// from wxWidgets context. These match MFC patterns.
+
+// Reference-counted pointer release (from refcount.h)
+// MFC usage: REF_PTR_RELEASE(SoundObj);
+#ifndef REF_PTR_RELEASE
+#define REF_PTR_RELEASE(x)  { if (x) x->Release_Ref(); x = nullptr; }
+#endif
+
+// ============================================================================
+// Pattern for Engine Integration in Dialog .cpp Files
+// ============================================================================
+//
+// When including engine headers in dialog .cpp files, use this pattern:
+//
+//   #include "YourDialog_wx.h"
+//   #include <wx/...>  // All wxWidgets includes first
+//
+//   // Phase 4: Engine integration includes
+//   #ifdef CString
+//   #undef CString
+//   #endif
+//
+//   #include "engine_header1.h"
+//   #include "engine_header2.h"
+//   // ... more engine includes ...
+//
+//   #define CString wxString  // Restore after engine includes
+//
+//   // Rest of implementation...
+//
+// The #undef/#define pattern is necessary because:
+// 1. wxWidgets needs #define CString wxString for MFC compatibility
+// 2. Engine headers may define/use CString differently
+// 3. We must undefine before engine includes, redefine after
+//
+// ============================================================================

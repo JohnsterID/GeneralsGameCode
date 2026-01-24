@@ -25,7 +25,7 @@
 #include <wx/dirdlg.h>
 
 // Phase 4: Engine integration includes
-// CRITICAL: Undefine CString before including engine headers
+// See w3dcompat_wx.h for pattern documentation
 #ifdef CString
 #undef CString
 #endif
@@ -39,7 +39,6 @@
 #include "wwstring.h"
 #include "wwdebug.h"
 
-// Redefine CString for wxWidgets compatibility
 #define CString wxString
 
 wxBEGIN_EVENT_TABLE(AnimatedSoundDialog, AnimatedSoundDialogBase)

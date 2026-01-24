@@ -372,9 +372,9 @@ bool CameraSettings::TransferDataFromWindow()
     float zfar = GetDlgItemFloat(m_idc_far_clip_edit);
     camera->Set_Clip_Planes(znear, zfar);
     
-    // TODO: Phase 4.2 - Implement Save_Camera_Settings() in W3DViewDoc
-    // This saves settings to registry/config. For now, settings are applied but not persisted.
-    // doc->Save_Camera_Settings();
+    // MFC: doc->Save_Camera_Settings();
+    // Save camera settings to wxConfig (registry/config file)
+    doc->Save_Camera_Settings();
     
     // MFC: //
     // MFC: // Update the fog settings. The fog near clip plane should always be equal

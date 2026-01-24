@@ -23,6 +23,7 @@
 #include "GraphicView_wx.h"
 
 #include <wx/msgdlg.h>
+#include <wx/config.h>
 
 // Phase 3A.3: Include real engine headers in .cpp
 // CRITICAL: Undefine CString macro before including engine headers
@@ -35,6 +36,7 @@
 #include "ViewerScene.h"
 #include "ViewerAssetMgr.h"
 #include "AssetInfo.h"
+#include "camera.h"
 
 // Redefine CString for wxWidgets compatibility
 #define CString wxString
@@ -189,4 +191,54 @@ CGraphicView* W3DViewDoc::GetGraphicView()
         }
     }
     return nullptr;
+}
+
+// ============================================================================
+// Phase 4: Save_Camera_Settings
+// MFC: CW3DViewDoc::Save_Camera_Settings() (W3DViewDoc.cpp lines 3001-3037)
+// ============================================================================
+
+void W3DViewDoc::Save_Camera_Settings()
+{
+    // MFC: theApp.WriteProfileInt("Config", "UseManualFOV", m_ManualFOV);
+    // MFC: theApp.WriteProfileInt("Config", "UseManualClipPlanes", m_ManualClipPlanes);
+    
+    wxConfigBase* config = wxConfig::Get();
+    config->Write("Config/UseManualFOV", m_manualFOV);
+    config->Write("Config/UseManualClipPlanes", m_manualClipPlanes);
+    
+    // MFC: CGraphicView *graphic_view = ::Get_Graphic_View();
+    // MFC: CameraClass *camera = graphic_view->GetCamera();
+    CGraphicView *graphic_view = GetGraphicView();
+    if (graphic_view == nullptr) {
+        config->Flush();
+        return;
+    }
+    
+    CameraClass *camera = graphic_view->GetCamera();
+    if (camera != nullptr) {
+        // MFC: double hfov = camera->Get_Horizontal_FOV();
+        // MFC: double vfov = camera->Get_Vertical_FOV();
+        double hfov = camera->Get_Horizontal_FOV();
+        double vfov = camera->Get_Vertical_FOV();
+        
+        // MFC: float znear = 0;
+        // MFC: float zfar = 0;
+        // MFC: camera->Get_Clip_Planes(znear, zfar);
+        float znear = 0;
+        float zfar = 0;
+        camera->Get_Clip_Planes(znear, zfar);
+        
+        // MFC: CString hfov_string;
+        // MFC: hfov_string.Format("%f", hfov);
+        // MFC: theApp.WriteProfileString("Config", "hfov", hfov_string);
+        // wxWidgets: Can write doubles directly to wxConfig
+        config->Write("Config/hfov", hfov);
+        config->Write("Config/vfov", vfov);
+        config->Write("Config/znear", (double)znear);
+        config->Write("Config/zfar", (double)zfar);
+    }
+    
+    // Ensure config is written to disk
+    config->Flush();
 }

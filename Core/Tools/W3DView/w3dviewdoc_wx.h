@@ -85,6 +85,9 @@ public:
     const wxString& Get_Texture_Path2() const { return m_texturePath2; }
     void Set_Texture_Path1(const wxString& path) { m_texturePath1 = path; }
     void Set_Texture_Path2(const wxString& path) { m_texturePath2 = path; }
+    
+    // Camera settings persistence
+    void Save_Camera_Settings();
 
 private:
     // Scene and object data

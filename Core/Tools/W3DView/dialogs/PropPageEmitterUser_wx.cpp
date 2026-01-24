@@ -20,6 +20,7 @@
 
 #include "PropPageEmitterUser_wx.h"
 #include <wx/xrc/xmlres.h>
+#include "w3d_file.h"  // For EMITTER_TYPE_NAMES
 
 wxBEGIN_EVENT_TABLE(PropPageEmitterUser, PropPageEmitterUserBase)
 EVT_TEXT(XRCID("IDC_PROGRAMMER_SETTINGS_EDIT"), PropPageEmitterUser::OnChangeProgrammerSettingsEdit)  // Text control change
@@ -57,14 +58,14 @@ void PropPageEmitterUser::OnCancel(wxCommandEvent &event)
 
 void PropPageEmitterUser::OnChangeProgrammerSettingsEdit(wxCommandEvent &event)
 {
-    // TODO: Implement OnChangeProgrammerSettingsEdit
-    // Control ID: IDC_PROGRAMMER_SETTINGS_EDIT
+    // Text changed - wxWidgets automatically handles modified state
+    // MFC called SetModified() here, but wx does this automatically for dialogs
 }
 
 void PropPageEmitterUser::OnSelchangeTypeCombo(wxCommandEvent &event)
 {
-    // TODO: Implement OnSelchangeTypeCombo
-    // Control ID: IDC_TYPE_COMBO
+    // Combobox selection changed - wxWidgets automatically handles modified state
+    // MFC called SetModified() here, but wx does this automatically for dialogs
 }
 
 
@@ -75,18 +76,20 @@ void PropPageEmitterUser::OnSelchangeTypeCombo(wxCommandEvent &event)
 void PropPageEmitterUser::OnInitDialog(wxInitDialogEvent& event)
 {
     // Initialize controls after they're created
-    // Allow the base class to process this message
+    
     // Add the list of user-types to the combobox
-    // TODO: Convert: m_TypeCombo.AddString (EMITTER_TYPE_NAMES[index]);
-    // Select the correct entry in the combobox
     if (m_idc_type_combo) {
+        for (int index = 0; index < EMITTER_TYPEID_COUNT; index++) {
+            m_idc_type_combo->Append(wxString(EMITTER_TYPE_NAMES[index]));
+        }
+        // Select the correct entry in the combobox
         m_idc_type_combo->SetSelection(m_iType);
     }
+    
     // Fill in the user-box
     if (m_idc_programmer_settings_edit) {
         m_idc_programmer_settings_edit->SetValue(m_UserString);
     }
-    // TODO: Convert: return TRUE;
 
     event.Skip();
 }
@@ -99,9 +102,14 @@ bool PropPageEmitterUser::TransferDataToWindow()
 
 bool PropPageEmitterUser::TransferDataFromWindow()
 {
-    // Extract data from controls and apply to business logic
-
-    // TODO: Extract data from controls
+    // Extract data from controls
+    if (m_idc_type_combo) {
+        m_iType = m_idc_type_combo->GetSelection();
+    }
+    
+    if (m_idc_programmer_settings_edit) {
+        m_UserString = m_idc_programmer_settings_edit->GetValue();
+    }
 
     return true;
 }

@@ -72,7 +72,10 @@ protected:
 class ScaleKey : public ScaleKeyBase
 {
 public:
-    ScaleKey(wxWindow *parent);
+    ScaleKey(float scale, wxWindow *parent, const wxString& prompt_string = "");
+
+    // Public accessor (matches MFC Get_Scale())
+    float Get_Scale() const { return m_Scale; }
 
 protected:
     // Override for data transfer if needed
@@ -87,8 +90,10 @@ private:
 
     void OnOK(wxCommandEvent &event);
     void OnCancel(wxCommandEvent &event);
+    void OnSizeSpinChange(wxSpinEvent& event);  // Spinner update
 
-    // Phase 2.5: Member variables
+    // Phase 2.5: Member variables (matches MFC m_Scale, m_Prompt)
+    float m_Scale;
     wxString m_Prompt;
 
     wxDECLARE_EVENT_TABLE();

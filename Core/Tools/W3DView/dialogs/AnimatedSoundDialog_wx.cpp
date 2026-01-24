@@ -24,6 +24,24 @@
 #include <wx/filedlg.h>
 #include <wx/dirdlg.h>
 
+// Phase 4: Engine integration includes
+// CRITICAL: Undefine CString before including engine headers
+#ifdef CString
+#undef CString
+#endif
+
+#include "animatedsoundmgr.h"
+#include "definitionmgr.h"
+#include "ffactory.h"
+#include "chunkio.h"
+#include "wwsaveload.h"
+#include "WWFILE.h"
+#include "wwstring.h"
+#include "wwdebug.h"
+
+// Redefine CString for wxWidgets compatibility
+#define CString wxString
+
 wxBEGIN_EVENT_TABLE(AnimatedSoundDialog, AnimatedSoundDialogBase)
 EVT_BUTTON(XRCID("IDC_SOUND_DEFINITION_LIBRARY_BROWSE_BUTTON"), AnimatedSoundDialog::OnSoundDefinitionLibraryBrowseButton)  // Button/Checkbox click
     EVT_BUTTON(XRCID("IDC_SOUND_INI_BROWSE_BUTTON"), AnimatedSoundDialog::OnSoundIniBrowseButton)  // Button/Checkbox click
@@ -162,6 +180,13 @@ bool AnimatedSoundDialog::TransferDataToWindow()
 bool AnimatedSoundDialog::TransferDataFromWindow()
 {
     // Extract data from controls and apply to business logic
+    // MFC: GetDlgItemText(IDC_SOUND_DEFINITION_LIBRARY_EDIT, sound_def_lib_path);
+    // MFC: GetDlgItemText(IDC_SOUND_INI_EDIT, sound_ini_path);
+    // MFC: GetDlgItemText(IDC_SOUND_FILE_PATH_EDIT, sound_data_path);
+    // MFC: theApp.WriteProfileString("Config", "SoundDefLibPath", sound_def_lib_path);
+    // MFC: theApp.WriteProfileString("Config", "AnimSoundINIPath", sound_ini_path);
+    // MFC: theApp.WriteProfileString("Config", "AnimSoundDataPath", sound_data_path);
+    // MFC: Load_Animated_Sound_Settings();
     
     // Get the user's response
     wxString sound_def_lib_path = m_idc_sound_definition_library_edit->GetValue();
@@ -175,14 +200,70 @@ bool AnimatedSoundDialog::TransferDataFromWindow()
     config->Write("Config/AnimSoundDataPath", sound_data_path);
     config->Flush(); // Ensure written to disk
     
-    // TODO: BLOCKER - Requires engine integration (Phase 4)
-    // MFC calls: Load_Animated_Sound_Settings();
-    // This function:
-    //   - Calls DefinitionMgrClass::Free_Definitions()
-    //   - Loads sound definition files with FileFactory
-    //   - Initializes AnimatedSoundMgrClass
-    //   - Configures file search paths
-    // Cannot implement until Phase 4 engine integration
+    // Load the animated sound settings (same as MFC OnOK)
+    Load_Animated_Sound_Settings();
     
     return true;
+}
+
+// ============================================================================
+// Phase 4: Engine Integration (MFC: AnimatedSoundOptionsDialog.cpp lines 188-228)
+// ============================================================================
+
+void AnimatedSoundDialog::Load_Animated_Sound_Settings()
+{
+    // MFC: AnimatedSoundOptionsDialogClass::Load_Animated_Sound_Settings()
+    // This function loads sound definitions and initializes the sound system
+    
+    // Start fresh - free any existing definitions
+    // MFC: DefinitionMgrClass::Free_Definitions();
+    DefinitionMgrClass::Free_Definitions();
+    
+    // Get the data from wxConfig (same as MFC registry)
+    // MFC: StringClass sound_def_lib_path = static_cast<const TCHAR*>(theApp.GetProfileString("Config", "SoundDefLibPath"));
+    wxConfigBase* config = wxConfig::Get();
+    wxString sound_def_lib_path_wx = config->Read("Config/SoundDefLibPath", "");
+    wxString sound_ini_path_wx = config->Read("Config/AnimSoundINIPath", "");
+    wxString sound_data_path_wx = config->Read("Config/AnimSoundDataPath", "");
+    
+    // Convert wxString to const char* for engine use
+    // Note: Engine uses ANSI strings (const char*), not Unicode (const wchar_t*)
+    // Use mb_str() to convert wxString to multibyte (ANSI) representation
+    const char* sound_def_lib_path = sound_def_lib_path_wx.mb_str();
+    const char* sound_ini_path = sound_ini_path_wx.mb_str();
+    const char* sound_data_path = sound_data_path_wx.mb_str();
+    
+    // Try to load the definitions into the definition mgr
+    // MFC: FileClass *file = _TheFileFactory->Get_File(sound_def_lib_path);
+    FileClass *file = _TheFileFactory->Get_File(sound_def_lib_path);
+    if (file != nullptr) {
+        // MFC: file->Open(FileClass::READ);
+        file->Open(FileClass::READ);
+        
+        // MFC: ChunkLoadClass cload(file);
+        ChunkLoadClass cload(file);
+        
+        // MFC: SaveLoadSystemClass::Load(cload);
+        SaveLoadSystemClass::Load(cload);
+        
+        // MFC: file->Close();
+        file->Close();
+        
+        // MFC: _TheFileFactory->Return_File(file);
+        _TheFileFactory->Return_File(file);
+    } else {
+        // MFC: WWDEBUG_SAY(("Failed to load file %s", sound_def_lib_path.str()));
+        WWDEBUG_SAY(("Failed to load file %s", sound_def_lib_path));
+    }
+    
+    // Load the sound settings from the ini file
+    // MFC: AnimatedSoundMgrClass::Shutdown();
+    AnimatedSoundMgrClass::Shutdown();
+    
+    // MFC: AnimatedSoundMgrClass::Initialize(sound_ini_path);
+    AnimatedSoundMgrClass::Initialize(sound_ini_path);
+    
+    // Add a sub-directory to the file factory for audio use
+    // MFC: _TheSimpleFileFactory->Append_Sub_Directory(sound_data_path);
+    _TheSimpleFileFactory->Append_Sub_Directory(sound_data_path);
 }

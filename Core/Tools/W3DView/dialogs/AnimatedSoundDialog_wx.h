@@ -103,4 +103,7 @@ private:
 void OnSoundDefinitionLibraryBrowseButton(wxCommandEvent &event);  // Button/Checkbox click
     void OnSoundIniBrowseButton(wxCommandEvent &event);  // Button/Checkbox click
     void OnSoundPathBrowseButton(wxCommandEvent &event);  // Button/Checkbox click
+    
+    // Phase 4: Helper method for engine integration
+    void Load_Animated_Sound_Settings();
 };

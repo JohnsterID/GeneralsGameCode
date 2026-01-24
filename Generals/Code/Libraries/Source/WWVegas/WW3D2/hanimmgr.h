@@ -49,14 +49,6 @@ class W3DExclusionListClass;
 /*
 ** An entry for a table of anims not found, so we can quickly determine their loss
 */
-
-// DEBUG: Check UNICODE mode for hanimmgr.h compilation
-#if defined(UNICODE) || defined(_UNICODE)
-#pragma message("hanimmgr.h: UNICODE mode detected - using wcstombs conversion")
-#else
-#pragma message("hanimmgr.h: ANSI mode - using direct StringClass conversion")
-#endif
-
 class MissingAnimClass : public HashableClass {
 
 public:

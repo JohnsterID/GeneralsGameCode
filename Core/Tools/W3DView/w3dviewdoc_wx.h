@@ -79,6 +79,12 @@ public:
     
     // View access
     CGraphicView* GetGraphicView();
+    
+    // Texture path methods
+    const wxString& Get_Texture_Path1() const { return m_texturePath1; }
+    const wxString& Get_Texture_Path2() const { return m_texturePath2; }
+    void Set_Texture_Path1(const wxString& path) { m_texturePath1 = path; }
+    void Set_Texture_Path2(const wxString& path) { m_texturePath2 = path; }
 
 private:
     // Scene and object data
@@ -89,6 +95,10 @@ private:
     Vector3 m_backgroundColor;
     bool m_manualFOV;
     bool m_manualClipPlanes;
+    
+    // Texture paths
+    wxString m_texturePath1;
+    wxString m_texturePath2;
 
     wxDECLARE_DYNAMIC_CLASS(W3DViewDoc);
 };

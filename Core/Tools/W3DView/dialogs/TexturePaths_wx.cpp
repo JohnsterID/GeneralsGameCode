@@ -21,6 +21,8 @@
 #include "TexturePaths_wx.h"
 #include <wx/xrc/xmlres.h>
 #include <wx/dirdlg.h>
+#include "../w3dviewdoc_wx.h"
+#include "../Utils.h"
 
 wxBEGIN_EVENT_TABLE(TexturePaths, TexturePathsBase)
 EVT_BUTTON(XRCID("IDC_BROWSE1"), TexturePaths::OnBrowse1)  // Button/Checkbox click
@@ -98,12 +100,19 @@ void TexturePaths::OnBrowse2(wxCommandEvent &event)
 void TexturePaths::OnInitDialog(wxInitDialogEvent& event)
 {
     // Initialize controls after they're created
-    // MFC: CW3DViewDoc *doc = ::GetCurrentDocument ();
-    // TODO: BLOCKER - Requires document access mechanism in wxWidgets
-    // TODO: MFC uses GetCurrentDocument() to access CW3DViewDoc
-    // TODO: Need to implement wxWidgets equivalent (pass doc pointer in constructor?)
-    // TODO: Once available: m_idc_path1->SetValue(doc->Get_Texture_Path1());
-    // TODO: Once available: m_idc_path2->SetValue(doc->Get_Texture_Path2());
+    // MFC: CW3DViewDoc *doc = ::GetCurrentDocument();
+    // MFC: SetDlgItemText(IDC_PATH1, doc->Get_Texture_Path1());
+    // MFC: SetDlgItemText(IDC_PATH2, doc->Get_Texture_Path2());
+    
+    W3DViewDoc* doc = GetCurrentDocument_wx();
+    if (doc) {
+        if (m_idc_path1) {
+            m_idc_path1->SetValue(doc->Get_Texture_Path1());
+        }
+        if (m_idc_path2) {
+            m_idc_path2->SetValue(doc->Get_Texture_Path2());
+        }
+    }
 
     event.Skip();
 }
@@ -121,11 +130,18 @@ bool TexturePaths::TransferDataFromWindow()
     // MFC: CW3DViewDoc *doc = ::GetCurrentDocument();
     // MFC: doc->Set_Texture_Path1(path1); doc->Set_Texture_Path2(path2);
     
-    // TODO: BLOCKER - Requires document access mechanism in wxWidgets
-    // TODO: Get path1 = m_idc_path1->GetValue()
-    // TODO: Get path2 = m_idc_path2->GetValue()
-    // TODO: Once doc available: doc->Set_Texture_Path1(path1)
-    // TODO: Once doc available: doc->Set_Texture_Path2(path2)
+    W3DViewDoc* doc = GetCurrentDocument_wx();
+    if (doc) {
+        if (m_idc_path1) {
+            wxString path1 = m_idc_path1->GetValue();
+            doc->Set_Texture_Path1(path1);
+        }
+        if (m_idc_path2) {
+            wxString path2 = m_idc_path2->GetValue();
+            doc->Set_Texture_Path2(path2);
+        }
+        return true;
+    }
 
-    return true;
+    return false;
 }

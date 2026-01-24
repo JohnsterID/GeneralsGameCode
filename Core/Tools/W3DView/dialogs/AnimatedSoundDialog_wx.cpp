@@ -21,6 +21,8 @@
 #include "AnimatedSoundDialog_wx.h"
 #include <wx/xrc/xmlres.h>
 #include <wx/config.h>
+#include <wx/filedlg.h>
+#include <wx/dirdlg.h>
 
 wxBEGIN_EVENT_TABLE(AnimatedSoundDialog, AnimatedSoundDialogBase)
 EVT_BUTTON(XRCID("IDC_SOUND_DEFINITION_LIBRARY_BROWSE_BUTTON"), AnimatedSoundDialog::OnSoundDefinitionLibraryBrowseButton)  // Button/Checkbox click
@@ -57,20 +59,68 @@ void AnimatedSoundDialog::OnCancel(wxCommandEvent &event)
 
 void AnimatedSoundDialog::OnSoundDefinitionLibraryBrowseButton(wxCommandEvent &event)
 {
-    // TODO: Implement OnSoundDefinitionLibraryBrowseButton
-    // Control ID: IDC_SOUND_DEFINITION_LIBRARY_BROWSE_BUTTON
+    // MFC: CFileDialog dialog(TRUE, ".ddb", "20480.ddb", OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT | OFN_EXPLORER,
+    //                         "Definition Database Files(*.ddb)|*.ddb||", this);
+    // MFC: if (dialog.DoModal() == IDOK) { SetDlgItemText(IDC_SOUND_DEFINITION_LIBRARY_EDIT, dialog.GetPathName()); }
+    
+    wxString currentPath = m_idc_sound_definition_library_edit->GetValue();
+    
+    wxFileDialog dialog(this, "Select Sound Definition Library", 
+                        wxEmptyString, "20480.ddb",
+                        "Definition Database Files (*.ddb)|*.ddb",
+                        wxFD_OPEN | wxFD_FILE_MUST_EXIST);
+    
+    if (!currentPath.IsEmpty()) {
+        dialog.SetPath(currentPath);
+    }
+    
+    if (dialog.ShowModal() == wxID_OK) {
+        m_idc_sound_definition_library_edit->SetValue(dialog.GetPath());
+    }
 }
 
 void AnimatedSoundDialog::OnSoundIniBrowseButton(wxCommandEvent &event)
 {
-    // TODO: Implement OnSoundIniBrowseButton
-    // Control ID: IDC_SOUND_INI_BROWSE_BUTTON
+    // MFC: CFileDialog dialog(TRUE, ".ini", "w3danimsound.ini", OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT | OFN_EXPLORER,
+    //                         "INI Files (*.ini)|*.ini||", this);
+    // MFC: if (dialog.DoModal() == IDOK) { SetDlgItemText(IDC_SOUND_INI_EDIT, dialog.GetPathName()); }
+    
+    wxString currentPath = m_idc_sound_ini_edit->GetValue();
+    
+    wxFileDialog dialog(this, "Select Sound INI File",
+                        wxEmptyString, "w3danimsound.ini",
+                        "INI Files (*.ini)|*.ini",
+                        wxFD_OPEN | wxFD_FILE_MUST_EXIST);
+    
+    if (!currentPath.IsEmpty()) {
+        dialog.SetPath(currentPath);
+    }
+    
+    if (dialog.ShowModal() == wxID_OK) {
+        m_idc_sound_ini_edit->SetValue(dialog.GetPath());
+    }
 }
 
 void AnimatedSoundDialog::OnSoundPathBrowseButton(wxCommandEvent &event)
 {
-    // TODO: Implement OnSoundPathBrowseButton
-    // Control ID: IDC_SOUND_PATH_BROWSE_BUTTON
+    // MFC: RestrictedFileDialogClass dialog(TRUE, ".wav", "test.wav", OFN_HIDEREADONLY | OFN_EXPLORER,
+    //                                        "Directories|*.wav||", AfxGetMainWnd());
+    // MFC: dialog.m_ofn.lpstrTitle = "Pick Sound Path";
+    // MFC: if (dialog.DoModal() == IDOK) {
+    // MFC:     CString path = ::Strip_Filename_From_Path(dialog.GetPathName());
+    // MFC:     SetDlgItemText(IDC_SOUND_FILE_PATH_EDIT, path);
+    // MFC: }
+    
+    // Note: MFC uses file dialog to pick directory (extracts path from selected file)
+    // wxWidgets: Use wxDirDialog directly for better UX
+    wxString currentPath = m_idc_sound_file_path_edit->GetValue();
+    
+    wxDirDialog dialog(this, "Pick Sound Path", currentPath,
+                       wxDD_DEFAULT_STYLE | wxDD_DIR_MUST_EXIST);
+    
+    if (dialog.ShowModal() == wxID_OK) {
+        m_idc_sound_file_path_edit->SetValue(dialog.GetPath());
+    }
 }
 
 
@@ -112,24 +162,27 @@ bool AnimatedSoundDialog::TransferDataToWindow()
 bool AnimatedSoundDialog::TransferDataFromWindow()
 {
     // Extract data from controls and apply to business logic
-
-    // TODO: Convert: //
-    // TODO: Convert: //	Get the user's response
-    // TODO: Convert: //
-    // TODO: Convert: CString sound_def_lib_path;
-    // TODO: Convert: CString sound_ini_path;
-    // TODO: Convert: CString sound_data_path;
-    // TODO: Convert: GetDlgItemText (IDC_SOUND_DEFINITION_LIBRARY_EDIT, sound_def_lib_path);
-    // TODO: Convert: GetDlgItemText (IDC_SOUND_INI_EDIT, sound_ini_path);
-    // TODO: Convert: GetDlgItemText (IDC_SOUND_FILE_PATH_EDIT, sound_data_path);
-    // TODO: Convert: //
-    // TODO: Convert: //	Store this information in the registry
-    // TODO: Convert: //
-    // TODO: Convert: theApp.WriteProfileString ("Config", "SoundDefLibPath", sound_def_lib_path);
-    // TODO: Convert: theApp.WriteProfileString ("Config", "AnimSoundINIPath", sound_ini_path);
-    // TODO: Convert: theApp.WriteProfileString ("Config", "AnimSoundDataPath", sound_data_path);
-    // TODO: Convert: Load_Animated_Sound_Settings ();
-    // TODO: Convert: return ;
-
+    
+    // Get the user's response
+    wxString sound_def_lib_path = m_idc_sound_definition_library_edit->GetValue();
+    wxString sound_ini_path = m_idc_sound_ini_edit->GetValue();
+    wxString sound_data_path = m_idc_sound_file_path_edit->GetValue();
+    
+    // Store this information in wxConfig (registry/config file)
+    wxConfigBase* config = wxConfig::Get();
+    config->Write("Config/SoundDefLibPath", sound_def_lib_path);
+    config->Write("Config/AnimSoundINIPath", sound_ini_path);
+    config->Write("Config/AnimSoundDataPath", sound_data_path);
+    config->Flush(); // Ensure written to disk
+    
+    // TODO: BLOCKER - Requires engine integration (Phase 4)
+    // MFC calls: Load_Animated_Sound_Settings();
+    // This function:
+    //   - Calls DefinitionMgrClass::Free_Definitions()
+    //   - Loads sound definition files with FileFactory
+    //   - Initializes AnimatedSoundMgrClass
+    //   - Configures file search paths
+    // Cannot implement until Phase 4 engine integration
+    
     return true;
 }

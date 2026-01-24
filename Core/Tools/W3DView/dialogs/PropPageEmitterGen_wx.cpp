@@ -63,8 +63,18 @@ void PropPageEmitterGen::OnCancel(wxCommandEvent &event)
 
 void PropPageEmitterGen::OnBrowseButton(wxCommandEvent &event)
 {
-    // TODO: Implement OnBrowseButton
-    // Control ID: IDC_BROWSE_BUTTON
+    // MFC: CFileDialog openFileDialog(TRUE, ".tga", nullptr, OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT | OFN_EXPLORER,
+    //                                  "Textures files (*.tga)|*.tga||", ::AfxGetMainWnd());
+    // MFC: if (openFileDialog.DoModal() == IDOK) {
+    // MFC:     SetDlgItemText(IDC_FILENAME_EDIT, openFileDialog.GetPathName());
+    // MFC:     SetModified();
+    // MFC: }
+    
+    // TODO: BLOCKER - Requires EmitterInstanceListClass* pointer (constructor dependency)
+    // TODO: BLOCKER - File dialog result needs SetModified() for property page architecture
+    // TODO: BLOCKER - Texture filename applied to emitter object in TransferDataFromWindow
+    // TODO: Can implement wxFileDialog for .tga files (simple)
+    // TODO: But cannot complete handler without engine integration (Phase 4)
 }
 
 void PropPageEmitterGen::OnChangeFilenameEdit(wxCommandEvent &event)
@@ -105,17 +115,17 @@ void PropPageEmitterGen::OnParticleLifetimeCheck(wxCommandEvent &event)
 void PropPageEmitterGen::OnInitDialog(wxInitDialogEvent& event)
 {
     // Initialize controls after they're created
-    // Allow the base class to process this message
-    //
-    //	Add the known shaders to the combobox
-    //
-    // TODO: Convert: Add_Shader_To_Combo (ShaderClass::_PresetAdditiveSpriteShader, "Additive");
-    // TODO: Convert: Add_Shader_To_Combo (ShaderClass::_PresetAlphaSpriteShader, "Alpha");
-    // TODO: Convert: Add_Shader_To_Combo (ShaderClass::_PresetATestSpriteShader, "Alpha-Test");
-    // TODO: Convert: Add_Shader_To_Combo (ShaderClass::_PresetATestBlendSpriteShader, "Alpha-Test-Blend");
-    // TODO: Convert: Add_Shader_To_Combo (ShaderClass::_PresetScreenSpriteShader, "Screen");
-    // TODO: Convert: Add_Shader_To_Combo (ShaderClass::_PresetMultiplicativeSpriteShader, "Multiplicative");
-    // TODO: Convert: Add_Shader_To_Combo (ShaderClass::_PresetOpaqueSpriteShader, "Opaque");
+    
+    // TODO: BLOCKER - Requires ShaderClass static instances from rendering engine (Phase 4)
+    // MFC: Add_Shader_To_Combo (ShaderClass::_PresetAdditiveSpriteShader, "Additive");
+    // MFC: Add_Shader_To_Combo (ShaderClass::_PresetAlphaSpriteShader, "Alpha");
+    // MFC: Add_Shader_To_Combo (ShaderClass::_PresetATestSpriteShader, "Alpha-Test");
+    // MFC: Add_Shader_To_Combo (ShaderClass::_PresetATestBlendSpriteShader, "Alpha-Test-Blend");
+    // MFC: Add_Shader_To_Combo (ShaderClass::_PresetScreenSpriteShader, "Screen");
+    // MFC: Add_Shader_To_Combo (ShaderClass::_PresetMultiplicativeSpriteShader, "Multiplicative");
+    // MFC: Add_Shader_To_Combo (ShaderClass::_PresetOpaqueSpriteShader, "Opaque");
+    // TODO: ShaderClass instances cannot be created without rendering engine
+    // TODO: Add_Shader_To_Combo stores ShaderClass* as combo item data for later retrieval
     //
     // Fill the edit controls with the default values
     //

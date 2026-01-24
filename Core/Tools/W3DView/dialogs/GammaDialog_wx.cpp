@@ -19,9 +19,11 @@
 // Auto-generated from XRC by xrc2cpp.py
 
 #include "GammaDialog_wx.h"
-// TODO: dx8wrapper.h inclusion causes StringClass/const char* conflict in vertmaterial.h
-// Need to investigate MFC/wxWidgets header ordering or add forward declarations
-// #include "dx8wrapper.h"
+// BLOCKER TODO: dx8wrapper.h inclusion causes StringClass/const char* conflict
+// BLOCKER TODO: dx8wrapper.h includes vertmaterial.h which has StringClass issues with wxWidgets
+// BLOCKER TODO: Need DX8Wrapper::Set_Gamma(float gamma, float, float) for gamma adjustment
+// BLOCKER TODO: This is an infrastructure issue affecting all dx8wrapper.h dependent dialogs
+// #include "dx8wrapper.h"  // Cannot include until StringClass conflicts resolved
 #include <wx/xrc/xmlres.h>
 #include <wx/slider.h>
 #include <wx/config.h>
@@ -65,7 +67,7 @@ void GammaDialog::OnReleasedcaptureGammaSlider(wxCommandEvent &event)
     m_gamma = m_idc_gamma_slider->GetValue();
     
     // Apply gamma immediately for preview
-    // TODO: Re-enable after fixing dx8wrapper.h include issue
+    // BLOCKER TODO: Re-enable after fixing dx8wrapper.h include issue (see header)
     // DX8Wrapper::Set_Gamma(m_gamma / 10.0f, 0.0f, 1.0f);
     
     // Update display text
@@ -131,7 +133,7 @@ bool GammaDialog::TransferDataFromWindow()
     
     // Apply gamma setting
     // MFC: DX8Wrapper::Set_Gamma(m_gamma/10.0f, 0.0f, 1.0f);
-    // TODO: Re-enable after fixing dx8wrapper.h include issue  
+    // BLOCKER TODO: Re-enable after fixing dx8wrapper.h include issue (see header)
     // DX8Wrapper::Set_Gamma(m_gamma / 10.0f, 0.0f, 1.0f);
 
     return true;

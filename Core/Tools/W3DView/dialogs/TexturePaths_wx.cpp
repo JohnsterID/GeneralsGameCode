@@ -20,6 +20,7 @@
 
 #include "TexturePaths_wx.h"
 #include <wx/xrc/xmlres.h>
+#include <wx/dirdlg.h>
 
 wxBEGIN_EVENT_TABLE(TexturePaths, TexturePathsBase)
 EVT_BUTTON(XRCID("IDC_BROWSE1"), TexturePaths::OnBrowse1)  // Button/Checkbox click
@@ -57,20 +58,36 @@ void TexturePaths::OnBrowse1(wxCommandEvent &event)
 {
     // MFC: CString initial_path; GetDlgItemText(IDC_PATH1, initial_path);
     // MFC: if (::Browse_For_Folder(m_hWnd, initial_path, path)) { SetDlgItemText(IDC_PATH1, path); }
-    // TODO: BLOCKER - Requires Browse_For_Folder() wxWidgets equivalent
-    // TODO: Use wxDirDialog to browse for folder
-    // TODO: Get initial path from m_idc_path1->GetValue()
-    // TODO: Set selected path to m_idc_path1->SetValue(path)
+    
+    // Get initial path from text control
+    wxString initial_path = m_idc_path1->GetValue();
+    
+    // Show directory selection dialog
+    wxDirDialog dialog(this, "Select Texture Path", initial_path, 
+                       wxDD_DEFAULT_STYLE | wxDD_DIR_MUST_EXIST);
+    
+    if (dialog.ShowModal() == wxID_OK) {
+        wxString path = dialog.GetPath();
+        m_idc_path1->SetValue(path);
+    }
 }
 
 void TexturePaths::OnBrowse2(wxCommandEvent &event)
 {
     // MFC: CString initial_path; GetDlgItemText(IDC_PATH2, initial_path);
     // MFC: if (::Browse_For_Folder(m_hWnd, initial_path, path)) { SetDlgItemText(IDC_PATH2, path); }
-    // TODO: BLOCKER - Requires Browse_For_Folder() wxWidgets equivalent
-    // TODO: Use wxDirDialog to browse for folder
-    // TODO: Get initial path from m_idc_path2->GetValue()
-    // TODO: Set selected path to m_idc_path2->SetValue(path)
+    
+    // Get initial path from text control
+    wxString initial_path = m_idc_path2->GetValue();
+    
+    // Show directory selection dialog
+    wxDirDialog dialog(this, "Select Texture Path", initial_path,
+                       wxDD_DEFAULT_STYLE | wxDD_DIR_MUST_EXIST);
+    
+    if (dialog.ShowModal() == wxID_OK) {
+        wxString path = dialog.GetPath();
+        m_idc_path2->SetValue(path);
+    }
 }
 
 

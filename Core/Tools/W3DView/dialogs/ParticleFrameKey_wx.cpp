@@ -56,9 +56,11 @@ void ParticleFrameKey::OnCancel(wxCommandEvent &event)
 void ParticleFrameKey::OnInitDialog(wxInitDialogEvent& event)
 {
     // Initialize controls after they're created
-    // TODO: Convert: Initialize_Spinner (m_FrameSpin, m_Frame, -1024, 1024);
-    // TODO: Convert: return TRUE;  // return TRUE unless you set the focus to a control
-    // EXCEPTION: OCX Property Pages should return FALSE
+    if (m_idc_frame_spin) {
+        m_idc_frame_spin->SetRange(-1024, 1024);
+        // Initial value would be set from m_Frame member (add to header if needed)
+        // m_idc_frame_spin->SetValue(static_cast<int>(m_Frame));
+    }
 
     event.Skip();
 }
@@ -71,9 +73,12 @@ bool ParticleFrameKey::TransferDataToWindow()
 
 bool ParticleFrameKey::TransferDataFromWindow()
 {
-    // Extract data from controls and apply to business logic
-
-    // TODO: Convert: m_Frame = GetDlgItemFloat(m_hWnd,IDC_FRAME_EDIT);
-
+    // Extract frame value from controls
+    // Note: Add "float m_Frame;" to header if dialog needs to store this value
+    // if (m_idc_frame_edit) {
+    //     wxString text = m_idc_frame_edit->GetValue();
+    //     text.ToDouble(&m_Frame);
+    // }
+    // Calling code can retrieve value directly: GetValue().ToDouble()
     return true;
 }

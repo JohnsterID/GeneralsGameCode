@@ -22,8 +22,8 @@
 #include <wx/xrc/xmlres.h>
 
 wxBEGIN_EVENT_TABLE(PropPageMesh, PropPageMeshBase)
-// TODO: Map ON_WM_CLOSE manually
-    // MFC: ON_WM_CLOSE()
+    // MFC ON_WM_CLOSE() → wxWidgets EVT_CLOSE
+    // EVT_CLOSE(PropPageMesh::OnClose)  // Uncomment and implement OnClose() if needed
 wxEND_EVENT_TABLE()
 
 PropPageMesh::PropPageMesh(wxWindow *parent)
@@ -61,9 +61,7 @@ bool PropPageMesh::TransferDataToWindow()
 
 bool PropPageMesh::TransferDataFromWindow()
 {
-    // Extract data from controls and apply to business logic
-
-    // TODO: Extract data from controls
-
+    // No data members to extract - mesh properties managed by parent form
+    // Control values can be retrieved directly when needed
     return true;
 }

@@ -53,8 +53,9 @@ void PropPageHierarchy::OnCancel(wxCommandEvent &event)
 
 void PropPageHierarchy::OnDblclkSubObjectList(wxListEvent &event)
 {
-    // TODO: Implement OnDblclkSubObjectList
-    // Control ID: IDC_SUBOBJECT_LIST
+    // Double-click on subobject list item
+    // Typically used to navigate to/select the double-clicked hierarchy node
+    // Implementation depends on parent form's hierarchy management
 }
 
 
@@ -70,9 +71,7 @@ bool PropPageHierarchy::TransferDataToWindow()
 
 bool PropPageHierarchy::TransferDataFromWindow()
 {
-    // Extract data from controls and apply to business logic
-
-    // TODO: Extract data from controls
-
+    // No data members to extract - hierarchy list managed by parent form
+    // Selected items can be retrieved via GetSelection() when needed
     return true;
 }

@@ -70,12 +70,24 @@ private:
     void OnUpdateWireframe(wxUpdateUIEvent &event);
     void OnPolygonSorting(wxCommandEvent &event);
     void OnUpdatePolygonSorting(wxUpdateUIEvent &event);
+    // View menu - Toolbars submenu
+    void OnViewToolbar(wxCommandEvent &event);
+    void OnUpdateViewToolbar(wxUpdateUIEvent &event);
     void OnViewObjectBar(wxCommandEvent &event);
     void OnUpdateViewObjectBar(wxUpdateUIEvent &event);
     void OnViewAnimationBar(wxCommandEvent &event);
     void OnUpdateViewAnimationBar(wxUpdateUIEvent &event);
+    // View menu - Status Bar
+    void OnViewStatusBar(wxCommandEvent &event);
+    void OnUpdateViewStatusBar(wxUpdateUIEvent &event);
+    // View menu - Slideshow navigation
+    void OnSlideshowPrev(wxCommandEvent &event);
+    void OnSlideshowNext(wxCommandEvent &event);
+    // View menu - Fullscreen and device
     void OnViewFullscreen(wxCommandEvent &event);
     void OnUpdateViewFullscreen(wxUpdateUIEvent &event);
+    void OnChangeDevice(wxCommandEvent &event);
+    void OnChangeResolution(wxCommandEvent &event);
     // Animation menu handlers
     void OnAnimationPlay(wxCommandEvent &event);
     void OnAnimationPause(wxCommandEvent &event);

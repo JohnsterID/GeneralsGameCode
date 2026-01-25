@@ -93,9 +93,18 @@ enum
     ID_VIEW_SUBDIVISION_6,
     ID_VIEW_SUBDIVISION_7,
     ID_VIEW_SUBDIVISION_8,
+    // View menu - Toolbars and UI
+    ID_VIEW_TOOLBAR,
     ID_VIEW_OBJECT_BAR,
     ID_VIEW_ANIMATION_BAR,
+    ID_VIEW_STATUS_BAR,
+    // View menu - Slideshow
+    ID_SLIDESHOW_PREV,
+    ID_SLIDESHOW_NEXT,
+    // View menu - Display
     ID_VIEW_FULLSCREEN,
+    ID_CHANGE_DEVICE,
+    ID_CHANGE_RESOLUTION,
     ID_ANIMATION_PLAY,
     ID_ANIMATION_PAUSE,
     ID_ANIMATION_STOP,
@@ -181,12 +190,24 @@ wxBEGIN_EVENT_TABLE(W3DViewFrame, wxDocParentFrame)
     EVT_UPDATE_UI(ID_VIEW_SUBDIVISION_7, W3DViewFrame::OnUpdateViewSubdivision7)
     EVT_MENU(ID_VIEW_SUBDIVISION_8, W3DViewFrame::OnViewSubdivision8)
     EVT_UPDATE_UI(ID_VIEW_SUBDIVISION_8, W3DViewFrame::OnUpdateViewSubdivision8)
+    // View menu - Toolbars
+    EVT_MENU(ID_VIEW_TOOLBAR, W3DViewFrame::OnViewToolbar)
+    EVT_UPDATE_UI(ID_VIEW_TOOLBAR, W3DViewFrame::OnUpdateViewToolbar)
     EVT_MENU(ID_VIEW_OBJECT_BAR, W3DViewFrame::OnViewObjectBar)
     EVT_UPDATE_UI(ID_VIEW_OBJECT_BAR, W3DViewFrame::OnUpdateViewObjectBar)
     EVT_MENU(ID_VIEW_ANIMATION_BAR, W3DViewFrame::OnViewAnimationBar)
     EVT_UPDATE_UI(ID_VIEW_ANIMATION_BAR, W3DViewFrame::OnUpdateViewAnimationBar)
+    // View menu - Status Bar
+    EVT_MENU(ID_VIEW_STATUS_BAR, W3DViewFrame::OnViewStatusBar)
+    EVT_UPDATE_UI(ID_VIEW_STATUS_BAR, W3DViewFrame::OnUpdateViewStatusBar)
+    // View menu - Slideshow
+    EVT_MENU(ID_SLIDESHOW_PREV, W3DViewFrame::OnSlideshowPrev)
+    EVT_MENU(ID_SLIDESHOW_NEXT, W3DViewFrame::OnSlideshowNext)
+    // View menu - Display
     EVT_MENU(ID_VIEW_FULLSCREEN, W3DViewFrame::OnViewFullscreen)
     EVT_UPDATE_UI(ID_VIEW_FULLSCREEN, W3DViewFrame::OnUpdateViewFullscreen)
+    EVT_MENU(ID_CHANGE_DEVICE, W3DViewFrame::OnChangeDevice)
+    EVT_MENU(ID_CHANGE_RESOLUTION, W3DViewFrame::OnChangeResolution)
     EVT_MENU(ID_ANIMATION_PLAY, W3DViewFrame::OnAnimationPlay)
     EVT_MENU(ID_ANIMATION_PAUSE, W3DViewFrame::OnAnimationPause)
     EVT_MENU(ID_ANIMATION_STOP, W3DViewFrame::OnAnimationStop)
@@ -384,27 +405,53 @@ void W3DViewFrame::CreateMenuBar()
     menuBar->Append(editMenu, "&Edit");
 
     // View menu
-    // MFC Reference: W3DView.rc:209-243
+    // MFC Reference: W3DView.rc:209-243 (EXACT MATCH)
+    // Structure: Toolbars submenu → Status Bar → Prev/Next → Fullscreen/Device/Resolution → Wireframe/Sorting/Gamma → Subdivision/Patch
     wxMenu *viewMenu = new wxMenu;
+    
+    // Toolbars submenu
+    wxMenu *toolbarsMenu = new wxMenu;
+    toolbarsMenu->AppendCheckItem(ID_VIEW_TOOLBAR, "&Main");
+    toolbarsMenu->AppendCheckItem(ID_VIEW_OBJECT_BAR, "Object");
+    toolbarsMenu->AppendCheckItem(ID_VIEW_ANIMATION_BAR, "Animation");
+    viewMenu->AppendSubMenu(toolbarsMenu, "&Toolbars");
+    
+    // Status Bar
+    viewMenu->AppendCheckItem(ID_VIEW_STATUS_BAR, "&Status Bar");
+    viewMenu->AppendSeparator();
+    
+    // Slideshow navigation
+    viewMenu->Append(ID_SLIDESHOW_PREV, "&Prev\tPgUp");
+    viewMenu->Append(ID_SLIDESHOW_NEXT, "&Next\tPgDn");
+    viewMenu->AppendSeparator();
+    
+    // Fullscreen and device settings
+    viewMenu->Append(ID_VIEW_FULLSCREEN, "&View Fullscreen");  // Note: No checkmark, was GRAYED in MFC
+    viewMenu->Append(ID_CHANGE_DEVICE, "&Change Device...");  // Note: GRAYED in MFC
+    viewMenu->Append(ID_CHANGE_RESOLUTION, "Change &Resolution...");  // Note: GRAYED in MFC
+    viewMenu->AppendSeparator();
+    
+    // Rendering controls
     viewMenu->AppendCheckItem(ID_VIEW_WIREFRAME, "&Wireframe Mode");
-    viewMenu->AppendCheckItem(ID_VIEW_POLYGON_SORTING, "Polygon &Sorting\tCtrl+P");
+    viewMenu->AppendCheckItem(ID_VIEW_POLYGON_SORTING, "Polygon Sorting\tCtrl+P");  // Note: No & on Polygon
+    viewMenu->Append(ID_GAMMA_SETTINGS, "Set &Gamma");  // Moved from Settings menu to match MFC
     viewMenu->AppendSeparator();
+    
+    // N-Patches subdivision submenu
     wxMenu *subdivMenu = new wxMenu;
-    subdivMenu->AppendRadioItem(ID_VIEW_SUBDIVISION_1, "Level &1");
-    subdivMenu->AppendRadioItem(ID_VIEW_SUBDIVISION_2, "Level &2");
-    subdivMenu->AppendRadioItem(ID_VIEW_SUBDIVISION_3, "Level &3");
-    subdivMenu->AppendRadioItem(ID_VIEW_SUBDIVISION_4, "Level &4");
-    subdivMenu->AppendRadioItem(ID_VIEW_SUBDIVISION_5, "Level &5");
-    subdivMenu->AppendRadioItem(ID_VIEW_SUBDIVISION_6, "Level &6");
-    subdivMenu->AppendRadioItem(ID_VIEW_SUBDIVISION_7, "Level &7");
-    subdivMenu->AppendRadioItem(ID_VIEW_SUBDIVISION_8, "Level &8");
-    viewMenu->AppendSubMenu(subdivMenu, "Su&bdivision Level");
-    viewMenu->AppendCheckItem(ID_VIEW_PATCH_GAP_FILL, "&Patch Gap Fill");
-    viewMenu->AppendSeparator();
-    viewMenu->AppendCheckItem(ID_VIEW_OBJECT_BAR, "Object &Toolbar");
-    viewMenu->AppendCheckItem(ID_VIEW_ANIMATION_BAR, "&Animation Toolbar");
-    viewMenu->AppendSeparator();
-    viewMenu->AppendCheckItem(ID_VIEW_FULLSCREEN, "&Fullscreen");
+    subdivMenu->AppendRadioItem(ID_VIEW_SUBDIVISION_1, "1");  // Note: No "Level " prefix in MFC
+    subdivMenu->AppendRadioItem(ID_VIEW_SUBDIVISION_2, "2");
+    subdivMenu->AppendRadioItem(ID_VIEW_SUBDIVISION_3, "3");
+    subdivMenu->AppendRadioItem(ID_VIEW_SUBDIVISION_4, "4");
+    subdivMenu->AppendRadioItem(ID_VIEW_SUBDIVISION_5, "5");
+    subdivMenu->AppendRadioItem(ID_VIEW_SUBDIVISION_6, "6");
+    subdivMenu->AppendRadioItem(ID_VIEW_SUBDIVISION_7, "7");
+    subdivMenu->AppendRadioItem(ID_VIEW_SUBDIVISION_8, "8");
+    viewMenu->AppendSubMenu(subdivMenu, "N-Patches Subdivision Level");  // Exact MFC text
+    
+    // N-Patches gap filling
+    viewMenu->AppendCheckItem(ID_VIEW_PATCH_GAP_FILL, "N-Patches Gap Filling");  // Exact MFC text
+    
     menuBar->Append(viewMenu, "&View");
 
     // Object menu
@@ -504,7 +551,7 @@ void W3DViewFrame::CreateMenuBar()
     settingsMenu->Append(ID_RESOLUTION_SETTINGS, "&Resolution...");
     settingsMenu->AppendSeparator();
     settingsMenu->AppendCheckItem(ID_ENABLE_GAMMA_CORRECTION, "&Enable Gamma Correction");
-    settingsMenu->Append(ID_GAMMA_SETTINGS, "Set &Gamma...");
+    // Note: "Set Gamma" moved to View menu to match MFC structure (W3DView.rc:221)
     menuBar->Append(settingsMenu, "&Settings");
 
     // Help menu
@@ -1255,6 +1302,262 @@ void W3DViewFrame::OnUpdateViewFullscreen(wxUpdateUIEvent &event)
     //   For now: Always unchecked (fullscreen not implemented)
     
     event.Check(false);  // Always unchecked (fullscreen not implemented)
+}
+
+// ============================================================================
+// View Menu - Toolbars Submenu Handlers
+// ============================================================================
+
+void W3DViewFrame::OnViewToolbar(wxCommandEvent &WXUNUSED(event))
+{
+    // MFC Reference: Standard MFC ID_VIEW_TOOLBAR (0xE800)
+    //
+    // MFC Implementation:
+    //   Standard MFC framework handler toggles main toolbar visibility
+    //   Uses CFrameWnd::ShowControlBar(m_wndToolBar, !m_wndToolBar.IsVisible())
+    //
+    // Expected Behavior:
+    //   - Toggle main toolbar visibility
+    //   - Toolbar contains: New, Open, Save, Properties buttons
+    //
+    // TODO(MFC-Match): Implement main toolbar toggle
+    //   Need to:
+    //   1. Track main toolbar visibility state
+    //   2. Implement Show/Hide with proper layout adjustment
+    //   3. Persist toolbar state in wxConfig
+    //   Until then: Placeholder (toolbar always visible)
+
+    // Placeholder: No action (main toolbar management not implemented)
+    wxMessageBox(
+        "Main toolbar toggle not yet implemented.\n\n"
+        "MFC version shows/hides the main toolbar with File and Object buttons.\n"
+        "This requires toolbar visibility management.",
+        "TODO",
+        wxOK | wxICON_INFORMATION,
+        this
+    );
+}
+
+void W3DViewFrame::OnUpdateViewToolbar(wxUpdateUIEvent &event)
+{
+    // MFC Reference: Standard MFC OnUpdateControlBarMenu
+    //
+    // Expected Behavior:
+    //   - Checked if main toolbar is visible
+    //   - Always enabled
+    //
+    // TODO(MFC-Match): Check actual toolbar visibility
+    //   For now: Always checked (toolbar always visible)
+
+    event.Enable(true);
+    event.Check(true);  // Always checked (toolbar always visible)
+}
+
+// ============================================================================
+// View Menu - Status Bar Handler
+// ============================================================================
+
+void W3DViewFrame::OnViewStatusBar(wxCommandEvent &WXUNUSED(event))
+{
+    // MFC Reference: Standard MFC ID_VIEW_STATUS_BAR (0xE801)
+    //
+    // MFC Implementation:
+    //   Standard MFC framework handler toggles status bar visibility
+    //   Uses ShowControlBar(m_wndStatusBar, !m_wndStatusBar.IsVisible())
+    //
+    // Expected Behavior:
+    //   - Toggle status bar visibility
+    //   - Status bar shows: Ready message, file info, animation frame, etc.
+    //
+    // TODO(MFC-Match): Implement status bar toggle
+    //   Need to:
+    //   1. Use GetStatusBar()->Show()/Hide()
+    //   2. Call Layout() to adjust window layout
+    //   3. Persist state in wxConfig
+    //   Until then: Placeholder
+
+    wxStatusBar *statusBar = GetStatusBar();
+    if (statusBar)
+    {
+        bool isVisible = statusBar->IsShown();
+        statusBar->Show(!isVisible);
+        Layout();  // Adjust layout after show/hide
+        
+        // TODO(MFC-Match): Persist status bar visibility in wxConfig
+    }
+    else
+    {
+        wxMessageBox(
+            "Status bar does not exist.\n\n"
+            "InitStatusBar() may not have been called.",
+            "Status Bar Missing",
+            wxOK | wxICON_WARNING,
+            this
+        );
+    }
+}
+
+void W3DViewFrame::OnUpdateViewStatusBar(wxUpdateUIEvent &event)
+{
+    // MFC Reference: Standard MFC OnUpdateControlBarMenu
+    //
+    // Expected Behavior:
+    //   - Checked if status bar is visible
+    //   - Always enabled
+    //
+    // TODO(MFC-Match): Check actual status bar visibility
+
+    wxStatusBar *statusBar = GetStatusBar();
+    event.Enable(statusBar != nullptr);
+    event.Check(statusBar && statusBar->IsShown());
+}
+
+// ============================================================================
+// View Menu - Slideshow Navigation Handlers
+// ============================================================================
+
+void W3DViewFrame::OnSlideshowPrev(wxCommandEvent &WXUNUSED(event))
+{
+    // MFC Reference: MainFrm.cpp (IDM_SLIDESHOW_UP = 32849)
+    //
+    // MFC Implementation:
+    //   if (m_slideshowMode)
+    //   {
+    //       Load_Previous_File();
+    //   }
+    //
+    // Expected Behavior:
+    //   - If slideshow mode enabled: Load previous file in directory
+    //   - Wraps to last file if at beginning
+    //   - Only active when m_slideshowMode is true
+    //   - Typically used for batch reviewing W3D models
+    //
+    // TODO(MFC-Investigate): Implement slideshow mode infrastructure
+    //   Need to:
+    //   1. Add m_slideshowMode flag to frame
+    //   2. Implement directory file enumeration (*.w3d)
+    //   3. Track current file index
+    //   4. Implement Load_Previous_File() / Load_Next_File()
+    //   5. Consider enabling slideshow mode when opening file
+    //   6. Handle keyboard shortcuts (PgUp/PgDn)
+    //   Until then: Disabled (no slideshow mode)
+    //   See MainFrm.cpp for slideshow implementation details
+
+    wxMessageBox(
+        "Slideshow navigation not yet implemented.\n\n"
+        "MFC version allows navigating through W3D files in a directory.\n"
+        "This requires slideshow mode infrastructure.",
+        "TODO",
+        wxOK | wxICON_INFORMATION,
+        this
+    );
+}
+
+void W3DViewFrame::OnSlideshowNext(wxCommandEvent &WXUNUSED(event))
+{
+    // MFC Reference: MainFrm.cpp (IDM_SLIDESHOW_DOWN = 32850)
+    //
+    // MFC Implementation:
+    //   if (m_slideshowMode)
+    //   {
+    //       Load_Next_File();
+    //   }
+    //
+    // Expected Behavior:
+    //   - If slideshow mode enabled: Load next file in directory
+    //   - Wraps to first file if at end
+    //   - Only active when m_slideshowMode is true
+    //
+    // TODO(MFC-Investigate): Implement slideshow mode infrastructure
+    //   Same requirements as OnSlideshowPrev
+    //   Until then: Disabled
+
+    wxMessageBox(
+        "Slideshow navigation not yet implemented.\n\n"
+        "MFC version allows navigating through W3D files in a directory.\n"
+        "This requires slideshow mode infrastructure.",
+        "TODO",
+        wxOK | wxICON_INFORMATION,
+        this
+    );
+}
+
+// ============================================================================
+// View Menu - Device and Resolution Handlers
+// ============================================================================
+
+void W3DViewFrame::OnChangeDevice(wxCommandEvent &WXUNUSED(event))
+{
+    // MFC Reference: MainFrm.cpp (IDM_DEVICE_CHANGE = 32806)
+    //
+    // MFC Implementation:
+    //   RenderDeviceClass::Reset_Current_Device();
+    //   CGraphicView *pCGraphicView = (CGraphicView *)m_wndSplitter.GetPane(0, 1);
+    //   pCGraphicView->Change_Device();
+    //   // Show device selection dialog
+    //   // Reinitialize rendering with new device
+    //
+    // Expected Behavior:
+    //   - Open device selection dialog
+    //   - Allow switching between D3D devices (hardware/software)
+    //   - Reinitialize GraphicView with new device
+    //   - Note: Was GRAYED in MFC menu (disabled)
+    //
+    // TODO(MFC-Investigate): Implement device change infrastructure
+    //   Need to:
+    //   1. Add RenderDeviceSelector dialog (already exists as _wx variant)
+    //   2. Implement Change_Device() in GraphicView_wx
+    //   3. Handle device re-initialization
+    //   4. Preserve scene state across device changes
+    //   Until then: Show placeholder or reuse existing dialog
+    //   Note: May be obsolete (Wine only has one D3D device)
+
+    wxMessageBox(
+        "Device change not yet implemented.\n\n"
+        "MFC version allows switching between D3D hardware/software devices.\n"
+        "This requires device management infrastructure.\n\n"
+        "Note: This was GRAYED (disabled) in MFC menu.",
+        "TODO",
+        wxOK | wxICON_INFORMATION,
+        this
+    );
+}
+
+void W3DViewFrame::OnChangeResolution(wxCommandEvent &WXUNUSED(event))
+{
+    // MFC Reference: MainFrm.cpp (IDM_CHANGE_RESOLUTION = 32864)
+    //
+    // MFC Implementation:
+    //   CResolution dlg;
+    //   if (dlg.DoModal() == IDOK)
+    //   {
+    //       // Get selected resolution from dialog
+    //       // Resize GraphicView and reinitialize
+    //   }
+    //
+    // Expected Behavior:
+    //   - Open resolution selection dialog
+    //   - Allow changing rendering resolution
+    //   - Resize GraphicView to new resolution
+    //   - Note: Was GRAYED in MFC menu (disabled)
+    //
+    // TODO(MFC-Investigate): Implement resolution change infrastructure
+    //   Need to:
+    //   1. Add Resolution dialog (already exists as Resolution_wx)
+    //   2. Implement resolution change in GraphicView_wx
+    //   3. Handle window resizing and layout
+    //   Until then: Show placeholder or reuse existing dialog
+    //   Note: May be less relevant (windowed mode can be resized directly)
+
+    wxMessageBox(
+        "Resolution change not yet implemented.\n\n"
+        "MFC version allows changing the rendering resolution.\n"
+        "This requires resolution management infrastructure.\n\n"
+        "Note: This was GRAYED (disabled) in MFC menu.",
+        "TODO",
+        wxOK | wxICON_INFORMATION,
+        this
+    );
 }
 
 void W3DViewFrame::OnAnimationPlay(wxCommandEvent &WXUNUSED(event))

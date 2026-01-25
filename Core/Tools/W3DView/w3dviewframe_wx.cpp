@@ -21,6 +21,7 @@
 #include "w3dviewframe_wx.h"
 #include "w3dviewtree_wx.h"
 #include "w3dviewview_wx.h"
+#include "w3dviewdoc_wx.h"
 #include "dialogs/Aboutbox_wx.h"
 #include "dialogs/CameraSettings_wx.h"
 #include "dialogs/BackgroundColor_wx.h"
@@ -30,11 +31,26 @@
 #include "dialogs/RenderDeviceSelector_wx.h"
 #include "dialogs/LightAmbientDialog_wx.h"
 #include "dialogs/LightSceneDialog_wx.h"
+#include "light.h"
 
 #include <wx/menu.h>
 #include <wx/toolbar.h>
 #include <wx/msgdlg.h>
 #include <wx/filedlg.h>
+
+// Helper function for adjusting light intensity (MFC: MainFrm.cpp:109-121)
+static inline void Adjust_Light_Intensity(Vector3 &color, float inc)
+{
+    color.X = color.X + inc;
+    color.Y = color.Y + inc;
+    color.Z = color.Z + inc;
+    color.X = (color.X < 0) ? 0 : color.X;
+    color.Y = (color.Y < 0) ? 0 : color.Y;
+    color.Z = (color.Z < 0) ? 0 : color.Z;
+    color.X = (color.X > 1.0F) ? 1.0F : color.X;
+    color.Y = (color.Y > 1.0F) ? 1.0F : color.Y;
+    color.Z = (color.Z > 1.0F) ? 1.0F : color.Z;
+}
 
 enum
 {
@@ -459,33 +475,46 @@ void W3DViewFrame::OnDecAmbientLight(wxCommandEvent &WXUNUSED(event))
 
 void W3DViewFrame::OnIncSceneLight(wxCommandEvent &WXUNUSED(event))
 {
-    // TODO(MFC-Match): Implement scene light intensity increase
-    // MFC Reference: MainFrm.cpp:2795-2800 (OnIncLight)
-    // MFC implementation:
-    //   CW3DViewDoc *pdoc = ::GetCurrentDocument();
-    //   LightClass *plight = pdoc->GetSceneLight();
-    //   if (plight != nullptr) {
-    //       Vector3 diffuse, specular;
-    //       plight->Get_Diffuse(&diffuse);
-    //       plight->Get_Specular(&specular);
-    //       Adjust_Light_Intensity(diffuse, 0.05F);
-    //       Adjust_Light_Intensity(specular, 0.05F);
-    //       plight->Set_Diffuse(diffuse);
-    //       plight->Set_Specular(specular);
-    //   }
-    // Status: W3DViewDoc::GetSceneLight() exists (added Session 6)
-    // Impact: Medium - scene light control
-    wxMessageBox("Inc Scene Light not yet implemented", "TODO", wxOK | wxICON_INFORMATION, this);
+    // MFC: MainFrm.cpp:2795-2815 (OnIncLight)
+    // Increases scene light intensity by 0.05 for both diffuse and specular
+    W3DViewDoc *doc = wxStaticCast(m_docManager->GetCurrentDocument(), W3DViewDoc);
+    if (!doc)
+        return;
+
+    LightClass *light = doc->GetSceneLight();
+    if (light != nullptr) {
+        Vector3 diffuse, specular;
+        light->Get_Diffuse(&diffuse);
+        light->Get_Specular(&specular);
+
+        Adjust_Light_Intensity(diffuse, 0.05F);
+        Adjust_Light_Intensity(specular, 0.05F);
+
+        light->Set_Diffuse(diffuse);
+        light->Set_Specular(specular);
+    }
 }
 
 void W3DViewFrame::OnDecSceneLight(wxCommandEvent &WXUNUSED(event))
 {
-    // TODO(MFC-Match): Implement scene light intensity decrease
-    // MFC Reference: MainFrm.cpp:2766-2786 (OnDecLight)
-    // Same as OnIncSceneLight but with -0.05F increment
-    // Status: W3DViewDoc::GetSceneLight() exists (added Session 6)
-    // Impact: Medium - scene light control
-    wxMessageBox("Dec Scene Light not yet implemented", "TODO", wxOK | wxICON_INFORMATION, this);
+    // MFC: MainFrm.cpp:2766-2786 (OnDecLight)
+    // Decreases scene light intensity by 0.05 for both diffuse and specular
+    W3DViewDoc *doc = wxStaticCast(m_docManager->GetCurrentDocument(), W3DViewDoc);
+    if (!doc)
+        return;
+
+    LightClass *light = doc->GetSceneLight();
+    if (light != nullptr) {
+        Vector3 diffuse, specular;
+        light->Get_Diffuse(&diffuse);
+        light->Get_Specular(&specular);
+
+        Adjust_Light_Intensity(diffuse, -0.05F);
+        Adjust_Light_Intensity(specular, -0.05F);
+
+        light->Set_Diffuse(diffuse);
+        light->Set_Specular(specular);
+    }
 }
 
 void W3DViewFrame::OnLightingExpose(wxCommandEvent &WXUNUSED(event))
@@ -503,19 +532,18 @@ void W3DViewFrame::OnLightingExpose(wxCommandEvent &WXUNUSED(event))
 
 void W3DViewFrame::OnKillSceneLight(wxCommandEvent &WXUNUSED(event))
 {
-    // TODO(MFC-Match): Implement kill scene light (set to black)
-    // MFC Reference: MainFrm.cpp:3677-3689 (OnKillSceneLight)
-    // MFC implementation:
-    //   CW3DViewDoc *pdoc = ::GetCurrentDocument();
-    //   LightClass *plight = pdoc->GetSceneLight();
-    //   if (plight != nullptr) {
-    //       const Vector3 black(0.0f, 0.0f, 0.0f);
-    //       plight->Set_Diffuse(black);
-    //       plight->Set_Specular(black);
-    //   }
-    // Status: W3DViewDoc::GetSceneLight() exists (added Session 6)
-    // Impact: Medium - scene light control
-    wxMessageBox("Kill Scene Light not yet implemented", "TODO", wxOK | wxICON_INFORMATION, this);
+    // MFC: MainFrm.cpp:3677-3689 (OnKillSceneLight)
+    // Sets scene light to black (turns it off)
+    W3DViewDoc *doc = wxStaticCast(m_docManager->GetCurrentDocument(), W3DViewDoc);
+    if (!doc)
+        return;
+
+    LightClass *light = doc->GetSceneLight();
+    if (light != nullptr) {
+        const Vector3 black(0.0f, 0.0f, 0.0f);
+        light->Set_Diffuse(black);
+        light->Set_Specular(black);
+    }
 }
 
 void W3DViewFrame::OnPrelitVertex(wxCommandEvent &WXUNUSED(event))

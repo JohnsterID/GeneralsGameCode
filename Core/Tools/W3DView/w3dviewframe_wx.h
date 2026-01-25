@@ -38,8 +38,8 @@ private:
     void OnAbout(wxCommandEvent &event);
     void OnObjectProperties(wxCommandEvent &event);
     void OnLodGenerate(wxCommandEvent &event);
-    void OnViewReset(wxCommandEvent &event);
-    void OnAlternateMaterial(wxCommandEvent &event);
+    void OnObjectReset(wxCommandEvent &event);
+    void OnObjectAlternateMaterials(wxCommandEvent &event);
     void OnViewPatchGapFill(wxCommandEvent &event);
     void OnUpdateViewPatchGapFill(wxUpdateUIEvent &event);
     void OnViewSubdivision1(wxCommandEvent &event);

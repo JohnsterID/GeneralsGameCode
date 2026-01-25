@@ -24,6 +24,7 @@
 #include "w3dviewdoc_wx.h"
 #include "GraphicView_wx.h"
 #include "ViewerScene.h"
+#include "ww3d.h"
 #include "dialogs/Aboutbox_wx.h"
 #include "dialogs/CameraSettings_wx.h"
 #include "dialogs/BackgroundColor_wx.h"
@@ -532,15 +533,20 @@ void W3DViewFrame::OnDecSceneLight(wxCommandEvent &WXUNUSED(event))
 
 void W3DViewFrame::OnLightingExpose(wxCommandEvent &WXUNUSED(event))
 {
-    // TODO(MFC-Match): Implement precalculated lighting expose toggle
-    // MFC Reference: MainFrm.cpp:2863-2872 (OnLightingExpose, OnUpdateLightingExpose)
+    // MFC: MainFrm.cpp:2863-2872 (OnLightingExpose)
+    // Toggles exposure of precalculated lighting
+    WW3D::Expose_Prelit(!WW3D::Expose_Prelit());
+    
+    // TODO(MFC-Missing-Feature): Add OnUpdateLightingExpose for menu checkbox state
+    // MFC Reference: MainFrm.cpp:2873-2877 (OnUpdateLightingExpose)
     // MFC implementation:
-    //   WW3D::Expose_Prelit(!WW3D::Expose_Prelit());  // toggle
-    // Also needs OnUpdateLightingExpose for checkbox state:
-    //   pcmdui->SetCheck(WW3D::Expose_Prelit());
-    // Status: Requires WW3D engine method access
-    // Impact: Low - advanced lighting feature
-    wxMessageBox("Lighting Expose not yet implemented", "TODO", wxOK | wxICON_INFORMATION, this);
+    //   void CMainFrame::OnUpdateLightingExpose(CCmdUI *pcmdui)
+    //   {
+    //       pcmdui->SetCheck(WW3D::Expose_Prelit());
+    //   }
+    // wxWidgets needs EVT_UPDATE_UI handler to set checkbox state
+    // Status: Requires wxUpdateUIEvent handler implementation
+    // Impact: Low - visual feedback only (functionality works)
 }
 
 void W3DViewFrame::OnKillSceneLight(wxCommandEvent &WXUNUSED(event))
@@ -563,14 +569,24 @@ void W3DViewFrame::OnPrelitVertex(wxCommandEvent &WXUNUSED(event))
 {
     // TODO(MFC-Match): Implement vertex lighting mode toggle
     // MFC Reference: MainFrm.cpp:3738-3751 (OnPrelitVertex, OnUpdatePrelitVertex)
+    // WW3D methods EXIST: WW3D::Get_Prelit_Mode(), WW3D::Set_Prelit_Mode() (ww3d.h:253-254)
+    // WW3D enum EXISTS: WW3D::PRELIT_MODE_VERTEX (ww3d.h:76)
+    // 
     // MFC implementation:
-    //   if (WW3D::Get_Prelit_Mode() != WW3D::PRELIT_MODE_LIGHTMAP_MULTI_VERTEX) {
-    //       WW3D::Set_Prelit_Mode(WW3D::PRELIT_MODE_LIGHTMAP_MULTI_VERTEX);
-    //       // Reload lightmap models (see OnPrelitMultipass for pattern)
+    //   if (WW3D::Get_Prelit_Mode() != WW3D::PRELIT_MODE_VERTEX) {
+    //       WW3D::Set_Prelit_Mode(WW3D::PRELIT_MODE_VERTEX);
+    //       CDataTreeView *tree = (CDataTreeView *)m_wndSplitter.GetPane(0, 0);
+    //       tree->Reload_Lightmap_Models();
+    //       GetCurrentDocument()->Reload_Displayed_Object();
     //   }
-    // Also needs OnUpdatePrelitVertex for checkbox state
-    // Status: Requires WW3D engine mode access
-    // Impact: Low - advanced lighting mode
+    //
+    // BLOCKED BY: Missing wxWidgets infrastructure
+    //   - W3DViewTreeCtrl::Reload_Lightmap_Models() not implemented
+    //   - W3DViewDoc::Reload_Displayed_Object() not implemented
+    //   - Need to investigate tree/document model reload pattern
+    //
+    // Also needs OnUpdatePrelitVertex for checkbox state (similar to OnUpdateLightingExpose)
+    // Impact: Low - advanced lighting mode (used for lightmapped models)
     wxMessageBox("Vertex Lighting not yet implemented", "TODO", wxOK | wxICON_INFORMATION, this);
 }
 
@@ -578,9 +594,15 @@ void W3DViewFrame::OnPrelitMultipass(wxCommandEvent &WXUNUSED(event))
 {
     // TODO(MFC-Match): Implement multipass lighting mode toggle
     // MFC Reference: MainFrm.cpp:3698-3734 (OnPrelitMultipass, OnUpdatePrelitMultipass)
-    // Changes prelit mode and reloads lightmap models
-    // Status: Requires WW3D engine mode access and model reload
-    // Impact: Low - advanced lighting mode
+    // WW3D methods EXIST: WW3D::Get_Prelit_Mode(), WW3D::Set_Prelit_Mode() (ww3d.h:253-254)
+    // WW3D enum EXISTS: WW3D::PRELIT_MODE_LIGHTMAP_MULTI_PASS (ww3d.h:77)
+    //
+    // BLOCKED BY: Same infrastructure as OnPrelitVertex
+    //   - Requires W3DViewTreeCtrl::Reload_Lightmap_Models()
+    //   - Requires W3DViewDoc::Reload_Displayed_Object()
+    //
+    // Also needs OnUpdatePrelitMultipass for checkbox state
+    // Impact: Low - advanced lighting mode (multi-pass lightmapping)
     wxMessageBox("Multi-Pass Lighting not yet implemented", "TODO", wxOK | wxICON_INFORMATION, this);
 }
 
@@ -588,9 +610,15 @@ void W3DViewFrame::OnPrelitMultitex(wxCommandEvent &WXUNUSED(event))
 {
     // TODO(MFC-Match): Implement multitexture lighting mode toggle
     // MFC Reference: MainFrm.cpp:3755-3787 (OnPrelitMultitex, OnUpdatePrelitMultitex)
-    // Similar to OnPrelitMultipass but for multitexture mode
-    // Status: Requires WW3D engine mode access
-    // Impact: Low - advanced lighting mode
+    // WW3D methods EXIST: WW3D::Get_Prelit_Mode(), WW3D::Set_Prelit_Mode() (ww3d.h:253-254)
+    // WW3D enum EXISTS: WW3D::PRELIT_MODE_LIGHTMAP_MULTI_TEXTURE (ww3d.h:78)
+    //
+    // BLOCKED BY: Same infrastructure as OnPrelitVertex
+    //   - Requires W3DViewTreeCtrl::Reload_Lightmap_Models()
+    //   - Requires W3DViewDoc::Reload_Displayed_Object()
+    //
+    // Also needs OnUpdatePrelitMultitex for checkbox state
+    // Impact: Low - advanced lighting mode (multi-texture lightmapping)
     wxMessageBox("Multi-Texture Lighting not yet implemented", "TODO", wxOK | wxICON_INFORMATION, this);
 }
 

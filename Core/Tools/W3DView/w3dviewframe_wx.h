@@ -91,6 +91,12 @@ private:
     void OnCameraBottom(wxCommandEvent &event);
     void OnCameraReset(wxCommandEvent &event);
     void OnCameraSettings(wxCommandEvent &event);
+    void OnCameraAllowRotateX(wxCommandEvent &event);
+    void OnUpdateCameraAllowRotateX(wxUpdateUIEvent &event);
+    void OnCameraAllowRotateY(wxCommandEvent &event);
+    void OnUpdateCameraAllowRotateY(wxUpdateUIEvent &event);
+    void OnCameraAllowRotateZ(wxCommandEvent &event);
+    void OnUpdateCameraAllowRotateZ(wxUpdateUIEvent &event);
     // Light menu handlers
     void OnLightRotateY(wxCommandEvent &event);
     void OnLightRotateZ(wxCommandEvent &event);

@@ -110,6 +110,9 @@ enum
     ID_CAMERA_BOTTOM,
     ID_CAMERA_RESET,
     ID_CAMERA_SETTINGS,
+    ID_CAMERA_ALLOW_ROTATE_X,
+    ID_CAMERA_ALLOW_ROTATE_Y,
+    ID_CAMERA_ALLOW_ROTATE_Z,
     // Light menu items
     ID_LIGHT_ROTATE_Y,
     ID_LIGHT_ROTATE_Z,
@@ -188,6 +191,12 @@ wxBEGIN_EVENT_TABLE(W3DViewFrame, wxDocParentFrame)
     EVT_MENU(ID_CAMERA_BOTTOM, W3DViewFrame::OnCameraBottom)
     EVT_MENU(ID_CAMERA_RESET, W3DViewFrame::OnCameraReset)
     EVT_MENU(ID_CAMERA_SETTINGS, W3DViewFrame::OnCameraSettings)
+    EVT_MENU(ID_CAMERA_ALLOW_ROTATE_X, W3DViewFrame::OnCameraAllowRotateX)
+    EVT_UPDATE_UI(ID_CAMERA_ALLOW_ROTATE_X, W3DViewFrame::OnUpdateCameraAllowRotateX)
+    EVT_MENU(ID_CAMERA_ALLOW_ROTATE_Y, W3DViewFrame::OnCameraAllowRotateY)
+    EVT_UPDATE_UI(ID_CAMERA_ALLOW_ROTATE_Y, W3DViewFrame::OnUpdateCameraAllowRotateY)
+    EVT_MENU(ID_CAMERA_ALLOW_ROTATE_Z, W3DViewFrame::OnCameraAllowRotateZ)
+    EVT_UPDATE_UI(ID_CAMERA_ALLOW_ROTATE_Z, W3DViewFrame::OnUpdateCameraAllowRotateZ)
     // Light menu
     EVT_MENU(ID_LIGHT_ROTATE_Y, W3DViewFrame::OnLightRotateY)
     EVT_MENU(ID_LIGHT_ROTATE_Z, W3DViewFrame::OnLightRotateZ)
@@ -415,9 +424,9 @@ void W3DViewFrame::CreateMenuBar()
     cameraMenu->Append(ID_CAMERA_TOP, "&Top\tCtrl+T");
     cameraMenu->Append(ID_CAMERA_BOTTOM, "Bo&ttom\tCtrl+M");
     cameraMenu->AppendSeparator();
-    // TODO(MFC-Investigate): Add "Rotate &X Only" toggle (IDM_CAMERA_ALLOW_ROTATE_X)
-    // TODO(MFC-Investigate): Add "Rotate &Y Only" toggle (IDM_CAMERA_ALLOW_ROTATE_Y)
-    // TODO(MFC-Investigate): Add "Rotate &Z Only" toggle (IDM_CAMERA_ALLOW_ROTATE_Z)
+    cameraMenu->AppendCheckItem(ID_CAMERA_ALLOW_ROTATE_X, "Rotate &X Only");
+    cameraMenu->AppendCheckItem(ID_CAMERA_ALLOW_ROTATE_Y, "Rotate &Y Only");
+    cameraMenu->AppendCheckItem(ID_CAMERA_ALLOW_ROTATE_Z, "Rotate &Z Only");
     // TODO(MFC-Investigate): Add "&Copy Screen Size To Clipboard\tCtrl+C" (IDM_COPY_SCREEN_SIZE)
     //   Note: Ctrl+C may conflict with standard copy - investigate alternative
     cameraMenu->AppendSeparator();
@@ -1373,6 +1382,157 @@ void W3DViewFrame::OnCameraSettings(wxCommandEvent &WXUNUSED(event))
     // MFC Reference: CameraSettings.cpp
     CameraSettings dialog(this);
     dialog.ShowModal();
+}
+
+void W3DViewFrame::OnCameraAllowRotateX(wxCommandEvent &WXUNUSED(event))
+{
+    // MFC Reference: MainFrm.cpp:1942-1971 (OnCameraAllowRotateX)
+    //
+    // MFC Implementation:
+    //   CGraphicView *pCGraphicView = (CGraphicView *)m_wndSplitter.GetPane (0, 1);
+    //   if (pCGraphicView)
+    //   {
+    //       if (pCGraphicView->GetAllowedCameraRotation () != CGraphicView::OnlyRotateX)
+    //       {
+    //           pCGraphicView->SetAllowedCameraRotation (CGraphicView::OnlyRotateX);
+    //           m_objectToolbar.SetButtonState (IDM_CAMERA_ALLOW_ROTATE_X, CFancyToolbar::StateDn);
+    //           m_objectToolbar.SetButtonState (IDM_CAMERA_ALLOW_ROTATE_Y, CFancyToolbar::StateUp);
+    //           m_objectToolbar.SetButtonState (IDM_CAMERA_ALLOW_ROTATE_Z, CFancyToolbar::StateUp);
+    //       }
+    //       else
+    //       {
+    //           pCGraphicView->SetAllowedCameraRotation (CGraphicView::FreeRotation);
+    //           m_objectToolbar.SetButtonState (IDM_CAMERA_ALLOW_ROTATE_X, CFancyToolbar::StateUp);
+    //           m_objectToolbar.SetButtonState (IDM_CAMERA_ALLOW_ROTATE_Y, CFancyToolbar::StateUp);
+    //           m_objectToolbar.SetButtonState (IDM_CAMERA_ALLOW_ROTATE_Z, CFancyToolbar::StateUp);
+    //       }
+    //   }
+    //
+    // Behavior: Toggle camera rotation constraint to X-axis only
+    //           If already constrained to X, toggle off (return to FreeRotation)
+    //           Menu checkmarks handled by OnUpdateCameraAllowRotateX
+    //
+    // Menu: Camera → Rotate X Only
+    
+    W3DViewDoc* doc = wxStaticCast(GetDocument(), W3DViewDoc);
+    if (!doc) return;
+    
+    CGraphicView* graphicView = doc->GetGraphicView();
+    if (!graphicView) return;
+    
+    // Toggle behavior: if already OnlyRotateX, switch to FreeRotation; otherwise set OnlyRotateX
+    if (graphicView->GetAllowedCameraRotation() != CGraphicView::OnlyRotateX) {
+        graphicView->SetAllowedCameraRotation(CGraphicView::OnlyRotateX);
+    } else {
+        graphicView->SetAllowedCameraRotation(CGraphicView::FreeRotation);
+    }
+    
+    // TODO(MFC-Match): Update toolbar button states when Object toolbar is implemented
+    // MFC syncs m_objectToolbar button states here (IDM_CAMERA_ALLOW_ROTATE_X/Y/Z)
+}
+
+void W3DViewFrame::OnUpdateCameraAllowRotateX(wxUpdateUIEvent &event)
+{
+    // MFC Reference: MainFrm.cpp:2055-2067 (OnUpdateCameraAllowRotateX)
+    //
+    // MFC Implementation:
+    //   CGraphicView *pCGraphicView = (CGraphicView *)m_wndSplitter.GetPane (0, 1);
+    //   if (pCGraphicView)
+    //   {
+    //       pCmdUI->SetCheck (pCGraphicView->GetAllowedCameraRotation () == CGraphicView::OnlyRotateX);
+    //   }
+    //
+    // Behavior: Check menu item if camera rotation is constrained to X-axis only
+    
+    W3DViewDoc* doc = wxStaticCast(GetDocument(), W3DViewDoc);
+    if (!doc) return;
+    
+    CGraphicView* graphicView = doc->GetGraphicView();
+    if (!graphicView) return;
+    
+    event.Check(graphicView->GetAllowedCameraRotation() == CGraphicView::OnlyRotateX);
+}
+
+void W3DViewFrame::OnCameraAllowRotateY(wxCommandEvent &WXUNUSED(event))
+{
+    // MFC Reference: MainFrm.cpp:1980-2009 (OnCameraAllowRotateY)
+    //
+    // MFC Implementation: Same toggle pattern as OnCameraAllowRotateX but for Y-axis
+    //
+    // Behavior: Toggle camera rotation constraint to Y-axis only
+    //           If already constrained to Y, toggle off (return to FreeRotation)
+    //
+    // Menu: Camera → Rotate Y Only
+    
+    W3DViewDoc* doc = wxStaticCast(GetDocument(), W3DViewDoc);
+    if (!doc) return;
+    
+    CGraphicView* graphicView = doc->GetGraphicView();
+    if (!graphicView) return;
+    
+    if (graphicView->GetAllowedCameraRotation() != CGraphicView::OnlyRotateY) {
+        graphicView->SetAllowedCameraRotation(CGraphicView::OnlyRotateY);
+    } else {
+        graphicView->SetAllowedCameraRotation(CGraphicView::FreeRotation);
+    }
+    
+    // TODO(MFC-Match): Update toolbar button states when Object toolbar is implemented
+}
+
+void W3DViewFrame::OnUpdateCameraAllowRotateY(wxUpdateUIEvent &event)
+{
+    // MFC Reference: MainFrm.cpp:2075-2087 (OnUpdateCameraAllowRotateY)
+    //
+    // Behavior: Check menu item if camera rotation is constrained to Y-axis only
+    
+    W3DViewDoc* doc = wxStaticCast(GetDocument(), W3DViewDoc);
+    if (!doc) return;
+    
+    CGraphicView* graphicView = doc->GetGraphicView();
+    if (!graphicView) return;
+    
+    event.Check(graphicView->GetAllowedCameraRotation() == CGraphicView::OnlyRotateY);
+}
+
+void W3DViewFrame::OnCameraAllowRotateZ(wxCommandEvent &WXUNUSED(event))
+{
+    // MFC Reference: MainFrm.cpp:2018-2047 (OnCameraAllowRotateZ)
+    //
+    // MFC Implementation: Same toggle pattern as OnCameraAllowRotateX but for Z-axis
+    //
+    // Behavior: Toggle camera rotation constraint to Z-axis only
+    //           If already constrained to Z, toggle off (return to FreeRotation)
+    //
+    // Menu: Camera → Rotate Z Only
+    
+    W3DViewDoc* doc = wxStaticCast(GetDocument(), W3DViewDoc);
+    if (!doc) return;
+    
+    CGraphicView* graphicView = doc->GetGraphicView();
+    if (!graphicView) return;
+    
+    if (graphicView->GetAllowedCameraRotation() != CGraphicView::OnlyRotateZ) {
+        graphicView->SetAllowedCameraRotation(CGraphicView::OnlyRotateZ);
+    } else {
+        graphicView->SetAllowedCameraRotation(CGraphicView::FreeRotation);
+    }
+    
+    // TODO(MFC-Match): Update toolbar button states when Object toolbar is implemented
+}
+
+void W3DViewFrame::OnUpdateCameraAllowRotateZ(wxUpdateUIEvent &event)
+{
+    // MFC Reference: MainFrm.cpp:2095-2107 (OnUpdateCameraAllowRotateZ)
+    //
+    // Behavior: Check menu item if camera rotation is constrained to Z-axis only
+    
+    W3DViewDoc* doc = wxStaticCast(GetDocument(), W3DViewDoc);
+    if (!doc) return;
+    
+    CGraphicView* graphicView = doc->GetGraphicView();
+    if (!graphicView) return;
+    
+    event.Check(graphicView->GetAllowedCameraRotation() == CGraphicView::OnlyRotateZ);
 }
 
 // Light menu handlers

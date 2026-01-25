@@ -218,7 +218,17 @@ void CGraphicView::ResetObject()
 
 void CGraphicView::RotateObject(OBJECT_ROTATION rotation)
 {
-    m_objectRotation = rotation;
+    // MFC Reference: GraphicView.cpp:1560-1570
+    // Behavior: Sets rotation state flags for continuous object rotation
+    //           Actual rotation happens in rendering loop (Rotate_Object)
+    //
+    // Is this rotation different?
+    if (m_objectRotation != rotation)
+    {
+        // Save the rotation state
+        m_objectRotation = rotation;
+    }
+    
     Refresh(false);
 }
 

@@ -33,7 +33,7 @@ public:
 
     wxSplitterWindow *GetSplitter() { return m_splitter; }
     
-    // Helper to get the current document (wxDocParentFrame doesn't have GetDocument())
+    // TODO: Helper to get the current document (wxDocParentFrame doesn't have GetDocument())
     wxDocument* GetDocument() const;
 
 private:
@@ -42,6 +42,11 @@ private:
     void OnObjectProperties(wxCommandEvent &event);
     void OnLodGenerate(wxCommandEvent &event);
     void OnObjectReset(wxCommandEvent &event);
+    void OnObjectRotateX(wxCommandEvent &event);
+    void OnObjectRotateY(wxCommandEvent &event);
+    void OnObjectRotateZ(wxCommandEvent &event);
+    void OnObjectRotateYBack(wxCommandEvent &event);
+    void OnObjectRotateZBack(wxCommandEvent &event);
     void OnObjectAlternateMaterials(wxCommandEvent &event);
     void OnViewPatchGapFill(wxCommandEvent &event);
     void OnUpdateViewPatchGapFill(wxUpdateUIEvent &event);

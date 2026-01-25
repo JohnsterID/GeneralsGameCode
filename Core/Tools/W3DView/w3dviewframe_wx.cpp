@@ -153,6 +153,18 @@ void W3DViewFrame::CreateMenuBar()
     menuBar->Append(animMenu, "&Animation");
 
     // Settings menu
+    // TODO(MFC-Match): Light menu structure completely wrong
+    // MFC has separate "Light" menu (W3DView.rc:280-299) with:
+    //   - Rotate Y/Z menu items with shortcuts
+    //   - Ambient... (IDM_LIGHT_AMBIENT -> LightAmbientDialog_wx, 0 TODOs)
+    //   - Scene Light... (IDM_LIGHT_SCENE -> LightSceneDialog_wx, has TODOs)
+    //   - Inc/Dec Ambient Intensity (+/-)
+    //   - Inc/Dec Scene Light Intensity (Ctrl+'+'/Ctrl+'-')
+    //   - Expose Precalculated Lighting
+    //   - Kill Scene Light (Ctrl+'*')
+    // wxWidgets currently has single "Lighting..." in Settings menu
+    // Status: Need to create separate Light menu with all items
+    // Impact: High - entire Light menu missing from wxWidgets
     wxMenu *settingsMenu = new wxMenu;
     settingsMenu->Append(ID_BACKGROUND_COLOR, "Background &Color...");
     settingsMenu->Append(ID_BACKGROUND_BMP, "Background &BMP...");
@@ -160,7 +172,7 @@ void W3DViewFrame::CreateMenuBar()
     settingsMenu->AppendCheckItem(ID_BACKGROUND_FOG, "Background &Fog");
     settingsMenu->AppendSeparator();
     settingsMenu->Append(ID_CAMERA_SETTINGS, "C&amera...");
-    settingsMenu->Append(ID_LIGHT_SETTINGS, "&Lighting...");
+    settingsMenu->Append(ID_LIGHT_SETTINGS, "&Lighting...");  // WRONG - should be separate Light menu
     settingsMenu->AppendSeparator();
     settingsMenu->Append(ID_TEXTURE_PATH, "&Texture Path...");
     settingsMenu->Append(ID_DEVICE_SELECTION, "&Device...");

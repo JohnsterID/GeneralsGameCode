@@ -24,6 +24,7 @@
 #include "dialogs/Aboutbox_wx.h"
 #include "dialogs/CameraSettings_wx.h"
 #include "dialogs/BackgroundColor_wx.h"
+#include "dialogs/BackgroundBmp_wx.h"
 #include "dialogs/BackgroundObject_wx.h"
 #include "dialogs/TexturePaths_wx.h"
 #include "dialogs/RenderDeviceSelector_wx.h"
@@ -41,7 +42,10 @@ enum
     ID_VIEW_RESET,
     ID_ALTERNATE_MATERIAL,
     ID_ANIMATION_SETTINGS,
-    ID_BACKGROUND_SETTINGS,
+    ID_BACKGROUND_COLOR,
+    ID_BACKGROUND_BMP,
+    ID_BACKGROUND_OBJECT,
+    ID_BACKGROUND_FOG,
     ID_CAMERA_SETTINGS,
     ID_LIGHT_SETTINGS,
     ID_TEXTURE_PATH,
@@ -58,7 +62,10 @@ wxBEGIN_EVENT_TABLE(W3DViewFrame, wxDocParentFrame)
     EVT_MENU(ID_VIEW_RESET, W3DViewFrame::OnViewReset)
     EVT_MENU(ID_ALTERNATE_MATERIAL, W3DViewFrame::OnAlternateMaterial)
     EVT_MENU(ID_ANIMATION_SETTINGS, W3DViewFrame::OnAnimationSettings)
-    EVT_MENU(ID_BACKGROUND_SETTINGS, W3DViewFrame::OnBackgroundSettings)
+    EVT_MENU(ID_BACKGROUND_COLOR, W3DViewFrame::OnBackgroundColor)
+    EVT_MENU(ID_BACKGROUND_BMP, W3DViewFrame::OnBackgroundBmp)
+    EVT_MENU(ID_BACKGROUND_OBJECT, W3DViewFrame::OnBackgroundObject)
+    EVT_MENU(ID_BACKGROUND_FOG, W3DViewFrame::OnBackgroundFog)
     EVT_MENU(ID_CAMERA_SETTINGS, W3DViewFrame::OnCameraSettings)
     EVT_MENU(ID_LIGHT_SETTINGS, W3DViewFrame::OnLightSettings)
     EVT_MENU(ID_TEXTURE_PATH, W3DViewFrame::OnTexturePathSettings)
@@ -147,8 +154,12 @@ void W3DViewFrame::CreateMenuBar()
 
     // Settings menu
     wxMenu *settingsMenu = new wxMenu;
-    settingsMenu->Append(ID_BACKGROUND_SETTINGS, "&Background...");
-    settingsMenu->Append(ID_CAMERA_SETTINGS, "&Camera...");
+    settingsMenu->Append(ID_BACKGROUND_COLOR, "Background &Color...");
+    settingsMenu->Append(ID_BACKGROUND_BMP, "Background &BMP...");
+    settingsMenu->Append(ID_BACKGROUND_OBJECT, "Background &Object...");
+    settingsMenu->AppendCheckItem(ID_BACKGROUND_FOG, "Background &Fog");
+    settingsMenu->AppendSeparator();
+    settingsMenu->Append(ID_CAMERA_SETTINGS, "C&amera...");
     settingsMenu->Append(ID_LIGHT_SETTINGS, "&Lighting...");
     settingsMenu->AppendSeparator();
     settingsMenu->Append(ID_TEXTURE_PATH, "&Texture Path...");
@@ -268,19 +279,49 @@ void W3DViewFrame::OnAnimationSettings(wxCommandEvent &WXUNUSED(event))
                  "TODO", wxOK | wxICON_INFORMATION, this);
 }
 
-void W3DViewFrame::OnBackgroundSettings(wxCommandEvent &WXUNUSED(event))
+void W3DViewFrame::OnBackgroundColor(wxCommandEvent &WXUNUSED(event))
 {
-    // TODO(MFC-Match): Fix menu structure mismatch
-    // MFC has separate menu items:
-    //   - IDM_BACKGROUND_COLOR (OnBackgroundColor) -> BackgroundColor_wx
-    //   - IDM_BACKGROUND_BMP (OnBackgroundBMP) -> BackgroundBmp_wx
-    //   - IDM_BACKGROUND_OBJECT (OnBackgroundObject) -> BackgroundObject_wx
-    //   - IDM_BACKGROUND_FOG (OnBackgroundFog) -> needs dialog
-    // wxWidgets currently has single "Background..." menu item
-    // Status: Menu structure needs reorganization to match MFC
-    wxMessageBox("Background Settings dialog not yet implemented\n\n"
-                 "MFC has multiple background menu items that need to be added:\n"
-                 "- Background Color\n- Background BMP\n- Background Object\n- Background Fog",
+    // TODO(MFC-Verify): Verify BackgroundColor dialog matches MFC exactly
+    // Dialog appears implemented but needs visual/behavioral verification
+    // MFC Reference: BackgroundColor.cpp (CBackgroundColorDialog)
+    BackgroundColor dialog(this);
+    dialog.ShowModal();
+}
+
+void W3DViewFrame::OnBackgroundBmp(wxCommandEvent &WXUNUSED(event))
+{
+    // TODO(MFC-Verify): Verify BackgroundBmp dialog matches MFC exactly
+    // Dialog appears implemented but needs visual/behavioral verification
+    // MFC Reference: BackgroundBMP.cpp (CBackgroundBMPDialog)
+    BackgroundBmp dialog(this);
+    dialog.ShowModal();
+}
+
+void W3DViewFrame::OnBackgroundObject(wxCommandEvent &WXUNUSED(event))
+{
+    // TODO(MFC-Verify): Verify BackgroundObject dialog matches MFC exactly
+    // Dialog appears implemented but needs visual/behavioral verification
+    // MFC Reference: BackgroundObject.cpp (CBackgroundObjectDialog)
+    BackgroundObject dialog(this);
+    dialog.ShowModal();
+}
+
+void W3DViewFrame::OnBackgroundFog(wxCommandEvent &WXUNUSED(event))
+{
+    // TODO(MFC-Match): Implement fog toggle functionality
+    // MFC Reference: MainFrm.cpp:1649 (OnBackgroundFog)
+    // MFC implementation:
+    //   CW3DViewDoc *pdoc = (CW3DViewDoc *)GetActiveDocument();
+    //   if (pdoc) {
+    //       pdoc->EnableFog(!pdoc->IsFogEnabled());
+    //   }
+    // Also needs OnUpdateBackgroundFog for checkbox state (MainFrm.cpp:1634)
+    // Status: Requires document methods IsFogEnabled() and EnableFog()
+    wxMessageBox("Background Fog toggle not yet implemented\n\n"
+                 "Requires:\n"
+                 "- W3DViewDoc::IsFogEnabled()\n"
+                 "- W3DViewDoc::EnableFog(bool)\n"
+                 "- Menu checkbox state update handler",
                  "TODO", wxOK | wxICON_INFORMATION, this);
 }
 

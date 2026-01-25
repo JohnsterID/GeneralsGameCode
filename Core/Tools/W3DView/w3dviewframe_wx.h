@@ -41,7 +41,10 @@ private:
     void OnViewReset(wxCommandEvent &event);
     void OnAlternateMaterial(wxCommandEvent &event);
     void OnAnimationSettings(wxCommandEvent &event);
-    void OnBackgroundSettings(wxCommandEvent &event);
+    void OnBackgroundColor(wxCommandEvent &event);
+    void OnBackgroundBmp(wxCommandEvent &event);
+    void OnBackgroundObject(wxCommandEvent &event);
+    void OnBackgroundFog(wxCommandEvent &event);
     void OnCameraSettings(wxCommandEvent &event);
     void OnLightSettings(wxCommandEvent &event);
     void OnTexturePathSettings(wxCommandEvent &event);

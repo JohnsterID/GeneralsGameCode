@@ -204,6 +204,27 @@ void W3DViewDoc::SetBackgroundColor(const Vector3& color)
     Modify(true);
 }
 
+bool W3DViewDoc::IsFogEnabled() const
+{
+    // MFC: W3DViewDoc.cpp (CW3DViewDoc::IsFogEnabled)
+    // Returns fog enable state from scene
+    if (m_scene)
+    {
+        return m_scene->Get_Fog_Enable();
+    }
+    return false;
+}
+
+void W3DViewDoc::EnableFog(bool enable)
+{
+    // MFC: W3DViewDoc.cpp (CW3DViewDoc::EnableFog)
+    // Sets fog enable state in scene
+    if (m_scene)
+    {
+        m_scene->Set_Fog_Enable(enable);
+    }
+}
+
 CGraphicView* W3DViewDoc::GetGraphicView()
 {
     // Get the first view that's a CGraphicView

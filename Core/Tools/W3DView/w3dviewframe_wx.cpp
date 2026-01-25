@@ -377,21 +377,29 @@ void W3DViewFrame::OnBackgroundObject(wxCommandEvent &WXUNUSED(event))
 
 void W3DViewFrame::OnBackgroundFog(wxCommandEvent &WXUNUSED(event))
 {
-    // TODO(MFC-Match): Implement fog toggle functionality
-    // MFC Reference: MainFrm.cpp:1649 (OnBackgroundFog)
+    // MFC: MainFrm.cpp:1649 (OnBackgroundFog)
+    // Toggles background fog enable state
+    W3DViewDoc *doc = wxStaticCast(m_docManager->GetCurrentDocument(), W3DViewDoc);
+    if (!doc)
+        return;
+
+    doc->EnableFog(!doc->IsFogEnabled());
+
+    // TODO(MFC-Missing-Feature): Add OnUpdateBackgroundFog for menu checkbox state
+    // MFC Reference: MainFrm.cpp:1634-1642 (OnUpdateBackgroundFog)
     // MFC implementation:
-    //   CW3DViewDoc *pdoc = (CW3DViewDoc *)GetActiveDocument();
-    //   if (pdoc) {
-    //       pdoc->EnableFog(!pdoc->IsFogEnabled());
+    //   void CMainFrame::OnUpdateBackgroundFog(CCmdUI *pcmdui)
+    //   {
+    //       CW3DViewDoc *pdoc = (CW3DViewDoc *)GetActiveDocument();
+    //       if (pdoc) {
+    //           pcmdui->SetCheck(pdoc->IsFogEnabled());
+    //       } else {
+    //           pcmdui->SetCheck(0);
+    //       }
     //   }
-    // Also needs OnUpdateBackgroundFog for checkbox state (MainFrm.cpp:1634)
-    // Status: Requires document methods IsFogEnabled() and EnableFog()
-    wxMessageBox("Background Fog toggle not yet implemented\n\n"
-                 "Requires:\n"
-                 "- W3DViewDoc::IsFogEnabled()\n"
-                 "- W3DViewDoc::EnableFog(bool)\n"
-                 "- Menu checkbox state update handler",
-                 "TODO", wxOK | wxICON_INFORMATION, this);
+    // wxWidgets needs EVT_UPDATE_UI handler to set checkbox state
+    // Status: Requires wxUpdateUIEvent handler implementation
+    // Impact: Low - visual feedback only (functionality works)
 }
 
 void W3DViewFrame::OnCameraSettings(wxCommandEvent &WXUNUSED(event))

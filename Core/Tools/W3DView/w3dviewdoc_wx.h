@@ -74,6 +74,10 @@ public:
     const Vector3& GetBackgroundColor() const { return m_backgroundColor; }
     void SetBackgroundColor(const Vector3& color);
 
+    // Background fog methods (MFC: IsFogEnabled, EnableFog)
+    bool IsFogEnabled() const;
+    void EnableFog(bool enable);
+
     // Camera settings methods
     bool Is_FOV_Manual() const { return m_manualFOV; }
     void Set_Manual_FOV(bool manual) { m_manualFOV = manual; }

@@ -196,6 +196,24 @@ W3DViewFrame::~W3DViewFrame()
 {
 }
 
+wxDocument* W3DViewFrame::GetDocument() const
+{
+    // wxDocParentFrame doesn't have GetDocument(), so we get it through the view
+    // Get the document manager
+    wxDocManager* docManager = GetDocumentManager();
+    if (!docManager) {
+        return nullptr;
+    }
+    
+    // Get the current document (first in the list, since we're single-document)
+    wxList& docs = docManager->GetDocuments();
+    if (docs.GetCount() > 0) {
+        return wxStaticCast(docs.GetFirst()->GetData(), wxDocument);
+    }
+    
+    return nullptr;
+}
+
 void W3DViewFrame::CreateMenuBar()
 {
     // TODO(MFC-Match): Complete menu structure overhaul needed

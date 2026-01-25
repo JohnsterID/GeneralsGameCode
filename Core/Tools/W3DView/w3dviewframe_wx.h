@@ -32,6 +32,9 @@ public:
     virtual ~W3DViewFrame();
 
     wxSplitterWindow *GetSplitter() { return m_splitter; }
+    
+    // Helper to get the current document (wxDocParentFrame doesn't have GetDocument())
+    wxDocument* GetDocument() const;
 
 private:
     void OnClose(wxCloseEvent &event);

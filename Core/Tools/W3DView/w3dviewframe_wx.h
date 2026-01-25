@@ -40,6 +40,15 @@ private:
     void OnClose(wxCloseEvent &event);
     void OnAbout(wxCommandEvent &event);
     // File menu handlers
+    void OnMungeSortOnLoad(wxCommandEvent &event);
+    void OnUpdateMungeSortOnLoad(wxUpdateUIEvent &event);
+    void OnEnableGammaCorrectionFile(wxCommandEvent &event);
+    void OnUpdateEnableGammaCorrectionFile(wxUpdateUIEvent &event);
+    void OnSaveSettings(wxCommandEvent &event);
+    void OnLoadSettings(wxCommandEvent &event);
+    void OnImportFacialAnims(wxCommandEvent &event);
+    void OnTexturePathFile(wxCommandEvent &event);
+    void OnAnimatedSoundOptions(wxCommandEvent &event);
     void OnExportAggregate(wxCommandEvent &event);
     void OnExportEmitter(wxCommandEvent &event);
     void OnExportLOD(wxCommandEvent &event);

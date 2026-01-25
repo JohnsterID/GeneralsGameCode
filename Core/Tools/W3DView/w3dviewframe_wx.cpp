@@ -73,8 +73,16 @@ static inline void Adjust_Light_Intensity(Vector3 &color, float inc)
 enum
 {
     ID_ABOUT = wxID_ABOUT,
+    // File menu
+    ID_MUNGE_SORT_ON_LOAD = wxID_HIGHEST + 1,
+    ID_ENABLE_GAMMA_CORRECTION_FILE,  // File menu version (different from View menu)
+    ID_SAVE_SETTINGS,
+    ID_LOAD_SETTINGS,
+    ID_IMPORT_FACIAL_ANIMS,
+    ID_TEXTURE_PATH_FILE,  // Will replace ID_TEXTURE_PATH from Settings menu
+    ID_ANIMATED_SOUND_OPTIONS,
     // File menu - Export submenu
-    ID_EXPORT_AGGREGATE = wxID_HIGHEST + 1,
+    ID_EXPORT_AGGREGATE,
     ID_EXPORT_EMITTER,
     ID_EXPORT_LOD,
     ID_EXPORT_PRIMITIVE,
@@ -168,6 +176,16 @@ enum
 wxBEGIN_EVENT_TABLE(W3DViewFrame, wxDocParentFrame)
     EVT_CLOSE(W3DViewFrame::OnClose)
     EVT_MENU(ID_ABOUT, W3DViewFrame::OnAbout)
+    // File menu
+    EVT_MENU(ID_MUNGE_SORT_ON_LOAD, W3DViewFrame::OnMungeSortOnLoad)
+    EVT_UPDATE_UI(ID_MUNGE_SORT_ON_LOAD, W3DViewFrame::OnUpdateMungeSortOnLoad)
+    EVT_MENU(ID_ENABLE_GAMMA_CORRECTION_FILE, W3DViewFrame::OnEnableGammaCorrectionFile)
+    EVT_UPDATE_UI(ID_ENABLE_GAMMA_CORRECTION_FILE, W3DViewFrame::OnUpdateEnableGammaCorrectionFile)
+    EVT_MENU(ID_SAVE_SETTINGS, W3DViewFrame::OnSaveSettings)
+    EVT_MENU(ID_LOAD_SETTINGS, W3DViewFrame::OnLoadSettings)
+    EVT_MENU(ID_IMPORT_FACIAL_ANIMS, W3DViewFrame::OnImportFacialAnims)
+    EVT_MENU(ID_TEXTURE_PATH_FILE, W3DViewFrame::OnTexturePathFile)
+    EVT_MENU(ID_ANIMATED_SOUND_OPTIONS, W3DViewFrame::OnAnimatedSoundOptions)
     // File menu - Export submenu
     EVT_MENU(ID_EXPORT_AGGREGATE, W3DViewFrame::OnExportAggregate)
     EVT_MENU(ID_EXPORT_EMITTER, W3DViewFrame::OnExportEmitter)
@@ -403,26 +421,17 @@ void W3DViewFrame::CreateMenuBar()
     
     wxMenuBar *menuBar = new wxMenuBar;
 
-    // File menu
+    // File menu - EXACT MFC matching (W3DView.rc:181-208)
     wxMenu *fileMenu = new wxMenu;
     fileMenu->Append(wxID_NEW, "&New\tCtrl+N");
     fileMenu->Append(wxID_OPEN, "&Open...\tCtrl+O");
-    // TODO(MFC-Match): Replace Save/Save As with proper MFC file menu items
-    //   MFC: W3DView.rc:186-187
-    //     - "Munge Sort on Load" (IDM_MUNGE_SORT_ON_LOAD:32897)
-    //     - "Enable Gamma Correction" (IDM_ENABLE_GAMMA_CORRECTION)
-    //   MFC: W3DView.rc:189-190
-    //     - "Save Settings...\tCtrl+S" (IDM_SAVE_SETTINGS:32796)
-    //     - "Load Settings..." (IDM_LOAD_SETTINGS:32797)
-    //   Handler: MainFrm.cpp (need to investigate all handlers)
-    //   Impact: High - settings persistence is core functionality
-    fileMenu->Append(wxID_SAVE, "&Save\tCtrl+S");
-    fileMenu->Append(wxID_SAVEAS, "Save &As...");
+    fileMenu->AppendCheckItem(ID_MUNGE_SORT_ON_LOAD, "&Munge Sort on Load");
+    fileMenu->AppendCheckItem(ID_ENABLE_GAMMA_CORRECTION_FILE, "&Enable Gamma Correction");
     fileMenu->AppendSeparator();
-    // TODO(MFC-Match): Add Import Facial Anims before Export submenu
-    //   MFC: W3DView.rc:192 - "&Import Facial Anims..." (IDM_IMPORT_FACIAL_ANIMS:32874)
-    //   Handler: MainFrm.cpp (need to investigate)
-    //   Impact: Medium - specialized animation import feature
+    fileMenu->Append(ID_SAVE_SETTINGS, "&Save Settings...\tCtrl+S");
+    fileMenu->Append(ID_LOAD_SETTINGS, "Load Settings...");
+    fileMenu->AppendSeparator();
+    fileMenu->Append(ID_IMPORT_FACIAL_ANIMS, "&Import Facial Anims...");
     // Export submenu (MFC: W3DView.rc:193-199)
     wxMenu *exportMenu = new wxMenu;
     exportMenu->Append(ID_EXPORT_AGGREGATE, "&Aggregate...");
@@ -432,16 +441,15 @@ void W3DViewFrame::CreateMenuBar()
     exportMenu->Append(ID_EXPORT_SOUND_OBJECT, "&Sound Object...");
     fileMenu->AppendSubMenu(exportMenu, "Ex&port...");
     fileMenu->AppendSeparator();
-    // TODO(MFC-Match): Add Texture Path and Animated Sound Options after Export
-    //   MFC: W3DView.rc:201-202
-    //     - "&Texture Path..." (IDM_TEXTURE_PATH)
-    //     - "&Animated Sound Options..." (IDM_EDIT_ANIMATED_SOUNDS_OPTIONS)
-    //   Handler: MainFrm.cpp (need to investigate)
-    //   Impact: High - texture paths needed, Medium - sound options specialized
-    // TODO(MFC-Match): Add Recent File (MRU) before Exit
+    fileMenu->Append(ID_TEXTURE_PATH_FILE, "&Texture Path...");
+    fileMenu->Append(ID_ANIMATED_SOUND_OPTIONS, "&Animated Sound Options...");
+    fileMenu->AppendSeparator();
+    // TODO(MFC-Match): Add Recent File (MRU) here
     //   MFC: W3DView.rc:205 - "Recent File" (ID_FILE_MRU_FILE1, GRAYED)
-    //   Handler: MFC framework automatic
+    //   Handler: MFC framework automatic, wxWidgets has wxFileHistory
     //   Impact: Medium - user convenience feature
+    //   Need to integrate wxFileHistory with wxConfig persistence
+    fileMenu->AppendSeparator();
     fileMenu->Append(wxID_EXIT, "E&xit\tAlt+F4");
     menuBar->Append(fileMenu, "&File");
 
@@ -591,21 +599,20 @@ void W3DViewFrame::CreateMenuBar()
     lightMenu->AppendCheckItem(ID_PRELIT_MULTITEX, "Multi-Te&xture Lighting");
     menuBar->Append(lightMenu, "Ligh&ting");
 
-    // Settings menu
-    wxMenu *settingsMenu = new wxMenu;
-    settingsMenu->Append(ID_BACKGROUND_COLOR, "Background &Color...");
-    settingsMenu->Append(ID_BACKGROUND_BMP, "Background &BMP...");
-    settingsMenu->Append(ID_BACKGROUND_OBJECT, "Background &Object...");
-    settingsMenu->AppendCheckItem(ID_BACKGROUND_FOG, "Background &Fog");
-    settingsMenu->AppendSeparator();
-    // TODO(MFC-Match): Camera Settings moved to Camera menu (matches MFC structure)
-    settingsMenu->Append(ID_TEXTURE_PATH, "&Texture Path...");
-    settingsMenu->Append(ID_DEVICE_SELECTION, "&Device...");
-    settingsMenu->Append(ID_RESOLUTION_SETTINGS, "&Resolution...");
-    settingsMenu->AppendSeparator();
-    settingsMenu->AppendCheckItem(ID_ENABLE_GAMMA_CORRECTION, "&Enable Gamma Correction");
-    // Note: "Set Gamma" moved to View menu to match MFC structure (W3DView.rc:221)
-    menuBar->Append(settingsMenu, "&Settings");
+    // Background menu - EXACT MFC matching (W3DView.rc:327-333)
+    wxMenu *backgroundMenu = new wxMenu;
+    backgroundMenu->Append(ID_BACKGROUND_COLOR, "&Color...");
+    backgroundMenu->Append(ID_BACKGROUND_BMP, "&Bitmap...");
+    backgroundMenu->Append(ID_BACKGROUND_OBJECT, "&Object...");
+    backgroundMenu->AppendSeparator();
+    backgroundMenu->AppendCheckItem(ID_BACKGROUND_FOG, "Fog (CTRL+ALT+F)");
+    menuBar->Append(backgroundMenu, "&Background");
+    
+    // Note: Settings menu removed - doesn't exist in MFC
+    //   - Texture Path moved to File menu (W3DView.rc:201)
+    //   - Device/Resolution already in View menu as Change Device/Resolution (W3DView.rc:223-224)
+    //   - Enable Gamma Correction moved to File menu (W3DView.rc:186)
+    //   - Set Gamma already in View menu (W3DView.rc:221)
 
     // Help menu
     wxMenu *helpMenu = new wxMenu;
@@ -2846,4 +2853,115 @@ void W3DViewFrame::OnUpdateObjectRestrictAnims(wxUpdateUIEvent &event)
     //   Set event.Check(restrictMode) to update checkmark
     //   May need to enable/disable based on whether animations are loaded
     event.Check(false); // Default to unchecked until implemented
+}
+
+// File menu handlers
+
+void W3DViewFrame::OnMungeSortOnLoad(wxCommandEvent &event)
+{
+    // MFC: MainFrm.cpp (need to investigate OnMungeSortOnLoad handler)
+    // MFC ID: IDM_MUNGE_SORT_ON_LOAD (32897)
+    // Function: Toggle whether loaded models are automatically sorted/munged
+    // TODO(MFC-Implement): Implement munge sort on load toggle
+    //   Store state in wxConfig: "/Config/MungeSortOnLoad" (bool)
+    //   Toggle current state and persist
+    //   May affect how W3D files are loaded/processed
+    //   Impact: Medium - affects asset loading pipeline
+    wxConfigBase *config = wxConfigBase::Get();
+    bool currentState = config->Read("/Config/MungeSortOnLoad", false);
+    config->Write("/Config/MungeSortOnLoad", !currentState);
+}
+
+void W3DViewFrame::OnUpdateMungeSortOnLoad(wxUpdateUIEvent &event)
+{
+    wxConfigBase *config = wxConfigBase::Get();
+    bool mungeSortEnabled = config->Read("/Config/MungeSortOnLoad", false);
+    event.Check(mungeSortEnabled);
+}
+
+void W3DViewFrame::OnEnableGammaCorrectionFile(wxCommandEvent &event)
+{
+    // MFC: MainFrm.cpp:4418-4436 (OnEnableGammaCorrection)
+    // MFC ID: IDM_ENABLE_GAMMA_CORRECTION (32898)
+    // Function: Toggle gamma correction enable/disable
+    // Note: Same as existing OnEnableGammaCorrection handler
+    wxConfigBase *config = wxConfigBase::Get();
+    long enableGamma = config->Read("/Config/EnableGamma", 0L);
+    config->Write("/Config/EnableGamma", (enableGamma == 0) ? 1L : 0L);
+}
+
+void W3DViewFrame::OnUpdateEnableGammaCorrectionFile(wxUpdateUIEvent &event)
+{
+    wxConfigBase *config = wxConfigBase::Get();
+    long enableGamma = config->Read("/Config/EnableGamma", 0L);
+    event.Check(enableGamma != 0);
+}
+
+void W3DViewFrame::OnSaveSettings(wxCommandEvent &WXUNUSED(event))
+{
+    // MFC: MainFrm.cpp (need to investigate OnSaveSettings handler)
+    // MFC ID: IDM_SAVE_SETTINGS (32796)
+    // Function: Save all application settings to a file
+    // TODO(MFC-Implement): Implement settings save functionality
+    //   MFC Reference: SaveSettingsDialog.cpp already exists (SaveSettings_wx.cpp)
+    //   Show file save dialog with .cfg or .ini filter
+    //   Write all wxConfig settings to selected file
+    //   Settings include: camera, lighting, view options, paths, etc.
+    //   Impact: High - user workflow feature for saving/restoring work environment
+    wxMessageBox("Save Settings not yet fully implemented.\nDialog exists but save logic needs completion.",
+                 "Feature Incomplete", wxOK | wxICON_INFORMATION, this);
+}
+
+void W3DViewFrame::OnLoadSettings(wxCommandEvent &WXUNUSED(event))
+{
+    // MFC: MainFrm.cpp (need to investigate OnLoadSettings handler)
+    // MFC ID: IDM_LOAD_SETTINGS (32797)
+    // Function: Load application settings from a file
+    // TODO(MFC-Implement): Implement settings load functionality
+    //   Show file open dialog with .cfg or .ini filter
+    //   Read settings file and update wxConfig
+    //   Apply loaded settings to current session
+    //   May need to refresh UI to reflect new settings
+    //   Impact: High - companion to Save Settings
+    wxMessageBox("Load Settings not yet implemented.\nNeed to implement file reading and config update.",
+                 "Feature Incomplete", wxOK | wxICON_INFORMATION, this);
+}
+
+void W3DViewFrame::OnImportFacialAnims(wxCommandEvent &WXUNUSED(event))
+{
+    // MFC: MainFrm.cpp (need to investigate OnImportFacialAnims handler)
+    // MFC ID: IDM_IMPORT_FACIAL_ANIMS (32874)
+    // Function: Import facial animation data for character models
+    // TODO(MFC-Implement): Implement facial animation import
+    //   Show file open dialog with facial anim file filter
+    //   Parse facial animation file format (need to investigate format)
+    //   Apply facial animations to current character model
+    //   May involve bone mapping and animation channel setup
+    //   Impact: Medium - specialized feature for character animation
+    wxMessageBox("Import Facial Anims not yet implemented.\nSee TODO in OnImportFacialAnims.",
+                 "Feature Incomplete", wxOK | wxICON_INFORMATION, this);
+}
+
+void W3DViewFrame::OnTexturePathFile(wxCommandEvent &WXUNUSED(event))
+{
+    // MFC: MainFrm.cpp (same as OnTexturePathSettings)
+    // MFC ID: IDM_TEXTURE_PATH (in File menu, not Settings)
+    // Function: Opens texture path configuration dialog
+    // Note: Handler already exists as OnTexturePathSettings, just reusing
+    TexturePaths dialog(this);
+    dialog.ShowModal();
+}
+
+void W3DViewFrame::OnAnimatedSoundOptions(wxCommandEvent &WXUNUSED(event))
+{
+    // MFC: MainFrm.cpp (need to investigate OnEditAnimatedSoundsOptions handler)
+    // MFC ID: IDM_EDIT_ANIMATED_SOUNDS_OPTIONS (32900)
+    // Function: Configure options for animated sound objects
+    // TODO(MFC-Implement): Implement animated sound options dialog
+    //   MFC Reference: AnimatedSoundDialog_wx.cpp already exists
+    //   Dialog may already be implemented, need to verify
+    //   Options likely include: sound trigger points, volume curves, falloff, etc.
+    //   Impact: Medium - specialized feature for sound designers
+    wxMessageBox("Animated Sound Options not yet fully implemented.\nDialog may exist (AnimatedSoundDialog_wx.cpp) but needs verification.",
+                 "Feature Incomplete", wxOK | wxICON_INFORMATION, this);
 }

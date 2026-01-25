@@ -22,6 +22,7 @@
 #include "w3dviewtree_wx.h"
 #include "w3dviewview_wx.h"
 #include "w3dviewdoc_wx.h"
+#include "ViewerScene.h"
 #include "dialogs/Aboutbox_wx.h"
 #include "dialogs/CameraSettings_wx.h"
 #include "dialogs/BackgroundColor_wx.h"
@@ -448,29 +449,32 @@ void W3DViewFrame::OnLightScene(wxCommandEvent &WXUNUSED(event))
 
 void W3DViewFrame::OnIncAmbientLight(wxCommandEvent &WXUNUSED(event))
 {
-    // TODO(MFC-Match): Implement ambient light intensity increase
-    // MFC Reference: MainFrm.cpp:2820-2833 (OnIncAmbientLight)
-    // MFC implementation:
-    //   CW3DViewDoc *pdoc = ::GetCurrentDocument();
-    //   if (pdoc->GetScene() != nullptr) {
-    //       Vector3 color = pdoc->GetScene()->Get_Ambient_Light();
-    //       Adjust_Light_Intensity(color, 0.05F);  // increment by 0.05
-    //       pdoc->GetScene()->Set_Ambient_Light(color);
-    //   }
-    // Helper: Adjust_Light_Intensity() at MainFrm.cpp:109
-    // Status: Requires W3DViewDoc::GetScene() and ambient light access
-    // Impact: Medium - ambient light control
-    wxMessageBox("Inc Ambient Light not yet implemented", "TODO", wxOK | wxICON_INFORMATION, this);
+    // MFC: MainFrm.cpp:2847-2861 (OnIncAmbientLight)
+    // Increases ambient light intensity by 0.05
+    W3DViewDoc *doc = wxStaticCast(m_docManager->GetCurrentDocument(), W3DViewDoc);
+    if (!doc)
+        return;
+
+    if (doc->GetScene() != nullptr) {
+        Vector3 color = doc->GetScene()->Get_Ambient_Light();
+        Adjust_Light_Intensity(color, 0.05F);
+        doc->GetScene()->Set_Ambient_Light(color);
+    }
 }
 
 void W3DViewFrame::OnDecAmbientLight(wxCommandEvent &WXUNUSED(event))
 {
-    // TODO(MFC-Match): Implement ambient light intensity decrease
-    // MFC Reference: MainFrm.cpp:2803-2816 (OnDecAmbientLight)
-    // Same as OnIncAmbientLight but with -0.05F increment
-    // Status: Requires W3DViewDoc::GetScene() and ambient light access
-    // Impact: Medium - ambient light control
-    wxMessageBox("Dec Ambient Light not yet implemented", "TODO", wxOK | wxICON_INFORMATION, this);
+    // MFC: MainFrm.cpp:2824-2837 (OnDecAmbientLight)
+    // Decreases ambient light intensity by 0.05
+    W3DViewDoc *doc = wxStaticCast(m_docManager->GetCurrentDocument(), W3DViewDoc);
+    if (!doc)
+        return;
+
+    if (doc->GetScene() != nullptr) {
+        Vector3 color = doc->GetScene()->Get_Ambient_Light();
+        Adjust_Light_Intensity(color, -0.05F);
+        doc->GetScene()->Set_Ambient_Light(color);
+    }
 }
 
 void W3DViewFrame::OnIncSceneLight(wxCommandEvent &WXUNUSED(event))

@@ -99,6 +99,14 @@ enum
     ID_BACKGROUND_BMP,
     ID_BACKGROUND_OBJECT,
     ID_BACKGROUND_FOG,
+    // Camera menu items
+    ID_CAMERA_FRONT,
+    ID_CAMERA_BACK,
+    ID_CAMERA_LEFT,
+    ID_CAMERA_RIGHT,
+    ID_CAMERA_TOP,
+    ID_CAMERA_BOTTOM,
+    ID_CAMERA_RESET,
     ID_CAMERA_SETTINGS,
     // Light menu items
     ID_LIGHT_ROTATE_Y,
@@ -167,6 +175,14 @@ wxBEGIN_EVENT_TABLE(W3DViewFrame, wxDocParentFrame)
     EVT_MENU(ID_BACKGROUND_OBJECT, W3DViewFrame::OnBackgroundObject)
     EVT_MENU(ID_BACKGROUND_FOG, W3DViewFrame::OnBackgroundFog)
     EVT_UPDATE_UI(ID_BACKGROUND_FOG, W3DViewFrame::OnUpdateBackgroundFog)
+    // Camera menu
+    EVT_MENU(ID_CAMERA_FRONT, W3DViewFrame::OnCameraFront)
+    EVT_MENU(ID_CAMERA_BACK, W3DViewFrame::OnCameraBack)
+    EVT_MENU(ID_CAMERA_LEFT, W3DViewFrame::OnCameraLeft)
+    EVT_MENU(ID_CAMERA_RIGHT, W3DViewFrame::OnCameraRight)
+    EVT_MENU(ID_CAMERA_TOP, W3DViewFrame::OnCameraTop)
+    EVT_MENU(ID_CAMERA_BOTTOM, W3DViewFrame::OnCameraBottom)
+    EVT_MENU(ID_CAMERA_RESET, W3DViewFrame::OnCameraReset)
     EVT_MENU(ID_CAMERA_SETTINGS, W3DViewFrame::OnCameraSettings)
     // Light menu
     EVT_MENU(ID_LIGHT_ROTATE_Y, W3DViewFrame::OnLightRotateY)
@@ -209,24 +225,39 @@ W3DViewFrame::W3DViewFrame(wxDocManager *manager)
     InitStatusBar();
     CreateUI();
     
-    // Add accelerators for "back" rotation without menu items
+    // Add accelerators for rotation back and camera positioning
     // MFC Reference: W3DView.rc accelerators
     //
-    // Object rotation (no modifier):
+    // Object rotation back (no modifier):
     //   VK_DOWN -> IDM_OBJECT_ROTATE_Y_BACK (MainFrm.cpp:2597-2613)
     //   VK_LEFT -> IDM_OBJECT_ROTATE_Z_BACK (MainFrm.cpp:2619-2635)
     //
-    // Light rotation (Ctrl modifier):
+    // Light rotation back (Ctrl modifier):
     //   Ctrl+VK_DOWN -> IDM_LIGHT_ROTATE_Y_BACK (MainFrm.cpp:2663-2676)
     //   Ctrl+VK_LEFT -> IDM_LIGHT_ROTATE_Z_BACK (MainFrm.cpp:2707-2720)
-    wxAcceleratorEntry entries[4];
+    //
+    // Camera positioning (Ctrl modifier):
+    //   Ctrl+F -> IDM_CAMERA_FRONT (MainFrm.cpp:1397-1408)
+    //   Ctrl+B -> IDM_CAMERA_BACK (MainFrm.cpp:1357-1368)
+    //   Ctrl+L -> IDM_CAMERA_LEFT (MainFrm.cpp:1417-1428)
+    //   Ctrl+R -> IDM_CAMERA_RIGHT (MainFrm.cpp:1467-1478)
+    //   Ctrl+T -> IDM_CAMERA_TOP (MainFrm.cpp:1487-1498)
+    //   Ctrl+M -> IDM_CAMERA_BOTTOM (MainFrm.cpp:1377-1388)
+    wxAcceleratorEntry entries[10];
     // Object rotation back (no modifier)
     entries[0].Set(wxACCEL_NORMAL, WXK_DOWN, ID_OBJECT_ROTATE_Y_BACK);
     entries[1].Set(wxACCEL_NORMAL, WXK_LEFT, ID_OBJECT_ROTATE_Z_BACK);
     // Light rotation back (Ctrl modifier)
     entries[2].Set(wxACCEL_CTRL, WXK_DOWN, ID_LIGHT_ROTATE_Y_BACK);
     entries[3].Set(wxACCEL_CTRL, WXK_LEFT, ID_LIGHT_ROTATE_Z_BACK);
-    wxAcceleratorTable accel(4, entries);
+    // Camera positioning (Ctrl modifier)
+    entries[4].Set(wxACCEL_CTRL, 'F', ID_CAMERA_FRONT);
+    entries[5].Set(wxACCEL_CTRL, 'B', ID_CAMERA_BACK);
+    entries[6].Set(wxACCEL_CTRL, 'L', ID_CAMERA_LEFT);
+    entries[7].Set(wxACCEL_CTRL, 'R', ID_CAMERA_RIGHT);
+    entries[8].Set(wxACCEL_CTRL, 'T', ID_CAMERA_TOP);
+    entries[9].Set(wxACCEL_CTRL, 'M', ID_CAMERA_BOTTOM);
+    wxAcceleratorTable accel(10, entries);
     SetAcceleratorTable(accel);
 
     Centre();
@@ -370,6 +401,31 @@ void W3DViewFrame::CreateMenuBar()
     // TODO(MFC-Investigate): Add "Ad&vanced...\tCtrl+V" menu item (IDM_ADVANCED_ANIM)
     menuBar->Append(animMenu, "&Animation");
 
+    // Camera menu
+    // MFC Reference: W3DView.rc (Camera menu structure)
+    wxMenu *cameraMenu = new wxMenu;
+    cameraMenu->Append(ID_CAMERA_FRONT, "&Front\tCtrl+F");
+    cameraMenu->Append(ID_CAMERA_BACK, "&Back\tCtrl+B");
+    cameraMenu->Append(ID_CAMERA_LEFT, "&Left\tCtrl+L");
+    cameraMenu->Append(ID_CAMERA_RIGHT, "&Right\tCtrl+R");
+    cameraMenu->Append(ID_CAMERA_TOP, "&Top\tCtrl+T");
+    cameraMenu->Append(ID_CAMERA_BOTTOM, "Bo&ttom\tCtrl+M");
+    cameraMenu->AppendSeparator();
+    // TODO(MFC-Investigate): Add "Rotate &X Only" toggle (IDM_CAMERA_ALLOW_ROTATE_X)
+    // TODO(MFC-Investigate): Add "Rotate &Y Only" toggle (IDM_CAMERA_ALLOW_ROTATE_Y)
+    // TODO(MFC-Investigate): Add "Rotate &Z Only" toggle (IDM_CAMERA_ALLOW_ROTATE_Z)
+    // TODO(MFC-Investigate): Add "&Copy Screen Size To Clipboard\tCtrl+C" (IDM_COPY_SCREEN_SIZE)
+    //   Note: Ctrl+C may conflict with standard copy - investigate alternative
+    cameraMenu->AppendSeparator();
+    // TODO(MFC-Investigate): Add "&Animate Camera\tF8" (IDM_CAMERA_ANIMATE)
+    // TODO(MFC-Investigate): Add "+X Camera" (IDM_CAMERA_BONE_POS_X)
+    cameraMenu->AppendSeparator();
+    cameraMenu->Append(ID_CAMERA_SETTINGS, "Settin&gs...");
+    // TODO(MFC-Investigate): Add "&Set Distance..." (IDM_SET_CAMERA_DISTANCE)
+    cameraMenu->AppendSeparator();
+    cameraMenu->Append(ID_CAMERA_RESET, "&Reset");
+    menuBar->Append(cameraMenu, "&Camera");
+
     // Light menu (matching MFC W3DView.rc:283-302)
     wxMenu *lightMenu = new wxMenu;
     lightMenu->Append(ID_LIGHT_ROTATE_Y, "Rotate &Y\tCtrl+Up");
@@ -398,8 +454,7 @@ void W3DViewFrame::CreateMenuBar()
     settingsMenu->Append(ID_BACKGROUND_OBJECT, "Background &Object...");
     settingsMenu->AppendCheckItem(ID_BACKGROUND_FOG, "Background &Fog");
     settingsMenu->AppendSeparator();
-    settingsMenu->Append(ID_CAMERA_SETTINGS, "C&amera...");
-    settingsMenu->AppendSeparator();
+    // TODO(MFC-Match): Camera Settings moved to Camera menu (matches MFC structure)
     settingsMenu->Append(ID_TEXTURE_PATH, "&Texture Path...");
     settingsMenu->Append(ID_DEVICE_SELECTION, "&Device...");
     settingsMenu->Append(ID_RESOLUTION_SETTINGS, "&Resolution...");
@@ -1135,6 +1190,133 @@ void W3DViewFrame::OnUpdateBackgroundFog(wxUpdateUIEvent &event)
         event.Check(doc->IsFogEnabled());
     } else {
         event.Check(false);
+    }
+}
+
+// Camera menu handlers
+
+void W3DViewFrame::OnCameraFront(wxCommandEvent &WXUNUSED(event))
+{
+    // MFC Reference: MainFrm.cpp:1397-1408 (OnCameraFront)
+    // Positions camera to front view (looking at object from front)
+    W3DViewDoc* doc = wxStaticCast(GetDocument(), W3DViewDoc);
+    if (!doc) return;
+    
+    CGraphicView* graphicView = doc->GetGraphicView();
+    if (!graphicView) return;
+    
+    // Position the camera to front view
+    graphicView->SetCameraPos(CGraphicView::CameraFront);
+}
+
+void W3DViewFrame::OnCameraBack(wxCommandEvent &WXUNUSED(event))
+{
+    // MFC Reference: MainFrm.cpp:1357-1368 (OnCameraBack)
+    // Positions camera to back view (looking at object from behind)
+    W3DViewDoc* doc = wxStaticCast(GetDocument(), W3DViewDoc);
+    if (!doc) return;
+    
+    CGraphicView* graphicView = doc->GetGraphicView();
+    if (!graphicView) return;
+    
+    // Position the camera to back view
+    graphicView->SetCameraPos(CGraphicView::CameraBack);
+}
+
+void W3DViewFrame::OnCameraLeft(wxCommandEvent &WXUNUSED(event))
+{
+    // MFC Reference: MainFrm.cpp:1417-1428 (OnCameraLeft)
+    // Positions camera to left view (looking at object from left side)
+    W3DViewDoc* doc = wxStaticCast(GetDocument(), W3DViewDoc);
+    if (!doc) return;
+    
+    CGraphicView* graphicView = doc->GetGraphicView();
+    if (!graphicView) return;
+    
+    // Position the camera to left view
+    graphicView->SetCameraPos(CGraphicView::CameraLeft);
+}
+
+void W3DViewFrame::OnCameraRight(wxCommandEvent &WXUNUSED(event))
+{
+    // MFC Reference: MainFrm.cpp:1467-1478 (OnCameraRight)
+    // Positions camera to right view (looking at object from right side)
+    W3DViewDoc* doc = wxStaticCast(GetDocument(), W3DViewDoc);
+    if (!doc) return;
+    
+    CGraphicView* graphicView = doc->GetGraphicView();
+    if (!graphicView) return;
+    
+    // Position the camera to right view
+    graphicView->SetCameraPos(CGraphicView::CameraRight);
+}
+
+void W3DViewFrame::OnCameraTop(wxCommandEvent &WXUNUSED(event))
+{
+    // MFC Reference: MainFrm.cpp:1487-1498 (OnCameraTop)
+    // Positions camera to top view (looking down at object from above)
+    W3DViewDoc* doc = wxStaticCast(GetDocument(), W3DViewDoc);
+    if (!doc) return;
+    
+    CGraphicView* graphicView = doc->GetGraphicView();
+    if (!graphicView) return;
+    
+    // Position the camera to top view
+    graphicView->SetCameraPos(CGraphicView::CameraTop);
+}
+
+void W3DViewFrame::OnCameraBottom(wxCommandEvent &WXUNUSED(event))
+{
+    // MFC Reference: MainFrm.cpp:1377-1388 (OnCameraBottom)
+    // Positions camera to bottom view (looking up at object from below)
+    W3DViewDoc* doc = wxStaticCast(GetDocument(), W3DViewDoc);
+    if (!doc) return;
+    
+    CGraphicView* graphicView = doc->GetGraphicView();
+    if (!graphicView) return;
+    
+    // Position the camera to bottom view
+    graphicView->SetCameraPos(CGraphicView::CameraBottom);
+}
+
+void W3DViewFrame::OnCameraReset(wxCommandEvent &WXUNUSED(event))
+{
+    // MFC Reference: MainFrm.cpp:1437-1458 (OnCameraReset)
+    //
+    // MFC Implementation:
+    //   CGraphicView *pCGraphicView = (CGraphicView *)m_wndSplitter.GetPane (0, 1);
+    //   CW3DViewDoc *pCDoc = (CW3DViewDoc *)GetActiveDocument ();
+    //   if (pCDoc && pCDoc->GetDisplayedObject ())
+    //   {
+    //       RenderObjClass *prender_obj = pCDoc->GetDisplayedObject ();
+    //       if (prender_obj->Class_ID () == RenderObjClass::CLASSID_PARTICLEEMITTER) {
+    //           pCGraphicView->Reset_Camera_To_Display_Emitter (*((ParticleEmitterClass *)prender_obj));
+    //       } else {
+    //           pCGraphicView->Reset_Camera_To_Display_Object (*prender_obj);
+    //       }
+    //   }
+    //
+    // Behavior: Resets camera to optimal position for viewing the displayed object
+    //           Different reset method for particle emitters vs regular objects
+    
+    W3DViewDoc* doc = wxStaticCast(GetDocument(), W3DViewDoc);
+    if (!doc) return;
+    
+    CGraphicView* graphicView = doc->GetGraphicView();
+    if (!graphicView) return;
+    
+    // Get the displayed object
+    RenderObjClass* renderObj = doc->GetDisplayedObject();
+    if (!renderObj) return;
+    
+    // Reset camera based on object type
+    if (renderObj->Class_ID() == RenderObjClass::CLASSID_PARTICLEEMITTER) {
+        // Particle emitters need special camera positioning
+        // Note: Using reinterpret_cast because ParticleEmitterClass is forward declared
+        graphicView->Reset_Camera_To_Display_Emitter(*reinterpret_cast<ParticleEmitterClass*>(renderObj));
+    } else {
+        // Regular render objects use standard camera reset
+        graphicView->Reset_Camera_To_Display_Object(*renderObj);
     }
 }
 

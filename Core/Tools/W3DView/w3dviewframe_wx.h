@@ -80,6 +80,14 @@ private:
     void OnBackgroundObject(wxCommandEvent &event);
     void OnBackgroundFog(wxCommandEvent &event);
     void OnUpdateBackgroundFog(wxUpdateUIEvent &event);
+    // Camera menu handlers
+    void OnCameraFront(wxCommandEvent &event);
+    void OnCameraBack(wxCommandEvent &event);
+    void OnCameraLeft(wxCommandEvent &event);
+    void OnCameraRight(wxCommandEvent &event);
+    void OnCameraTop(wxCommandEvent &event);
+    void OnCameraBottom(wxCommandEvent &event);
+    void OnCameraReset(wxCommandEvent &event);
     void OnCameraSettings(wxCommandEvent &event);
     // Light menu handlers
     void OnLightRotateY(wxCommandEvent &event);

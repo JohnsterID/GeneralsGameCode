@@ -37,6 +37,7 @@
 #include "ViewerAssetMgr.h"
 #include "AssetInfo.h"
 #include "camera.h"
+#include "light.h"
 
 // Redefine CString for wxWidgets compatibility
 #define CString wxString
@@ -77,17 +78,23 @@ bool W3DViewDoc::OnNewDocument()
     // Phase 3A.3: Create scene (EngineString + wwstring.h fix enables this)
     m_scene = new ViewerSceneClass();
     
-    // TODO: Phase 4 - Create and initialize scene light (MFC: W3DViewDoc.cpp lines 374-390)
-    // m_sceneLight = new LightClass;
-    // m_sceneLight->Set_Position(Vector3(0, 5000, 3000));
-    // m_sceneLight->Set_Intensity(1.0F);
-    // m_sceneLight->Set_Force_Visible(true);
-    // m_sceneLight->Set_Flag(LightClass::NEAR_ATTENUATION, false);
-    // m_sceneLight->Set_Far_Attenuation_Range(1000000, 1000000);
-    // m_sceneLight->Set_Ambient(Vector3(0, 0, 0));
-    // m_sceneLight->Set_Diffuse(Vector3(1, 1, 1));
-    // m_sceneLight->Set_Specular(Vector3(1, 1, 1));
-    // m_scene->Add_Render_Object(m_sceneLight);
+    // Phase 4: Create and initialize scene light (MFC: W3DViewDoc.cpp lines 374-390)
+    m_sceneLight = new LightClass;
+    
+    if (m_sceneLight != nullptr) {
+        // Create default light settings matching MFC
+        m_sceneLight->Set_Position(Vector3(0, 5000, 3000));
+        m_sceneLight->Set_Intensity(1.0F);
+        m_sceneLight->Set_Force_Visible(true);
+        m_sceneLight->Set_Flag(LightClass::NEAR_ATTENUATION, false);
+        m_sceneLight->Set_Far_Attenuation_Range(1000000, 1000000);
+        m_sceneLight->Set_Ambient(Vector3(0, 0, 0));
+        m_sceneLight->Set_Diffuse(Vector3(1, 1, 1));
+        m_sceneLight->Set_Specular(Vector3(1, 1, 1));
+        
+        // Add this light to the scene
+        m_scene->Add_Render_Object(m_sceneLight);
+    }
     
     return true;
 }

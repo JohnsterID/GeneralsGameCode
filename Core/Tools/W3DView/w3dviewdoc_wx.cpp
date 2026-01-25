@@ -61,6 +61,7 @@ W3DViewDoc::W3DViewDoc()
     , m_animCombo(nullptr)
     , m_currentFrame(0.0f)
     , m_animTime(0.0f)
+    , m_bAnimateCamera(false)  // Camera animation disabled by default
 {
 }
 
@@ -367,6 +368,38 @@ void W3DViewDoc::StepAnimation(int frameIncrement)
     // TODO(MFC-Investigate): Call Update_Camera() for camera animations
     // MFC: Update_Camera();
     // Need to verify if Update_Camera() method exists and what it does for animated cameras
+}
+
+void W3DViewDoc::Animate_Camera(bool animate)
+{
+    // MFC Reference: W3DViewDoc.cpp:2397-2407 (Animate_Camera)
+    //
+    // MFC Implementation:
+    //   void CW3DViewDoc::Animate_Camera (bool banimate)
+    //   {
+    //       m_bAnimateCamera = banimate;
+    //
+    //       // Restore the camera if we are done animating it
+    //       if (m_bAnimateCamera == false) {
+    //           ::AfxGetMainWnd ()->SendMessage (WM_COMMAND, MAKEWPARAM (IDM_CAMERA_RESET, 0));
+    //       }
+    //       return ;
+    //   }
+    //
+    // Behavior: Enables/disables camera animation
+    //           When disabling, automatically resets camera to default position
+    
+    m_bAnimateCamera = animate;
+    
+    // TODO(MFC-Match): Trigger camera reset when disabling animation
+    // MFC sends WM_COMMAND with IDM_CAMERA_RESET to reset camera on disable
+    // wxWidgets approach: Frame handler should check state and reset camera
+    // Alternative: Add camera reset logic here directly
+    
+    // TODO(MFC-Investigate): Implement actual camera animation logic
+    // MFC may animate camera during idle processing or timer updates
+    // Current implementation: Just sets flag, actual animation logic TBD
+    // May need to investigate GraphicView camera animation methods or timer-based updates
 }
 
 void W3DViewDoc::Reload_Displayed_Object()

@@ -108,6 +108,10 @@ public:
     // Animation control
     void StepAnimation(int frameIncrement);
     
+    // Camera animation control (MFC: W3DViewDoc.h:156, W3DViewDoc.cpp:2397-2407)
+    void Animate_Camera(bool animate);
+    bool Is_Camera_Animated() const { return m_bAnimateCamera; }
+    
     // TODO(MFC-Infrastructure): Implement Reload_Displayed_Object() for prelit mode changes
     // MFC Reference: W3DViewDoc.cpp:579-593
     // Required for: OnPrelitVertex, OnPrelitMultipass, OnPrelitMultitex
@@ -146,6 +150,9 @@ private:
     HAnimComboClass *m_animCombo;    // Combo animation (MFC: m_pCAnimCombo)
     float m_currentFrame;            // Current animation frame (MFC: m_CurrentFrame)
     float m_animTime;                // Current animation time (MFC: m_animTime)
+    
+    // Camera animation state (MFC: m_bAnimateCamera)
+    bool m_bAnimateCamera;           // Camera animation enabled flag
 
     wxDECLARE_DYNAMIC_CLASS(W3DViewDoc);
 };

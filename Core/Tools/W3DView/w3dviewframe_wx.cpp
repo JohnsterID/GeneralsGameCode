@@ -27,6 +27,7 @@
 #include "ww3d.h"
 #include "dialogs/Aboutbox_wx.h"
 #include "dialogs/CameraSettings_wx.h"
+#include "dialogs/CameraDistance_wx.h"
 #include "dialogs/BackgroundColor_wx.h"
 #include "dialogs/BackgroundBmp_wx.h"
 #include "dialogs/BackgroundObject_wx.h"
@@ -115,6 +116,9 @@ enum
     ID_CAMERA_ALLOW_ROTATE_Y,
     ID_CAMERA_ALLOW_ROTATE_Z,
     ID_COPY_SCREEN_SIZE,
+    ID_CAMERA_ANIMATE,
+    ID_CAMERA_BONE_POS_X,
+    ID_SET_CAMERA_DISTANCE,
     // Light menu items
     ID_LIGHT_ROTATE_Y,
     ID_LIGHT_ROTATE_Z,
@@ -200,6 +204,11 @@ wxBEGIN_EVENT_TABLE(W3DViewFrame, wxDocParentFrame)
     EVT_MENU(ID_CAMERA_ALLOW_ROTATE_Z, W3DViewFrame::OnCameraAllowRotateZ)
     EVT_UPDATE_UI(ID_CAMERA_ALLOW_ROTATE_Z, W3DViewFrame::OnUpdateCameraAllowRotateZ)
     EVT_MENU(ID_COPY_SCREEN_SIZE, W3DViewFrame::OnCopyScreenSize)
+    EVT_MENU(ID_CAMERA_ANIMATE, W3DViewFrame::OnCameraAnimate)
+    EVT_UPDATE_UI(ID_CAMERA_ANIMATE, W3DViewFrame::OnUpdateCameraAnimate)
+    EVT_MENU(ID_CAMERA_BONE_POS_X, W3DViewFrame::OnCameraBonePosX)
+    EVT_UPDATE_UI(ID_CAMERA_BONE_POS_X, W3DViewFrame::OnUpdateCameraBonePosX)
+    EVT_MENU(ID_SET_CAMERA_DISTANCE, W3DViewFrame::OnSetCameraDistance)
     // Light menu
     EVT_MENU(ID_LIGHT_ROTATE_Y, W3DViewFrame::OnLightRotateY)
     EVT_MENU(ID_LIGHT_ROTATE_Z, W3DViewFrame::OnLightRotateZ)
@@ -434,11 +443,11 @@ void W3DViewFrame::CreateMenuBar()
     // TODO(MFC-Investigate): Ctrl+C shortcut may conflict with standard copy
     //   Consider alternative shortcut if clipboard copy conflicts arise
     cameraMenu->AppendSeparator();
-    // TODO(MFC-Investigate): Add "&Animate Camera\tF8" (IDM_CAMERA_ANIMATE)
-    // TODO(MFC-Investigate): Add "+X Camera" (IDM_CAMERA_BONE_POS_X)
+    cameraMenu->AppendCheckItem(ID_CAMERA_ANIMATE, "&Animate Camera\tF8");
+    cameraMenu->AppendCheckItem(ID_CAMERA_BONE_POS_X, "+X Camera");
     cameraMenu->AppendSeparator();
     cameraMenu->Append(ID_CAMERA_SETTINGS, "Settin&gs...");
-    // TODO(MFC-Investigate): Add "&Set Distance..." (IDM_SET_CAMERA_DISTANCE)
+    cameraMenu->Append(ID_SET_CAMERA_DISTANCE, "&Set Distance...");
     cameraMenu->AppendSeparator();
     cameraMenu->Append(ID_CAMERA_RESET, "&Reset");
     menuBar->Append(cameraMenu, "&Camera");
@@ -1585,6 +1594,126 @@ void W3DViewFrame::OnCopyScreenSize(wxCommandEvent &WXUNUSED(event))
     if (wxTheClipboard->Open()) {
         wxTheClipboard->SetData(new wxTextDataObject(sizeString));
         wxTheClipboard->Close();
+    }
+}
+
+void W3DViewFrame::OnSetCameraDistance(wxCommandEvent &WXUNUSED(event))
+{
+    // MFC Reference: MainFrm.cpp:4059-4064 (OnSetCameraDistance)
+    //
+    // MFC Implementation:
+    //   void CMainFrame::OnSetCameraDistance (void)
+    //   {
+    //       CameraDistanceDialogClass dialog (this);
+    //       dialog.DoModal ();
+    //       return ;
+    //   }
+    //
+    // Behavior: Opens camera distance configuration dialog
+    //
+    // Menu: Camera → Set Distance...
+    
+    CameraDistance dialog(this);
+    dialog.ShowModal();
+}
+
+void W3DViewFrame::OnCameraAnimate(wxCommandEvent &WXUNUSED(event))
+{
+    // MFC Reference: MainFrm.cpp:2514-2520 (OnCameraAnimate)
+    //
+    // MFC Implementation:
+    //   void CMainFrame::OnCameraAnimate (void)
+    //   {
+    //       bool banimated = ((CW3DViewDoc *)GetActiveDocument ())->Is_Camera_Animated ();
+    //       ((CW3DViewDoc *)GetActiveDocument ())->Animate_Camera (banimated == false);
+    //       return ;
+    //   }
+    //
+    // Behavior: Toggles camera animation on/off
+    //           When disabling, MFC automatically resets camera (via document method)
+    //
+    // Menu: Camera → Animate Camera (F8) [Checkable]
+    
+    W3DViewDoc* doc = wxStaticCast(GetDocument(), W3DViewDoc);
+    if (!doc) return;
+    
+    // Toggle the animated state
+    bool currentlyAnimated = doc->Is_Camera_Animated();
+    doc->Animate_Camera(!currentlyAnimated);
+    
+    // TODO(MFC-Match): Call OnCameraReset when disabling animation
+    // MFC document method sends IDM_CAMERA_RESET command
+    // Consider: if (!currentlyAnimated && !doc->Is_Camera_Animated()) OnCameraReset(event);
+}
+
+void W3DViewFrame::OnUpdateCameraAnimate(wxUpdateUIEvent &event)
+{
+    // MFC Reference: MainFrm.cpp:2529-2533 (OnUpdateCameraAnimate)
+    //
+    // MFC Implementation:
+    //   void CMainFrame::OnUpdateCameraAnimate (CCmdUI *pCmdUI)
+    //   {
+    //       pCmdUI->SetCheck (((CW3DViewDoc *)GetActiveDocument ())->Is_Camera_Animated ());
+    //       return ;
+    //   }
+    //
+    // Behavior: Updates checkmark state based on document animation flag
+    
+    W3DViewDoc* doc = wxStaticCast(GetDocument(), W3DViewDoc);
+    event.Check(doc && doc->Is_Camera_Animated());
+}
+
+void W3DViewFrame::OnCameraBonePosX(wxCommandEvent &WXUNUSED(event))
+{
+    // MFC Reference: MainFrm.cpp:4231-4237 (OnCameraBonePosX)
+    //
+    // MFC Implementation:
+    //   void CMainFrame::OnCameraBonePosX()
+    //   {
+    //       CGraphicView *pCGraphicView = (CGraphicView *)m_wndSplitter.GetPane (0, 1);
+    //       if (pCGraphicView != nullptr) {
+    //           pCGraphicView->Set_Camera_Bone_Pos_X(!pCGraphicView->Is_Camera_Bone_Pos_X());
+    //       }
+    //   }
+    //
+    // Behavior: Toggles camera bone position X mode
+    //
+    // Menu: Camera → +X Camera [Checkable]
+    //
+    // TODO(MFC-Investigate): Clarify bone position mode behavior
+    // May be related to camera attachment to skeletal animation bones
+    
+    W3DViewDoc* doc = wxStaticCast(GetDocument(), W3DViewDoc);
+    if (!doc) return;
+    
+    CGraphicView* graphicView = doc->GetGraphicView();
+    if (graphicView) {
+        // Toggle bone position X mode
+        graphicView->Set_Camera_Bone_Pos_X(!graphicView->Is_Camera_Bone_Pos_X());
+    }
+}
+
+void W3DViewFrame::OnUpdateCameraBonePosX(wxUpdateUIEvent &event)
+{
+    // MFC Reference: MainFrm.cpp:4246-4252 (OnUpdateCameraBonePosX)
+    //
+    // MFC Implementation:
+    //   void CMainFrame::OnUpdateCameraBonePosX(CCmdUI* pCmdUI)
+    //   {
+    //       CGraphicView *pCGraphicView = (CGraphicView *)m_wndSplitter.GetPane (0, 1);
+    //       if (pCGraphicView != nullptr) {
+    //           pCmdUI->SetCheck(pCGraphicView->Is_Camera_Bone_Pos_X());
+    //       }
+    //   }
+    //
+    // Behavior: Updates checkmark state based on GraphicView bone pos flag
+    
+    W3DViewDoc* doc = wxStaticCast(GetDocument(), W3DViewDoc);
+    if (doc) {
+        CGraphicView* graphicView = doc->GetGraphicView();
+        event.Check(graphicView && graphicView->Is_Camera_Bone_Pos_X());
+    } else {
+        event.Check(false);
     }
 }
 

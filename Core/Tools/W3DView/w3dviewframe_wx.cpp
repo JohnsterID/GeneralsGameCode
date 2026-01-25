@@ -62,8 +62,8 @@ wxBEGIN_EVENT_TABLE(W3DViewFrame, wxDocParentFrame)
 wxEND_EVENT_TABLE()
 
 W3DViewFrame::W3DViewFrame(wxDocManager *manager)
-    : wxDocParentFrame(manager, nullptr, wxID_ANY, "W3DView",
-                       wxDefaultPosition, wxSize(1024, 768))
+    : wxDocParentFrame(manager, nullptr, wxID_ANY, "W3D Viewer",
+                       wxDefaultPosition, wxSize(960, 720))
     , m_docManager(manager)
     , m_splitter(nullptr)
     , m_statusBar(nullptr)

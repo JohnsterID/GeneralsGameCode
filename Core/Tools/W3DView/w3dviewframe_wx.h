@@ -39,6 +39,13 @@ public:
 private:
     void OnClose(wxCloseEvent &event);
     void OnAbout(wxCommandEvent &event);
+    // File menu handlers
+    void OnExportAggregate(wxCommandEvent &event);
+    void OnExportEmitter(wxCommandEvent &event);
+    void OnExportLOD(wxCommandEvent &event);
+    void OnExportPrimitive(wxCommandEvent &event);
+    void OnExportSoundObject(wxCommandEvent &event);
+    // Object menu handlers
     void OnObjectProperties(wxCommandEvent &event);
     void OnLodGenerate(wxCommandEvent &event);
     void OnObjectReset(wxCommandEvent &event);
@@ -47,6 +54,8 @@ private:
     void OnObjectRotateZ(wxCommandEvent &event);
     void OnObjectRotateYBack(wxCommandEvent &event);
     void OnObjectRotateZBack(wxCommandEvent &event);
+    void OnObjectRestrictAnims(wxCommandEvent &event);
+    void OnUpdateObjectRestrictAnims(wxUpdateUIEvent &event);
     void OnObjectAlternateMaterials(wxCommandEvent &event);
     void OnViewPatchGapFill(wxCommandEvent &event);
     void OnUpdateViewPatchGapFill(wxUpdateUIEvent &event);

@@ -73,7 +73,14 @@ static inline void Adjust_Light_Intensity(Vector3 &color, float inc)
 enum
 {
     ID_ABOUT = wxID_ABOUT,
-    ID_OBJECT_PROPERTIES = wxID_HIGHEST + 1,
+    // File menu - Export submenu
+    ID_EXPORT_AGGREGATE = wxID_HIGHEST + 1,
+    ID_EXPORT_EMITTER,
+    ID_EXPORT_LOD,
+    ID_EXPORT_PRIMITIVE,
+    ID_EXPORT_SOUND_OBJECT,
+    // Object menu
+    ID_OBJECT_PROPERTIES,
     ID_LOD_GENERATE,
     ID_OBJECT_RESET,
     ID_OBJECT_ROTATE_X,
@@ -81,6 +88,7 @@ enum
     ID_OBJECT_ROTATE_Z,
     ID_OBJECT_ROTATE_Y_BACK,
     ID_OBJECT_ROTATE_Z_BACK,
+    ID_OBJECT_RESTRICT_ANIMS,
     ID_OBJECT_ALTERNATE_MATERIALS,
     ID_VIEW_WIREFRAME,
     ID_VIEW_POLYGON_SORTING,
@@ -159,6 +167,13 @@ enum
 wxBEGIN_EVENT_TABLE(W3DViewFrame, wxDocParentFrame)
     EVT_CLOSE(W3DViewFrame::OnClose)
     EVT_MENU(ID_ABOUT, W3DViewFrame::OnAbout)
+    // File menu - Export submenu
+    EVT_MENU(ID_EXPORT_AGGREGATE, W3DViewFrame::OnExportAggregate)
+    EVT_MENU(ID_EXPORT_EMITTER, W3DViewFrame::OnExportEmitter)
+    EVT_MENU(ID_EXPORT_LOD, W3DViewFrame::OnExportLOD)
+    EVT_MENU(ID_EXPORT_PRIMITIVE, W3DViewFrame::OnExportPrimitive)
+    EVT_MENU(ID_EXPORT_SOUND_OBJECT, W3DViewFrame::OnExportSoundObject)
+    // Object menu
     EVT_MENU(ID_OBJECT_PROPERTIES, W3DViewFrame::OnObjectProperties)
     EVT_MENU(ID_LOD_GENERATE, W3DViewFrame::OnLodGenerate)
     EVT_MENU(ID_OBJECT_RESET, W3DViewFrame::OnObjectReset)
@@ -167,6 +182,8 @@ wxBEGIN_EVENT_TABLE(W3DViewFrame, wxDocParentFrame)
     EVT_MENU(ID_OBJECT_ROTATE_Z, W3DViewFrame::OnObjectRotateZ)
     EVT_MENU(ID_OBJECT_ROTATE_Y_BACK, W3DViewFrame::OnObjectRotateYBack)
     EVT_MENU(ID_OBJECT_ROTATE_Z_BACK, W3DViewFrame::OnObjectRotateZBack)
+    EVT_MENU(ID_OBJECT_RESTRICT_ANIMS, W3DViewFrame::OnObjectRestrictAnims)
+    EVT_UPDATE_UI(ID_OBJECT_RESTRICT_ANIMS, W3DViewFrame::OnUpdateObjectRestrictAnims)
     EVT_MENU(ID_OBJECT_ALTERNATE_MATERIALS, W3DViewFrame::OnObjectAlternateMaterials)
     EVT_MENU(ID_VIEW_WIREFRAME, W3DViewFrame::OnWireframe)
     EVT_UPDATE_UI(ID_VIEW_WIREFRAME, W3DViewFrame::OnUpdateWireframe)
@@ -388,9 +405,41 @@ void W3DViewFrame::CreateMenuBar()
     wxMenu *fileMenu = new wxMenu;
     fileMenu->Append(wxID_NEW, "&New\tCtrl+N");
     fileMenu->Append(wxID_OPEN, "&Open...\tCtrl+O");
+    // TODO(MFC-Match): Replace Save/Save As with proper MFC file menu items
+    //   MFC: W3DView.rc:186-187
+    //     - "Munge Sort on Load" (IDM_MUNGE_SORT_ON_LOAD:32897)
+    //     - "Enable Gamma Correction" (IDM_ENABLE_GAMMA_CORRECTION)
+    //   MFC: W3DView.rc:189-190
+    //     - "Save Settings...\tCtrl+S" (IDM_SAVE_SETTINGS:32796)
+    //     - "Load Settings..." (IDM_LOAD_SETTINGS:32797)
+    //   Handler: MainFrm.cpp (need to investigate all handlers)
+    //   Impact: High - settings persistence is core functionality
     fileMenu->Append(wxID_SAVE, "&Save\tCtrl+S");
     fileMenu->Append(wxID_SAVEAS, "Save &As...");
     fileMenu->AppendSeparator();
+    // TODO(MFC-Match): Add Import Facial Anims before Export submenu
+    //   MFC: W3DView.rc:192 - "&Import Facial Anims..." (IDM_IMPORT_FACIAL_ANIMS:32874)
+    //   Handler: MainFrm.cpp (need to investigate)
+    //   Impact: Medium - specialized animation import feature
+    // Export submenu (MFC: W3DView.rc:193-199)
+    wxMenu *exportMenu = new wxMenu;
+    exportMenu->Append(ID_EXPORT_AGGREGATE, "&Aggregate...");
+    exportMenu->Append(ID_EXPORT_EMITTER, "&Emitter...");
+    exportMenu->Append(ID_EXPORT_LOD, "&LOD...");
+    exportMenu->Append(ID_EXPORT_PRIMITIVE, "&Primitive...");
+    exportMenu->Append(ID_EXPORT_SOUND_OBJECT, "&Sound Object...");
+    fileMenu->AppendSubMenu(exportMenu, "Ex&port...");
+    fileMenu->AppendSeparator();
+    // TODO(MFC-Match): Add Texture Path and Animated Sound Options after Export
+    //   MFC: W3DView.rc:201-202
+    //     - "&Texture Path..." (IDM_TEXTURE_PATH)
+    //     - "&Animated Sound Options..." (IDM_EDIT_ANIMATED_SOUNDS_OPTIONS)
+    //   Handler: MainFrm.cpp (need to investigate)
+    //   Impact: High - texture paths needed, Medium - sound options specialized
+    // TODO(MFC-Match): Add Recent File (MRU) before Exit
+    //   MFC: W3DView.rc:205 - "Recent File" (ID_FILE_MRU_FILE1, GRAYED)
+    //   Handler: MFC framework automatic
+    //   Impact: Medium - user convenience feature
     fileMenu->Append(wxID_EXIT, "E&xit\tAlt+F4");
     menuBar->Append(fileMenu, "&File");
 
@@ -454,25 +503,28 @@ void W3DViewFrame::CreateMenuBar()
     
     menuBar->Append(viewMenu, "&View");
 
-    // Object menu
-    // MFC Reference: W3DView.rc:244-258
+    // Object menu - EXACT MFC matching (W3DView.rc:244-258)
     wxMenu *objectMenu = new wxMenu;
-    objectMenu->Append(ID_OBJECT_PROPERTIES, "&Properties...\tEnter");
-    objectMenu->Append(ID_LOD_GENERATE, "Generate &LOD...");
-    objectMenu->AppendSeparator();
+    // Rotate items first (MFC: W3DView.rc:246-248)
     objectMenu->Append(ID_OBJECT_ROTATE_X, "Rotate &X\tCtrl+X");
     objectMenu->Append(ID_OBJECT_ROTATE_Y, "Rotate &Y\tUp");
     objectMenu->Append(ID_OBJECT_ROTATE_Z, "Rotate &Z\tRight");
     objectMenu->AppendSeparator();
+    // Properties (MFC: W3DView.rc:250)
+    objectMenu->Append(ID_OBJECT_PROPERTIES, "&Properties...\tEnter");
+    objectMenu->AppendSeparator();
+    // Restrict Anims (MFC: W3DView.rc:252)
+    objectMenu->AppendCheckItem(ID_OBJECT_RESTRICT_ANIMS, "&Restrict Anims");
+    objectMenu->AppendSeparator();
+    // Reset (MFC: W3DView.rc:254)
     objectMenu->Append(ID_OBJECT_RESET, "&Reset");
     objectMenu->AppendSeparator();
+    // Toggle Alternate Materials (MFC: W3DView.rc:256)
     objectMenu->Append(ID_OBJECT_ALTERNATE_MATERIALS, "Toggle Alternate &Materials");
-    // TODO(MFC-Match): Add "Restrict Anims" menu item after Toggle Alternate Materials
-    //   MFC: IDM_OBJECT_RESTRICT_ANIMS (W3DView.rc:258)
-    //   Handler: MainFrm.cpp (need to investigate)
-    //   Should have separator before it
-    // objectMenu->AppendSeparator();
-    // objectMenu->Append(ID_OBJECT_RESTRICT_ANIMS, "Restrict &Anims");
+    // TODO(MFC-Match): Generate LOD removed from Object menu (doesn't exist in MFC)
+    //   Generate LOD belongs in separate LOD menu (IDR_LOD_MENU in resource.h)
+    //   LOD menu appears contextually when LOD objects are selected
+    //   Need to implement context-sensitive menu switching
     menuBar->Append(objectMenu, "&Object");
 
     // Animation menu
@@ -2671,4 +2723,109 @@ void W3DViewFrame::OnGammaSettings(wxCommandEvent &WXUNUSED(event))
         wxMessageBox("Gamma is disabled.\nEnable in Settings Menu.",
                      "Warning", wxOK | wxICON_WARNING, this);
     }
+}
+
+// File menu - Export submenu handlers
+
+void W3DViewFrame::OnExportAggregate(wxCommandEvent &WXUNUSED(event))
+{
+    // MFC: MainFrm.cpp (need to investigate OnSaveAggregate handler)
+    // MFC ID: IDM_SAVE_AGGREGATE (32813)
+    // Function: Export aggregate model to file
+    // TODO(MFC-Implement): Implement aggregate export functionality
+    //   1. Show file save dialog with .w3d filter
+    //   2. Get current aggregate from document/scene
+    //   3. Serialize aggregate to W3D file format
+    //   4. Handle errors (no aggregate, write failure, etc.)
+    //   Impact: High - primary export feature for aggregate models
+    wxMessageBox("Export Aggregate not yet implemented.\nSee TODO in OnExportAggregate.",
+                 "Feature Incomplete", wxOK | wxICON_INFORMATION, this);
+}
+
+void W3DViewFrame::OnExportEmitter(wxCommandEvent &WXUNUSED(event))
+{
+    // MFC: MainFrm.cpp (need to investigate OnSaveEmitter handler)
+    // MFC ID: IDM_SAVE_EMITTER (32810)
+    // Function: Export particle emitter to file
+    // TODO(MFC-Implement): Implement emitter export functionality
+    //   1. Show file save dialog with emitter file filter
+    //   2. Get current emitter from scene
+    //   3. Serialize emitter properties to file
+    //   4. Handle errors (no emitter selected, write failure, etc.)
+    //   Impact: Medium - specialized export for particle effects
+    wxMessageBox("Export Emitter not yet implemented.\nSee TODO in OnExportEmitter.",
+                 "Feature Incomplete", wxOK | wxICON_INFORMATION, this);
+}
+
+void W3DViewFrame::OnExportLOD(wxCommandEvent &WXUNUSED(event))
+{
+    // MFC: MainFrm.cpp (need to investigate OnLodSave handler)
+    // MFC ID: IDM_LOD_SAVE (32794)
+    // Function: Export LOD (Level of Detail) model to file
+    // TODO(MFC-Implement): Implement LOD export functionality
+    //   1. Verify LOD model is valid (at least 2 levels)
+    //   2. Show file save dialog with LOD file filter
+    //   3. Serialize all LOD levels to file
+    //   4. Handle errors (insufficient levels, no LOD, write failure, etc.)
+    //   Impact: High - critical for LOD workflow
+    wxMessageBox("Export LOD not yet implemented.\nSee TODO in OnExportLOD.",
+                 "Feature Incomplete", wxOK | wxICON_INFORMATION, this);
+}
+
+void W3DViewFrame::OnExportPrimitive(wxCommandEvent &WXUNUSED(event))
+{
+    // MFC: MainFrm.cpp (need to investigate OnExportPrimitive handler)
+    // MFC ID: IDM_EXPORT_PRIMITIVE (32869)
+    // Function: Export primitive (sphere, ring, etc.) to file
+    // TODO(MFC-Implement): Implement primitive export functionality
+    //   1. Verify primitive is selected
+    //   2. Show file save dialog with primitive file filter
+    //   3. Serialize primitive geometry and properties
+    //   4. Handle errors (no primitive, write failure, etc.)
+    //   Impact: Low - specialized export for primitive objects
+    wxMessageBox("Export Primitive not yet implemented.\nSee TODO in OnExportPrimitive.",
+                 "Feature Incomplete", wxOK | wxICON_INFORMATION, this);
+}
+
+void W3DViewFrame::OnExportSoundObject(wxCommandEvent &WXUNUSED(event))
+{
+    // MFC: MainFrm.cpp (need to investigate OnExportSoundObj handler)
+    // MFC ID: IDM_EXPORT_SOUND_OBJ (32881)
+    // Function: Export sound object to file
+    // TODO(MFC-Implement): Implement sound object export functionality
+    //   1. Verify sound object is selected
+    //   2. Show file save dialog with sound object file filter
+    //   3. Serialize sound object properties (position, falloff, etc.)
+    //   4. Handle errors (no sound object, write failure, etc.)
+    //   Impact: Low - specialized export for audio objects
+    wxMessageBox("Export Sound Object not yet implemented.\nSee TODO in OnExportSoundObject.",
+                 "Feature Incomplete", wxOK | wxICON_INFORMATION, this);
+}
+
+// Object menu handlers
+
+void W3DViewFrame::OnObjectRestrictAnims(wxCommandEvent &event)
+{
+    // MFC: MainFrm.cpp (need to investigate OnRestrictAnims handler)
+    // MFC ID: IDM_RESTRICT_ANIMS (32875)
+    // Function: Toggle animation restriction mode
+    // TODO(MFC-Implement): Implement animation restriction functionality
+    //   1. Toggle restrict mode flag in scene/document
+    //   2. Update UI checkmark state
+    //   3. When enabled, filter available animations based on some criteria
+    //   4. Update animation list/controls to reflect restriction
+    //   Impact: Medium - animation workflow feature
+    //   Need to investigate MFC implementation to understand restriction logic
+    wxMessageBox("Restrict Anims toggle not yet implemented.\nSee TODO in OnObjectRestrictAnims.",
+                 "Feature Incomplete", wxOK | wxICON_INFORMATION, this);
+}
+
+void W3DViewFrame::OnUpdateObjectRestrictAnims(wxUpdateUIEvent &event)
+{
+    // MFC: MainFrm.cpp (need to investigate update handler)
+    // TODO(MFC-Implement): Implement checkmark state update
+    //   Read restrict mode flag from scene/document
+    //   Set event.Check(restrictMode) to update checkmark
+    //   May need to enable/disable based on whether animations are loaded
+    event.Check(false); // Default to unchecked until implemented
 }

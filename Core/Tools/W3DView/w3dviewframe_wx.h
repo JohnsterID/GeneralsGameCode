@@ -97,6 +97,7 @@ private:
     void OnUpdateCameraAllowRotateY(wxUpdateUIEvent &event);
     void OnCameraAllowRotateZ(wxCommandEvent &event);
     void OnUpdateCameraAllowRotateZ(wxUpdateUIEvent &event);
+    void OnCopyScreenSize(wxCommandEvent &event);
     // Light menu handlers
     void OnLightRotateY(wxCommandEvent &event);
     void OnLightRotateZ(wxCommandEvent &event);

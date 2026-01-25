@@ -43,6 +43,7 @@
 #include <wx/msgdlg.h>
 #include <wx/filedlg.h>
 #include <wx/config.h>
+#include <wx/clipbrd.h>
 
 // Engine includes for object manipulation
 #ifdef CString
@@ -113,6 +114,7 @@ enum
     ID_CAMERA_ALLOW_ROTATE_X,
     ID_CAMERA_ALLOW_ROTATE_Y,
     ID_CAMERA_ALLOW_ROTATE_Z,
+    ID_COPY_SCREEN_SIZE,
     // Light menu items
     ID_LIGHT_ROTATE_Y,
     ID_LIGHT_ROTATE_Z,
@@ -197,6 +199,7 @@ wxBEGIN_EVENT_TABLE(W3DViewFrame, wxDocParentFrame)
     EVT_UPDATE_UI(ID_CAMERA_ALLOW_ROTATE_Y, W3DViewFrame::OnUpdateCameraAllowRotateY)
     EVT_MENU(ID_CAMERA_ALLOW_ROTATE_Z, W3DViewFrame::OnCameraAllowRotateZ)
     EVT_UPDATE_UI(ID_CAMERA_ALLOW_ROTATE_Z, W3DViewFrame::OnUpdateCameraAllowRotateZ)
+    EVT_MENU(ID_COPY_SCREEN_SIZE, W3DViewFrame::OnCopyScreenSize)
     // Light menu
     EVT_MENU(ID_LIGHT_ROTATE_Y, W3DViewFrame::OnLightRotateY)
     EVT_MENU(ID_LIGHT_ROTATE_Z, W3DViewFrame::OnLightRotateZ)
@@ -427,8 +430,9 @@ void W3DViewFrame::CreateMenuBar()
     cameraMenu->AppendCheckItem(ID_CAMERA_ALLOW_ROTATE_X, "Rotate &X Only");
     cameraMenu->AppendCheckItem(ID_CAMERA_ALLOW_ROTATE_Y, "Rotate &Y Only");
     cameraMenu->AppendCheckItem(ID_CAMERA_ALLOW_ROTATE_Z, "Rotate &Z Only");
-    // TODO(MFC-Investigate): Add "&Copy Screen Size To Clipboard\tCtrl+C" (IDM_COPY_SCREEN_SIZE)
-    //   Note: Ctrl+C may conflict with standard copy - investigate alternative
+    cameraMenu->Append(ID_COPY_SCREEN_SIZE, "&Copy Screen Size To Clipboard\tCtrl+C");
+    // TODO(MFC-Investigate): Ctrl+C shortcut may conflict with standard copy
+    //   Consider alternative shortcut if clipboard copy conflicts arise
     cameraMenu->AppendSeparator();
     // TODO(MFC-Investigate): Add "&Animate Camera\tF8" (IDM_CAMERA_ANIMATE)
     // TODO(MFC-Investigate): Add "+X Camera" (IDM_CAMERA_BONE_POS_X)
@@ -1533,6 +1537,55 @@ void W3DViewFrame::OnUpdateCameraAllowRotateZ(wxUpdateUIEvent &event)
     if (!graphicView) return;
     
     event.Check(graphicView->GetAllowedCameraRotation() == CGraphicView::OnlyRotateZ);
+}
+
+void W3DViewFrame::OnCopyScreenSize(wxCommandEvent &WXUNUSED(event))
+{
+    // MFC Reference: MainFrm.cpp:3398-3432 (OnCopyScreenSize)
+    //
+    // MFC Implementation:
+    //   CGraphicView *graphic_view = (CGraphicView *)m_wndSplitter.GetPane (0, 1);
+    //   CameraClass *camera = graphic_view->GetCamera ();
+    //   RenderObjClass *render_obj = ::GetCurrentDocument ()->GetDisplayedObject ();
+    //   float screen_size = render_obj->Get_Screen_Size (*camera);
+    //
+    //   CString size_string;
+    //   size_string.Format ("MaxScreenSize=%f", screen_size);
+    //
+    //   [Windows clipboard operations: GlobalAlloc, GlobalLock, OpenClipboard, etc.]
+    //
+    // Behavior: Calculates the maximum screen size of the displayed object from
+    //           the current camera view and copies it to clipboard
+    //
+    // Output Format: "MaxScreenSize=<float_value>"
+    //
+    // Menu: Camera → Copy Screen Size To Clipboard (Ctrl+C)
+    
+    W3DViewDoc* doc = wxStaticCast(GetDocument(), W3DViewDoc);
+    if (!doc) return;
+    
+    CGraphicView* graphicView = doc->GetGraphicView();
+    if (!graphicView) return;
+    
+    // Get the camera from the graphic view
+    CameraClass* camera = graphicView->GetCamera();
+    if (!camera) return;
+    
+    // Get the displayed object
+    RenderObjClass* renderObj = doc->GetDisplayedObject();
+    if (!renderObj) return;
+    
+    // Calculate the screen size
+    float screenSize = renderObj->Get_Screen_Size(*camera);
+    
+    // Format the string (matching MFC format exactly)
+    wxString sizeString = wxString::Format("MaxScreenSize=%f", screenSize);
+    
+    // Copy to clipboard using wxWidgets API
+    if (wxTheClipboard->Open()) {
+        wxTheClipboard->SetData(new wxTextDataObject(sizeString));
+        wxTheClipboard->Close();
+    }
 }
 
 // Light menu handlers

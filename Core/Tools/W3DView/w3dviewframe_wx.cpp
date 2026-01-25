@@ -108,6 +108,8 @@ enum
     ID_DEC_SCENE_LIGHT,
     ID_LIGHTING_EXPOSE,
     ID_KILL_SCENE_LIGHT,
+    ID_LIGHT_ROTATE_Y_BACK,
+    ID_LIGHT_ROTATE_Z_BACK,
     ID_PRELIT_VERTEX,
     ID_PRELIT_MULTIPASS,
     ID_PRELIT_MULTITEX,
@@ -163,6 +165,8 @@ wxBEGIN_EVENT_TABLE(W3DViewFrame, wxDocParentFrame)
     // Light menu
     EVT_MENU(ID_LIGHT_ROTATE_Y, W3DViewFrame::OnLightRotateY)
     EVT_MENU(ID_LIGHT_ROTATE_Z, W3DViewFrame::OnLightRotateZ)
+    EVT_MENU(ID_LIGHT_ROTATE_Y_BACK, W3DViewFrame::OnLightRotateYBack)
+    EVT_MENU(ID_LIGHT_ROTATE_Z_BACK, W3DViewFrame::OnLightRotateZBack)
     EVT_MENU(ID_LIGHT_AMBIENT, W3DViewFrame::OnLightAmbient)
     EVT_MENU(ID_LIGHT_SCENE, W3DViewFrame::OnLightScene)
     EVT_MENU(ID_INC_AMBIENT_LIGHT, W3DViewFrame::OnIncAmbientLight)
@@ -199,14 +203,24 @@ W3DViewFrame::W3DViewFrame(wxDocManager *manager)
     InitStatusBar();
     CreateUI();
     
-    // Add accelerators for "back" rotation (Down/Left arrows) without menu items
+    // Add accelerators for "back" rotation without menu items
     // MFC Reference: W3DView.rc accelerators
+    //
+    // Object rotation (no modifier):
     //   VK_DOWN -> IDM_OBJECT_ROTATE_Y_BACK (MainFrm.cpp:2597-2613)
     //   VK_LEFT -> IDM_OBJECT_ROTATE_Z_BACK (MainFrm.cpp:2619-2635)
-    wxAcceleratorEntry entries[2];
+    //
+    // Light rotation (Ctrl modifier):
+    //   Ctrl+VK_DOWN -> IDM_LIGHT_ROTATE_Y_BACK (MainFrm.cpp:2663-2676)
+    //   Ctrl+VK_LEFT -> IDM_LIGHT_ROTATE_Z_BACK (MainFrm.cpp:2707-2720)
+    wxAcceleratorEntry entries[4];
+    // Object rotation back (no modifier)
     entries[0].Set(wxACCEL_NORMAL, WXK_DOWN, ID_OBJECT_ROTATE_Y_BACK);
     entries[1].Set(wxACCEL_NORMAL, WXK_LEFT, ID_OBJECT_ROTATE_Z_BACK);
-    wxAcceleratorTable accel(2, entries);
+    // Light rotation back (Ctrl modifier)
+    entries[2].Set(wxACCEL_CTRL, WXK_DOWN, ID_LIGHT_ROTATE_Y_BACK);
+    entries[3].Set(wxACCEL_CTRL, WXK_LEFT, ID_LIGHT_ROTATE_Z_BACK);
+    wxAcceleratorTable accel(4, entries);
     SetAcceleratorTable(accel);
 
     Centre();
@@ -1045,6 +1059,65 @@ void W3DViewFrame::OnLightRotateZ(wxCommandEvent &WXUNUSED(event))
         rotation &= ~CGraphicView::RotateZBack;
         graphicView->Rotate_Light((CGraphicView::OBJECT_ROTATION)rotation);
     }
+}
+
+void W3DViewFrame::OnLightRotateYBack(wxCommandEvent &WXUNUSED(event))
+{
+    // MFC Reference: MainFrm.cpp:2663-2676 (OnLightRotateYBack)
+    //
+    // MFC Implementation:
+    //   CGraphicView *pgraphic_view = (CGraphicView *)m_wndSplitter.GetPane (0, 1);
+    //   int rotation = (pgraphic_view->Get_Light_Rotation () ^ (CGraphicView::RotateYBack));
+    //   rotation &= ~CGraphicView::RotateY;
+    //   pgraphic_view->Rotate_Light ((CGraphicView::OBJECT_ROTATION)rotation);
+    //
+    // Behavior: Toggles reverse Y-axis rotation for scene light
+    //           XOR flips the RotateYBack bit, clearing RotateY ensures reverse only
+    //
+    // Note: No menu item in MFC, accelerator only
+    // Shortcut: Ctrl+Down Arrow
+    
+    W3DViewDoc* doc = wxStaticCast(GetDocument(), W3DViewDoc);
+    if (!doc) return;
+    
+    CGraphicView* graphicView = doc->GetGraphicView();
+    if (!graphicView) return;
+    
+    // Toggle Y back rotation bit, clear forward Y rotation bit
+    int rotation = (graphicView->Get_Light_Rotation() ^ CGraphicView::RotateYBack);
+    rotation &= ~CGraphicView::RotateY;
+    
+    graphicView->Rotate_Light(static_cast<CGraphicView::OBJECT_ROTATION>(rotation));
+}
+
+void W3DViewFrame::OnLightRotateZBack(wxCommandEvent &WXUNUSED(event))
+{
+    // MFC Reference: MainFrm.cpp:2707-2720 (OnLightRotateZBack)
+    //
+    // MFC Implementation:
+    //   CGraphicView *pgraphic_view = (CGraphicView *)m_wndSplitter.GetPane (0, 1);
+    //   int rotation = (pgraphic_view->Get_Light_Rotation () ^ (CGraphicView::RotateZBack));
+    //   rotation &= ~CGraphicView::RotateZ;
+    //   pgraphic_view->Rotate_Light ((CGraphicView::OBJECT_ROTATION)rotation);
+    //
+    // Behavior: Toggles reverse Z-axis rotation for scene light
+    //           XOR flips the RotateZBack bit, clearing RotateZ ensures reverse only
+    //
+    // Note: MFC comment incorrectly says "around Y" but code correctly rotates around Z
+    // Note: No menu item in MFC, accelerator only
+    // Shortcut: Ctrl+Left Arrow
+    
+    W3DViewDoc* doc = wxStaticCast(GetDocument(), W3DViewDoc);
+    if (!doc) return;
+    
+    CGraphicView* graphicView = doc->GetGraphicView();
+    if (!graphicView) return;
+    
+    // Toggle Z back rotation bit, clear forward Z rotation bit
+    int rotation = (graphicView->Get_Light_Rotation() ^ CGraphicView::RotateZBack);
+    rotation &= ~CGraphicView::RotateZ;
+    
+    graphicView->Rotate_Light(static_cast<CGraphicView::OBJECT_ROTATION>(rotation));
 }
 
 void W3DViewFrame::OnLightAmbient(wxCommandEvent &WXUNUSED(event))

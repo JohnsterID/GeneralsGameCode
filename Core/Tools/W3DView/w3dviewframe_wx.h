@@ -80,6 +80,8 @@ private:
     // Light menu handlers
     void OnLightRotateY(wxCommandEvent &event);
     void OnLightRotateZ(wxCommandEvent &event);
+    void OnLightRotateYBack(wxCommandEvent &event);
+    void OnLightRotateZBack(wxCommandEvent &event);
     void OnLightAmbient(wxCommandEvent &event);
     void OnLightScene(wxCommandEvent &event);
     void OnIncAmbientLight(wxCommandEvent &event);

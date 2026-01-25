@@ -119,6 +119,7 @@ enum
     ID_ANIMATION_STEP_BACK,
     ID_ANIMATION_STEP_FORWARD,
     ID_ANIMATION_SETTINGS,
+    ID_ANIMATION_ADVANCED,
     ID_BACKGROUND_COLOR,
     ID_BACKGROUND_BMP,
     ID_BACKGROUND_OBJECT,
@@ -231,6 +232,7 @@ wxBEGIN_EVENT_TABLE(W3DViewFrame, wxDocParentFrame)
     EVT_MENU(ID_ANIMATION_STEP_BACK, W3DViewFrame::OnAnimationStepBack)
     EVT_MENU(ID_ANIMATION_STEP_FORWARD, W3DViewFrame::OnAnimationStepForward)
     EVT_MENU(ID_ANIMATION_SETTINGS, W3DViewFrame::OnAnimationSettings)
+    EVT_MENU(ID_ANIMATION_ADVANCED, W3DViewFrame::OnAnimationAdvanced)
     EVT_MENU(ID_BACKGROUND_COLOR, W3DViewFrame::OnBackgroundColor)
     EVT_MENU(ID_BACKGROUND_BMP, W3DViewFrame::OnBackgroundBmp)
     EVT_MENU(ID_BACKGROUND_OBJECT, W3DViewFrame::OnBackgroundObject)
@@ -527,8 +529,7 @@ void W3DViewFrame::CreateMenuBar()
     //   Need to implement context-sensitive menu switching
     menuBar->Append(objectMenu, "&Object");
 
-    // Animation menu
-    // MFC Reference: W3DView.rc:263-273
+    // Animation menu - EXACT MFC matching (W3DView.rc:363-373)
     wxMenu *animMenu = new wxMenu;
     animMenu->Append(ID_ANIMATION_PLAY, "&Play");
     animMenu->Append(ID_ANIMATION_PAUSE, "P&ause");
@@ -539,7 +540,7 @@ void W3DViewFrame::CreateMenuBar()
     animMenu->AppendSeparator();
     animMenu->Append(ID_ANIMATION_SETTINGS, "Se&ttings...");
     animMenu->AppendSeparator();
-    // TODO(MFC-Investigate): Add "Ad&vanced...\tCtrl+V" menu item (IDM_ADVANCED_ANIM)
+    animMenu->Append(ID_ANIMATION_ADVANCED, "Ad&vanced...\tCtrl+V");
     menuBar->Append(animMenu, "&Animation");
 
     // Camera menu
@@ -1765,6 +1766,23 @@ void W3DViewFrame::OnAnimationSettings(wxCommandEvent &WXUNUSED(event))
     // TODO: Implement animation settings dialog
     wxMessageBox("Animation Settings dialog not yet implemented",
                  "TODO", wxOK | wxICON_INFORMATION, this);
+}
+
+void W3DViewFrame::OnAnimationAdvanced(wxCommandEvent &WXUNUSED(event))
+{
+    // MFC: MainFrm.cpp (need to investigate OnAdvancedAnim handler)
+    // MFC ID: IDM_ADVANCED_ANIM (W3DView.rc:373)
+    // Function: Opens advanced animation mixing/management dialog
+    // TODO(MFC-Implement): Implement advanced animation dialog
+    //   MFC Reference: PropPageAdvanimMixing_wx.cpp, PropPageAdvanimReport_wx.cpp already exist
+    //   These appear to be property pages for advanced animation features:
+    //   - Animation mixing (blending multiple animations)
+    //   - Animation reports (debugging/analysis)
+    //   Need to create parent dialog that hosts these property pages
+    //   Impact: Medium - advanced user feature for complex animation workflows
+    //   Investigation: Check if PropPage files are complete or need work
+    wxMessageBox("Advanced Animation dialog not yet implemented.\nSee TODO in OnAnimationAdvanced.\nProperty pages may already exist (PropPageAdvanim*).",
+                 "Feature Incomplete", wxOK | wxICON_INFORMATION, this);
 }
 
 void W3DViewFrame::OnBackgroundColor(wxCommandEvent &WXUNUSED(event))

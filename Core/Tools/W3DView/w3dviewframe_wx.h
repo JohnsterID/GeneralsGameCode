@@ -104,6 +104,7 @@ private:
     void OnAnimationStepBack(wxCommandEvent &event);
     void OnAnimationStepForward(wxCommandEvent &event);
     void OnAnimationSettings(wxCommandEvent &event);
+    void OnAnimationAdvanced(wxCommandEvent &event);
     void OnBackgroundColor(wxCommandEvent &event);
     void OnBackgroundBmp(wxCommandEvent &event);
     void OnBackgroundObject(wxCommandEvent &event);

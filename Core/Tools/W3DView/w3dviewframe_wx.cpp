@@ -101,6 +101,7 @@ wxBEGIN_EVENT_TABLE(W3DViewFrame, wxDocParentFrame)
     EVT_MENU(ID_BACKGROUND_BMP, W3DViewFrame::OnBackgroundBmp)
     EVT_MENU(ID_BACKGROUND_OBJECT, W3DViewFrame::OnBackgroundObject)
     EVT_MENU(ID_BACKGROUND_FOG, W3DViewFrame::OnBackgroundFog)
+    EVT_UPDATE_UI(ID_BACKGROUND_FOG, W3DViewFrame::OnUpdateBackgroundFog)
     EVT_MENU(ID_CAMERA_SETTINGS, W3DViewFrame::OnCameraSettings)
     // Light menu
     EVT_MENU(ID_LIGHT_ROTATE_Y, W3DViewFrame::OnLightRotateY)
@@ -112,6 +113,7 @@ wxBEGIN_EVENT_TABLE(W3DViewFrame, wxDocParentFrame)
     EVT_MENU(ID_INC_SCENE_LIGHT, W3DViewFrame::OnIncSceneLight)
     EVT_MENU(ID_DEC_SCENE_LIGHT, W3DViewFrame::OnDecSceneLight)
     EVT_MENU(ID_LIGHTING_EXPOSE, W3DViewFrame::OnLightingExpose)
+    EVT_UPDATE_UI(ID_LIGHTING_EXPOSE, W3DViewFrame::OnUpdateLightingExpose)
     EVT_MENU(ID_KILL_SCENE_LIGHT, W3DViewFrame::OnKillSceneLight)
     EVT_MENU(ID_PRELIT_VERTEX, W3DViewFrame::OnPrelitVertex)
     EVT_MENU(ID_PRELIT_MULTIPASS, W3DViewFrame::OnPrelitMultipass)
@@ -410,22 +412,18 @@ void W3DViewFrame::OnBackgroundFog(wxCommandEvent &WXUNUSED(event))
         return;
 
     doc->EnableFog(!doc->IsFogEnabled());
+}
 
-    // TODO(MFC-Missing-Feature): Add OnUpdateBackgroundFog for menu checkbox state
-    // MFC Reference: MainFrm.cpp:1634-1642 (OnUpdateBackgroundFog)
-    // MFC implementation:
-    //   void CMainFrame::OnUpdateBackgroundFog(CCmdUI *pcmdui)
-    //   {
-    //       CW3DViewDoc *pdoc = (CW3DViewDoc *)GetActiveDocument();
-    //       if (pdoc) {
-    //           pcmdui->SetCheck(pdoc->IsFogEnabled());
-    //       } else {
-    //           pcmdui->SetCheck(0);
-    //       }
-    //   }
-    // wxWidgets needs EVT_UPDATE_UI handler to set checkbox state
-    // Status: Requires wxUpdateUIEvent handler implementation
-    // Impact: Low - visual feedback only (functionality works)
+void W3DViewFrame::OnUpdateBackgroundFog(wxUpdateUIEvent &event)
+{
+    // MFC: MainFrm.cpp:1634-1642 (OnUpdateBackgroundFog)
+    // Sets checkbox state based on document's fog enable state
+    W3DViewDoc *doc = wxStaticCast(m_docManager->GetCurrentDocument(), W3DViewDoc);
+    if (doc) {
+        event.Check(doc->IsFogEnabled());
+    } else {
+        event.Check(false);
+    }
 }
 
 void W3DViewFrame::OnCameraSettings(wxCommandEvent &WXUNUSED(event))
@@ -570,17 +568,13 @@ void W3DViewFrame::OnLightingExpose(wxCommandEvent &WXUNUSED(event))
     // MFC: MainFrm.cpp:2863-2872 (OnLightingExpose)
     // Toggles exposure of precalculated lighting
     WW3D::Expose_Prelit(!WW3D::Expose_Prelit());
-    
-    // TODO(MFC-Missing-Feature): Add OnUpdateLightingExpose for menu checkbox state
-    // MFC Reference: MainFrm.cpp:2873-2877 (OnUpdateLightingExpose)
-    // MFC implementation:
-    //   void CMainFrame::OnUpdateLightingExpose(CCmdUI *pcmdui)
-    //   {
-    //       pcmdui->SetCheck(WW3D::Expose_Prelit());
-    //   }
-    // wxWidgets needs EVT_UPDATE_UI handler to set checkbox state
-    // Status: Requires wxUpdateUIEvent handler implementation
-    // Impact: Low - visual feedback only (functionality works)
+}
+
+void W3DViewFrame::OnUpdateLightingExpose(wxUpdateUIEvent &event)
+{
+    // MFC: MainFrm.cpp:2873-2877 (OnUpdateLightingExpose)
+    // Sets checkbox state based on WW3D::Expose_Prelit() state
+    event.Check(WW3D::Expose_Prelit());
 }
 
 void W3DViewFrame::OnKillSceneLight(wxCommandEvent &WXUNUSED(event))

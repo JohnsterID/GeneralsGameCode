@@ -45,6 +45,7 @@ private:
     void OnBackgroundBmp(wxCommandEvent &event);
     void OnBackgroundObject(wxCommandEvent &event);
     void OnBackgroundFog(wxCommandEvent &event);
+    void OnUpdateBackgroundFog(wxUpdateUIEvent &event);
     void OnCameraSettings(wxCommandEvent &event);
     // Light menu handlers
     void OnLightRotateY(wxCommandEvent &event);
@@ -56,6 +57,7 @@ private:
     void OnIncSceneLight(wxCommandEvent &event);
     void OnDecSceneLight(wxCommandEvent &event);
     void OnLightingExpose(wxCommandEvent &event);
+    void OnUpdateLightingExpose(wxUpdateUIEvent &event);
     void OnKillSceneLight(wxCommandEvent &event);
     void OnPrelitVertex(wxCommandEvent &event);
     void OnPrelitMultipass(wxCommandEvent &event);

@@ -93,6 +93,9 @@ enum
     ID_VIEW_SUBDIVISION_6,
     ID_VIEW_SUBDIVISION_7,
     ID_VIEW_SUBDIVISION_8,
+    ID_VIEW_OBJECT_BAR,
+    ID_VIEW_ANIMATION_BAR,
+    ID_VIEW_FULLSCREEN,
     ID_ANIMATION_PLAY,
     ID_ANIMATION_PAUSE,
     ID_ANIMATION_STOP,
@@ -178,6 +181,12 @@ wxBEGIN_EVENT_TABLE(W3DViewFrame, wxDocParentFrame)
     EVT_UPDATE_UI(ID_VIEW_SUBDIVISION_7, W3DViewFrame::OnUpdateViewSubdivision7)
     EVT_MENU(ID_VIEW_SUBDIVISION_8, W3DViewFrame::OnViewSubdivision8)
     EVT_UPDATE_UI(ID_VIEW_SUBDIVISION_8, W3DViewFrame::OnUpdateViewSubdivision8)
+    EVT_MENU(ID_VIEW_OBJECT_BAR, W3DViewFrame::OnViewObjectBar)
+    EVT_UPDATE_UI(ID_VIEW_OBJECT_BAR, W3DViewFrame::OnUpdateViewObjectBar)
+    EVT_MENU(ID_VIEW_ANIMATION_BAR, W3DViewFrame::OnViewAnimationBar)
+    EVT_UPDATE_UI(ID_VIEW_ANIMATION_BAR, W3DViewFrame::OnUpdateViewAnimationBar)
+    EVT_MENU(ID_VIEW_FULLSCREEN, W3DViewFrame::OnViewFullscreen)
+    EVT_UPDATE_UI(ID_VIEW_FULLSCREEN, W3DViewFrame::OnUpdateViewFullscreen)
     EVT_MENU(ID_ANIMATION_PLAY, W3DViewFrame::OnAnimationPlay)
     EVT_MENU(ID_ANIMATION_PAUSE, W3DViewFrame::OnAnimationPause)
     EVT_MENU(ID_ANIMATION_STOP, W3DViewFrame::OnAnimationStop)
@@ -391,6 +400,11 @@ void W3DViewFrame::CreateMenuBar()
     subdivMenu->AppendRadioItem(ID_VIEW_SUBDIVISION_8, "Level &8");
     viewMenu->AppendSubMenu(subdivMenu, "Su&bdivision Level");
     viewMenu->AppendCheckItem(ID_VIEW_PATCH_GAP_FILL, "&Patch Gap Fill");
+    viewMenu->AppendSeparator();
+    viewMenu->AppendCheckItem(ID_VIEW_OBJECT_BAR, "Object &Toolbar");
+    viewMenu->AppendCheckItem(ID_VIEW_ANIMATION_BAR, "&Animation Toolbar");
+    viewMenu->AppendSeparator();
+    viewMenu->AppendCheckItem(ID_VIEW_FULLSCREEN, "&Fullscreen");
     menuBar->Append(viewMenu, "&View");
 
     // Object menu
@@ -1058,6 +1072,189 @@ void W3DViewFrame::OnUpdatePolygonSorting(wxUpdateUIEvent &event)
     // MFC Reference: MainFrm.cpp:4219-4223 (OnUpdateToggleSorting)
     // Check the menu item if sorting is enabled
     event.Check(WW3D::Is_Sorting_Enabled());
+}
+
+void W3DViewFrame::OnViewObjectBar(wxCommandEvent &WXUNUSED(event))
+{
+    // MFC Reference: MainFrm.cpp:1859-1873 (OnViewObjectBar)
+    //
+    // MFC Implementation:
+    //   if (m_objectToolbar.IsWindowVisible () == FALSE)
+    //   {
+    //       ShowControlBar (&m_objectToolbar, TRUE, FALSE);
+    //   }
+    //   else
+    //   {
+    //       ShowControlBar (&m_objectToolbar, FALSE, FALSE);
+    //   }
+    //
+    // Expected Behavior:
+    //   - Toggles visibility of Object toolbar (rotation controls, etc.)
+    //   - Object toolbar contains: Rotate X/Y/Z buttons, Reset, etc.
+    //   - MFC: CFancyToolbar with custom button states
+    //
+    // TODO(MFC-Match): Implement Object toolbar infrastructure
+    //   Current wxWidgets implementation has basic toolbar in InitToolBar()
+    //   but MFC has separate specialized toolbars (m_objectToolbar, m_animationToolbar)
+    //   Need to:
+    //   1. Create separate wxToolBar for object controls
+    //   2. Add rotation lock buttons (IDM_OBJECT_ROTATE_X/Y/Z)
+    //   3. Add reset, properties, etc. buttons
+    //   4. Implement toggle show/hide functionality
+    //   5. Persist toolbar visibility state in wxConfig
+    //   Until then, this handler does nothing (menu item should be disabled)
+    //   See MainFrm.cpp:532-591 for toolbar creation
+    //   See Toolbar.cpp for CFancyToolbar implementation
+    
+    // Placeholder: No action until Object toolbar is implemented
+    wxLogWarning("Object Toolbar not yet implemented in wxWidgets version");
+}
+
+void W3DViewFrame::OnUpdateViewObjectBar(wxUpdateUIEvent &event)
+{
+    // MFC Reference: MainFrm.cpp:1815-1821 (OnUpdateViewObjectBar)
+    //
+    // MFC Implementation:
+    //   pCmdUI->Enable (TRUE);
+    //   pCmdUI->SetCheck (m_objectToolbar.IsWindowVisible ());
+    //
+    // Expected Behavior:
+    //   - Always enabled
+    //   - Checked if Object toolbar is visible
+    //
+    // TODO(MFC-Match): Enable and check when Object toolbar exists
+    //   For now: Disable menu item (no toolbar to toggle)
+    
+    event.Enable(false);  // Disabled until Object toolbar is implemented
+    event.Check(false);   // Always unchecked (toolbar doesn't exist)
+}
+
+void W3DViewFrame::OnViewAnimationBar(wxCommandEvent &WXUNUSED(event))
+{
+    // MFC Reference: MainFrm.cpp:1830-1850 (OnViewAnimationBar)
+    //
+    // MFC Implementation:
+    //   if (m_animationToolbar.IsWindowVisible () == FALSE)
+    //   {
+    //       ShowControlBar (&m_animationToolbar, TRUE, FALSE);
+    //       m_bShowAnimationBar = TRUE;
+    //   }
+    //   else
+    //   {
+    //       ShowControlBar (&m_animationToolbar, FALSE, FALSE);
+    //       m_bShowAnimationBar = FALSE;
+    //   }
+    //
+    // Expected Behavior:
+    //   - Toggles visibility of Animation toolbar
+    //   - Animation toolbar contains: Play, Pause, Stop, Step Forward/Back, Loop, etc.
+    //   - MFC: CFancyToolbar with playback controls
+    //   - Remembers state in m_bShowAnimationBar for auto-show on animation load
+    //
+    // TODO(MFC-Match): Implement Animation toolbar infrastructure
+    //   Current wxWidgets has animation menu items but no animation toolbar
+    //   Need to:
+    //   1. Create separate wxToolBar for animation controls
+    //   2. Add playback buttons (Play, Pause, Stop)
+    //   3. Add step buttons (Step Forward/Back)
+    //   4. Add loop/speed controls
+    //   5. Implement toggle show/hide functionality
+    //   6. Persist toolbar visibility state in wxConfig
+    //   7. Auto-show when animation is loaded (see m_bShowAnimationBar)
+    //   Until then, this handler does nothing (menu item should be disabled)
+    //   See MainFrm.cpp:592-642 for toolbar creation
+    //   See Toolbar.cpp for CFancyToolbar implementation
+    
+    // Placeholder: No action until Animation toolbar is implemented
+    wxLogWarning("Animation Toolbar not yet implemented in wxWidgets version");
+}
+
+void W3DViewFrame::OnUpdateViewAnimationBar(wxUpdateUIEvent &event)
+{
+    // MFC Reference: MainFrm.cpp:1789-1806 (OnUpdateViewAnimationBar)
+    //
+    // MFC Implementation:
+    //   if ((m_currentAssetType != TypeAnimation) || (m_currentAssetType != TypeCompressedAnimation))
+    //   {
+    //       pCmdUI->Enable (FALSE);
+    //       pCmdUI->SetCheck (FALSE);
+    //   }
+    //   else
+    //   {
+    //       pCmdUI->Enable (TRUE);
+    //       pCmdUI->SetCheck (m_animationToolbar.IsWindowVisible ());
+    //   }
+    //
+    // Expected Behavior:
+    //   - Enabled only when viewing animation asset
+    //   - Checked if Animation toolbar is visible
+    //   - Uses m_currentAssetType to determine if animation is loaded
+    //
+    // TODO(MFC-Match): Enable/check based on current asset type
+    //   Need to track m_currentAssetType in wxWidgets frame
+    //   For now: Always disable (no toolbar to toggle)
+    
+    event.Enable(false);  // Disabled until Animation toolbar is implemented
+    event.Check(false);   // Always unchecked (toolbar doesn't exist)
+}
+
+void W3DViewFrame::OnViewFullscreen(wxCommandEvent &WXUNUSED(event))
+{
+    // MFC Reference: MainFrm.cpp:2258-2271 (OnViewFullscreen)
+    //
+    // MFC Implementation:
+    //   CGraphicView *pCGraphicView = (CGraphicView *)m_wndSplitter.GetPane (0, 1);
+    //   if (pCGraphicView->Is_Fullscreen ())
+    //   {
+    //       RestoreOriginalSize ();
+    //   }
+    //   pCGraphicView->Set_Fullscreen (!pCGraphicView->Is_Fullscreen ());
+    //
+    // Expected Behavior:
+    //   - Toggles fullscreen mode for GraphicView
+    //   - If entering fullscreen: Save original window size
+    //   - If exiting fullscreen: Restore original window size
+    //   - GraphicView handles actual fullscreen rendering setup
+    //
+    // TODO(MFC-Match): Implement fullscreen mode in wxWidgets
+    //   Need to:
+    //   1. Add Is_Fullscreen() and Set_Fullscreen() to GraphicView_wx
+    //   2. Implement RestoreOriginalSize() in W3DViewFrame
+    //   3. Save/restore window size and position
+    //   4. Consider using wxFrame::ShowFullScreen() for true OS fullscreen
+    //      or custom implementation matching MFC behavior
+    //   5. Handle DirectX fullscreen mode changes (if applicable)
+    //   Until then, show placeholder message
+    //   See GraphicView.cpp for Is_Fullscreen/Set_Fullscreen implementation
+    //   See MainFrm.cpp:2258-2271 for fullscreen toggle logic
+    
+    // Placeholder: No action until fullscreen mode is implemented
+    wxMessageBox(
+        "Fullscreen mode not yet implemented in wxWidgets version.\n\n"
+        "MFC version toggles fullscreen rendering in GraphicView.\n"
+        "This requires GraphicView_wx fullscreen infrastructure.",
+        "Fullscreen Not Implemented",
+        wxOK | wxICON_INFORMATION,
+        this
+    );
+}
+
+void W3DViewFrame::OnUpdateViewFullscreen(wxUpdateUIEvent &event)
+{
+    // MFC Reference: MainFrm.cpp:2280-2285 (OnUpdateViewFullscreen)
+    //
+    // MFC Implementation:
+    //   CGraphicView *pCGraphicView = (CGraphicView *)m_wndSplitter.GetPane (0, 1);
+    //   pCmdUI->SetCheck (pCGraphicView->Is_Fullscreen ());
+    //
+    // Expected Behavior:
+    //   - Checked if GraphicView is in fullscreen mode
+    //
+    // TODO(MFC-Match): Check GraphicView fullscreen state
+    //   Need Is_Fullscreen() in GraphicView_wx
+    //   For now: Always unchecked (fullscreen not implemented)
+    
+    event.Check(false);  // Always unchecked (fullscreen not implemented)
 }
 
 void W3DViewFrame::OnAnimationPlay(wxCommandEvent &WXUNUSED(event))

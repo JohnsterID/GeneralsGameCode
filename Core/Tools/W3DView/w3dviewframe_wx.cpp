@@ -65,6 +65,15 @@ enum
     ID_LOD_GENERATE,
     ID_VIEW_RESET,
     ID_ALTERNATE_MATERIAL,
+    ID_VIEW_PATCH_GAP_FILL,
+    ID_VIEW_SUBDIVISION_1,
+    ID_VIEW_SUBDIVISION_2,
+    ID_VIEW_SUBDIVISION_3,
+    ID_VIEW_SUBDIVISION_4,
+    ID_VIEW_SUBDIVISION_5,
+    ID_VIEW_SUBDIVISION_6,
+    ID_VIEW_SUBDIVISION_7,
+    ID_VIEW_SUBDIVISION_8,
     ID_ANIMATION_SETTINGS,
     ID_BACKGROUND_COLOR,
     ID_BACKGROUND_BMP,
@@ -100,6 +109,24 @@ wxBEGIN_EVENT_TABLE(W3DViewFrame, wxDocParentFrame)
     EVT_MENU(ID_LOD_GENERATE, W3DViewFrame::OnLodGenerate)
     EVT_MENU(ID_VIEW_RESET, W3DViewFrame::OnViewReset)
     EVT_MENU(ID_ALTERNATE_MATERIAL, W3DViewFrame::OnAlternateMaterial)
+    EVT_MENU(ID_VIEW_PATCH_GAP_FILL, W3DViewFrame::OnViewPatchGapFill)
+    EVT_UPDATE_UI(ID_VIEW_PATCH_GAP_FILL, W3DViewFrame::OnUpdateViewPatchGapFill)
+    EVT_MENU(ID_VIEW_SUBDIVISION_1, W3DViewFrame::OnViewSubdivision1)
+    EVT_UPDATE_UI(ID_VIEW_SUBDIVISION_1, W3DViewFrame::OnUpdateViewSubdivision1)
+    EVT_MENU(ID_VIEW_SUBDIVISION_2, W3DViewFrame::OnViewSubdivision2)
+    EVT_UPDATE_UI(ID_VIEW_SUBDIVISION_2, W3DViewFrame::OnUpdateViewSubdivision2)
+    EVT_MENU(ID_VIEW_SUBDIVISION_3, W3DViewFrame::OnViewSubdivision3)
+    EVT_UPDATE_UI(ID_VIEW_SUBDIVISION_3, W3DViewFrame::OnUpdateViewSubdivision3)
+    EVT_MENU(ID_VIEW_SUBDIVISION_4, W3DViewFrame::OnViewSubdivision4)
+    EVT_UPDATE_UI(ID_VIEW_SUBDIVISION_4, W3DViewFrame::OnUpdateViewSubdivision4)
+    EVT_MENU(ID_VIEW_SUBDIVISION_5, W3DViewFrame::OnViewSubdivision5)
+    EVT_UPDATE_UI(ID_VIEW_SUBDIVISION_5, W3DViewFrame::OnUpdateViewSubdivision5)
+    EVT_MENU(ID_VIEW_SUBDIVISION_6, W3DViewFrame::OnViewSubdivision6)
+    EVT_UPDATE_UI(ID_VIEW_SUBDIVISION_6, W3DViewFrame::OnUpdateViewSubdivision6)
+    EVT_MENU(ID_VIEW_SUBDIVISION_7, W3DViewFrame::OnViewSubdivision7)
+    EVT_UPDATE_UI(ID_VIEW_SUBDIVISION_7, W3DViewFrame::OnUpdateViewSubdivision7)
+    EVT_MENU(ID_VIEW_SUBDIVISION_8, W3DViewFrame::OnViewSubdivision8)
+    EVT_UPDATE_UI(ID_VIEW_SUBDIVISION_8, W3DViewFrame::OnUpdateViewSubdivision8)
     EVT_MENU(ID_ANIMATION_SETTINGS, W3DViewFrame::OnAnimationSettings)
     EVT_MENU(ID_BACKGROUND_COLOR, W3DViewFrame::OnBackgroundColor)
     EVT_MENU(ID_BACKGROUND_BMP, W3DViewFrame::OnBackgroundBmp)
@@ -163,7 +190,7 @@ void W3DViewFrame::CreateMenuBar()
     // 1. Missing ~35+ menu items from MFC (File, View, Object menus)
     // 2. Settings menu items in wrong locations (should be in File/View)
     // 3. Missing Export submenu (Aggregate, Emitter, LOD, Primitive, Sound Object)
-    // 4. Missing rendering controls (Wireframe, Polygon Sorting, N-Patches)
+    // 4. Missing rendering controls (Wireframe, Polygon Sorting)
     // 5. Missing Object rotation controls (Rotate X/Y/Z with shortcuts)
     // 6. Missing toolbar visibility controls (View → Toolbars submenu)
     // 7. Save Settings vs Save file (Ctrl+S conflict)
@@ -199,6 +226,19 @@ void W3DViewFrame::CreateMenuBar()
     wxMenu *viewMenu = new wxMenu;
     viewMenu->Append(ID_VIEW_RESET, "&Reset View");
     viewMenu->Append(ID_ALTERNATE_MATERIAL, "&Alternate Material");
+    viewMenu->AppendSeparator();
+    viewMenu->AppendCheckItem(ID_VIEW_PATCH_GAP_FILL, "&Patch Gap Fill");
+    viewMenu->AppendSeparator();
+    wxMenu *subdivMenu = new wxMenu;
+    subdivMenu->AppendRadioItem(ID_VIEW_SUBDIVISION_1, "Level &1");
+    subdivMenu->AppendRadioItem(ID_VIEW_SUBDIVISION_2, "Level &2");
+    subdivMenu->AppendRadioItem(ID_VIEW_SUBDIVISION_3, "Level &3");
+    subdivMenu->AppendRadioItem(ID_VIEW_SUBDIVISION_4, "Level &4");
+    subdivMenu->AppendRadioItem(ID_VIEW_SUBDIVISION_5, "Level &5");
+    subdivMenu->AppendRadioItem(ID_VIEW_SUBDIVISION_6, "Level &6");
+    subdivMenu->AppendRadioItem(ID_VIEW_SUBDIVISION_7, "Level &7");
+    subdivMenu->AppendRadioItem(ID_VIEW_SUBDIVISION_8, "Level &8");
+    viewMenu->AppendSubMenu(subdivMenu, "Su&bdivision Level");
     menuBar->Append(viewMenu, "&View");
 
     // Object menu
@@ -430,6 +470,156 @@ void W3DViewFrame::OnAlternateMaterial(wxCommandEvent &WXUNUSED(event))
     // Impact: Medium - affects material display for models with alternate materials
     //         (less commonly used feature)
     // Priority: Defer until engine header conflicts resolved
+}
+
+void W3DViewFrame::OnViewPatchGapFill(wxCommandEvent &WXUNUSED(event))
+{
+    // MFC Reference: MainFrm.cpp:4255-4265 (OnViewPatchGapFill)
+    // Toggle N-Patches gap-filling mode between enabled and disabled
+    if (WW3D::Get_NPatches_Gap_Filling_Mode() == WW3D::NPATCHES_GAP_FILLING_ENABLED) {
+        WW3D::Set_NPatches_Gap_Filling_Mode(WW3D::NPATCHES_GAP_FILLING_DISABLED);
+        wxConfig::Get()->Write("/Config/NPatchesGapFilling", 0L);
+    } else {
+        WW3D::Set_NPatches_Gap_Filling_Mode(WW3D::NPATCHES_GAP_FILLING_ENABLED);
+        wxConfig::Get()->Write("/Config/NPatchesGapFilling", 1L);
+    }
+    wxConfig::Get()->Flush();
+}
+
+void W3DViewFrame::OnUpdateViewPatchGapFill(wxUpdateUIEvent &event)
+{
+    // MFC Reference: MainFrm.cpp:4270-4275 (OnUpdateViewPatchGapFill)
+    // Check the menu item if gap-filling is turned on
+    bool enabled = (WW3D::Get_NPatches_Gap_Filling_Mode() == WW3D::NPATCHES_GAP_FILLING_ENABLED);
+    event.Check(enabled);
+}
+
+void W3DViewFrame::OnViewSubdivision1(wxCommandEvent &WXUNUSED(event))
+{
+    // MFC Reference: MainFrm.cpp:4277-4284 (OnViewSubdivision1)
+    // Set N-Patches subdivision level to 1
+    WW3D::Set_NPatches_Level(1);
+    wxConfig::Get()->Write("/Config/NPatchesSubdivision", 1L);
+    wxConfig::Get()->Flush();
+}
+
+void W3DViewFrame::OnUpdateViewSubdivision1(wxUpdateUIEvent &event)
+{
+    // MFC Reference: MainFrm.cpp:4286-4291 (OnUpdateViewSubdivision1)
+    // Check the menu item if current subdivision level is 1
+    event.Check(WW3D::Get_NPatches_Level() == 1);
+}
+
+void W3DViewFrame::OnViewSubdivision2(wxCommandEvent &WXUNUSED(event))
+{
+    // MFC Reference: MainFrm.cpp:4293-4300 (OnViewSubdivision2)
+    // Set N-Patches subdivision level to 2
+    WW3D::Set_NPatches_Level(2);
+    wxConfig::Get()->Write("/Config/NPatchesSubdivision", 2L);
+    wxConfig::Get()->Flush();
+}
+
+void W3DViewFrame::OnUpdateViewSubdivision2(wxUpdateUIEvent &event)
+{
+    // MFC Reference: MainFrm.cpp:4302-4307 (OnUpdateViewSubdivision2)
+    // Check the menu item if current subdivision level is 2
+    event.Check(WW3D::Get_NPatches_Level() == 2);
+}
+
+void W3DViewFrame::OnViewSubdivision3(wxCommandEvent &WXUNUSED(event))
+{
+    // MFC Reference: MainFrm.cpp:4309-4316 (OnViewSubdivision3)
+    // Set N-Patches subdivision level to 3
+    WW3D::Set_NPatches_Level(3);
+    wxConfig::Get()->Write("/Config/NPatchesSubdivision", 3L);
+    wxConfig::Get()->Flush();
+}
+
+void W3DViewFrame::OnUpdateViewSubdivision3(wxUpdateUIEvent &event)
+{
+    // MFC Reference: MainFrm.cpp:4318-4323 (OnUpdateViewSubdivision3)
+    // Check the menu item if current subdivision level is 3
+    event.Check(WW3D::Get_NPatches_Level() == 3);
+}
+
+void W3DViewFrame::OnViewSubdivision4(wxCommandEvent &WXUNUSED(event))
+{
+    // MFC Reference: MainFrm.cpp:4325-4332 (OnViewSubdivision4)
+    // Set N-Patches subdivision level to 4
+    WW3D::Set_NPatches_Level(4);
+    wxConfig::Get()->Write("/Config/NPatchesSubdivision", 4L);
+    wxConfig::Get()->Flush();
+}
+
+void W3DViewFrame::OnUpdateViewSubdivision4(wxUpdateUIEvent &event)
+{
+    // MFC Reference: MainFrm.cpp:4334-4339 (OnUpdateViewSubdivision4)
+    // Check the menu item if current subdivision level is 4
+    event.Check(WW3D::Get_NPatches_Level() == 4);
+}
+
+void W3DViewFrame::OnViewSubdivision5(wxCommandEvent &WXUNUSED(event))
+{
+    // MFC Reference: MainFrm.cpp:4341-4348 (OnViewSubdivision5)
+    // Set N-Patches subdivision level to 5
+    WW3D::Set_NPatches_Level(5);
+    wxConfig::Get()->Write("/Config/NPatchesSubdivision", 5L);
+    wxConfig::Get()->Flush();
+}
+
+void W3DViewFrame::OnUpdateViewSubdivision5(wxUpdateUIEvent &event)
+{
+    // MFC Reference: MainFrm.cpp:4350-4355 (OnUpdateViewSubdivision5)
+    // Check the menu item if current subdivision level is 5
+    event.Check(WW3D::Get_NPatches_Level() == 5);
+}
+
+void W3DViewFrame::OnViewSubdivision6(wxCommandEvent &WXUNUSED(event))
+{
+    // MFC Reference: MainFrm.cpp:4357-4364 (OnViewSubdivision6)
+    // Set N-Patches subdivision level to 6
+    WW3D::Set_NPatches_Level(6);
+    wxConfig::Get()->Write("/Config/NPatchesSubdivision", 6L);
+    wxConfig::Get()->Flush();
+}
+
+void W3DViewFrame::OnUpdateViewSubdivision6(wxUpdateUIEvent &event)
+{
+    // MFC Reference: MainFrm.cpp:4366-4371 (OnUpdateViewSubdivision6)
+    // Check the menu item if current subdivision level is 6
+    event.Check(WW3D::Get_NPatches_Level() == 6);
+}
+
+void W3DViewFrame::OnViewSubdivision7(wxCommandEvent &WXUNUSED(event))
+{
+    // MFC Reference: MainFrm.cpp:4373-4380 (OnViewSubdivision7)
+    // Set N-Patches subdivision level to 7
+    WW3D::Set_NPatches_Level(7);
+    wxConfig::Get()->Write("/Config/NPatchesSubdivision", 7L);
+    wxConfig::Get()->Flush();
+}
+
+void W3DViewFrame::OnUpdateViewSubdivision7(wxUpdateUIEvent &event)
+{
+    // MFC Reference: MainFrm.cpp:4382-4387 (OnUpdateViewSubdivision7)
+    // Check the menu item if current subdivision level is 7
+    event.Check(WW3D::Get_NPatches_Level() == 7);
+}
+
+void W3DViewFrame::OnViewSubdivision8(wxCommandEvent &WXUNUSED(event))
+{
+    // MFC Reference: MainFrm.cpp:4389-4396 (OnViewSubdivision8)
+    // Set N-Patches subdivision level to 8
+    WW3D::Set_NPatches_Level(8);
+    wxConfig::Get()->Write("/Config/NPatchesSubdivision", 8L);
+    wxConfig::Get()->Flush();
+}
+
+void W3DViewFrame::OnUpdateViewSubdivision8(wxUpdateUIEvent &event)
+{
+    // MFC Reference: MainFrm.cpp:4398-4403 (OnUpdateViewSubdivision8)
+    // Check the menu item if current subdivision level is 8
+    event.Check(WW3D::Get_NPatches_Level() == 8);
 }
 
 void W3DViewFrame::OnAnimationSettings(wxCommandEvent &WXUNUSED(event))

@@ -22,6 +22,7 @@
 #include "w3dviewtree_wx.h"
 #include "w3dviewview_wx.h"
 #include "w3dviewdoc_wx.h"
+#include "GraphicView_wx.h"
 #include "ViewerScene.h"
 #include "dialogs/Aboutbox_wx.h"
 #include "dialogs/CameraSettings_wx.h"
@@ -405,28 +406,36 @@ void W3DViewFrame::OnCameraSettings(wxCommandEvent &WXUNUSED(event))
 
 void W3DViewFrame::OnLightRotateY(wxCommandEvent &WXUNUSED(event))
 {
-    // TODO(MFC-Match): Implement light Y rotation toggle
-    // MFC Reference: MainFrm.cpp:2641-2654 (OnLightRotateY)
-    // MFC implementation:
-    //   CGraphicView *pgraphic_view = (CGraphicView *)m_wndSplitter.GetPane(0, 1);
-    //   if (pgraphic_view != nullptr) {
-    //       int rotation = (pgraphic_view->Get_Light_Rotation() ^ CGraphicView::RotateY);
-    //       rotation &= ~CGraphicView::RotateYBack;
-    //       pgraphic_view->Rotate_Light((CGraphicView::OBJECT_ROTATION)rotation);
-    //   }
-    // Status: Requires GraphicView Get_Light_Rotation() and Rotate_Light() methods
-    // Impact: Medium - light rotation control
-    wxMessageBox("Light Rotate Y not yet implemented", "TODO", wxOK | wxICON_INFORMATION, this);
+    // MFC: MainFrm.cpp:2641-2654 (OnLightRotateY)
+    // Toggles continuous Y-axis rotation of scene light
+    W3DViewDoc *doc = wxStaticCast(m_docManager->GetCurrentDocument(), W3DViewDoc);
+    if (!doc)
+        return;
+
+    CGraphicView *graphicView = doc->GetGraphicView();
+    if (graphicView != nullptr) {
+        // Start or stop the rotation around Y
+        int rotation = (graphicView->Get_Light_Rotation() ^ CGraphicView::RotateY);
+        rotation &= ~CGraphicView::RotateYBack;
+        graphicView->Rotate_Light((CGraphicView::OBJECT_ROTATION)rotation);
+    }
 }
 
 void W3DViewFrame::OnLightRotateZ(wxCommandEvent &WXUNUSED(event))
 {
-    // TODO(MFC-Match): Implement light Z rotation toggle
-    // MFC Reference: MainFrm.cpp:2685-2698 (OnLightRotateZ)
-    // Similar to OnLightRotateY but for Z axis
-    // Status: Requires GraphicView rotation methods
-    // Impact: Medium - light rotation control
-    wxMessageBox("Light Rotate Z not yet implemented", "TODO", wxOK | wxICON_INFORMATION, this);
+    // MFC: MainFrm.cpp:2685-2698 (OnLightRotateZ)
+    // Toggles continuous Z-axis rotation of scene light
+    W3DViewDoc *doc = wxStaticCast(m_docManager->GetCurrentDocument(), W3DViewDoc);
+    if (!doc)
+        return;
+
+    CGraphicView *graphicView = doc->GetGraphicView();
+    if (graphicView != nullptr) {
+        // Start or stop the rotation around Z
+        int rotation = (graphicView->Get_Light_Rotation() ^ CGraphicView::RotateZ);
+        rotation &= ~CGraphicView::RotateZBack;
+        graphicView->Rotate_Light((CGraphicView::OBJECT_ROTATION)rotation);
+    }
 }
 
 void W3DViewFrame::OnLightAmbient(wxCommandEvent &WXUNUSED(event))

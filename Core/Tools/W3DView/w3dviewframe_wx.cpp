@@ -34,6 +34,8 @@
 #include "dialogs/RenderDeviceSelector_wx.h"
 #include "dialogs/LightAmbientDialog_wx.h"
 #include "dialogs/LightSceneDialog_wx.h"
+#include "dialogs/Resolution_wx.h"
+#include "dialogs/GammaDialog_wx.h"
 #include "light.h"
 
 #include <wx/menu.h>
@@ -725,14 +727,38 @@ void W3DViewFrame::OnDeviceSelection(wxCommandEvent &WXUNUSED(event))
 
 void W3DViewFrame::OnResolutionSettings(wxCommandEvent &WXUNUSED(event))
 {
-    // TODO: Implement resolution settings dialog
-    wxMessageBox("Resolution Settings dialog not yet implemented",
-                 "TODO", wxOK | wxICON_INFORMATION, this);
+    // MFC: MainFrm.cpp:1565-1576 (OnChangeResolution)
+    // MFC implementation shows dialog only for DX8 builds
+    // Since this wxWidgets build uses WW3D_DX8, dialog is available
+#ifdef WW3D_DX8
+    // TODO(MFC-Verify): Verify Resolution dialog matches MFC exactly
+    // Dialog appears implemented but needs visual/behavioral verification
+    // MFC Reference: ResolutionDialog.cpp (ResolutionDialogClass)
+    Resolution dialog(this);
+    dialog.ShowModal();
+#else
+    wxMessageBox("Feature removed during conversion to DX8.",
+                 "Unsupported Feature", wxOK | wxICON_EXCLAMATION, this);
+#endif
 }
 
 void W3DViewFrame::OnGammaSettings(wxCommandEvent &WXUNUSED(event))
 {
-    // TODO: Implement gamma settings dialog
-    wxMessageBox("Gamma Settings dialog not yet implemented",
-                 "TODO", wxOK | wxICON_INFORMATION, this);
+    // MFC: MainFrm.cpp:4441-4451 (OnSetGamma)
+    // MFC implementation checks if gamma is enabled via registry setting,
+    // then shows dialog or warning message
+    //
+    // TODO(MFC-Missing-Feature): Add "Enable Gamma Correction" menu item
+    // MFC has TWO gamma menu items:
+    //   1. "Enable Gamma Correction" (toggle checkbox) - IDM_ENABLE_GAMMA_CORRECTION
+    //   2. "Set Gamma..." (dialog) - IDM_SET_GAMMA
+    // Current wxWidgets menu only has one "Gamma..." item
+    // Need to add separate enable/disable toggle menu item
+    // MFC Reference: MainFrm.cpp:4418-4440 (OnEnableGammaCorrection, OnUpdateEnableGammaCorrection)
+    //
+    // For now, showing dialog directly without enable check
+    // TODO(MFC-Verify): Verify GammaDialog matches MFC exactly
+    // MFC Reference: GammaDialog.cpp (GammaDialogClass)
+    GammaDialog dialog(this);
+    dialog.ShowModal();
 }

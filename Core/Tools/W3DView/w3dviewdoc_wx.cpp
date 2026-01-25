@@ -290,3 +290,36 @@ void W3DViewDoc::Save_Camera_Settings()
     // Ensure config is written to disk
     config->Flush();
 }
+
+void W3DViewDoc::Reload_Displayed_Object()
+{
+    // TODO(MFC-Infrastructure): Implement object reloading for prelit mode changes
+    // MFC Reference: W3DViewDoc.cpp:579-593
+    //
+    // Current status: STUB - Does nothing
+    //
+    // MFC implementation:
+    //   void CW3DViewDoc::Reload_Displayed_Object(void) {
+    //       GetDataTreeView()->Display_Asset();
+    //       // Commented out in MFC:
+    //       //SAFE_ADD_REF(m_pCRenderObj);
+    //       //DisplayObject(m_pCRenderObj, false, false);
+    //       //SAFE_RELEASE_REF(m_pCRenderObj);
+    //   }
+    //
+    // Full implementation requires:
+    //   1. GetDataTreeView() method to access tree control from document
+    //   2. W3DViewTreeCtrl::Display_Asset() method
+    //   3. Document → Frame → Tree control connection
+    //
+    // Purpose: Refreshes the currently displayed 3D object from the tree view selection.
+    //          When prelit lighting mode changes, loaded models need to be reloaded
+    //          to show the new lighting. This method triggers that reload.
+    //
+    // Called by: OnPrelitVertex, OnPrelitMultipass, OnPrelitMultitex
+    // Impact: Without this, prelit mode changes apply to new loads but not current objects
+    // Priority: Medium - mode changes work, but current display may not update
+    
+    // STUB: Currently does nothing - prelit mode is set but current object isn't reloaded
+    return;
+}

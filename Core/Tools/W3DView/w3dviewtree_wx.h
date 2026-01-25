@@ -34,6 +34,26 @@ public:
 
     void RefreshTree();
     void Clear();
+    
+    // TODO(MFC-Infrastructure): Implement Reload_Lightmap_Models() for prelit mode changes
+    // MFC Reference: DataTreeView.cpp:1426-1436
+    // Required for: OnPrelitVertex, OnPrelitMultipass, OnPrelitMultitex
+    //
+    // Full implementation requires:
+    //   - Tree structure with mesh collection, hierarchy, and mesh roots
+    //   - AssetInfoClass data attached to tree items
+    //   - Free_Child_Models() helper method
+    //   - Integration with WW3DAssetManager::Remove_Prototype()
+    //
+    // MFC logic:
+    //   Free_Child_Models(m_hMeshCollectionRoot);
+    //   Free_Child_Models(m_hHierarchyRoot);
+    //   Free_Child_Models(m_hMeshRoot);
+    //
+    // Purpose: Removes cached lightmap model prototypes from asset manager,
+    //          forcing reload from disk when models are next displayed.
+    //          Essential for prelit mode changes to take effect.
+    void Reload_Lightmap_Models();
 
 private:
     void OnSelectionChanged(wxTreeEvent &event);

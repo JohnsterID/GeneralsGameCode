@@ -96,6 +96,24 @@ public:
     
     // Camera settings persistence
     void Save_Camera_Settings();
+    
+    // TODO(MFC-Infrastructure): Implement Reload_Displayed_Object() for prelit mode changes
+    // MFC Reference: W3DViewDoc.cpp:579-593
+    // Required for: OnPrelitVertex, OnPrelitMultipass, OnPrelitMultitex
+    //
+    // MFC implementation:
+    //   void CW3DViewDoc::Reload_Displayed_Object(void) {
+    //       GetDataTreeView()->Display_Asset();
+    //   }
+    //
+    // Purpose: Refreshes the currently displayed object from the tree view selection.
+    //          Essential for showing prelit mode changes on loaded models.
+    //
+    // Full implementation requires:
+    //   - GetDataTreeView() method to access tree control
+    //   - Tree control's Display_Asset() method
+    //   - Document → Tree → View connections
+    void Reload_Displayed_Object();
 
 private:
     // Scene and object data

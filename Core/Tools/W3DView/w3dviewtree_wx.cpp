@@ -127,3 +127,45 @@ void W3DViewTreeCtrl::OnRightClick(wxTreeEvent &event)
 
     PopupMenu(&menu);
 }
+
+void W3DViewTreeCtrl::Reload_Lightmap_Models()
+{
+    // TODO(MFC-Infrastructure): Implement lightmap model reloading
+    // MFC Reference: DataTreeView.cpp:1426-1436
+    //
+    // Current status: STUB - Does nothing
+    //
+    // Full implementation requires:
+    //   1. Tree structure with mesh roots (m_hMeshCollectionRoot, m_hHierarchyRoot, m_hMeshRoot)
+    //   2. AssetInfoClass* attached to tree items (not TreeItemDataInt)
+    //   3. WW3DAssetManager integration for Remove_Prototype()
+    //
+    // MFC implementation:
+    //   void CDataTreeView::Reload_Lightmap_Models(void) {
+    //       Free_Child_Models(m_hMeshCollectionRoot);
+    //       Free_Child_Models(m_hHierarchyRoot);
+    //       Free_Child_Models(m_hMeshRoot);
+    //   }
+    //
+    //   void Free_Child_Models(HTREEITEM parent_item) {
+    //       for (HTREEITEM tree_item = GetTreeCtrl().GetChildItem(parent_item); ...) {
+    //           AssetInfoClass *asset_info = (AssetInfoClass*)GetTreeCtrl().GetItemData(tree_item);
+    //           if (asset_info != nullptr) {
+    //               WW3DAssetManager::Get_Instance()->Remove_Prototype(asset_info->Get_Name());
+    //           }
+    //       }
+    //   }
+    //
+    // When implementing:
+    //   - Traverse mesh collection, hierarchy, and mesh tree roots
+    //   - For each child item, get AssetInfoClass from item data
+    //   - Call WW3DAssetManager::Get_Instance()->Remove_Prototype(name)
+    //   - This forces models to reload from disk with new prelit settings
+    //
+    // Called by: OnPrelitVertex, OnPrelitMultipass, OnPrelitMultitex
+    // Impact: Without this, prelit mode changes may not fully take effect on loaded models
+    // Priority: Medium - prelit handlers work but may need reload for full effect
+    
+    // STUB: Currently does nothing - prelit mode is set but models aren't reloaded
+    return;
+}

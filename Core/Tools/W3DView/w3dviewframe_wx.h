@@ -60,8 +60,11 @@ private:
     void OnUpdateLightingExpose(wxUpdateUIEvent &event);
     void OnKillSceneLight(wxCommandEvent &event);
     void OnPrelitVertex(wxCommandEvent &event);
+    void OnUpdatePrelitVertex(wxUpdateUIEvent &event);
     void OnPrelitMultipass(wxCommandEvent &event);
+    void OnUpdatePrelitMultipass(wxUpdateUIEvent &event);
     void OnPrelitMultitex(wxCommandEvent &event);
+    void OnUpdatePrelitMultitex(wxUpdateUIEvent &event);
     // Settings menu handlers
     void OnTexturePathSettings(wxCommandEvent &event);
     void OnDeviceSelection(wxCommandEvent &event);

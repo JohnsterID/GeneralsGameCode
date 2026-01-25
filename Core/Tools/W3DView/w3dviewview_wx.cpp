@@ -57,11 +57,25 @@ bool W3DViewView::OnCreate(wxDocument *doc, long WXUNUSED(flags))
     // W3D engine will use the native window handle (HWND on Windows)
     m_renderPanel = new wxPanel(splitter, wxID_ANY);
     
-    // TODO: Initialize W3D rendering engine with native window handle
+    // TODO(MFC-Match): Initialize W3D rendering engine with native window handle
+    // MFC Reference: MainFrm.cpp:550-559 (OnCreateClient)
+    // Sequence:
+    //   1. WW3D::Init((HWND)*pCGraphicView) 
+    //   2. WW3D::Enable_Static_Sort_Lists(true)
+    //   3. Load device width/height from registry
+    //   4. Call Select_Device(false) to show device selection dialog
+    //   5. Register prototype loaders
+    // Status: Partially implemented (needs Select_Device call)
+    // Visual Impact: Missing device selection dialog on startup
+    //
     // Example (Windows):
     //   HWND hwnd = (HWND)m_renderPanel->GetHandle();
     //   wxSize size = m_renderPanel->GetClientSize();
-    //   WW3D::Set_Render_Device(deviceIndex, size.GetWidth(), size.GetHeight(), bitsPerPixel, windowed);
+    //   if (WW3D::Init(hwnd) == WW3D_ERROR_OK) {
+    //       WW3D::Enable_Static_Sort_Lists(true);
+    //       // TODO: Call device selection dialog (RenderDeviceSelector_wx)
+    //       // TODO: Register prototype loaders
+    //   }
 
     // Create the tree view
     W3DViewTreeCtrl *treeView = new W3DViewTreeCtrl(splitter, wxID_ANY);

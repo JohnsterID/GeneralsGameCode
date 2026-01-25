@@ -21,6 +21,9 @@
 #include "w3dviewframe_wx.h"
 #include "w3dviewtree_wx.h"
 #include "w3dviewview_wx.h"
+#include "dialogs/CameraSettings_wx.h"
+#include "dialogs/BackgroundColor_wx.h"
+#include "dialogs/BackgroundObject_wx.h"
 
 #include <wx/menu.h>
 #include <wx/toolbar.h>
@@ -169,6 +172,28 @@ void W3DViewFrame::CreateUI()
     // The actual view windows will be created by the document/view framework
     // For now, just initialize the splitter
     m_splitter->SetMinimumPaneSize(200);
+
+    // TODO(MFC-Match): Create Object controls toolbar
+    // MFC Reference: MainFrm.cpp:382-386
+    // Creates CFancyToolbar with rotation lock buttons:
+    //   - Lock X rotation (IDB_LOCK_X_UP/DN, IDM_CAMERA_ALLOW_ROTATE_Y)
+    //   - Lock Y rotation (IDB_LOCK_Y_UP/DN, IDM_CAMERA_ALLOW_ROTATE_X)
+    //   - Lock Z rotation (IDB_LOCK_Z_UP/DN, IDM_CAMERA_ALLOW_ROTATE_Z)
+    //   - Rotate Z (IDB_ROTATE_Z_UP/DN, IDM_OBJECT_ROTATE_Z)
+    // Status: Not implemented
+    // Visual Impact: Missing control panel at bottom of window
+
+    // TODO(MFC-Match): Create Animation controls toolbar
+    // MFC Reference: MainFrm.cpp:388-394
+    // Creates CFancyToolbar with playback controls:
+    //   - Play (IDB_PLAY_UP/DN, IDM_ANI_START)
+    //   - Stop (IDB_STOP_UP/DN, IDM_ANI_STOP)
+    //   - Pause (IDB_PAUSE_UP/DN, IDM_ANI_PAUSE)
+    //   - Step backward (IDB_REVERSE_UP/DN, IDM_ANI_STEP_BKWD)
+    //   - Step forward (IDB_FFWD_UP/DN, IDM_ANI_STEP_FWD)
+    // Default state: Hidden (ShowWindow(SW_HIDE))
+    // Status: Not implemented
+    // Visual Impact: Missing animation control panel
 }
 
 void W3DViewFrame::OnClose(wxCloseEvent &event)
@@ -226,16 +251,27 @@ void W3DViewFrame::OnAnimationSettings(wxCommandEvent &WXUNUSED(event))
 
 void W3DViewFrame::OnBackgroundSettings(wxCommandEvent &WXUNUSED(event))
 {
-    // TODO: Implement background settings dialog
-    wxMessageBox("Background Settings dialog not yet implemented",
+    // TODO(MFC-Match): Fix menu structure mismatch
+    // MFC has separate menu items:
+    //   - IDM_BACKGROUND_COLOR (OnBackgroundColor) -> BackgroundColor_wx
+    //   - IDM_BACKGROUND_BMP (OnBackgroundBMP) -> BackgroundBmp_wx
+    //   - IDM_BACKGROUND_OBJECT (OnBackgroundObject) -> BackgroundObject_wx
+    //   - IDM_BACKGROUND_FOG (OnBackgroundFog) -> needs dialog
+    // wxWidgets currently has single "Background..." menu item
+    // Status: Menu structure needs reorganization to match MFC
+    wxMessageBox("Background Settings dialog not yet implemented\n\n"
+                 "MFC has multiple background menu items that need to be added:\n"
+                 "- Background Color\n- Background BMP\n- Background Object\n- Background Fog",
                  "TODO", wxOK | wxICON_INFORMATION, this);
 }
 
 void W3DViewFrame::OnCameraSettings(wxCommandEvent &WXUNUSED(event))
 {
-    // TODO: Implement camera settings dialog
-    wxMessageBox("Camera Settings dialog not yet implemented",
-                 "TODO", wxOK | wxICON_INFORMATION, this);
+    // TODO(MFC-Verify): Verify CameraSettings dialog matches MFC exactly
+    // Dialog appears implemented but needs visual/behavioral verification
+    // MFC Reference: CameraSettings.cpp
+    CameraSettings dialog(this);
+    dialog.ShowModal();
 }
 
 void W3DViewFrame::OnLightSettings(wxCommandEvent &WXUNUSED(event))

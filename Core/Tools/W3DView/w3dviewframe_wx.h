@@ -70,6 +70,10 @@ private:
     void OnUpdateWireframe(wxUpdateUIEvent &event);
     void OnPolygonSorting(wxCommandEvent &event);
     void OnUpdatePolygonSorting(wxUpdateUIEvent &event);
+    // Animation menu handlers
+    void OnAnimationPlay(wxCommandEvent &event);
+    void OnAnimationPause(wxCommandEvent &event);
+    void OnAnimationStop(wxCommandEvent &event);
     void OnAnimationSettings(wxCommandEvent &event);
     void OnBackgroundColor(wxCommandEvent &event);
     void OnBackgroundBmp(wxCommandEvent &event);

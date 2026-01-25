@@ -91,6 +91,9 @@ enum
     ID_VIEW_SUBDIVISION_6,
     ID_VIEW_SUBDIVISION_7,
     ID_VIEW_SUBDIVISION_8,
+    ID_ANIMATION_PLAY,
+    ID_ANIMATION_PAUSE,
+    ID_ANIMATION_STOP,
     ID_ANIMATION_SETTINGS,
     ID_BACKGROUND_COLOR,
     ID_BACKGROUND_BMP,
@@ -155,6 +158,9 @@ wxBEGIN_EVENT_TABLE(W3DViewFrame, wxDocParentFrame)
     EVT_UPDATE_UI(ID_VIEW_SUBDIVISION_7, W3DViewFrame::OnUpdateViewSubdivision7)
     EVT_MENU(ID_VIEW_SUBDIVISION_8, W3DViewFrame::OnViewSubdivision8)
     EVT_UPDATE_UI(ID_VIEW_SUBDIVISION_8, W3DViewFrame::OnUpdateViewSubdivision8)
+    EVT_MENU(ID_ANIMATION_PLAY, W3DViewFrame::OnAnimationPlay)
+    EVT_MENU(ID_ANIMATION_PAUSE, W3DViewFrame::OnAnimationPause)
+    EVT_MENU(ID_ANIMATION_STOP, W3DViewFrame::OnAnimationStop)
     EVT_MENU(ID_ANIMATION_SETTINGS, W3DViewFrame::OnAnimationSettings)
     EVT_MENU(ID_BACKGROUND_COLOR, W3DViewFrame::OnBackgroundColor)
     EVT_MENU(ID_BACKGROUND_BMP, W3DViewFrame::OnBackgroundBmp)
@@ -270,7 +276,7 @@ void W3DViewFrame::CreateMenuBar()
     // 1. ⚠️ Settings menu doesn't exist in MFC - items scattered across File/View/Object
     // 2. ⚠️ "Set Gamma..." is in Settings menu, should be in View menu per MFC
     // 3. ⚠️ Missing View menu items: Toolbars submenu, Status Bar, Prev/Next, Fullscreen, Device/Resolution
-    // 4. ⚠️ Missing Object menu items: Rotate X/Y/Z (with shortcuts), Restrict Anims
+    // 4. ⚠️ Missing Object menu items: Restrict Anims (✅ Rotate X/Y/Z implemented in Session 22)
     // 5. ⚠️ Missing Export submenu (Aggregate, Emitter, LOD, Primitive, Sound Object)
     // 6. ⚠️ Background should be 4 separate items, not 1 combined
     // 7. ⚠️ Save Settings vs Save file (Ctrl+S conflict)
@@ -350,8 +356,18 @@ void W3DViewFrame::CreateMenuBar()
     menuBar->Append(objectMenu, "&Object");
 
     // Animation menu
+    // MFC Reference: W3DView.rc:263-273
     wxMenu *animMenu = new wxMenu;
-    animMenu->Append(ID_ANIMATION_SETTINGS, "&Settings...");
+    animMenu->Append(ID_ANIMATION_PLAY, "&Play");
+    animMenu->Append(ID_ANIMATION_PAUSE, "P&ause");
+    animMenu->Append(ID_ANIMATION_STOP, "&Stop");
+    animMenu->AppendSeparator();
+    // TODO(MFC-Investigate): Add "Step &Back" menu item (IDM_ANI_STEP_BKWD)
+    // TODO(MFC-Investigate): Add "Step &Forward" menu item (IDM_ANI_STEP_FWD)
+    animMenu->AppendSeparator();
+    animMenu->Append(ID_ANIMATION_SETTINGS, "Se&ttings...");
+    animMenu->AppendSeparator();
+    // TODO(MFC-Investigate): Add "Ad&vanced...\tCtrl+V" menu item (IDM_ADVANCED_ANIM)
     menuBar->Append(animMenu, "&Animation");
 
     // Light menu (matching MFC W3DView.rc:283-302)
@@ -957,6 +973,112 @@ void W3DViewFrame::OnUpdatePolygonSorting(wxUpdateUIEvent &event)
     // MFC Reference: MainFrm.cpp:4219-4223 (OnUpdateToggleSorting)
     // Check the menu item if sorting is enabled
     event.Check(WW3D::Is_Sorting_Enabled());
+}
+
+void W3DViewFrame::OnAnimationPlay(wxCommandEvent &WXUNUSED(event))
+{
+    // MFC Reference: MainFrm.cpp:1292-1309 (OnAniStart)
+    //
+    // MFC Implementation:
+    //   CGraphicView *pCGraphicView = (CGraphicView *)m_wndSplitter.GetPane (0, 1);
+    //   pCGraphicView->SetAnimationState (CGraphicView::AnimPlaying);
+    //   m_animationToolbar.SetButtonState (IDM_ANI_PAUSE, CFancyToolbar::StateUp);
+    //   m_animationToolbar.SetButtonState (IDM_ANI_START, CFancyToolbar::StateDn);
+    //
+    // Behavior: Starts animation playback
+    //           Sets state to AnimPlaying
+    //           Updates toolbar: Play button down, Pause button up
+    
+    W3DViewDoc* doc = wxStaticCast(GetDocument(), W3DViewDoc);
+    if (!doc) return;
+    
+    CGraphicView* graphicView = doc->GetGraphicView();
+    if (!graphicView) return;
+    
+    // Start the animation
+    graphicView->SetAnimationState(CGraphicView::AnimPlaying);
+    
+    // TODO(MFC-Match): Update toolbar buttons when Animation toolbar is implemented
+    //   MFC updates m_animationToolbar button states (Play down, Pause up)
+    //   See MainFrm.cpp:1302-1305
+    //   Defer until toolbar infrastructure exists
+}
+
+void W3DViewFrame::OnAnimationPause(wxCommandEvent &WXUNUSED(event))
+{
+    // MFC Reference: MainFrm.cpp:1318-1348 (OnAniPause)
+    //
+    // MFC Implementation:
+    //   CGraphicView *pCGraphicView = (CGraphicView *)m_wndSplitter.GetPane (0, 1);
+    //   if (pCGraphicView->GetAnimationState () == CGraphicView::AnimPlaying)
+    //   {
+    //       pCGraphicView->SetAnimationState (CGraphicView::AnimPaused);
+    //       m_animationToolbar.SetButtonState (IDM_ANI_PAUSE, CFancyToolbar::StateDn);
+    //   }
+    //   else if (pCGraphicView->GetAnimationState () == CGraphicView::AnimPaused)
+    //   {
+    //       pCGraphicView->SetAnimationState (CGraphicView::AnimPlaying);
+    //       m_animationToolbar.SetButtonState (IDM_ANI_PAUSE, CFancyToolbar::StateUp);
+    //   }
+    //   else // Stopped state
+    //   {
+    //       m_animationToolbar.SetButtonState (IDM_ANI_PAUSE, CFancyToolbar::StateUp);
+    //   }
+    //
+    // Behavior: Toggle between Playing and Paused states
+    //           If Playing → Pauses (button down)
+    //           If Paused → Resumes playing (button up)
+    //           If Stopped → Does nothing (button pops up)
+    
+    W3DViewDoc* doc = wxStaticCast(GetDocument(), W3DViewDoc);
+    if (!doc) return;
+    
+    CGraphicView* graphicView = doc->GetGraphicView();
+    if (!graphicView) return;
+    
+    // Toggle between Playing and Paused
+    if (graphicView->GetAnimationState() == CGraphicView::AnimPlaying)
+    {
+        // Pause the animation
+        graphicView->SetAnimationState(CGraphicView::AnimPaused);
+        // TODO(MFC-Match): SetButtonState(IDM_ANI_PAUSE, StateDn)
+    }
+    else if (graphicView->GetAnimationState() == CGraphicView::AnimPaused)
+    {
+        // Resume playing
+        graphicView->SetAnimationState(CGraphicView::AnimPlaying);
+        // TODO(MFC-Match): SetButtonState(IDM_ANI_PAUSE, StateUp)
+    }
+    // If stopped, do nothing (toolbar button pops up in MFC)
+}
+
+void W3DViewFrame::OnAnimationStop(wxCommandEvent &WXUNUSED(event))
+{
+    // MFC Reference: MainFrm.cpp:1268-1283 (OnAniStop)
+    //
+    // MFC Implementation:
+    //   CGraphicView *pCGraphicView = (CGraphicView *)m_wndSplitter.GetPane (0, 1);
+    //   pCGraphicView->SetAnimationState (CGraphicView::AnimStopped);
+    //   m_animationToolbar.SetButtonState (IDM_ANI_START, CFancyToolbar::StateUp);
+    //   m_animationToolbar.SetButtonState (IDM_ANI_PAUSE, CFancyToolbar::StateUp);
+    //
+    // Behavior: Stops animation playback
+    //           Sets state to AnimStopped
+    //           Updates toolbar: Both Play and Pause buttons pop up
+    
+    W3DViewDoc* doc = wxStaticCast(GetDocument(), W3DViewDoc);
+    if (!doc) return;
+    
+    CGraphicView* graphicView = doc->GetGraphicView();
+    if (!graphicView) return;
+    
+    // Stop the animation
+    graphicView->SetAnimationState(CGraphicView::AnimStopped);
+    
+    // TODO(MFC-Match): Update toolbar buttons when Animation toolbar is implemented
+    //   MFC pops both Play and Pause buttons
+    //   See MainFrm.cpp:1278-1279
+    //   Defer until toolbar infrastructure exists
 }
 
 void W3DViewFrame::OnAnimationSettings(wxCommandEvent &WXUNUSED(event))

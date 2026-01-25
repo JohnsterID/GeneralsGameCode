@@ -58,6 +58,10 @@ private:
     void OnUpdateViewSubdivision7(wxUpdateUIEvent &event);
     void OnViewSubdivision8(wxCommandEvent &event);
     void OnUpdateViewSubdivision8(wxUpdateUIEvent &event);
+    void OnWireframe(wxCommandEvent &event);
+    void OnUpdateWireframe(wxUpdateUIEvent &event);
+    void OnPolygonSorting(wxCommandEvent &event);
+    void OnUpdatePolygonSorting(wxUpdateUIEvent &event);
     void OnAnimationSettings(wxCommandEvent &event);
     void OnBackgroundColor(wxCommandEvent &event);
     void OnBackgroundBmp(wxCommandEvent &event);

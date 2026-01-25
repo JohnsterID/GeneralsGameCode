@@ -65,6 +65,8 @@ enum
     ID_LOD_GENERATE,
     ID_VIEW_RESET,
     ID_ALTERNATE_MATERIAL,
+    ID_VIEW_WIREFRAME,
+    ID_VIEW_POLYGON_SORTING,
     ID_VIEW_PATCH_GAP_FILL,
     ID_VIEW_SUBDIVISION_1,
     ID_VIEW_SUBDIVISION_2,
@@ -109,6 +111,10 @@ wxBEGIN_EVENT_TABLE(W3DViewFrame, wxDocParentFrame)
     EVT_MENU(ID_LOD_GENERATE, W3DViewFrame::OnLodGenerate)
     EVT_MENU(ID_VIEW_RESET, W3DViewFrame::OnViewReset)
     EVT_MENU(ID_ALTERNATE_MATERIAL, W3DViewFrame::OnAlternateMaterial)
+    EVT_MENU(ID_VIEW_WIREFRAME, W3DViewFrame::OnWireframe)
+    EVT_UPDATE_UI(ID_VIEW_WIREFRAME, W3DViewFrame::OnUpdateWireframe)
+    EVT_MENU(ID_VIEW_POLYGON_SORTING, W3DViewFrame::OnPolygonSorting)
+    EVT_UPDATE_UI(ID_VIEW_POLYGON_SORTING, W3DViewFrame::OnUpdatePolygonSorting)
     EVT_MENU(ID_VIEW_PATCH_GAP_FILL, W3DViewFrame::OnViewPatchGapFill)
     EVT_UPDATE_UI(ID_VIEW_PATCH_GAP_FILL, W3DViewFrame::OnUpdateViewPatchGapFill)
     EVT_MENU(ID_VIEW_SUBDIVISION_1, W3DViewFrame::OnViewSubdivision1)
@@ -183,14 +189,17 @@ W3DViewFrame::~W3DViewFrame()
 void W3DViewFrame::CreateMenuBar()
 {
     // TODO(MFC-Match): Complete menu structure overhaul needed
-    // Current wxWidgets menu is ~40% complete compared to MFC
+    // Current wxWidgets menu is ~45% complete compared to MFC
     // See MENU_STRUCTURE_MISMATCH.md for full analysis
     //
     // CRITICAL ISSUES:
-    // 1. Missing ~35+ menu items from MFC (File, View, Object menus)
+    // 1. Missing ~33+ menu items from MFC (File, View, Object menus)
     // 2. Settings menu items in wrong locations (should be in File/View)
     // 3. Missing Export submenu (Aggregate, Emitter, LOD, Primitive, Sound Object)
-    // 4. Missing rendering controls (Wireframe, Polygon Sorting)
+    // 4. View Menu Rendering Controls: ✅ Implemented: Wireframe Mode, Polygon Sorting
+    //    TODO(MFC-Verify): Verify complete list of rendering controls in MFC View menu
+    //    Current: Wireframe, Polygon Sorting, Patch Gap Fill, Subdivision Level 1-8
+    //    Check MFC W3DView.rc:227-242 for any additional rendering controls
     // 5. Missing Object rotation controls (Rotate X/Y/Z with shortcuts)
     // 6. Missing toolbar visibility controls (View → Toolbars submenu)
     // 7. Save Settings vs Save file (Ctrl+S conflict)
@@ -227,7 +236,8 @@ void W3DViewFrame::CreateMenuBar()
     viewMenu->Append(ID_VIEW_RESET, "&Reset View");
     viewMenu->Append(ID_ALTERNATE_MATERIAL, "&Alternate Material");
     viewMenu->AppendSeparator();
-    viewMenu->AppendCheckItem(ID_VIEW_PATCH_GAP_FILL, "&Patch Gap Fill");
+    viewMenu->AppendCheckItem(ID_VIEW_WIREFRAME, "&Wireframe Mode");
+    viewMenu->AppendCheckItem(ID_VIEW_POLYGON_SORTING, "Polygon &Sorting\tCtrl+P");
     viewMenu->AppendSeparator();
     wxMenu *subdivMenu = new wxMenu;
     subdivMenu->AppendRadioItem(ID_VIEW_SUBDIVISION_1, "Level &1");
@@ -239,6 +249,7 @@ void W3DViewFrame::CreateMenuBar()
     subdivMenu->AppendRadioItem(ID_VIEW_SUBDIVISION_7, "Level &7");
     subdivMenu->AppendRadioItem(ID_VIEW_SUBDIVISION_8, "Level &8");
     viewMenu->AppendSubMenu(subdivMenu, "Su&bdivision Level");
+    viewMenu->AppendCheckItem(ID_VIEW_PATCH_GAP_FILL, "&Patch Gap Fill");
     menuBar->Append(viewMenu, "&View");
 
     // Object menu
@@ -620,6 +631,60 @@ void W3DViewFrame::OnUpdateViewSubdivision8(wxUpdateUIEvent &event)
     // MFC Reference: MainFrm.cpp:4398-4403 (OnUpdateViewSubdivision8)
     // Check the menu item if current subdivision level is 8
     event.Check(WW3D::Get_NPatches_Level() == 8);
+}
+
+void W3DViewFrame::OnWireframe(wxCommandEvent &WXUNUSED(event))
+{
+    // MFC Reference: MainFrm.cpp:4172-4179 (OnWireframeMode)
+    // Toggle wireframe rendering mode (scene-specific setting)
+    W3DViewDoc *doc = wxDynamicCast(GetDocument(), W3DViewDoc);
+    if (!doc) return;
+    
+    ViewerSceneClass *scene = doc->GetScene();
+    if (!scene) return;
+    
+    // Toggle between LINE (wireframe) and FILL (normal) rendering
+    bool enable = (scene->Get_Polygon_Mode() != SceneClass::LINE);
+    scene->Set_Polygon_Mode(enable ? SceneClass::LINE : SceneClass::FILL);
+    // Note: No config persistence (scene-specific, not global setting)
+}
+
+void W3DViewFrame::OnUpdateWireframe(wxUpdateUIEvent &event)
+{
+    // MFC Reference: MainFrm.cpp:4188-4193 (OnUpdateWireframeMode)
+    // Check the menu item if wireframe mode is enabled
+    W3DViewDoc *doc = wxDynamicCast(GetDocument(), W3DViewDoc);
+    if (!doc) {
+        event.Enable(false);
+        return;
+    }
+    
+    ViewerSceneClass *scene = doc->GetScene();
+    if (!scene) {
+        event.Enable(false);
+        return;
+    }
+    
+    event.Check(scene->Get_Polygon_Mode() == SceneClass::LINE);
+}
+
+void W3DViewFrame::OnPolygonSorting(wxCommandEvent &WXUNUSED(event))
+{
+    // MFC Reference: MainFrm.cpp:4202-4210 (OnToggleSorting)
+    // Toggle polygon sorting state (global WW3D setting)
+    bool sorting = !WW3D::Is_Sorting_Enabled();
+    WW3D::_Invalidate_Mesh_Cache();
+    WW3D::Enable_Sorting(sorting);
+    // Save the new value in wxConfig
+    wxConfig::Get()->Write("/Config/EnableSorting", sorting ? 1L : 0L);
+    wxConfig::Get()->Flush();
+}
+
+void W3DViewFrame::OnUpdatePolygonSorting(wxUpdateUIEvent &event)
+{
+    // MFC Reference: MainFrm.cpp:4219-4223 (OnUpdateToggleSorting)
+    // Check the menu item if sorting is enabled
+    event.Check(WW3D::Is_Sorting_Enabled());
 }
 
 void W3DViewFrame::OnAnimationSettings(wxCommandEvent &WXUNUSED(event))

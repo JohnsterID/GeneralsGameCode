@@ -190,20 +190,33 @@ void W3DViewFrame::CreateMenuBar()
 {
     // TODO(MFC-Match): Complete menu structure overhaul needed
     // Current wxWidgets menu is ~45% complete compared to MFC
-    // See MENU_STRUCTURE_MISMATCH.md for full analysis
+    // See MENU_STRUCTURE_MISMATCH.md and SESSION_21_VIEW_MENU_INVESTIGATION.md
+    //
+    // ⚠️ CRITICAL FINDINGS (Session 21 Investigation):
+    // ❌ WRONG MENU LOCATION: "Reset View" and "Alternate Material" are from MFC Object menu!
+    //    - "Reset View" → Should be Object → Reset (MFC: MainFrm.cpp:1922, IDM_OBJECT_RESET)
+    //    - "Alternate Material" → Should be Object → Toggle Alternate Materials (MFC: MainFrm.cpp:4073)
+    //    These are currently in VIEW menu but MFC has them in OBJECT menu!
     //
     // CRITICAL ISSUES:
-    // 1. Missing ~33+ menu items from MFC (File, View, Object menus)
-    // 2. Settings menu items in wrong locations (should be in File/View)
-    // 3. Missing Export submenu (Aggregate, Emitter, LOD, Primitive, Sound Object)
-    // 4. View Menu Rendering Controls: ✅ Implemented: Wireframe Mode, Polygon Sorting
-    //    TODO(MFC-Verify): Verify complete list of rendering controls in MFC View menu
-    //    Current: Wireframe, Polygon Sorting, Patch Gap Fill, Subdivision Level 1-8
-    //    Check MFC W3DView.rc:227-242 for any additional rendering controls
-    // 5. Missing Object rotation controls (Rotate X/Y/Z with shortcuts)
-    // 6. Missing toolbar visibility controls (View → Toolbars submenu)
-    // 7. Save Settings vs Save file (Ctrl+S conflict)
-    // 8. Background should be 4 separate items, not 1 combined
+    // 1. ❌ View menu has 2 items that belong in Object menu (Reset, Alternate Material)
+    // 2. ⚠️ Missing Object menu entirely - needs creation with proper MFC items
+    // 3. ⚠️ Settings menu doesn't exist in MFC - items scattered across File/View/Object
+    // 4. ✅ View Menu Rendering Controls: COMPLETE (Wireframe, Polygon Sorting, Patch Gap Fill, Subdivision 1-8)
+    //    ⚠️ EXCEPT: "Set Gamma..." is in Settings menu, should be in View menu per MFC
+    // 5. ⚠️ Missing View menu items: Toolbars submenu, Status Bar, Prev/Next, Fullscreen, Device/Resolution
+    // 6. ⚠️ Missing Object menu items: Rotate X/Y/Z (with shortcuts), Properties, Restrict Anims
+    // 7. ⚠️ Missing Export submenu (Aggregate, Emitter, LOD, Primitive, Sound Object)
+    // 8. ⚠️ Background should be 4 separate items, not 1 combined
+    // 9. ⚠️ Save Settings vs Save file (Ctrl+S conflict)
+    //
+    // TODO(MFC-Match-URGENT): Move "Reset View" to Object menu as "Reset"
+    // TODO(MFC-Match-URGENT): Move "Alternate Material" to Object menu as "Toggle Alternate Materials"
+    // TODO(MFC-Match): Create Object menu with MFC structure (W3DView.rc:244-258)
+    // TODO(MFC-Match): Add View → Toolbars submenu (Main, Object, Animation)
+    // TODO(MFC-Match): Add View → Status Bar toggle
+    // TODO(MFC-Match): Move "Set Gamma..." from Settings to View menu
+    // TODO(MFC-Investigate): Decide Settings menu strategy (doesn't exist in MFC)
     //
     // MFC Reference: W3DView.rc lines 181-300+
     // Status: Major work required for exact matching
@@ -437,24 +450,45 @@ void W3DViewFrame::OnLodGenerate(wxCommandEvent &WXUNUSED(event))
 
 void W3DViewFrame::OnViewReset(wxCommandEvent &WXUNUSED(event))
 {
-    // TODO(MFC-Missing): OnViewReset has no MFC implementation
-    // Searched: Core/Tools/W3DView/MainFrm.cpp - handler not found
-    // This appears to be a planned feature that was never implemented in MFC
-    // 
-    // Possible interpretation: Reset camera view to default position/rotation
-    // Would need to define what "reset" means:
-    //   - Reset camera position/orientation?
-    //   - Reset lighting to defaults?
-    //   - Reset all view settings?
+    // TODO(MFC-Match-WRONG-MENU): This is OnObjectReset, belongs in Object menu!
+    // ❌ CRITICAL: This menu item is in WRONG MENU location!
     //
-    // Status: Unimplemented in MFC, unclear requirements
-    // Priority: Low - feature was never implemented in original
-    // Impact: Unknown - no MFC behavior to match
+    // MFC Structure:
+    //   - Menu: Object → Reset (NOT View → Reset View)
+    //   - ID: IDM_OBJECT_RESET (NOT ID_VIEW_RESET)
+    //   - Handler: CMainFrame::OnObjectReset (MainFrm.cpp:1922-1933)
+    //
+    // MFC Implementation:
+    //   CGraphicView *pCGraphicView = (CGraphicView *)m_wndSplitter.GetPane(0, 1);
+    //   if (pCGraphicView) {
+    //       pCGraphicView->ResetObject();  // Resets OBJECT rotation, not VIEW/camera!
+    //   }
+    //
+    // Correct Behavior: Reset current object's rotation to default
+    // NOT: Reset camera view (as name implies)
+    //
+    // Required Actions:
+    // 1. Move this menu item from View menu to Object menu
+    // 2. Rename from "Reset View" to "Reset" (matches MFC)
+    // 3. Change ID from ID_VIEW_RESET to ID_OBJECT_RESET
+    // 4. Implement actual object reset functionality (call view->ResetObject())
+    //
+    // Investigation: SESSION_21_VIEW_MENU_INVESTIGATION.md
+    // Priority: HIGH - menu structure mismatch
+    // Impact: HIGH - user expects Object reset, not View reset
 }
 
 void W3DViewFrame::OnAlternateMaterial(wxCommandEvent &WXUNUSED(event))
 {
+    // TODO(MFC-Match-WRONG-MENU): This belongs in Object menu, not View menu!
     // TODO(MFC-Match-BLOCKED): Implement alternate material toggle
+    // ❌ CRITICAL: This menu item is in WRONG MENU location!
+    //
+    // MFC Structure:
+    //   - Menu: Object → Toggle Alternate Materials (NOT View → Alternate Material)
+    //   - ID: IDM_OBJECT_ALTERNATE_MATERIALS (NOT ID_ALTERNATE_MATERIAL)
+    //   - Handler: CMainFrame::OnObjectAlternateMaterials (MainFrm.cpp:4073-4077)
+    //
     // MFC Reference: MainFrm.cpp:4073 (OnObjectAlternateMaterials)
     // MFC implementation:
     //   ::GetCurrentDocument()->Toggle_Alternate_Materials();
@@ -478,9 +512,15 @@ void W3DViewFrame::OnAlternateMaterial(wxCommandEvent &WXUNUSED(event))
     //   3. Investigate MFC StdAfx.h preprocessor handling
     //   4. Use forward declarations and reinterpret_cast (type-unsafe)
     //
-    // Impact: Medium - affects material display for models with alternate materials
-    //         (less commonly used feature)
-    // Priority: Defer until engine header conflicts resolved
+    // Required Actions (Menu Location):
+    //   1. Move this menu item from View menu to Object menu
+    //   2. Rename from "Alternate Material" to "Toggle Alternate Materials"
+    //   3. Change ID from ID_ALTERNATE_MATERIAL to ID_OBJECT_ALTERNATE_MATERIALS
+    //   4. Then implement functionality (once header conflicts resolved)
+    //
+    // Investigation: SESSION_21_VIEW_MENU_INVESTIGATION.md
+    // Impact: Medium - affects material display + WRONG MENU LOCATION
+    // Priority: HIGH (menu fix) + Defer (implementation until headers resolved)
 }
 
 void W3DViewFrame::OnViewPatchGapFill(wxCommandEvent &WXUNUSED(event))

@@ -41,6 +41,8 @@ class RenderObjClass;
 class AssetInfoClass;
 class CGraphicView;
 class LightClass;
+class HAnimClass;
+class HAnimComboClass;
 
 class W3DViewDoc : public wxDocument
 {
@@ -97,6 +99,15 @@ public:
     // Camera settings persistence
     void Save_Camera_Settings();
     
+    // Animation accessors (MFC compatibility)
+    HAnimClass* GetCurrentAnimation() const { return m_animation; }
+    HAnimComboClass* GetAnimationCombo() const { return m_animCombo; }
+    float GetCurrentFrame() const { return m_currentFrame; }
+    float GetAnimationTime() const { return m_animTime; }
+    
+    // Animation control
+    void StepAnimation(int frameIncrement);
+    
     // TODO(MFC-Infrastructure): Implement Reload_Displayed_Object() for prelit mode changes
     // MFC Reference: W3DViewDoc.cpp:579-593
     // Required for: OnPrelitVertex, OnPrelitMultipass, OnPrelitMultitex
@@ -129,6 +140,12 @@ private:
     // Texture paths
     wxString m_texturePath1;
     wxString m_texturePath2;
+    
+    // Animation state (MFC compatibility)
+    HAnimClass *m_animation;         // Current animation (MFC: m_pCAnimation)
+    HAnimComboClass *m_animCombo;    // Combo animation (MFC: m_pCAnimCombo)
+    float m_currentFrame;            // Current animation frame (MFC: m_CurrentFrame)
+    float m_animTime;                // Current animation time (MFC: m_animTime)
 
     wxDECLARE_DYNAMIC_CLASS(W3DViewDoc);
 };

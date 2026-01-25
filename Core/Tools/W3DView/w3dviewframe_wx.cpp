@@ -94,6 +94,8 @@ enum
     ID_ANIMATION_PLAY,
     ID_ANIMATION_PAUSE,
     ID_ANIMATION_STOP,
+    ID_ANIMATION_STEP_BACK,
+    ID_ANIMATION_STEP_FORWARD,
     ID_ANIMATION_SETTINGS,
     ID_BACKGROUND_COLOR,
     ID_BACKGROUND_BMP,
@@ -169,6 +171,8 @@ wxBEGIN_EVENT_TABLE(W3DViewFrame, wxDocParentFrame)
     EVT_MENU(ID_ANIMATION_PLAY, W3DViewFrame::OnAnimationPlay)
     EVT_MENU(ID_ANIMATION_PAUSE, W3DViewFrame::OnAnimationPause)
     EVT_MENU(ID_ANIMATION_STOP, W3DViewFrame::OnAnimationStop)
+    EVT_MENU(ID_ANIMATION_STEP_BACK, W3DViewFrame::OnAnimationStepBack)
+    EVT_MENU(ID_ANIMATION_STEP_FORWARD, W3DViewFrame::OnAnimationStepForward)
     EVT_MENU(ID_ANIMATION_SETTINGS, W3DViewFrame::OnAnimationSettings)
     EVT_MENU(ID_BACKGROUND_COLOR, W3DViewFrame::OnBackgroundColor)
     EVT_MENU(ID_BACKGROUND_BMP, W3DViewFrame::OnBackgroundBmp)
@@ -393,8 +397,8 @@ void W3DViewFrame::CreateMenuBar()
     animMenu->Append(ID_ANIMATION_PAUSE, "P&ause");
     animMenu->Append(ID_ANIMATION_STOP, "&Stop");
     animMenu->AppendSeparator();
-    // TODO(MFC-Investigate): Add "Step &Back" menu item (IDM_ANI_STEP_BKWD)
-    // TODO(MFC-Investigate): Add "Step &Forward" menu item (IDM_ANI_STEP_FWD)
+    animMenu->Append(ID_ANIMATION_STEP_BACK, "Step &Back");
+    animMenu->Append(ID_ANIMATION_STEP_FORWARD, "Step &Forward");
     animMenu->AppendSeparator();
     animMenu->Append(ID_ANIMATION_SETTINGS, "Se&ttings...");
     animMenu->AppendSeparator();
@@ -1134,6 +1138,48 @@ void W3DViewFrame::OnAnimationStop(wxCommandEvent &WXUNUSED(event))
     //   MFC pops both Play and Pause buttons
     //   See MainFrm.cpp:1278-1279
     //   Defer until toolbar infrastructure exists
+}
+
+void W3DViewFrame::OnAnimationStepBack(wxCommandEvent &WXUNUSED(event))
+{
+    // MFC Reference: MainFrm.cpp:1902-1913 (OnAniStepBkwd)
+    //
+    // MFC Implementation:
+    //   CW3DViewDoc *pCDoc = (CW3DViewDoc *)GetActiveDocument ();
+    //   if (pCDoc) {
+    //       pCDoc->StepAnimation (-1);
+    //   }
+    //
+    // Behavior: Steps animation backward by one frame
+    //           Wraps to last frame if at frame 0
+    //           Delegates to document's StepAnimation method
+    
+    W3DViewDoc* doc = wxStaticCast(GetDocument(), W3DViewDoc);
+    if (!doc) return;
+    
+    // Step animation backward by one frame
+    doc->StepAnimation(-1);
+}
+
+void W3DViewFrame::OnAnimationStepForward(wxCommandEvent &WXUNUSED(event))
+{
+    // MFC Reference: MainFrm.cpp:1882-1893 (OnAniStepFwd)
+    //
+    // MFC Implementation:
+    //   CW3DViewDoc *pCDoc = (CW3DViewDoc *)GetActiveDocument ();
+    //   if (pCDoc) {
+    //       pCDoc->StepAnimation (1);
+    //   }
+    //
+    // Behavior: Steps animation forward by one frame
+    //           Wraps to frame 0 if at last frame
+    //           Delegates to document's StepAnimation method
+    
+    W3DViewDoc* doc = wxStaticCast(GetDocument(), W3DViewDoc);
+    if (!doc) return;
+    
+    // Step animation forward by one frame
+    doc->StepAnimation(1);
 }
 
 void W3DViewFrame::OnAnimationSettings(wxCommandEvent &WXUNUSED(event))

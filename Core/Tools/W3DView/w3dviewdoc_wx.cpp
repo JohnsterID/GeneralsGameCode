@@ -38,6 +38,10 @@
 #include "AssetInfo.h"
 #include "camera.h"
 #include "light.h"
+#include "hanimmgr.h"  // For HAnimManagerClass
+#include "hrawanim.h"  // For HAnimClass (HRawAnimClass)
+#include "hmorphanim.h"  // For HMorphAnimClass
+// Note: HAnimComboClass appears to be defined in one of the above headers
 
 // Redefine CString for wxWidgets compatibility
 #define CString wxString
@@ -53,6 +57,10 @@ W3DViewDoc::W3DViewDoc()
     , m_backgroundColor(0.0f, 0.0f, 0.0f)  // Black by default
     , m_manualFOV(false)
     , m_manualClipPlanes(false)
+    , m_animation(nullptr)     // Animation state
+    , m_animCombo(nullptr)
+    , m_currentFrame(0.0f)
+    , m_animTime(0.0f)
 {
 }
 
@@ -289,6 +297,76 @@ void W3DViewDoc::Save_Camera_Settings()
     
     // Ensure config is written to disk
     config->Flush();
+}
+
+void W3DViewDoc::StepAnimation(int frameIncrement)
+{
+    // MFC Reference: W3DViewDoc.cpp:802-846 (StepAnimation)
+    //
+    // MFC Implementation:
+    //   if (m_pCRenderObj && m_pCAnimation) {
+    //       int iTotalFrames = m_pCAnimation->Get_Num_Frames ();
+    //       m_CurrentFrame += iFrameInc;
+    //       // Wrap around...
+    //       if (m_pCAnimCombo) {
+    //           for (int i = 0; i < m_pCAnimCombo->Get_Num_Anims(); i++)
+    //               m_pCAnimCombo->Set_Frame(i, m_CurrentFrame);
+    //           m_pCRenderObj->Set_Animation (m_pCAnimCombo);
+    //       } else {
+    //           m_pCRenderObj->Set_Animation (m_pCAnimation, m_CurrentFrame);
+    //       }
+    //       ((CMainFrame *)::AfxGetMainWnd ())->UpdateFrameCount (...);
+    //       Update_Camera ();
+    //   }
+    //
+    // Behavior: Steps animation forward/backward by frameIncrement frames
+    //           Handles frame wrapping at boundaries
+    //           Updates status bar and camera position
+    
+    if (!m_currentObject || !m_animation) {
+        // No object or animation loaded
+        return;
+    }
+    
+    int totalFrames = m_animation->Get_Num_Frames();
+    if (totalFrames <= 0) {
+        // Invalid animation
+        return;
+    }
+    
+    // Increment the frame
+    m_currentFrame += frameIncrement;
+    
+    // Wrap the animation
+    if (m_currentFrame >= totalFrames) {
+        // Forward wrap: go to frame 0
+        m_currentFrame = 0.0f;
+        m_animTime = 0.0f;
+    }
+    else if (m_currentFrame < 0) {
+        // Backward wrap: go to last frame
+        m_currentFrame = static_cast<float>(totalFrames - 1);
+    }
+    
+    // Update the animation frame
+    if (m_animCombo) {
+        // Combo animation: set frame for all sub-animations
+        for (int i = 0; i < m_animCombo->Get_Num_Anims(); i++) {
+            m_animCombo->Set_Frame(i, static_cast<int>(m_currentFrame));
+        }
+        m_currentObject->Set_Animation(m_animCombo);
+    } else {
+        // Single animation: set frame directly
+        m_currentObject->Set_Animation(m_animation, static_cast<int>(m_currentFrame));
+    }
+    
+    // TODO(MFC-Defer): Update status bar with frame count
+    // MFC: ((CMainFrame *)::AfxGetMainWnd ())->UpdateFrameCount(m_CurrentFrame, iTotalFrames - 1, frame_rate * anim_speed);
+    // Status bar implementation deferred - will add when status bar infrastructure is complete
+    
+    // TODO(MFC-Investigate): Call Update_Camera() for camera animations
+    // MFC: Update_Camera();
+    // Need to verify if Update_Camera() method exists and what it does for animated cameras
 }
 
 void W3DViewDoc::Reload_Displayed_Object()

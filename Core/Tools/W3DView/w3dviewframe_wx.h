@@ -74,6 +74,8 @@ private:
     void OnAnimationPlay(wxCommandEvent &event);
     void OnAnimationPause(wxCommandEvent &event);
     void OnAnimationStop(wxCommandEvent &event);
+    void OnAnimationStepBack(wxCommandEvent &event);
+    void OnAnimationStepForward(wxCommandEvent &event);
     void OnAnimationSettings(wxCommandEvent &event);
     void OnBackgroundColor(wxCommandEvent &event);
     void OnBackgroundBmp(wxCommandEvent &event);

@@ -338,7 +338,33 @@ void W3DViewFrame::OnViewReset(wxCommandEvent &WXUNUSED(event))
 
 void W3DViewFrame::OnAlternateMaterial(wxCommandEvent &WXUNUSED(event))
 {
-    // TODO: Implement alternate material
+    // TODO(MFC-Match-BLOCKED): Implement alternate material toggle
+    // MFC Reference: MainFrm.cpp:4073 (OnObjectAlternateMaterials)
+    // MFC implementation:
+    //   ::GetCurrentDocument()->Toggle_Alternate_Materials();
+    //
+    // W3DViewDoc::Toggle_Alternate_Materials() implementation (W3DViewDoc.cpp):
+    //   Recursively toggles alternate material description for mesh objects
+    //   For each CLASSID_MESH:
+    //     MeshModelClass* model = ((MeshClass*)renderObj)->Get_Model();
+    //     model->Enable_Alternate_Material_Description(!model->Is_Alternate_Material_Description_Enabled());
+    //   Recurses into all sub-objects
+    //
+    // BLOCKED BY: Header include conflict with wxWidgets
+    //   Including mesh.h/meshmdl.h causes compilation error in vertmaterial.h:119
+    //   Error: "cannot convert 'const StringClass' to 'const char*' in return"
+    //   VertexMaterialClass::Get_Name() returns StringClass Name directly
+    //   MFC StdAfx.h preprocessor setup may handle this differently
+    //
+    // Possible solutions to investigate:
+    //   1. Fix vertmaterial.h Get_Name() to call Name.Peek_Buffer()
+    //   2. Add StringClass implicit conversion operator (risky, wide impact)
+    //   3. Investigate MFC StdAfx.h preprocessor handling
+    //   4. Use forward declarations and reinterpret_cast (type-unsafe)
+    //
+    // Impact: Medium - affects material display for models with alternate materials
+    //         (less commonly used feature)
+    // Priority: Defer until engine header conflicts resolved
 }
 
 void W3DViewFrame::OnAnimationSettings(wxCommandEvent &WXUNUSED(event))

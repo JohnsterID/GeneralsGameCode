@@ -21,9 +21,12 @@
 #include "w3dviewframe_wx.h"
 #include "w3dviewtree_wx.h"
 #include "w3dviewview_wx.h"
+#include "dialogs/Aboutbox_wx.h"
 #include "dialogs/CameraSettings_wx.h"
 #include "dialogs/BackgroundColor_wx.h"
 #include "dialogs/BackgroundObject_wx.h"
+#include "dialogs/TexturePaths_wx.h"
+#include "dialogs/RenderDeviceSelector_wx.h"
 
 #include <wx/menu.h>
 #include <wx/toolbar.h>
@@ -85,6 +88,24 @@ W3DViewFrame::~W3DViewFrame()
 
 void W3DViewFrame::CreateMenuBar()
 {
+    // TODO(MFC-Match): Complete menu structure overhaul needed
+    // Current wxWidgets menu is ~40% complete compared to MFC
+    // See MENU_STRUCTURE_MISMATCH.md for full analysis
+    //
+    // CRITICAL ISSUES:
+    // 1. Missing ~35+ menu items from MFC (File, View, Object menus)
+    // 2. Settings menu items in wrong locations (should be in File/View)
+    // 3. Missing Export submenu (Aggregate, Emitter, LOD, Primitive, Sound Object)
+    // 4. Missing rendering controls (Wireframe, Polygon Sorting, N-Patches)
+    // 5. Missing Object rotation controls (Rotate X/Y/Z with shortcuts)
+    // 6. Missing toolbar visibility controls (View → Toolbars submenu)
+    // 7. Save Settings vs Save file (Ctrl+S conflict)
+    // 8. Background should be 4 separate items, not 1 combined
+    //
+    // MFC Reference: W3DView.rc lines 181-300+
+    // Status: Major work required for exact matching
+    // Impact: High - menu structure is primary user interface
+    
     wxMenuBar *menuBar = new wxMenuBar;
 
     // File menu
@@ -209,13 +230,11 @@ void W3DViewFrame::OnClose(wxCloseEvent &event)
 
 void W3DViewFrame::OnAbout(wxCommandEvent &WXUNUSED(event))
 {
-    wxMessageBox("W3DView - 3D Model Viewer\n\n"
-                 "Command & Conquer Generals Zero Hour\n"
-                 "Copyright 2025 Electronic Arts Inc.\n\n"
-                 "wxWidgets cross-platform version",
-                 "About W3DView",
-                 wxOK | wxICON_INFORMATION,
-                 this);
+    // TODO(MFC-Verify): Verify Aboutbox dialog matches MFC exactly
+    // Dialog appears implemented but needs visual/behavioral verification
+    // MFC Reference: AboutBox.cpp (CAboutDlg)
+    Aboutbox dialog(this);
+    dialog.ShowModal();
 }
 
 void W3DViewFrame::OnObjectProperties(wxCommandEvent &WXUNUSED(event))
@@ -283,16 +302,21 @@ void W3DViewFrame::OnLightSettings(wxCommandEvent &WXUNUSED(event))
 
 void W3DViewFrame::OnTexturePathSettings(wxCommandEvent &WXUNUSED(event))
 {
-    // TODO: Implement texture path settings dialog
-    wxMessageBox("Texture Path Settings dialog not yet implemented",
-                 "TODO", wxOK | wxICON_INFORMATION, this);
+    // TODO(MFC-Verify): Verify TexturePaths dialog matches MFC exactly
+    // Dialog appears implemented but needs visual/behavioral verification
+    // MFC Reference: TexturePathDialog.cpp (TexturePathDialogClass)
+    TexturePaths dialog(this);
+    dialog.ShowModal();
 }
 
 void W3DViewFrame::OnDeviceSelection(wxCommandEvent &WXUNUSED(event))
 {
-    // TODO: Implement device selection dialog
-    wxMessageBox("Device Selection dialog not yet implemented",
-                 "TODO", wxOK | wxICON_INFORMATION, this);
+    // TODO(MFC-Verify): Verify RenderDeviceSelector dialog matches MFC exactly
+    // Dialog appears implemented but needs visual/behavioral verification
+    // MFC Reference: DeviceSelectionDialog.cpp (CDeviceSelectionDialog)
+    // Note: This should also be called during initialization (see w3dviewview_wx.cpp TODO)
+    RenderDeviceSelector dialog(this);
+    dialog.ShowModal();
 }
 
 void W3DViewFrame::OnResolutionSettings(wxCommandEvent &WXUNUSED(event))

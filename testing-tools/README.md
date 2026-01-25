@@ -60,8 +60,6 @@ Create comparison report with:
 
 1. **screenshot_compare.py** - Screenshot comparison tool
 2. **dialog_tester.py** - Automated dialog interaction
-3. **run_comparison.py** - Main test runner
-4. **generate_report.py** - HTML report generator
 
 ## Test Environment
 

@@ -321,21 +321,73 @@ void W3DViewFrame::OnAbout(wxCommandEvent &WXUNUSED(event))
 
 void W3DViewFrame::OnObjectProperties(wxCommandEvent &WXUNUSED(event))
 {
-    // TODO: Implement object properties dialog
+    // TODO(MFC-Match-COMPLEX): Implement object properties dialog
+    // MFC Reference: MainFrm.cpp:718-724 (OnObjectProperties)
+    // MFC implementation:
+    //   Calls ShowObjectProperties() which displays different property sheets
+    //   based on current tree selection type (mesh, hierarchy, etc.)
+    //
+    // Requirements:
+    //   1. Get current selection from tree view (W3DViewTreeCtrl)
+    //   2. Determine selection type (TypeMesh, TypeHierarchy, etc.)
+    //   3. Create appropriate property sheet dialog (CMeshPropPage, etc.)
+    //   4. Display modal property sheet
+    //
+    // Blockers:
+    //   - Property sheet architecture not yet implemented in wxWidgets
+    //   - Tree view integration needed
+    //   - Multiple property page classes (20+ dialogs affected)
+    //
+    // Impact: High - important feature for editing objects
+    // Priority: Medium - blocked by property sheet architecture
     wxMessageBox("Object Properties dialog not yet implemented",
                  "TODO", wxOK | wxICON_INFORMATION, this);
 }
 
 void W3DViewFrame::OnLodGenerate(wxCommandEvent &WXUNUSED(event))
 {
-    // TODO: Implement LOD generation dialog
+    // TODO(MFC-Match-COMPLEX): Implement LOD generation feature
+    // MFC Reference: MainFrm.cpp:979-1025 (OnLodGenerate)
+    // MFC implementation:
+    //   1. Gets current selection from tree view
+    //   2. Validates name format for LOD (e.g., "name00", "name01")
+    //   3. Calls document->GenerateLOD(basename, type)
+    //   4. Adds generated LOD prototype to asset manager
+    //   5. Updates tree view with new LOD
+    //
+    // Requirements:
+    //   - Tree view integration (get selection name)
+    //   - LOD name validation (Is_LOD_Name_Valid)
+    //   - Document GenerateLOD() method
+    //   - Asset manager integration
+    //   - Tree view update after generation
+    //
+    // Blockers:
+    //   - Tree view integration not complete
+    //   - Document LOD generation method not implemented
+    //   - Asset manager API access needed
+    //
+    // Impact: Medium - LOD creation is important but specialized workflow
+    // Priority: Medium - requires multiple components working together
     wxMessageBox("LOD Generation dialog not yet implemented",
                  "TODO", wxOK | wxICON_INFORMATION, this);
 }
 
 void W3DViewFrame::OnViewReset(wxCommandEvent &WXUNUSED(event))
 {
-    // TODO: Implement view reset
+    // TODO(MFC-Missing): OnViewReset has no MFC implementation
+    // Searched: Core/Tools/W3DView/MainFrm.cpp - handler not found
+    // This appears to be a planned feature that was never implemented in MFC
+    // 
+    // Possible interpretation: Reset camera view to default position/rotation
+    // Would need to define what "reset" means:
+    //   - Reset camera position/orientation?
+    //   - Reset lighting to defaults?
+    //   - Reset all view settings?
+    //
+    // Status: Unimplemented in MFC, unclear requirements
+    // Priority: Low - feature was never implemented in original
+    // Impact: Unknown - no MFC behavior to match
 }
 
 void W3DViewFrame::OnAlternateMaterial(wxCommandEvent &WXUNUSED(event))

@@ -44,6 +44,16 @@
 #include <wx/filedlg.h>
 #include <wx/config.h>
 
+// Engine includes for object manipulation
+#ifdef CString
+#undef CString
+#endif
+
+#include "rendobj.h"
+#include "matrix3d.h"
+
+#define CString wxString
+
 // Helper function for adjusting light intensity (MFC: MainFrm.cpp:109-121)
 static inline void Adjust_Light_Intensity(Vector3 &color, float inc)
 {
@@ -464,35 +474,36 @@ void W3DViewFrame::OnLodGenerate(wxCommandEvent &WXUNUSED(event))
 
 void W3DViewFrame::OnObjectReset(wxCommandEvent &WXUNUSED(event))
 {
-    // TODO(MFC-Match): Implement object rotation reset
-    // ✅ MENU LOCATION: Corrected! Now in Object menu (was in View menu)
+    // MFC Reference: MainFrm.cpp:1922-1933 (OnObjectReset)
+    //   Calls: CGraphicView::ResetObject (GraphicView.cpp:1593-1611)
     //
-    // MFC Structure:
-    //   - Menu: Object → Reset ✅ CORRECT
-    //   - ID: IDM_OBJECT_RESET ✅ CORRECT (was ID_VIEW_RESET)
-    //   - Handler: CMainFrame::OnObjectReset (MainFrm.cpp:1922-1933)
-    //
-    // MFC Implementation (MainFrm.cpp:1922-1933):
-    //   CGraphicView *pCGraphicView = (CGraphicView *)m_wndSplitter.GetPane(0, 1);
-    //   if (pCGraphicView) {
-    //       pCGraphicView->ResetObject();  // Resets OBJECT rotation, not VIEW/camera!
-    //   }
-    //
-    // Behavior: Reset current object's rotation to default state
-    //
-    // Implementation needed:
-    //   W3DViewDoc* doc = wxStaticCast(GetDocument(), W3DViewDoc);
+    // MFC Implementation (GraphicView.cpp:1593-1611):
+    //   CW3DViewDoc *doc = ::GetCurrentDocument();
     //   if (doc) {
-    //       W3DGraphicView* view = doc->GetGraphicView();
-    //       if (view) {
-    //           view->ResetObject();  // Need to implement this method
+    //       RenderObjClass *pCRenderObj = doc->GetDisplayedObject();
+    //       if (pCRenderObj) {
+    //           pCRenderObj->Set_Transform(Matrix3D(1));  // Identity matrix = reset
     //       }
     //   }
     //
-    // Status: Menu location corrected (Session 21), implementation pending
-    // Investigation: SESSION_21_VIEW_MENU_INVESTIGATION.md
-    // Priority: MEDIUM - functionality not yet implemented
-    // Impact: MEDIUM - user feature for resetting object rotation
+    // Behavior: Resets the displayed object's transform to identity matrix
+    //           This removes all rotation, scaling, and translation
+    //
+    // ✅ MENU LOCATION: Corrected in Session 21 (was in View menu, now in Object menu)
+    
+    // Get the document
+    W3DViewDoc* doc = wxStaticCast(GetDocument(), W3DViewDoc);
+    if (!doc) {
+        return;
+    }
+    
+    // Get the displayed object
+    RenderObjClass* renderObj = doc->GetDisplayedObject();
+    if (renderObj) {
+        // Reset the object's transform to identity matrix
+        // Matrix3D(1) or Matrix3D(true) creates an identity matrix
+        renderObj->Set_Transform(Matrix3D(true));
+    }
 }
 
 void W3DViewFrame::OnObjectAlternateMaterials(wxCommandEvent &WXUNUSED(event))

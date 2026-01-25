@@ -62,7 +62,16 @@ W3DViewDoc::W3DViewDoc()
     , m_currentFrame(0.0f)
     , m_animTime(0.0f)
     , m_bAnimateCamera(false)  // Camera animation disabled by default
+    , m_bAutoCameraReset(true)  // Auto reset enabled by default (MFC: W3DViewDoc.cpp:108)
 {
+    // MFC Reference: W3DViewDoc.cpp:121
+    // Loads auto reset setting from registry: GetProfileInt("Config", "ResetCamera", 1)
+    // wxWidgets equivalent: Use wxConfig
+    wxConfigBase *config = wxConfigBase::Get();
+    if (config)
+    {
+        m_bAutoCameraReset = config->ReadBool("/Config/ResetCamera", true);
+    }
 }
 
 W3DViewDoc::~W3DViewDoc()

@@ -112,6 +112,16 @@ public:
     void Animate_Camera(bool animate);
     bool Is_Camera_Animated() const { return m_bAnimateCamera; }
     
+    // Camera auto reset control (MFC: W3DViewDoc.h:164-165, MainFrm.cpp:2564-2588)
+    // Controls whether camera resets automatically when loading new objects
+    // TODO(MFC-Implementation): Use m_bAutoCameraReset in DisplayObject/Display_Emitter methods
+    //   MFC Reference: W3DViewDoc.cpp:637,714,751,895,994
+    //   Logic: if ((use_global_reset_flag && m_bAutoCameraReset) || ...) 
+    //          then call pCGraphicView->Reset_Camera_To_Display_Object()/Reset_Camera_To_Display_Emitter()
+    //   Required when: Object loading/display infrastructure is implemented
+    bool Is_Camera_Auto_Reset_On() const { return m_bAutoCameraReset; }
+    void Turn_Camera_Auto_Reset_On(bool onoff) { m_bAutoCameraReset = onoff; }
+    
     // TODO(MFC-Infrastructure): Implement Reload_Displayed_Object() for prelit mode changes
     // MFC Reference: W3DViewDoc.cpp:579-593
     // Required for: OnPrelitVertex, OnPrelitMultipass, OnPrelitMultitex
@@ -153,6 +163,9 @@ private:
     
     // Camera animation state (MFC: m_bAnimateCamera)
     bool m_bAnimateCamera;           // Camera animation enabled flag
+    
+    // Camera auto reset state (MFC: m_bAutoCameraReset, W3DViewDoc.h:316)
+    bool m_bAutoCameraReset;         // Auto reset camera on object load
 
     wxDECLARE_DYNAMIC_CLASS(W3DViewDoc);
 };

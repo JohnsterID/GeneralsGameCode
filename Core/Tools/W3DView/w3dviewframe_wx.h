@@ -103,6 +103,8 @@ private:
     void OnUpdateCameraAnimate(wxUpdateUIEvent &event);
     void OnCameraBonePosX(wxCommandEvent &event);
     void OnUpdateCameraBonePosX(wxUpdateUIEvent &event);
+    void OnCameraResetOnLoad(wxCommandEvent &event);
+    void OnUpdateCameraResetOnLoad(wxUpdateUIEvent &event);
     // Light menu handlers
     void OnLightRotateY(wxCommandEvent &event);
     void OnLightRotateZ(wxCommandEvent &event);

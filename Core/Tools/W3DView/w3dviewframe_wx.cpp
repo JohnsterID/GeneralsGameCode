@@ -119,6 +119,7 @@ enum
     ID_CAMERA_ANIMATE,
     ID_CAMERA_BONE_POS_X,
     ID_SET_CAMERA_DISTANCE,
+    ID_CAMERA_RESET_ON_LOAD,
     // Light menu items
     ID_LIGHT_ROTATE_Y,
     ID_LIGHT_ROTATE_Z,
@@ -209,6 +210,8 @@ wxBEGIN_EVENT_TABLE(W3DViewFrame, wxDocParentFrame)
     EVT_MENU(ID_CAMERA_BONE_POS_X, W3DViewFrame::OnCameraBonePosX)
     EVT_UPDATE_UI(ID_CAMERA_BONE_POS_X, W3DViewFrame::OnUpdateCameraBonePosX)
     EVT_MENU(ID_SET_CAMERA_DISTANCE, W3DViewFrame::OnSetCameraDistance)
+    EVT_MENU(ID_CAMERA_RESET_ON_LOAD, W3DViewFrame::OnCameraResetOnLoad)
+    EVT_UPDATE_UI(ID_CAMERA_RESET_ON_LOAD, W3DViewFrame::OnUpdateCameraResetOnLoad)
     // Light menu
     EVT_MENU(ID_LIGHT_ROTATE_Y, W3DViewFrame::OnLightRotateY)
     EVT_MENU(ID_LIGHT_ROTATE_Z, W3DViewFrame::OnLightRotateZ)
@@ -449,7 +452,8 @@ void W3DViewFrame::CreateMenuBar()
     cameraMenu->Append(ID_CAMERA_SETTINGS, "Settin&gs...");
     cameraMenu->Append(ID_SET_CAMERA_DISTANCE, "&Set Distance...");
     cameraMenu->AppendSeparator();
-    cameraMenu->Append(ID_CAMERA_RESET, "&Reset");
+    cameraMenu->AppendCheckItem(ID_CAMERA_RESET_ON_LOAD, "Reset on &Display");
+    cameraMenu->Append(ID_CAMERA_RESET, "R&eset");
     menuBar->Append(cameraMenu, "&Camera");
 
     // Light menu (matching MFC W3DView.rc:283-302)
@@ -1715,6 +1719,49 @@ void W3DViewFrame::OnUpdateCameraBonePosX(wxUpdateUIEvent &event)
     } else {
         event.Check(false);
     }
+}
+
+void W3DViewFrame::OnCameraResetOnLoad(wxCommandEvent &WXUNUSED(event))
+{
+    // MFC Reference: MainFrm.cpp:2564-2574 (OnCameraResetOnLoad)
+    //
+    // MFC Implementation:
+    //   void CMainFrame::OnCameraResetOnLoad (void)
+    //   {
+    //       // Toggle the auto reset state of the menu option
+    //       CW3DViewDoc *pdoc = (CW3DViewDoc *)GetActiveDocument ();
+    //       pdoc->Turn_Camera_Auto_Reset_On ((pdoc->Is_Camera_Auto_Reset_On () == false));
+    //       return ;
+    //   }
+    //
+    // Behavior: Toggles whether camera automatically resets when loading new objects
+    //           State is persisted via Turn_Camera_Auto_Reset_On()
+    //
+    // Menu: Camera → Reset on Display [Checkable]
+    
+    W3DViewDoc* doc = wxStaticCast(GetDocument(), W3DViewDoc);
+    if (!doc) return;
+    
+    // Toggle the auto reset state
+    doc->Turn_Camera_Auto_Reset_On(!doc->Is_Camera_Auto_Reset_On());
+}
+
+void W3DViewFrame::OnUpdateCameraResetOnLoad(wxUpdateUIEvent &event)
+{
+    // MFC Reference: MainFrm.cpp:2579-2588 (OnUpdateCameraResetOnLoad)
+    //
+    // MFC Implementation:
+    //   void CMainFrame::OnUpdateCameraResetOnLoad (CCmdUI *pCmdUI)
+    //   {
+    //       CW3DViewDoc *pdoc = (CW3DViewDoc *)GetActiveDocument ();
+    //       pCmdUI->SetCheck (pdoc->Is_Camera_Auto_Reset_On ());
+    //       return ;
+    //   }
+    //
+    // Behavior: Sets checkmark based on current auto reset state
+    
+    W3DViewDoc* doc = wxStaticCast(GetDocument(), W3DViewDoc);
+    event.Check(doc && doc->Is_Camera_Auto_Reset_On());
 }
 
 // Light menu handlers

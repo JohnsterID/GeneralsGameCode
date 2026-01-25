@@ -49,7 +49,7 @@ echo ""
 # Setup Wine environment
 echo "[3/5] Setting up Wine environment..."
 export WINEARCH=win32
-export WINEPREFIX=/opt/wineprefix32
+export WINEPREFIX=~/.wine32
 export DISPLAY=:99
 
 # Check if Xvfb is running

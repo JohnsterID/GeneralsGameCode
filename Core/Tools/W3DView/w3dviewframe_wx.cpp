@@ -28,6 +28,8 @@
 #include "dialogs/BackgroundObject_wx.h"
 #include "dialogs/TexturePaths_wx.h"
 #include "dialogs/RenderDeviceSelector_wx.h"
+#include "dialogs/LightAmbientDialog_wx.h"
+#include "dialogs/LightSceneDialog_wx.h"
 
 #include <wx/menu.h>
 #include <wx/toolbar.h>
@@ -47,7 +49,21 @@ enum
     ID_BACKGROUND_OBJECT,
     ID_BACKGROUND_FOG,
     ID_CAMERA_SETTINGS,
-    ID_LIGHT_SETTINGS,
+    // Light menu items
+    ID_LIGHT_ROTATE_Y,
+    ID_LIGHT_ROTATE_Z,
+    ID_LIGHT_AMBIENT,
+    ID_LIGHT_SCENE,
+    ID_INC_AMBIENT_LIGHT,
+    ID_DEC_AMBIENT_LIGHT,
+    ID_INC_SCENE_LIGHT,
+    ID_DEC_SCENE_LIGHT,
+    ID_LIGHTING_EXPOSE,
+    ID_KILL_SCENE_LIGHT,
+    ID_PRELIT_VERTEX,
+    ID_PRELIT_MULTIPASS,
+    ID_PRELIT_MULTITEX,
+    // Settings menu items
     ID_TEXTURE_PATH,
     ID_DEVICE_SELECTION,
     ID_RESOLUTION_SETTINGS,
@@ -67,7 +83,21 @@ wxBEGIN_EVENT_TABLE(W3DViewFrame, wxDocParentFrame)
     EVT_MENU(ID_BACKGROUND_OBJECT, W3DViewFrame::OnBackgroundObject)
     EVT_MENU(ID_BACKGROUND_FOG, W3DViewFrame::OnBackgroundFog)
     EVT_MENU(ID_CAMERA_SETTINGS, W3DViewFrame::OnCameraSettings)
-    EVT_MENU(ID_LIGHT_SETTINGS, W3DViewFrame::OnLightSettings)
+    // Light menu
+    EVT_MENU(ID_LIGHT_ROTATE_Y, W3DViewFrame::OnLightRotateY)
+    EVT_MENU(ID_LIGHT_ROTATE_Z, W3DViewFrame::OnLightRotateZ)
+    EVT_MENU(ID_LIGHT_AMBIENT, W3DViewFrame::OnLightAmbient)
+    EVT_MENU(ID_LIGHT_SCENE, W3DViewFrame::OnLightScene)
+    EVT_MENU(ID_INC_AMBIENT_LIGHT, W3DViewFrame::OnIncAmbientLight)
+    EVT_MENU(ID_DEC_AMBIENT_LIGHT, W3DViewFrame::OnDecAmbientLight)
+    EVT_MENU(ID_INC_SCENE_LIGHT, W3DViewFrame::OnIncSceneLight)
+    EVT_MENU(ID_DEC_SCENE_LIGHT, W3DViewFrame::OnDecSceneLight)
+    EVT_MENU(ID_LIGHTING_EXPOSE, W3DViewFrame::OnLightingExpose)
+    EVT_MENU(ID_KILL_SCENE_LIGHT, W3DViewFrame::OnKillSceneLight)
+    EVT_MENU(ID_PRELIT_VERTEX, W3DViewFrame::OnPrelitVertex)
+    EVT_MENU(ID_PRELIT_MULTIPASS, W3DViewFrame::OnPrelitMultipass)
+    EVT_MENU(ID_PRELIT_MULTITEX, W3DViewFrame::OnPrelitMultitex)
+    // Settings menu
     EVT_MENU(ID_TEXTURE_PATH, W3DViewFrame::OnTexturePathSettings)
     EVT_MENU(ID_DEVICE_SELECTION, W3DViewFrame::OnDeviceSelection)
     EVT_MENU(ID_RESOLUTION_SETTINGS, W3DViewFrame::OnResolutionSettings)
@@ -152,19 +182,28 @@ void W3DViewFrame::CreateMenuBar()
     animMenu->Append(ID_ANIMATION_SETTINGS, "&Settings...");
     menuBar->Append(animMenu, "&Animation");
 
+    // Light menu (matching MFC W3DView.rc:283-302)
+    wxMenu *lightMenu = new wxMenu;
+    lightMenu->Append(ID_LIGHT_ROTATE_Y, "Rotate &Y\tCtrl+Up");
+    lightMenu->Append(ID_LIGHT_ROTATE_Z, "Rotate &Z\tCtrl+Right");
+    lightMenu->AppendSeparator();
+    lightMenu->Append(ID_LIGHT_AMBIENT, "&Ambient...");
+    lightMenu->Append(ID_LIGHT_SCENE, "&Scene Light...");
+    lightMenu->AppendSeparator();
+    lightMenu->Append(ID_INC_AMBIENT_LIGHT, "&Inc Ambient Intensity\t+");
+    lightMenu->Append(ID_DEC_AMBIENT_LIGHT, "&Dec Ambient Intensity\t-");
+    lightMenu->Append(ID_INC_SCENE_LIGHT, "Inc Scene &Light Intensity\tCtrl++");
+    lightMenu->Append(ID_DEC_SCENE_LIGHT, "De&c Scene Light Intensity\tCtrl+-");
+    lightMenu->AppendSeparator();
+    lightMenu->AppendCheckItem(ID_LIGHTING_EXPOSE, "Expose Precalculated Lighting");
+    lightMenu->Append(ID_KILL_SCENE_LIGHT, "Kill Scene Light\tCtrl+*");
+    lightMenu->AppendSeparator();
+    lightMenu->AppendCheckItem(ID_PRELIT_VERTEX, "&Vertex Lighting");
+    lightMenu->AppendCheckItem(ID_PRELIT_MULTIPASS, "Multi-&Pass Lighting");
+    lightMenu->AppendCheckItem(ID_PRELIT_MULTITEX, "Multi-Te&xture Lighting");
+    menuBar->Append(lightMenu, "Ligh&ting");
+
     // Settings menu
-    // TODO(MFC-Match): Light menu structure completely wrong
-    // MFC has separate "Light" menu (W3DView.rc:280-299) with:
-    //   - Rotate Y/Z menu items with shortcuts
-    //   - Ambient... (IDM_LIGHT_AMBIENT -> LightAmbientDialog_wx, 0 TODOs)
-    //   - Scene Light... (IDM_LIGHT_SCENE -> LightSceneDialog_wx, has TODOs)
-    //   - Inc/Dec Ambient Intensity (+/-)
-    //   - Inc/Dec Scene Light Intensity (Ctrl+'+'/Ctrl+'-')
-    //   - Expose Precalculated Lighting
-    //   - Kill Scene Light (Ctrl+'*')
-    // wxWidgets currently has single "Lighting..." in Settings menu
-    // Status: Need to create separate Light menu with all items
-    // Impact: High - entire Light menu missing from wxWidgets
     wxMenu *settingsMenu = new wxMenu;
     settingsMenu->Append(ID_BACKGROUND_COLOR, "Background &Color...");
     settingsMenu->Append(ID_BACKGROUND_BMP, "Background &BMP...");
@@ -172,7 +211,6 @@ void W3DViewFrame::CreateMenuBar()
     settingsMenu->AppendCheckItem(ID_BACKGROUND_FOG, "Background &Fog");
     settingsMenu->AppendSeparator();
     settingsMenu->Append(ID_CAMERA_SETTINGS, "C&amera...");
-    settingsMenu->Append(ID_LIGHT_SETTINGS, "&Lighting...");  // WRONG - should be separate Light menu
     settingsMenu->AppendSeparator();
     settingsMenu->Append(ID_TEXTURE_PATH, "&Texture Path...");
     settingsMenu->Append(ID_DEVICE_SELECTION, "&Device...");
@@ -346,12 +384,176 @@ void W3DViewFrame::OnCameraSettings(wxCommandEvent &WXUNUSED(event))
     dialog.ShowModal();
 }
 
-void W3DViewFrame::OnLightSettings(wxCommandEvent &WXUNUSED(event))
+// Light menu handlers
+
+void W3DViewFrame::OnLightRotateY(wxCommandEvent &WXUNUSED(event))
 {
-    // TODO: Implement light settings dialog
-    wxMessageBox("Light Settings dialog not yet implemented",
-                 "TODO", wxOK | wxICON_INFORMATION, this);
+    // TODO(MFC-Match): Implement light Y rotation toggle
+    // MFC Reference: MainFrm.cpp:2641-2654 (OnLightRotateY)
+    // MFC implementation:
+    //   CGraphicView *pgraphic_view = (CGraphicView *)m_wndSplitter.GetPane(0, 1);
+    //   if (pgraphic_view != nullptr) {
+    //       int rotation = (pgraphic_view->Get_Light_Rotation() ^ CGraphicView::RotateY);
+    //       rotation &= ~CGraphicView::RotateYBack;
+    //       pgraphic_view->Rotate_Light((CGraphicView::OBJECT_ROTATION)rotation);
+    //   }
+    // Status: Requires GraphicView Get_Light_Rotation() and Rotate_Light() methods
+    // Impact: Medium - light rotation control
+    wxMessageBox("Light Rotate Y not yet implemented", "TODO", wxOK | wxICON_INFORMATION, this);
 }
+
+void W3DViewFrame::OnLightRotateZ(wxCommandEvent &WXUNUSED(event))
+{
+    // TODO(MFC-Match): Implement light Z rotation toggle
+    // MFC Reference: MainFrm.cpp:2685-2698 (OnLightRotateZ)
+    // Similar to OnLightRotateY but for Z axis
+    // Status: Requires GraphicView rotation methods
+    // Impact: Medium - light rotation control
+    wxMessageBox("Light Rotate Z not yet implemented", "TODO", wxOK | wxICON_INFORMATION, this);
+}
+
+void W3DViewFrame::OnLightAmbient(wxCommandEvent &WXUNUSED(event))
+{
+    // TODO(MFC-Verify): Verify LightAmbientDialog matches MFC exactly
+    // Dialog appears implemented but needs visual/behavioral verification
+    // MFC Reference: MainFrm.cpp:1588-1594 (OnLightAmbient), AmbientLightDialog.cpp
+    LightAmbientDialog dialog(this);
+    dialog.ShowModal();
+}
+
+void W3DViewFrame::OnLightScene(wxCommandEvent &WXUNUSED(event))
+{
+    // TODO(MFC-Verify): Verify LightSceneDialog matches MFC exactly
+    // Dialog appears implemented but needs visual/behavioral verification
+    // MFC Reference: MainFrm.cpp:1604-1610 (OnLightScene), SceneLightDialog.cpp
+    LightSceneDialog dialog(this);
+    dialog.ShowModal();
+}
+
+void W3DViewFrame::OnIncAmbientLight(wxCommandEvent &WXUNUSED(event))
+{
+    // TODO(MFC-Match): Implement ambient light intensity increase
+    // MFC Reference: MainFrm.cpp:2820-2833 (OnIncAmbientLight)
+    // MFC implementation:
+    //   CW3DViewDoc *pdoc = ::GetCurrentDocument();
+    //   if (pdoc->GetScene() != nullptr) {
+    //       Vector3 color = pdoc->GetScene()->Get_Ambient_Light();
+    //       Adjust_Light_Intensity(color, 0.05F);  // increment by 0.05
+    //       pdoc->GetScene()->Set_Ambient_Light(color);
+    //   }
+    // Helper: Adjust_Light_Intensity() at MainFrm.cpp:109
+    // Status: Requires W3DViewDoc::GetScene() and ambient light access
+    // Impact: Medium - ambient light control
+    wxMessageBox("Inc Ambient Light not yet implemented", "TODO", wxOK | wxICON_INFORMATION, this);
+}
+
+void W3DViewFrame::OnDecAmbientLight(wxCommandEvent &WXUNUSED(event))
+{
+    // TODO(MFC-Match): Implement ambient light intensity decrease
+    // MFC Reference: MainFrm.cpp:2803-2816 (OnDecAmbientLight)
+    // Same as OnIncAmbientLight but with -0.05F increment
+    // Status: Requires W3DViewDoc::GetScene() and ambient light access
+    // Impact: Medium - ambient light control
+    wxMessageBox("Dec Ambient Light not yet implemented", "TODO", wxOK | wxICON_INFORMATION, this);
+}
+
+void W3DViewFrame::OnIncSceneLight(wxCommandEvent &WXUNUSED(event))
+{
+    // TODO(MFC-Match): Implement scene light intensity increase
+    // MFC Reference: MainFrm.cpp:2795-2800 (OnIncLight)
+    // MFC implementation:
+    //   CW3DViewDoc *pdoc = ::GetCurrentDocument();
+    //   LightClass *plight = pdoc->GetSceneLight();
+    //   if (plight != nullptr) {
+    //       Vector3 diffuse, specular;
+    //       plight->Get_Diffuse(&diffuse);
+    //       plight->Get_Specular(&specular);
+    //       Adjust_Light_Intensity(diffuse, 0.05F);
+    //       Adjust_Light_Intensity(specular, 0.05F);
+    //       plight->Set_Diffuse(diffuse);
+    //       plight->Set_Specular(specular);
+    //   }
+    // Status: W3DViewDoc::GetSceneLight() exists (added Session 6)
+    // Impact: Medium - scene light control
+    wxMessageBox("Inc Scene Light not yet implemented", "TODO", wxOK | wxICON_INFORMATION, this);
+}
+
+void W3DViewFrame::OnDecSceneLight(wxCommandEvent &WXUNUSED(event))
+{
+    // TODO(MFC-Match): Implement scene light intensity decrease
+    // MFC Reference: MainFrm.cpp:2766-2786 (OnDecLight)
+    // Same as OnIncSceneLight but with -0.05F increment
+    // Status: W3DViewDoc::GetSceneLight() exists (added Session 6)
+    // Impact: Medium - scene light control
+    wxMessageBox("Dec Scene Light not yet implemented", "TODO", wxOK | wxICON_INFORMATION, this);
+}
+
+void W3DViewFrame::OnLightingExpose(wxCommandEvent &WXUNUSED(event))
+{
+    // TODO(MFC-Match): Implement precalculated lighting expose toggle
+    // MFC Reference: MainFrm.cpp:2863-2872 (OnLightingExpose, OnUpdateLightingExpose)
+    // MFC implementation:
+    //   WW3D::Expose_Prelit(!WW3D::Expose_Prelit());  // toggle
+    // Also needs OnUpdateLightingExpose for checkbox state:
+    //   pcmdui->SetCheck(WW3D::Expose_Prelit());
+    // Status: Requires WW3D engine method access
+    // Impact: Low - advanced lighting feature
+    wxMessageBox("Lighting Expose not yet implemented", "TODO", wxOK | wxICON_INFORMATION, this);
+}
+
+void W3DViewFrame::OnKillSceneLight(wxCommandEvent &WXUNUSED(event))
+{
+    // TODO(MFC-Match): Implement kill scene light (set to black)
+    // MFC Reference: MainFrm.cpp:3677-3689 (OnKillSceneLight)
+    // MFC implementation:
+    //   CW3DViewDoc *pdoc = ::GetCurrentDocument();
+    //   LightClass *plight = pdoc->GetSceneLight();
+    //   if (plight != nullptr) {
+    //       const Vector3 black(0.0f, 0.0f, 0.0f);
+    //       plight->Set_Diffuse(black);
+    //       plight->Set_Specular(black);
+    //   }
+    // Status: W3DViewDoc::GetSceneLight() exists (added Session 6)
+    // Impact: Medium - scene light control
+    wxMessageBox("Kill Scene Light not yet implemented", "TODO", wxOK | wxICON_INFORMATION, this);
+}
+
+void W3DViewFrame::OnPrelitVertex(wxCommandEvent &WXUNUSED(event))
+{
+    // TODO(MFC-Match): Implement vertex lighting mode toggle
+    // MFC Reference: MainFrm.cpp:3738-3751 (OnPrelitVertex, OnUpdatePrelitVertex)
+    // MFC implementation:
+    //   if (WW3D::Get_Prelit_Mode() != WW3D::PRELIT_MODE_LIGHTMAP_MULTI_VERTEX) {
+    //       WW3D::Set_Prelit_Mode(WW3D::PRELIT_MODE_LIGHTMAP_MULTI_VERTEX);
+    //       // Reload lightmap models (see OnPrelitMultipass for pattern)
+    //   }
+    // Also needs OnUpdatePrelitVertex for checkbox state
+    // Status: Requires WW3D engine mode access
+    // Impact: Low - advanced lighting mode
+    wxMessageBox("Vertex Lighting not yet implemented", "TODO", wxOK | wxICON_INFORMATION, this);
+}
+
+void W3DViewFrame::OnPrelitMultipass(wxCommandEvent &WXUNUSED(event))
+{
+    // TODO(MFC-Match): Implement multipass lighting mode toggle
+    // MFC Reference: MainFrm.cpp:3698-3734 (OnPrelitMultipass, OnUpdatePrelitMultipass)
+    // Changes prelit mode and reloads lightmap models
+    // Status: Requires WW3D engine mode access and model reload
+    // Impact: Low - advanced lighting mode
+    wxMessageBox("Multi-Pass Lighting not yet implemented", "TODO", wxOK | wxICON_INFORMATION, this);
+}
+
+void W3DViewFrame::OnPrelitMultitex(wxCommandEvent &WXUNUSED(event))
+{
+    // TODO(MFC-Match): Implement multitexture lighting mode toggle
+    // MFC Reference: MainFrm.cpp:3755-3787 (OnPrelitMultitex, OnUpdatePrelitMultitex)
+    // Similar to OnPrelitMultipass but for multitexture mode
+    // Status: Requires WW3D engine mode access
+    // Impact: Low - advanced lighting mode
+    wxMessageBox("Multi-Texture Lighting not yet implemented", "TODO", wxOK | wxICON_INFORMATION, this);
+}
+
+// Settings menu handlers
 
 void W3DViewFrame::OnTexturePathSettings(wxCommandEvent &WXUNUSED(event))
 {

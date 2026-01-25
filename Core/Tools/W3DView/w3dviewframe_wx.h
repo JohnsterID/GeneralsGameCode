@@ -46,7 +46,21 @@ private:
     void OnBackgroundObject(wxCommandEvent &event);
     void OnBackgroundFog(wxCommandEvent &event);
     void OnCameraSettings(wxCommandEvent &event);
-    void OnLightSettings(wxCommandEvent &event);
+    // Light menu handlers
+    void OnLightRotateY(wxCommandEvent &event);
+    void OnLightRotateZ(wxCommandEvent &event);
+    void OnLightAmbient(wxCommandEvent &event);
+    void OnLightScene(wxCommandEvent &event);
+    void OnIncAmbientLight(wxCommandEvent &event);
+    void OnDecAmbientLight(wxCommandEvent &event);
+    void OnIncSceneLight(wxCommandEvent &event);
+    void OnDecSceneLight(wxCommandEvent &event);
+    void OnLightingExpose(wxCommandEvent &event);
+    void OnKillSceneLight(wxCommandEvent &event);
+    void OnPrelitVertex(wxCommandEvent &event);
+    void OnPrelitMultipass(wxCommandEvent &event);
+    void OnPrelitMultitex(wxCommandEvent &event);
+    // Settings menu handlers
     void OnTexturePathSettings(wxCommandEvent &event);
     void OnDeviceSelection(wxCommandEvent &event);
     void OnResolutionSettings(wxCommandEvent &event);

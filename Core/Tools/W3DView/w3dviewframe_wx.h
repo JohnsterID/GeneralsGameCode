@@ -66,6 +66,8 @@ private:
     void OnTexturePathSettings(wxCommandEvent &event);
     void OnDeviceSelection(wxCommandEvent &event);
     void OnResolutionSettings(wxCommandEvent &event);
+    void OnEnableGammaCorrection(wxCommandEvent &event);
+    void OnUpdateEnableGammaCorrection(wxUpdateUIEvent &event);
     void OnGammaSettings(wxCommandEvent &event);
 
     void CreateMenuBar();

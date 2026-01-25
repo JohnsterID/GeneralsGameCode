@@ -42,6 +42,7 @@
 #include <wx/toolbar.h>
 #include <wx/msgdlg.h>
 #include <wx/filedlg.h>
+#include <wx/config.h>
 
 // Helper function for adjusting light intensity (MFC: MainFrm.cpp:109-121)
 static inline void Adjust_Light_Intensity(Vector3 &color, float inc)
@@ -88,6 +89,7 @@ enum
     ID_TEXTURE_PATH,
     ID_DEVICE_SELECTION,
     ID_RESOLUTION_SETTINGS,
+    ID_ENABLE_GAMMA_CORRECTION,
     ID_GAMMA_SETTINGS,
 };
 
@@ -124,6 +126,8 @@ wxBEGIN_EVENT_TABLE(W3DViewFrame, wxDocParentFrame)
     EVT_MENU(ID_TEXTURE_PATH, W3DViewFrame::OnTexturePathSettings)
     EVT_MENU(ID_DEVICE_SELECTION, W3DViewFrame::OnDeviceSelection)
     EVT_MENU(ID_RESOLUTION_SETTINGS, W3DViewFrame::OnResolutionSettings)
+    EVT_MENU(ID_ENABLE_GAMMA_CORRECTION, W3DViewFrame::OnEnableGammaCorrection)
+    EVT_UPDATE_UI(ID_ENABLE_GAMMA_CORRECTION, W3DViewFrame::OnUpdateEnableGammaCorrection)
     EVT_MENU(ID_GAMMA_SETTINGS, W3DViewFrame::OnGammaSettings)
 wxEND_EVENT_TABLE()
 
@@ -238,7 +242,9 @@ void W3DViewFrame::CreateMenuBar()
     settingsMenu->Append(ID_TEXTURE_PATH, "&Texture Path...");
     settingsMenu->Append(ID_DEVICE_SELECTION, "&Device...");
     settingsMenu->Append(ID_RESOLUTION_SETTINGS, "&Resolution...");
-    settingsMenu->Append(ID_GAMMA_SETTINGS, "&Gamma...");
+    settingsMenu->AppendSeparator();
+    settingsMenu->AppendCheckItem(ID_ENABLE_GAMMA_CORRECTION, "&Enable Gamma Correction");
+    settingsMenu->Append(ID_GAMMA_SETTINGS, "Set &Gamma...");
     menuBar->Append(settingsMenu, "&Settings");
 
     // Help menu
@@ -742,23 +748,63 @@ void W3DViewFrame::OnResolutionSettings(wxCommandEvent &WXUNUSED(event))
 #endif
 }
 
+void W3DViewFrame::OnEnableGammaCorrection(wxCommandEvent &WXUNUSED(event))
+{
+    // MFC: MainFrm.cpp:4418-4436 (OnEnableGammaCorrection)
+    // Toggles gamma correction enable/disable state
+    wxConfigBase *config = wxConfigBase::Get();
+    
+    // Read current setting (0 or 1)
+    long enableGamma = config->Read("/Config/EnableGamma", 0L);
+    
+    // Toggle the value
+    enableGamma = (enableGamma ? 0 : 1);
+    
+    // Write back to config
+    config->Write("/Config/EnableGamma", enableGamma);
+    config->Flush();
+    
+    if (enableGamma) {
+        // Enable gamma: read gamma value from config and apply
+        long gammaInt = config->Read("/Config/Gamma", 10L);
+        float gamma = static_cast<float>(gammaInt) / 10.0f;
+        
+        // Clamp to valid range (1.0 - 3.0)
+        if (gamma < 1.0f) gamma = 1.0f;
+        if (gamma > 3.0f) gamma = 3.0f;
+        
+        // Apply gamma correction (using WW3D wrapper for DX8Wrapper)
+        WW3D::Set_Gamma(gamma, 0.0f, 1.0f);
+    } else {
+        // Disable gamma: reset to neutral (1.0)
+        WW3D::Set_Gamma(1.0f, 0.0f, 1.0f);
+    }
+}
+
+void W3DViewFrame::OnUpdateEnableGammaCorrection(wxUpdateUIEvent &event)
+{
+    // MFC: MainFrm.cpp:4438-4440 (OnUpdateEnableGammaCorrection)
+    // Sets checkbox state based on config setting
+    wxConfigBase *config = wxConfigBase::Get();
+    long enableGamma = config->Read("/Config/EnableGamma", 0L);
+    event.Check(enableGamma != 0);
+}
+
 void W3DViewFrame::OnGammaSettings(wxCommandEvent &WXUNUSED(event))
 {
     // MFC: MainFrm.cpp:4441-4451 (OnSetGamma)
-    // MFC implementation checks if gamma is enabled via registry setting,
-    // then shows dialog or warning message
-    //
-    // TODO(MFC-Missing-Feature): Add "Enable Gamma Correction" menu item
-    // MFC has TWO gamma menu items:
-    //   1. "Enable Gamma Correction" (toggle checkbox) - IDM_ENABLE_GAMMA_CORRECTION
-    //   2. "Set Gamma..." (dialog) - IDM_SET_GAMMA
-    // Current wxWidgets menu only has one "Gamma..." item
-    // Need to add separate enable/disable toggle menu item
-    // MFC Reference: MainFrm.cpp:4418-4440 (OnEnableGammaCorrection, OnUpdateEnableGammaCorrection)
-    //
-    // For now, showing dialog directly without enable check
-    // TODO(MFC-Verify): Verify GammaDialog matches MFC exactly
-    // MFC Reference: GammaDialog.cpp (GammaDialogClass)
-    GammaDialog dialog(this);
-    dialog.ShowModal();
+    // Shows gamma settings dialog if gamma is enabled,
+    // otherwise shows warning message
+    wxConfigBase *config = wxConfigBase::Get();
+    long enableGamma = config->Read("/Config/EnableGamma", 0L);
+    
+    if (enableGamma) {
+        // TODO(MFC-Verify): Verify GammaDialog matches MFC exactly
+        // MFC Reference: GammaDialog.cpp (GammaDialogClass)
+        GammaDialog dialog(this);
+        dialog.ShowModal();
+    } else {
+        wxMessageBox("Gamma is disabled.\nEnable in Settings Menu.",
+                     "Warning", wxOK | wxICON_WARNING, this);
+    }
 }

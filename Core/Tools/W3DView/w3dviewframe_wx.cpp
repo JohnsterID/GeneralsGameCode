@@ -3635,10 +3635,41 @@ void W3DViewFrame::OnSaveScreenshot(wxCommandEvent &WXUNUSED(event))
     // Get document and graphic view
     W3DViewDoc* doc = wxDynamicCast(GetDocument(), W3DViewDoc);
     if (doc != nullptr && doc->GetGraphicView() != nullptr) {
-        // TODO(MFC-Implement): Implement cursor hide/show
-        //   Need to add Is_Cursor_Shown() and Show_Cursor(bool) to W3DViewDoc
-        //   MFC: bool cursor_shown = GetCurrentDocument()->Is_Cursor_Shown();
-        //   MFC: GetCurrentDocument()->Show_Cursor(false);
+        // TODO(MFC-Infrastructure): Implement cursor hide/show for screenshots
+        //   BLOCKED BY: ScreenCursorClass not yet ported to wxWidgets
+        //   
+        //   MFC Implementation (W3DViewDoc.cpp:2562-2582):
+        //     Show_Cursor(bool onoff):
+        //       - Uses m_pCursor (ScreenCursorClass*)
+        //       - Calls m_pCursor->Set_Hidden(!onoff)
+        //     Is_Cursor_Shown():
+        //       - Returns m_pCursor->Is_Not_Hidden_At_All()
+        //   
+        //   Required Infrastructure:
+        //   1. Port ScreenCursorClass to wxWidgets
+        //      - Custom 3D cursor rendering in scene
+        //      - MFC: Core/Tools/W3DView/ScreenCursor.h/cpp
+        //      - Renders cursor as 3D object in scene
+        //   2. Add m_pCursor member to W3DViewDoc
+        //      - Type: ScreenCursorClass*
+        //      - Initialized in Create_Cursor() (W3DViewDoc.cpp:2409-2470)
+        //   3. Add m_pCursorScene member
+        //      - Type: SceneClass*
+        //      - Separate scene for cursor rendering
+        //   4. Implement Show_Cursor(bool) and Is_Cursor_Shown()
+        //   
+        //   Usage in Screenshot (MainFrm.cpp:2419-2420, 2505):
+        //     bool restore_cursor = Is_Cursor_Shown();
+        //     Show_Cursor(false);  // Hide before screenshot
+        //     WW3D::Make_Screen_Shot(...);
+        //     Show_Cursor(restore_cursor);  // Restore after
+        //   
+        //   Impact: LOW - Screenshots work without cursor hiding
+        //   Priority: LOW - Nice-to-have, not essential
+        //   Complexity: MEDIUM-HIGH - Requires ScreenCursorClass port
+        //   
+        //   Current Behavior: Cursor may appear in screenshots if visible
+        //   MFC Behavior: Cursor always hidden during screenshot capture
         
         // Repaint view to ensure latest frame is captured
         doc->GetGraphicView()->RepaintView();
@@ -3651,8 +3682,8 @@ void W3DViewFrame::OnSaveScreenshot(wxCommandEvent &WXUNUSED(event))
         // Call WW3D screenshot function (handles numbering, capture, and file writing)
         WW3D::Make_Screen_Shot(screenshotBase.mb_str(), 1.3f, WW3D::TGA);
         
-        // TODO(MFC-Implement): Restore cursor visibility
-        //   MFC: GetCurrentDocument()->Show_Cursor(cursor_shown);
+        // TODO(MFC-Infrastructure): Restore cursor visibility
+        //   (Same infrastructure as above TODO)
         
         // Show confirmation (optional - MFC doesn't show this)
         // wxMessageBox(wxString::Format("Screenshot saved to:\n%s##.tga", screenshotBase),

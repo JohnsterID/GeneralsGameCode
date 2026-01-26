@@ -103,11 +103,12 @@ void PropPageEmitterLineprops::OnInitDialog(wxInitDialogEvent& event)
         m_idc_disable_sorting_check->SetValue(m_DisableSorting != 0 != 0);  // Boolean logic verified
     }
     
-    // NOTE: Control enable/disable logic requires m_pEmitterList which should be
-    // set via a SetEmitterList() method before showing the dialog. Implementation:
+    // TODO(MFC-Implementation): Control enable/disable logic requires m_pEmitterList
+    // which should be set via a SetEmitterList() method before showing the dialog.
+    // MFC implementation:
     //   bool enable = (m_pEmitterList && m_pEmitterList->Get_Render_Mode() == W3D_EMITTER_RENDER_MODE_LINE);
     //   Enable(enable);  // Enable/disable all dialog controls
-    // This will be implemented when the emitter list is wired to the dialog.
+    // Required when: Emitter property pages are wired to document emitter list
 
     event.Skip();
 }

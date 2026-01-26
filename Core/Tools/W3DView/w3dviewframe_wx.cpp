@@ -3179,24 +3179,39 @@ void W3DViewFrame::OnEditSoundObject(wxCommandEvent &WXUNUSED(event))
 
 void W3DViewFrame::OnMakeMovie(wxCommandEvent &WXUNUSED(event))
 {
-    // MFC: MainFrm.cpp (need to investigate OnMakeMovie handler)
+    // MFC: MainFrm.cpp:OnMakeMovie() → W3DViewDoc.cpp:Make_Movie()
     // MFC ID: IDM_MAKE_MOVIE (32845)
-    // Function: Record animation to movie file (AVI or other format)
-    // TODO(MFC-Implement): Implement movie recording functionality
-    //   Show dialog with movie recording options:
-    //     - Output file path/name
-    //     - Frame rate (FPS)
-    //     - Codec selection
-    //     - Resolution/quality settings
-    //     - Frame range (start/end frames or time)
-    //   Capture rendering output to video file
-    //   Need to integrate with video encoding library (DirectShow/FFmpeg)
-    //   Should capture audio if sound objects are present
-    //   Impact: High - important for marketing/documentation
-    //   Files to review: MovieRecorder_wx.cpp (if exists), video encoding integration
-    //   Note: This is a complex feature requiring video encoding library
-    wxMessageBox("Make Movie not yet implemented.\nRequires video encoding library integration (DirectShow/FFmpeg).",
-                 "Feature Incomplete", wxOK | wxICON_INFORMATION, this);
+    // Function: Record animation to AVI file
+    // MFC Implementation Details:
+    //   - Uses FrameGrabClass (framgrab.h/cpp) with Windows VFW (Video for Windows) API
+    //   - Creates AVI files using PAVIFILE, PAVISTREAM (vfw.h)
+    //   - Loops through animation frames at 30 FPS
+    //   - Calls WW3D::Start_Movie_Capture("Grab", 30) to start
+    //   - Updates each frame with WW3D::Update_Movie_Capture()
+    //   - Stops with WW3D::Stop_Movie_Capture()
+    //   - Hides cursor during capture
+    //   - Allows ESC key to cancel
+    //   - Supports camera animation if enabled
+    // TODO(MFC-Implement): LOW PRIORITY - Complex feature, can be left for later/never
+    //   Implementation approach:
+    //     1. Port FrameGrabClass to use wxWidgets/cross-platform AVI library
+    //        * Windows: Can use VFW API (vfw.h) same as MFC
+    //        * Linux/Mac: Would need alternative (FFmpeg, OpenCV VideoWriter, etc.)
+    //     2. Or: Skip movie recording entirely and only implement screenshot (more useful)
+    //   Requirements:
+    //     - Access to WW3D rendering buffer
+    //     - Animation frame control
+    //     - AVI encoding library
+    //   Impact: LOW - Nice-to-have feature, screenshot is more important
+    //   Recommendation: Mark as "TODO for future" and focus on other features first
+    //   Files to review: 
+    //     * Generals/Code/Libraries/Source/WWVegas/WW3D2/framgrab.{h,cpp}
+    //     * Core/Tools/W3DView/W3DViewDoc.cpp:Make_Movie()
+    wxMessageBox("Make Movie not yet implemented.\n\n"
+                 "MFC version uses Windows VFW (Video for Windows) API to create AVI files.\n"
+                 "This is a complex feature that can be implemented later or left as TODO.\n\n"
+                 "Screenshot capture (F7) is higher priority.",
+                 "Low Priority Feature", wxOK | wxICON_INFORMATION, this);
 }
 
 void W3DViewFrame::OnSaveScreenshot(wxCommandEvent &WXUNUSED(event))

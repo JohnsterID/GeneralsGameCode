@@ -394,11 +394,53 @@ W3DViewFrame::W3DViewFrame(wxDocManager *manager)
     wxAcceleratorTable accel(10, entries);
     SetAcceleratorTable(accel);
 
+    // Restore application settings from wxConfig
+    InitializeApplicationSettings();
+
     Centre();
 }
 
 W3DViewFrame::~W3DViewFrame()
 {
+}
+
+void W3DViewFrame::InitializeApplicationSettings()
+{
+    // MFC Reference: MainFrm.cpp constructor and InitInstance
+    // Restores application settings from registry/wxConfig on startup
+    // Ensures user preferences persist across application sessions
+    
+    wxConfigBase *config = wxConfig::Get();
+    
+    // 1. Restore Munge Sort on Load setting
+    //    MFC: Registry key "Config\MungeSortOnLoad" (default: 0/false)
+    //    MFC Ref: App initialization in W3DViewApp.cpp
+    long mungeSortEnabled = config->Read("/Config/MungeSortOnLoad", 0L);
+    WW3D::Enable_Munge_Sort_On_Load(mungeSortEnabled != 0);
+    
+    // 2. Restore Gamma Correction setting
+    //    MFC: Registry key "Config\EnableGamma" (default: 0/false)
+    //    If enabled, also reads "Config\Gamma" (integer * 10, default: 10 = 1.0)
+    long enableGamma = config->Read("/Config/EnableGamma", 0L);
+    if (enableGamma != 0) {
+        // Read gamma value (stored as integer * 10, range 10-30 = 1.0-3.0)
+        long gammaInt = config->Read("/Config/Gamma", 10L);
+        float gamma = gammaInt / 10.0f;
+        
+        // Clamp to valid range
+        if (gamma < 1.0f) gamma = 1.0f;
+        if (gamma > 3.0f) gamma = 3.0f;
+        
+        // Apply gamma correction
+        WW3D::Set_Gamma(gamma, 0.0f, 1.0f);
+    } else {
+        // Gamma disabled: reset to linear (1.0)
+        WW3D::Set_Gamma(1.0f, 0.0f, 1.0f);
+    }
+    
+    // Note: Status bar visibility is restored in InitStatusBar()
+    // Note: Camera reset on load is applied when files are loaded (see OnFileOpen)
+    // Note: Other settings (polygon sorting, wireframe) are per-document, not global
 }
 
 wxDocument* W3DViewFrame::GetDocument() const

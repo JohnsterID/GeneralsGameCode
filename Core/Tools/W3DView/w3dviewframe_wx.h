@@ -188,6 +188,7 @@ private:
     void InitToolBar();
     void InitStatusBar();
     void CreateUI();
+    void InitializeApplicationSettings();
 
 private:
     wxDocManager *m_docManager;

@@ -77,6 +77,9 @@ private:
     // Sound menu handlers
     void OnCreateSoundObject(wxCommandEvent &event);
     void OnEditSoundObject(wxCommandEvent &event);
+    // Movie menu handlers
+    void OnMakeMovie(wxCommandEvent &event);
+    void OnSaveScreenshot(wxCommandEvent &event);
     void OnViewPatchGapFill(wxCommandEvent &event);
     void OnUpdateViewPatchGapFill(wxUpdateUIEvent &event);
     void OnViewSubdivision1(wxCommandEvent &event);

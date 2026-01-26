@@ -109,6 +109,9 @@ enum
     // Sound menu
     ID_CREATE_SOUND_OBJECT,
     ID_EDIT_SOUND_OBJECT,
+    // Movie menu
+    ID_MAKE_MOVIE,
+    ID_SAVE_SCREENSHOT,
     ID_VIEW_WIREFRAME,
     ID_VIEW_POLYGON_SORTING,
     ID_VIEW_PATCH_GAP_FILL,
@@ -226,6 +229,9 @@ wxBEGIN_EVENT_TABLE(W3DViewFrame, wxDocParentFrame)
     // Sound menu
     EVT_MENU(ID_CREATE_SOUND_OBJECT, W3DViewFrame::OnCreateSoundObject)
     EVT_MENU(ID_EDIT_SOUND_OBJECT, W3DViewFrame::OnEditSoundObject)
+    // Movie menu
+    EVT_MENU(ID_MAKE_MOVIE, W3DViewFrame::OnMakeMovie)
+    EVT_MENU(ID_SAVE_SCREENSHOT, W3DViewFrame::OnSaveScreenshot)
     EVT_MENU(ID_VIEW_WIREFRAME, W3DViewFrame::OnWireframe)
     EVT_UPDATE_UI(ID_VIEW_WIREFRAME, W3DViewFrame::OnUpdateWireframe)
     EVT_MENU(ID_VIEW_POLYGON_SORTING, W3DViewFrame::OnPolygonSorting)
@@ -475,15 +481,9 @@ void W3DViewFrame::CreateMenuBar()
     fileMenu->Append(wxID_EXIT, "E&xit\tAlt+F4");
     menuBar->Append(fileMenu, "&File");
 
-    // Edit menu
-    wxMenu *editMenu = new wxMenu;
-    editMenu->Append(wxID_UNDO, "&Undo\tCtrl+Z");
-    editMenu->Append(wxID_REDO, "&Redo\tCtrl+Y");
-    editMenu->AppendSeparator();
-    editMenu->Append(wxID_CUT, "Cu&t\tCtrl+X");
-    editMenu->Append(wxID_COPY, "&Copy\tCtrl+C");
-    editMenu->Append(wxID_PASTE, "&Paste\tCtrl+V");
-    menuBar->Append(editMenu, "&Edit");
+    // Note: Edit menu removed - doesn't exist in MFC IDR_MAINFRAME menu (W3DView.rc:178-343)
+    //   MFC W3DView doesn't have standard Edit menu (Undo/Redo/Cut/Copy/Paste)
+    //   If needed, edit operations are handled through context menus or specialized dialogs
 
     // View menu
     // MFC Reference: W3DView.rc:209-243 (EXACT MATCH)
@@ -584,22 +584,29 @@ void W3DViewFrame::CreateMenuBar()
     soundMenu->Append(ID_EDIT_SOUND_OBJECT, "&Edit Sound Object...\tEnter");
     menuBar->Append(soundMenu, "&Sound");
 
-    // Animation menu - EXACT MFC matching (W3DView.rc:363-373)
-    wxMenu *animMenu = new wxMenu;
-    animMenu->Append(ID_ANIMATION_PLAY, "&Play");
-    animMenu->Append(ID_ANIMATION_PAUSE, "P&ause");
-    animMenu->Append(ID_ANIMATION_STOP, "&Stop");
-    animMenu->AppendSeparator();
-    animMenu->Append(ID_ANIMATION_STEP_BACK, "Step &Back");
-    animMenu->Append(ID_ANIMATION_STEP_FORWARD, "Step &Forward");
-    animMenu->AppendSeparator();
-    animMenu->Append(ID_ANIMATION_SETTINGS, "Se&ttings...");
-    animMenu->AppendSeparator();
-    animMenu->Append(ID_ANIMATION_ADVANCED, "Ad&vanced...\tCtrl+V");
-    menuBar->Append(animMenu, "&Animation");
+    // Light menu - EXACT MFC matching (W3DView.rc:283-302)
+    // NOTE: Lighting comes BEFORE Camera in MFC IDR_MAINFRAME menu order
+    wxMenu *lightMenu = new wxMenu;
+    lightMenu->Append(ID_LIGHT_ROTATE_Y, "Rotate &Y\tCtrl+Up");
+    lightMenu->Append(ID_LIGHT_ROTATE_Z, "Rotate &Z\tCtrl+Right");
+    lightMenu->AppendSeparator();
+    lightMenu->Append(ID_LIGHT_AMBIENT, "&Ambient...");
+    lightMenu->Append(ID_LIGHT_SCENE, "&Scene Light...");
+    lightMenu->AppendSeparator();
+    lightMenu->Append(ID_INC_AMBIENT_LIGHT, "&Inc Ambient Intensity\t+");
+    lightMenu->Append(ID_DEC_AMBIENT_LIGHT, "&Dec Ambient Intensity\t-");
+    lightMenu->Append(ID_INC_SCENE_LIGHT, "Inc Scene &Light Intensity\tCtrl++");
+    lightMenu->Append(ID_DEC_SCENE_LIGHT, "De&c Scene Light Intensity\tCtrl+-");
+    lightMenu->AppendSeparator();
+    lightMenu->AppendCheckItem(ID_LIGHTING_EXPOSE, "Expose Precalculated Lighting");
+    lightMenu->Append(ID_KILL_SCENE_LIGHT, "Kill Scene Light\tCtrl+*");
+    lightMenu->AppendSeparator();
+    lightMenu->AppendCheckItem(ID_PRELIT_VERTEX, "&Vertex Lighting");
+    lightMenu->AppendCheckItem(ID_PRELIT_MULTIPASS, "Multi-&Pass Lighting");
+    lightMenu->AppendCheckItem(ID_PRELIT_MULTITEX, "Multi-Te&xture Lighting");
+    menuBar->Append(lightMenu, "Ligh&ting");
 
-    // Camera menu
-    // MFC Reference: W3DView.rc (Camera menu structure)
+    // Camera menu - MFC Reference: W3DView.rc:303-326
     wxMenu *cameraMenu = new wxMenu;
     cameraMenu->Append(ID_CAMERA_FRONT, "&Front\tCtrl+F");
     cameraMenu->Append(ID_CAMERA_BACK, "&Back\tCtrl+B");
@@ -625,27 +632,6 @@ void W3DViewFrame::CreateMenuBar()
     cameraMenu->Append(ID_CAMERA_RESET, "R&eset");
     menuBar->Append(cameraMenu, "&Camera");
 
-    // Light menu (matching MFC W3DView.rc:283-302)
-    wxMenu *lightMenu = new wxMenu;
-    lightMenu->Append(ID_LIGHT_ROTATE_Y, "Rotate &Y\tCtrl+Up");
-    lightMenu->Append(ID_LIGHT_ROTATE_Z, "Rotate &Z\tCtrl+Right");
-    lightMenu->AppendSeparator();
-    lightMenu->Append(ID_LIGHT_AMBIENT, "&Ambient...");
-    lightMenu->Append(ID_LIGHT_SCENE, "&Scene Light...");
-    lightMenu->AppendSeparator();
-    lightMenu->Append(ID_INC_AMBIENT_LIGHT, "&Inc Ambient Intensity\t+");
-    lightMenu->Append(ID_DEC_AMBIENT_LIGHT, "&Dec Ambient Intensity\t-");
-    lightMenu->Append(ID_INC_SCENE_LIGHT, "Inc Scene &Light Intensity\tCtrl++");
-    lightMenu->Append(ID_DEC_SCENE_LIGHT, "De&c Scene Light Intensity\tCtrl+-");
-    lightMenu->AppendSeparator();
-    lightMenu->AppendCheckItem(ID_LIGHTING_EXPOSE, "Expose Precalculated Lighting");
-    lightMenu->Append(ID_KILL_SCENE_LIGHT, "Kill Scene Light\tCtrl+*");
-    lightMenu->AppendSeparator();
-    lightMenu->AppendCheckItem(ID_PRELIT_VERTEX, "&Vertex Lighting");
-    lightMenu->AppendCheckItem(ID_PRELIT_MULTIPASS, "Multi-&Pass Lighting");
-    lightMenu->AppendCheckItem(ID_PRELIT_MULTITEX, "Multi-Te&xture Lighting");
-    menuBar->Append(lightMenu, "Ligh&ting");
-
     // Background menu - EXACT MFC matching (W3DView.rc:327-333)
     wxMenu *backgroundMenu = new wxMenu;
     backgroundMenu->Append(ID_BACKGROUND_COLOR, "&Color...");
@@ -654,14 +640,31 @@ void W3DViewFrame::CreateMenuBar()
     backgroundMenu->AppendSeparator();
     backgroundMenu->AppendCheckItem(ID_BACKGROUND_FOG, "Fog (CTRL+ALT+F)");
     menuBar->Append(backgroundMenu, "&Background");
-    
-    // Note: Settings menu removed - doesn't exist in MFC
-    //   - Texture Path moved to File menu (W3DView.rc:201)
-    //   - Device/Resolution already in View menu as Change Device/Resolution (W3DView.rc:223-224)
-    //   - Enable Gamma Correction moved to File menu (W3DView.rc:186)
-    //   - Set Gamma already in View menu (W3DView.rc:221)
 
-    // Help menu
+    // Movie menu - EXACT MFC matching (W3DView.rc:334-338)
+    wxMenu *movieMenu = new wxMenu;
+    movieMenu->Append(ID_MAKE_MOVIE, "&Make Movie...");
+    movieMenu->Append(ID_SAVE_SCREENSHOT, "&Capture Screen Shot...\tF7");
+    menuBar->Append(movieMenu, "&Movie");
+
+    // Animation menu - EXACT MFC matching (W3DView.rc:363-373 in IDR_ANI_MENU)
+    // NOTE: In MFC, Animation is in separate menu resource (IDR_ANI_MENU) that gets swapped contextually
+    //   For now, keeping it in main menu bar for wxWidgets compatibility
+    //   TODO(MFC-Match): Implement context-sensitive menu swapping (IDR_MAINFRAME <-> IDR_ANI_MENU)
+    wxMenu *animMenu = new wxMenu;
+    animMenu->Append(ID_ANIMATION_PLAY, "&Play");
+    animMenu->Append(ID_ANIMATION_PAUSE, "P&ause");
+    animMenu->Append(ID_ANIMATION_STOP, "&Stop");
+    animMenu->AppendSeparator();
+    animMenu->Append(ID_ANIMATION_STEP_BACK, "Step &Back");
+    animMenu->Append(ID_ANIMATION_STEP_FORWARD, "Step &Forward");
+    animMenu->AppendSeparator();
+    animMenu->Append(ID_ANIMATION_SETTINGS, "Se&ttings...");
+    animMenu->AppendSeparator();
+    animMenu->Append(ID_ANIMATION_ADVANCED, "Ad&vanced...\tCtrl+V");
+    menuBar->Append(animMenu, "&Animation");
+    
+    // Help menu - MFC Reference: W3DView.rc:339-342
     wxMenu *helpMenu = new wxMenu;
     helpMenu->Append(ID_ABOUT, "&About...");
     menuBar->Append(helpMenu, "&Help");
@@ -3169,5 +3172,50 @@ void W3DViewFrame::OnEditSoundObject(wxCommandEvent &WXUNUSED(event))
     //   Note: Keyboard shortcut is Enter (same as Object->Properties)
     //   Files to review: SoundObjectDialog_wx.cpp, EditSoundObjectDialog_wx.cpp
     wxMessageBox("Edit Sound Object not yet implemented.\nNeeds sound object properties dialog.",
+                 "Feature Incomplete", wxOK | wxICON_INFORMATION, this);
+}
+
+// Movie menu handlers
+
+void W3DViewFrame::OnMakeMovie(wxCommandEvent &WXUNUSED(event))
+{
+    // MFC: MainFrm.cpp (need to investigate OnMakeMovie handler)
+    // MFC ID: IDM_MAKE_MOVIE (32845)
+    // Function: Record animation to movie file (AVI or other format)
+    // TODO(MFC-Implement): Implement movie recording functionality
+    //   Show dialog with movie recording options:
+    //     - Output file path/name
+    //     - Frame rate (FPS)
+    //     - Codec selection
+    //     - Resolution/quality settings
+    //     - Frame range (start/end frames or time)
+    //   Capture rendering output to video file
+    //   Need to integrate with video encoding library (DirectShow/FFmpeg)
+    //   Should capture audio if sound objects are present
+    //   Impact: High - important for marketing/documentation
+    //   Files to review: MovieRecorder_wx.cpp (if exists), video encoding integration
+    //   Note: This is a complex feature requiring video encoding library
+    wxMessageBox("Make Movie not yet implemented.\nRequires video encoding library integration (DirectShow/FFmpeg).",
+                 "Feature Incomplete", wxOK | wxICON_INFORMATION, this);
+}
+
+void W3DViewFrame::OnSaveScreenshot(wxCommandEvent &WXUNUSED(event))
+{
+    // MFC: MainFrm.cpp (need to investigate OnSaveScreenshot handler)
+    // MFC ID: IDM_SAVE_SCREENSHOT (32846)
+    // Function: Capture current viewport to image file
+    // Keyboard: F7
+    // TODO(MFC-Implement): Implement screenshot capture
+    //   Show file save dialog with image format filters (PNG, JPG, TGA, BMP)
+    //   Capture current OpenGL/DirectX framebuffer
+    //   Save to selected image format
+    //   Implementation steps:
+    //     1. Get wxGLCanvas or rendering context
+    //     2. Read pixels from framebuffer (glReadPixels or equivalent)
+    //     3. Convert to wxImage
+    //     4. Save using wxImage::SaveFile()
+    //   Impact: High - essential for documentation and bug reporting
+    //   Files to review: ScreenshotDialog_wx.cpp (if exists), W3D rendering code
+    wxMessageBox("Capture Screen Shot not yet implemented.\nNeeds framebuffer capture and image save functionality.",
                  "Feature Incomplete", wxOK | wxICON_INFORMATION, this);
 }

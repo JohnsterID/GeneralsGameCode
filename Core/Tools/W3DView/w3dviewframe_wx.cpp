@@ -37,12 +37,21 @@
 #include "dialogs/LightSceneDialog_wx.h"
 #include "dialogs/Resolution_wx.h"
 #include "dialogs/GammaDialog_wx.h"
+#include "dialogs/AnimatedSoundDialog_wx.h"
+#include "dialogs/SaveSettings_wx.h"
+#include "dialogs/PropPageAdvanimMixing_wx.h"
+#include "dialogs/PropPageAdvanimReport_wx.h"
+#include "dialogs/PropPageAnimation_wx.h"
+#include "dialogs/PropPageEmitterGen_wx.h"
+#include "dialogs/PropPageSphereGen_wx.h"
+#include "dialogs/PropPageRingGen_wx.h"
+#include "dialogs/SoundEdit_wx.h"
 #include "light.h"
 
 #include <wx/menu.h>
 #include <wx/toolbar.h>
-#include <wx/msgdlg.h>
 #include <wx/filedlg.h>
+#include <wx/msgdlg.h>
 #include <wx/config.h>
 #include <wx/clipbrd.h>
 
@@ -2949,32 +2958,63 @@ void W3DViewFrame::OnUpdateEnableGammaCorrectionFile(wxUpdateUIEvent &event)
 
 void W3DViewFrame::OnSaveSettings(wxCommandEvent &WXUNUSED(event))
 {
-    // MFC: MainFrm.cpp (need to investigate OnSaveSettings handler)
+    // MFC: MainFrm.cpp:OnSaveSettings
     // MFC ID: IDM_SAVE_SETTINGS (32796)
-    // Function: Save all application settings to a file
-    // TODO(MFC-Implement): Implement settings save functionality
-    //   MFC Reference: SaveSettingsDialog.cpp already exists (SaveSettings_wx.cpp)
-    //   Show file save dialog with .cfg or .ini filter
-    //   Write all wxConfig settings to selected file
-    //   Settings include: camera, lighting, view options, paths, etc.
+    // Function: Save application settings to a file
+    // Dialog: SaveSettings_wx.cpp (XRC-based, converted from MFC)
+    // TODO(MFC-Implement): Dialog UI exists, need to implement file save logic
+    //   Dialog shows:
+    //     - Checkboxes: Lighting, Background, Camera (select what to save)
+    //     - Filename edit + browse button
+    //   Need to implement in SaveSettings dialog:
+    //     1. File save dialog integration (browse button)
+    //     2. Write selected settings to file (when OK clicked)
+    //     3. File format: .cfg or .ini (investigate MFC format)
+    //     4. Settings to save: camera position, lighting state, background, etc.
+    //   MFC Reference: SaveSettingsDialog.cpp lines ~100-200
     //   Impact: High - user workflow feature for saving/restoring work environment
-    wxMessageBox("Save Settings not yet fully implemented.\nDialog exists but save logic needs completion.",
-                 "Feature Incomplete", wxOK | wxICON_INFORMATION, this);
+    SaveSettings dialog(this);
+    if (dialog.ShowModal() == wxID_OK) {
+        // TODO(MFC-Implement): Extract settings from dialog and save to file
+        //   Get filename from dialog: dialog.m_idc_filename_edit->GetValue()
+        //   Get checkboxes: dialog.m_idc_lighting_checkbox->GetValue(), etc.
+        //   Call save function with selected options
+        wxMessageBox("Settings save logic not yet implemented.\nDialog shown but file write pending.",
+                     "Feature Incomplete", wxOK | wxICON_INFORMATION, this);
+    }
 }
 
 void W3DViewFrame::OnLoadSettings(wxCommandEvent &WXUNUSED(event))
 {
-    // MFC: MainFrm.cpp (need to investigate OnLoadSettings handler)
+    // MFC: MainFrm.cpp:OnLoadSettings
     // MFC ID: IDM_LOAD_SETTINGS (32797)
     // Function: Load application settings from a file
     // TODO(MFC-Implement): Implement settings load functionality
     //   Show file open dialog with .cfg or .ini filter
-    //   Read settings file and update wxConfig
-    //   Apply loaded settings to current session
-    //   May need to refresh UI to reflect new settings
+    //   wxFileDialog with wxFD_OPEN | wxFD_FILE_MUST_EXIST
+    //   Read settings file and apply to current session:
+    //     - Parse file format (investigate MFC format)
+    //     - Update camera settings (position, orientation, distance)
+    //     - Update lighting settings (ambient, scene light)
+    //     - Update background settings (color, bitmap, fog)
+    //     - Refresh UI to show loaded settings
+    //   MFC Reference: MainFrm.cpp OnLoadSettings (investigate implementation)
     //   Impact: High - companion to Save Settings
-    wxMessageBox("Load Settings not yet implemented.\nNeed to implement file reading and config update.",
-                 "Feature Incomplete", wxOK | wxICON_INFORMATION, this);
+    wxFileDialog dialog(this, "Load Settings", "", "",
+                       "Configuration files (*.cfg)|*.cfg|All files (*.*)|*.*",
+                       wxFD_OPEN | wxFD_FILE_MUST_EXIST);
+    
+    if (dialog.ShowModal() == wxID_OK) {
+        wxString filename = dialog.GetPath();
+        // TODO(MFC-Implement): Read and parse settings file, apply to application
+        //   1. Open and parse file (format investigation needed)
+        //   2. Extract settings values
+        //   3. Apply to camera, lighting, background
+        //   4. Refresh viewport/UI
+        wxMessageBox(wxString::Format("Load Settings not yet implemented.\nSelected file: %s\nFile parsing and apply logic pending.",
+                                      filename),
+                     "Feature Incomplete", wxOK | wxICON_INFORMATION, this);
+    }
 }
 
 void W3DViewFrame::OnImportFacialAnims(wxCommandEvent &WXUNUSED(event))
@@ -3004,16 +3044,21 @@ void W3DViewFrame::OnTexturePathFile(wxCommandEvent &WXUNUSED(event))
 
 void W3DViewFrame::OnAnimatedSoundOptions(wxCommandEvent &WXUNUSED(event))
 {
-    // MFC: MainFrm.cpp (need to investigate OnEditAnimatedSoundsOptions handler)
+    // MFC: MainFrm.cpp:OnEditAnimatedSoundsOptions
     // MFC ID: IDM_EDIT_ANIMATED_SOUNDS_OPTIONS (32900)
     // Function: Configure options for animated sound objects
-    // TODO(MFC-Implement): Implement animated sound options dialog
-    //   MFC Reference: AnimatedSoundDialog_wx.cpp already exists
-    //   Dialog may already be implemented, need to verify
-    //   Options likely include: sound trigger points, volume curves, falloff, etc.
+    // Dialog: AnimatedSoundDialog_wx.cpp (XRC-based, converted from MFC)
+    // TODO(MFC-Verify): Verify dialog behavior matches MFC exactly
+    //   Dialog shows:
+    //     - Sound definition library path
+    //     - Browse button for library selection
+    //   Need to verify:
+    //     - Data persistence (wxConfig or registry)
+    //     - File path validation
+    //     - Default values match MFC
     //   Impact: Medium - specialized feature for sound designers
-    wxMessageBox("Animated Sound Options not yet fully implemented.\nDialog may exist (AnimatedSoundDialog_wx.cpp) but needs verification.",
-                 "Feature Incomplete", wxOK | wxICON_INFORMATION, this);
+    AnimatedSoundDialog dialog(this);
+    dialog.ShowModal();
 }
 
 // Emitters menu handlers
@@ -3135,44 +3180,77 @@ void W3DViewFrame::OnEditPrimitive(wxCommandEvent &WXUNUSED(event))
 
 void W3DViewFrame::OnCreateSoundObject(wxCommandEvent &WXUNUSED(event))
 {
-    // MFC: MainFrm.cpp (need to investigate OnCreateSoundObject handler)
+    // MFC: MainFrm.cpp:OnCreateSoundObject
     // MFC ID: IDM_CREATE_SOUND_OBJECT (32879)
-    // Function: Create a positioned sound object in 3D space
-    // TODO(MFC-Implement): Implement sound object creation dialog
-    //   Show dialog with sound object parameters:
-    //     - Sound file selection (browse for audio file)
-    //     - Position in 3D space
-    //     - Volume, pitch
-    //     - 3D sound properties: min/max distance, rolloff factor
-    //     - Loop settings
-    //   Create W3D sound object and add to scene
-    //   Need to integrate with audio system
+    // Function: Create a new sound object in the scene
+    // Dialog: SoundEdit_wx.cpp (XRC-based, converted from MFC SoundEditDialogClass)
+    // MFC Implementation: Simply shows SoundEditDialogClass dialog
+    // TODO(MFC-Implement): Dialog shows, need to implement object creation logic
+    //   Dialog controls (from SoundEdit_wx.h):
+    //     - Name, filename (with browse button)
+    //     - 2D/3D radio buttons
+    //     - Trigger radius, drop-off distance, max volume
+    //     - Infinite loops, stop when hidden checkboxes
+    //     - Sound effect/music radio, priority/volume sliders
+    //     - Play button to preview sound
+    //   Need to implement in SoundEdit dialog:
+    //     1. Browse button handler for sound file selection
+    //     2. Play button handler for sound preview
+    //     3. OK handler to create SoundRenderObjClass
+    //     4. Add created object to document
+    //     5. Update tree view
+    //   MFC Reference: SoundEditDialogClass.cpp
     //   Impact: High - core feature for sound designers
-    //   Files to review: SoundObjectDialog_wx.cpp (may already exist), audio system integration
-    wxMessageBox("Create Sound Object not yet implemented.\nNeeds dialog and audio system integration.",
-                 "Feature Incomplete", wxOK | wxICON_INFORMATION, this);
+    SoundEdit dialog(this);
+    if (dialog.ShowModal() == wxID_OK) {
+        // TODO(MFC-Implement): Extract values from dialog and create sound object
+        //   Get values: dialog.m_idc_name_edit->GetValue(), etc.
+        //   Create new SoundRenderObjClass with parameters
+        //   Add to document: doc->AddObject(soundObj)
+        //   Refresh tree view
+        wxMessageBox("Sound object creation logic not yet implemented in dialog.\nDialog shown but object creation pending.",
+                     "Feature Incomplete", wxOK | wxICON_INFORMATION, this);
+    }
 }
 
 void W3DViewFrame::OnEditSoundObject(wxCommandEvent &WXUNUSED(event))
 {
-    // MFC: MainFrm.cpp (need to investigate OnEditSoundObject handler)
+    // MFC: MainFrm.cpp:OnEditSoundObject
     // MFC ID: IDM_EDIT_SOUND_OBJECT (32880)
-    // Function: Edit properties of selected sound object
-    // TODO(MFC-Implement): Implement sound object properties dialog
-    //   Check if sound object is currently selected
-    //   Show sound object properties dialog
-    //   Dialog includes:
-    //     - Sound file (with option to change)
-    //     - Position, Volume, Pitch
-    //     - 3D sound properties (min/max distance, rolloff)
-    //     - Loop, autoplay settings
-    //     - Test/preview button to play sound
-    //   Apply changes to selected sound object
+    // Function: Edit properties of the currently displayed sound object
+    // Dialog: SoundEdit_wx.cpp (same dialog as Create, but pre-filled with object data)
+    // MFC Implementation:
+    //   1. Gets current document
+    //   2. Gets displayed object (doc->GetDisplayedObject())
+    //   3. Casts to SoundRenderObjClass*
+    //   4. If valid, shows SoundEditDialogClass with dialog.Set_Sound(sound_obj)
+    // TODO(MFC-Implement): Dialog shows, need to implement edit logic
+    //   Need to implement in SoundEdit dialog:
+    //     1. Set_Sound() method to populate fields from existing object
+    //     2. Get_Sound() method to extract modified values
+    //     3. Update object when OK clicked
     //   Impact: High - primary editing interface for sound objects
-    //   Note: Keyboard shortcut is Enter (same as Object->Properties)
-    //   Files to review: SoundObjectDialog_wx.cpp, EditSoundObjectDialog_wx.cpp
-    wxMessageBox("Edit Sound Object not yet implemented.\nNeeds sound object properties dialog.",
-                 "Feature Incomplete", wxOK | wxICON_INFORMATION, this);
+    W3DViewDoc* doc = wxDynamicCast(GetDocument(), W3DViewDoc);
+    if (doc != nullptr) {
+        RenderObjClass* obj = doc->GetDisplayedObject();
+        if (obj != nullptr) {
+            // TODO(MFC-Implement): Check if object is SoundRenderObjClass
+            //   Need to add type checking: obj->Class_ID() == SoundRenderObjClass::Class_ID()
+            //   Or dynamic_cast<SoundRenderObjClass*>(obj)
+            SoundEdit dialog(this);
+            // TODO(MFC-Implement): dialog.Set_Sound((SoundRenderObjClass*)obj)
+            //   Need to implement Set_Sound() method in SoundEdit dialog
+            //   Populate all dialog fields from sound object properties
+            if (dialog.ShowModal() == wxID_OK) {
+                // TODO(MFC-Implement): Update sound object from dialog values
+                //   Get values from dialog and apply to object
+                //   Refresh viewport if needed
+            }
+        } else {
+            wxMessageBox("No sound object is currently displayed.\nPlease select a sound object in the tree view first.",
+                        "No Sound Object Selected", wxOK | wxICON_INFORMATION, this);
+        }
+    }
 }
 
 // Movie menu handlers

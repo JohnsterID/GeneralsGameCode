@@ -43,6 +43,7 @@ class CGraphicView;
 class LightClass;
 class HAnimClass;
 class HAnimComboClass;
+class Bitmap2DObjClass;
 
 class W3DViewDoc : public wxDocument
 {
@@ -161,6 +162,10 @@ public:
     //   - Tree control's Display_Asset() method
     //   - Document → Tree → View connections
     void Reload_Displayed_Object();
+    
+    // Background BMP accessors (MFC: W3DViewDoc.h:231,244, W3DViewDoc.cpp:3008-3059)
+    const wxString& GetBackgroundBMP() const { return m_backgroundBMPFilename; }
+    void SetBackgroundBMP(const wxString& filename);
 
 private:
     // Scene and object data
@@ -196,6 +201,10 @@ private:
     // NOTE: These exist in MFC but are unused in AnimationSpeed dialog
     bool m_bCompress_channel_Q;      // Channel Q compression enabled
     int m_nChannelQnBytes;           // Q bytes (1 or 2)
+    
+    // Background BMP state (MFC: m_pCBackgroundBMP, m_stringBackgroundBMP)
+    Bitmap2DObjClass *m_backgroundBMP;    // Background bitmap texture object
+    wxString m_backgroundBMPFilename;     // Background bitmap filename
 
     wxDECLARE_DYNAMIC_CLASS(W3DViewDoc);
 };

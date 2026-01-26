@@ -66,6 +66,7 @@ W3DViewDoc::W3DViewDoc()
     , m_bAnimBlend(true)  // Animation blending enabled by default (MFC: W3DViewDoc.cpp:106)
     , m_bCompress_channel_Q(false)  // Channel Q compression disabled by default (MFC: W3DViewDoc.cpp)
     , m_nChannelQnBytes(2)  // Q bytes default to 2 (16-bit) (MFC: W3DViewDoc.cpp)
+    , m_backgroundBMP(nullptr)  // Background bitmap (MFC: m_pCBackgroundBMP)
 {
     // MFC Reference: W3DViewDoc.cpp:121
     // Loads auto reset setting from registry: GetProfileInt("Config", "ResetCamera", 1)
@@ -472,4 +473,25 @@ void W3DViewDoc::Reload_Displayed_Object()
     
     // STUB: Currently does nothing - prelit mode is set but current object isn't reloaded
     return;
+}
+
+// MFC: W3DViewDoc.cpp:3008-3059 (SetBackgroundBMP)
+void W3DViewDoc::SetBackgroundBMP(const wxString& filename)
+{
+    // TODO(MFC-Infrastructure): Full implementation requires 2D scene support
+    // MFC uses separate m_pC2DScene (SceneClass*) for 2D overlay elements
+    // MFC implementation:
+    //   1. Remove old background BMP: m_pCBackgroundBMP->Remove(), Release_Ref()
+    //   2. Create new Bitmap2DObjClass: new Bitmap2DObjClass(filename, 0.5f, 0.5f, TRUE, FALSE)
+    //   3. Add to 2D scene: m_pC2DScene->Add_Render_Object(m_pCBackgroundBMP)
+    //   4. Store filename: m_stringBackgroundBMP = filename
+    //
+    // Current implementation: Store filename only (dialog can save/load setting)
+    // Full implementation requires:
+    //   - SceneClass *m_2DScene member in document
+    //   - 2D scene creation/management in document lifecycle
+    //   - 2D rendering support in graphics view
+    
+    m_backgroundBMPFilename = filename;
+    Modify(true);  // Mark document as modified
 }

@@ -1973,9 +1973,9 @@ void W3DViewFrame::OnBackgroundColor(wxCommandEvent &WXUNUSED(event))
 
 void W3DViewFrame::OnBackgroundBmp(wxCommandEvent &WXUNUSED(event))
 {
-    // TODO(MFC-Verify): Verify BackgroundBmp dialog matches MFC exactly
-    // Dialog appears implemented but needs visual/behavioral verification
-    // MFC Reference: BackgroundBMP.cpp (CBackgroundBMPDialog)
+    // MFC: MainFrm.cpp (OnBackgroundBmp - shows dialog)
+    // Dialog: BackgroundBMPDialog.cpp:38-92 (OnInitDialog, OnOK)
+    // NOTE: Full BMP display requires 2D scene infrastructure (see W3DViewDoc::SetBackgroundBMP)
     BackgroundBmp dialog(this);
     dialog.ShowModal();
 }

@@ -82,7 +82,8 @@ private:
     // Phase 2.5: Dialog infrastructure
     bool TransferDataToWindow() override;
     bool TransferDataFromWindow() override;
+    void OnInitDialog(wxInitDialogEvent& event);
 
     // Event handlers (Phase 2)
-void OnBrowse(wxCommandEvent &event);  // Button/Checkbox click
+    void OnBrowse(wxCommandEvent &event);  // Button/Checkbox click
 };

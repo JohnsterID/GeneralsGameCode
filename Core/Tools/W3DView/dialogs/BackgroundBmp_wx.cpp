@@ -21,9 +21,12 @@
 #include "BackgroundBmp_wx.h"
 #include <wx/xrc/xmlres.h>
 #include <wx/filedlg.h>
+#include "../w3dcompat_wx.h"
+#include "../w3dviewdoc_wx.h"
 
 wxBEGIN_EVENT_TABLE(BackgroundBmp, BackgroundBmpBase)
 EVT_BUTTON(XRCID("IDC_BROWSE"), BackgroundBmp::OnBrowse)  // Button/Checkbox click
+    EVT_INIT_DIALOG(BackgroundBmp::OnInitDialog)
 wxEND_EVENT_TABLE()
 
 BackgroundBmp::BackgroundBmp(wxWindow *parent)
@@ -69,6 +72,16 @@ void BackgroundBmp::OnBrowse(wxCommandEvent &event)
 // Phase 2.5: Dialog Infrastructure (Auto-generated)
 // ============================================================================
 
+void BackgroundBmp::OnInitDialog(wxInitDialogEvent& event)
+{
+    // MFC: BackgroundBMPDialog.cpp:38-60 (OnInitDialog)
+    W3DViewDoc *doc = GetCurrentDocument_wx();
+    if (doc) {
+        m_idc_filename_edit->SetValue(doc->GetBackgroundBMP());
+    }
+    event.Skip();
+}
+
 bool BackgroundBmp::TransferDataToWindow()
 {
     // Data is transferred in OnInitDialog for this dialog
@@ -77,7 +90,15 @@ bool BackgroundBmp::TransferDataToWindow()
 
 bool BackgroundBmp::TransferDataFromWindow()
 {
-    // Filename is already in the text control, no additional extraction needed
-    // The calling code can retrieve it via the text control
+    // MFC: BackgroundBMPDialog.cpp:68-92 (OnOK)
+    W3DViewDoc *doc = GetCurrentDocument_wx();
+    if (doc) {
+        wxString filename = m_idc_filename_edit->GetValue().Trim();
+        if (!filename.IsEmpty()) {
+            doc->SetBackgroundBMP(filename);
+        } else {
+            doc->SetBackgroundBMP(wxEmptyString);  // Clear background
+        }
+    }
     return true;
 }

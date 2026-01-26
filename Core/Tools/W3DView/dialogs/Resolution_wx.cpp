@@ -20,8 +20,18 @@
 
 #include "Resolution_wx.h"
 #include <wx/xrc/xmlres.h>
+#include <wx/config.h>
 #include "../Utils.h"
 #include "../GraphicView_wx.h"
+#include "../Globals.h"
+
+// BLOCKER TODO: rddesc.h inclusion causes StringClass/const char* conflicts with wxWidgets
+// BLOCKER TODO: RenderDeviceDescClass inline methods return StringClass as const char*
+// BLOCKER TODO: Need RenderDeviceDescClass, ResolutionDescClass, DynamicVectorClass for resolution enumeration
+// BLOCKER TODO: Required for WW3D::Get_Render_Device_Desc() and device_info.Enumerate_Resolutions()
+// BLOCKER TODO: This is an infrastructure issue affecting resolution enumeration dialogs
+// #include "ww3d.h"
+// #include "rddesc.h"
 
 wxBEGIN_EVENT_TABLE(Resolution, ResolutionBase)
 EVT_LIST_ITEM_ACTIVATED(XRCID("IDC_RESOLUTION_LIST_CTRL"), Resolution::OnDblclkResolutionListCtrl)  // List item double-click
@@ -56,8 +66,15 @@ void Resolution::OnCancel(wxCommandEvent &event)
 
 void Resolution::OnDblclkResolutionListCtrl(wxListEvent &event)
 {
-    // TODO: Implement OnDblclkResolutionListCtrl
-    // Control ID: IDC_RESOLUTION_LIST_CTRL
+    // MFC: ResolutionDialog.cpp:228-236 (OnDblclkResolutionListCtrl)
+    // Double-click on list item acts like OK button
+    long list_index = m_idc_resolution_list_ctrl->GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
+    if (list_index >= 0) {
+        // Trigger OK behavior (works with current stub implementation)
+        if (Validate() && TransferDataFromWindow()) {
+            EndModal(wxID_OK);
+        }
+    }
 }
 
 
@@ -67,73 +84,41 @@ void Resolution::OnDblclkResolutionListCtrl(wxListEvent &event)
 
 void Resolution::OnInitDialog(wxInitDialogEvent& event)
 {
-    // Initialize controls after they're created
+    // MFC: ResolutionDialog.cpp:84-170 (OnInitDialog)
+    // TODO(MFC-Infrastructure): Full implementation requires rddesc.h (blocker: StringClass conflicts)
+    
+    // Configure the list control
+    m_idc_resolution_list_ctrl->SetSingleStyle(wxLC_REPORT);
+    m_idc_resolution_list_ctrl->InsertColumn(0, "Resolution");
+    m_idc_resolution_list_ctrl->InsertColumn(1, "Bit Depth");
+    
+    // Size the columns
+    wxRect rect = m_idc_resolution_list_ctrl->GetClientRect();
+    m_idc_resolution_list_ctrl->SetColumnWidth(0, (rect.GetWidth() >> 1) - 4);
+    m_idc_resolution_list_ctrl->SetColumnWidth(1, (rect.GetWidth() >> 1) - 4);
+    
+    // TODO(MFC-Infrastructure): Re-enable after fixing rddesc.h include issue (see header)
+    // MFC implementation:
+    //   1. Get device info: WW3D::Get_Render_Device_Desc()
+    //   2. Enumerate resolutions: device_info.Enumerate_Resolutions()
+    //   3. Get current resolution: WW3D::Get_Device_Resolution(width, height, bpp, windowed)
+    //   4. Populate list with all available resolutions
+    //   5. Select current resolution in list
     //
-    //	Configure the list control
-    //
-    // TODO: Convert: m_ListCtrl.SetExtendedStyle (LVS_EX_FULLROWSELECT);
-    // TODO: Convert: m_ListCtrl.InsertColumn (0, "Resolution");
-    // TODO: Convert: m_ListCtrl.InsertColumn (1, "Bit Depth");
-    //
-    //	Size the columns
-    //
-    // TODO: Convert: CRect rect;
-    // TODO: Convert: m_ListCtrl.GetClientRect (&rect);
-    // TODO: Convert: m_ListCtrl.SetColumnWidth (0, (rect.Width () >> 1) - 4);
-    // TODO: Convert: m_ListCtrl.SetColumnWidth (1, (rect.Width () >> 1) - 4);
-    //
-    //	Get information about the current render device
-    //
-    // TODO: Convert: const RenderDeviceDescClass &device_info = WW3D::Get_Render_Device_Desc ();
-    // TODO: Convert: const DynamicVectorClass<ResolutionDescClass> &res_list = device_info.Enumerate_Resolutions ();
-    //
-    //	Get the current resolution
-    //
-    // TODO: Declare: int curr_width			= 0;
-    // TODO: Declare: int curr_height		= 0;
-    // TODO: Declare: int curr_bpp			= 0;
-    // TODO: Declare: bool curr_windowed	= false;
-    // TODO: Convert: WW3D::Get_Device_Resolution (curr_width, curr_height, curr_bpp, curr_windowed);
+    // Blocked by: rddesc.h contains inline methods returning StringClass as const char*
+    // Required types: RenderDeviceDescClass, ResolutionDescClass, DynamicVectorClass<ResolutionDescClass>
+    
+    // Stub: Add a placeholder message
+    long list_index = m_idc_resolution_list_ctrl->InsertItem(0, "Resolution enumeration blocked by rddesc.h");
+    m_idc_resolution_list_ctrl->SetItem(list_index, 1, "See Resolution_wx.cpp");
+    
+    // Set fullscreen checkbox to current windowed state (from config)
+    wxConfigBase *config = wxConfigBase::Get();
+    curr_windowed = config->ReadBool("/Config/Windowed", true);
     if (m_idc_fullscreen_check) {
-        m_idc_fullscreen_check->SetValue(curr_windowed == false != 0);  // TODO: Verify boolean logic
+        m_idc_fullscreen_check->SetValue(!curr_windowed);
     }
-    //
-    //	Loop over all the resolutions available to us
-    //
-    // TODO: Declare: bool found = false;
-    // TODO: Declare: int index = res_list.Count ();
-    // TODO: Declare: int width	= res_list[index].Width;
-    // TODO: Declare: int height	= res_list[index].Height;
-    // TODO: Declare: int bpp		= res_list[index].BitDepth;
-    //
-    //	Format description strings for this resolution
-    //
-    // TODO: Convert: CString resolution_string;
-    // TODO: Convert: CString bit_depth_string;
-    // TODO: Convert: resolution_string.Format ("%d x %d", width, height);
-    // TODO: Convert: bit_depth_string.Format ("%d bpp (%d colors)", bpp, 1 << bpp);
-    //
-    //	Add this resolution to the list ctrl
-    //
-    // TODO: Declare: int list_index = m_ListCtrl.InsertItem (0, resolution_string, 0);
-    // TODO: Convert: m_ListCtrl.SetItemText (list_index, 1, bit_depth_string);
-    // TODO: Convert: m_ListCtrl.SetItemData (list_index, index);
-    //
-    //	Is this the current resolution?  If so,
-    // select this entry as the default...
-    //
-    // TODO: Convert: if (	found == false &&
-    // TODO: Convert: curr_width == width &&
-    // TODO: Convert: curr_height == height &&
-    // TODO: Convert: curr_bpp == bpp)
-    // TODO: Convert: m_ListCtrl.SetItemState (list_index, LVIS_SELECTED, LVIS_SELECTED);
-    // TODO: Convert: found = true;
-    //
-    //	Select the first entry by default (if necessary)
-    //
-    // TODO: Convert: m_ListCtrl.SetItemState (0, LVIS_SELECTED, LVIS_SELECTED);
-    // TODO: Convert: return TRUE;
-
+    
     event.Skip();
 }
 
@@ -145,40 +130,27 @@ bool Resolution::TransferDataToWindow()
 
 bool Resolution::TransferDataFromWindow()
 {
-    // Extract data from controls and apply to business logic
-
-    // TODO: Convert: //
-    // TODO: Convert: //	Get the current selection
-    // TODO: Convert: //
-    // TODO: Convert: int list_index = m_ListCtrl.GetNextItem (-1, LVNI_ALL | LVNI_SELECTED);
-    // TODO: Convert: if (list_index >= 0) {
-    // TODO: Convert: //
-    // TODO: Convert: //	Index into the resolution list for this device...
-    // TODO: Convert: //
-    // TODO: Convert: int index = m_ListCtrl.GetItemData (list_index);
-    // TODO: Convert: if (index >= 0) {
-    // TODO: Convert: //
-    // TODO: Convert: //	Lookup the selected resolution information
-    // TODO: Convert: //
-    // TODO: Convert: const RenderDeviceDescClass &device_info = WW3D::Get_Render_Device_Desc ();
-    // TODO: Convert: const DynamicVectorClass<ResolutionDescClass> &res_list = device_info.Enumerate_Resolutions ();
-    // TODO: Convert: g_iWidth				= res_list[index].Width;
-    // TODO: Convert: g_iHeight			= res_list[index].Height;
-    // TODO: Convert: g_iBitsPerPixel	= res_list[index].BitDepth;
-    // TODO: Convert: //
-    // TODO: Convert: // Cache this information in the registry
-    // TODO: Convert: //
-    // TODO: Convert: theApp.WriteProfileInt ("Config", "DeviceWidth", g_iWidth);
-    // TODO: Convert: theApp.WriteProfileInt ("Config", "DeviceHeight", g_iHeight);
-    // TODO: Convert: theApp.WriteProfileInt ("Config", "DeviceBitsPerPix", g_iBitsPerPixel);
-    // TODO: Convert: //
-    // TODO: Convert: //	Reset the display
-    // TODO: Convert: //
-    // TODO: Convert: bool fullscreen = (SendDlgItemMessage (IDC_FULLSCREEN_CHECK, BM_GETCHECK) == 1);
-    // TODO: Convert: ::Get_Graphic_View ()->Set_Fullscreen (fullscreen);
-    // TODO: Convert: }
-    // TODO: Convert: }
-    // TODO: Convert: return ;
-
+    // MFC: ResolutionDialog.cpp:180-221 (OnOK)
+    // TODO(MFC-Infrastructure): Full implementation requires rddesc.h (blocker: StringClass conflicts)
+    
+    // TODO(MFC-Infrastructure): Re-enable after fixing rddesc.h include issue
+    // MFC implementation:
+    //   1. Get selected list item index
+    //   2. Get resolution index from item data
+    //   3. Lookup resolution from WW3D::Get_Render_Device_Desc().Enumerate_Resolutions()[index]
+    //   4. Set globals: g_iWidth, g_iHeight, g_iBitsPerPixel
+    //   5. Cache to registry: WriteProfileInt("Config", "DeviceWidth/Height/BitsPerPix")
+    //   6. Apply fullscreen setting: Get_Graphic_View()->Set_Fullscreen()
+    //
+    // Current implementation: Save fullscreen setting only (resolution enum blocked)
+    
+    // Save fullscreen checkbox state
+    wxConfigBase *config = wxConfigBase::Get();
+    bool fullscreen = m_idc_fullscreen_check->GetValue();
+    config->Write("/Config/Windowed", !fullscreen);
+    curr_windowed = !fullscreen;
+    
+    // TODO: Apply fullscreen setting when Get_Graphic_View()->Set_Fullscreen() is available
+    
     return true;
 }

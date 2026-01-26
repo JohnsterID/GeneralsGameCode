@@ -2855,13 +2855,12 @@ void W3DViewFrame::OnDeviceSelection(wxCommandEvent &WXUNUSED(event))
 
 void W3DViewFrame::OnResolutionSettings(wxCommandEvent &WXUNUSED(event))
 {
-    // MFC: MainFrm.cpp:1565-1576 (OnChangeResolution)
-    // MFC implementation shows dialog only for DX8 builds
-    // Since this wxWidgets build uses WW3D_DX8, dialog is available
+    // MFC: MainFrm.cpp:1565-1576 (OnChangeResolution - shows dialog for DX8 only)
+    // Dialog: ResolutionDialog.cpp:84-236 (OnInitDialog, OnOK, OnDblclkResolutionListCtrl)
+    // TODO(MFC-Infrastructure): Full resolution enumeration blocked by rddesc.h StringClass conflicts
+    //   Dialog structure complete, fullscreen setting functional
+    //   Resolution list population requires RenderDeviceDescClass, ResolutionDescClass access
 #ifdef WW3D_DX8
-    // TODO(MFC-Verify): Verify Resolution dialog matches MFC exactly
-    // Dialog appears implemented but needs visual/behavioral verification
-    // MFC Reference: ResolutionDialog.cpp (ResolutionDialogClass)
     Resolution dialog(this);
     dialog.ShowModal();
 #else

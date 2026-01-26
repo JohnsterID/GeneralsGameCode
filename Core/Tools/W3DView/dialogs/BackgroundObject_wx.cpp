@@ -20,10 +20,15 @@
 
 #include "BackgroundObject_wx.h"
 #include <wx/xrc/xmlres.h>
+#include "../w3dcompat_wx.h"
+#include "../w3dviewdoc_wx.h"
+#include "assetmgr.h"
+#include "rendobj.h"
 
 wxBEGIN_EVENT_TABLE(BackgroundObject, BackgroundObjectBase)
-EVT_LIST_ITEM_SELECTED(XRCID("IDC_HIERARCHY_LIST"), BackgroundObject::OnItemChangedHierarchyList)  // List item selection changed
+    EVT_LIST_ITEM_SELECTED(XRCID("IDC_HIERARCHY_LIST"), BackgroundObject::OnItemChangedHierarchyList)  // List item selection changed
     EVT_BUTTON(XRCID("IDC_CLEAR"), BackgroundObject::OnClear)  // Button/Checkbox click
+    EVT_INIT_DIALOG(BackgroundObject::OnInitDialog)
 wxEND_EVENT_TABLE()
 
 BackgroundObject::BackgroundObject(wxWindow *parent)
@@ -52,16 +57,58 @@ void BackgroundObject::OnCancel(wxCommandEvent &event)
 // Event Handlers (Phase 2 - Auto-integrated)
 // ============================================================================
 
+void BackgroundObject::OnInitDialog(wxInitDialogEvent& event)
+{
+    // MFC: BackgroundObjectDialog.cpp:44-96 (OnInitDialog)
+    
+    // Setup list columns
+    m_idc_hierarchy_list->InsertColumn(0, "Name", wxLIST_FORMAT_LEFT, 200);
+    
+    // Enumerate hierarchies from asset manager
+    RenderObjIterator *objEnum = WW3DAssetManager::Get_Instance()->Create_Render_Obj_Iterator();
+    if (objEnum) {
+        for (objEnum->First(); !objEnum->Is_Done(); objEnum->Next()) {
+            const char *itemName = objEnum->Current_Item_Name();
+            
+            // Check if this is a hierarchy (CLASSID_HMODEL)
+            if (WW3DAssetManager::Get_Instance()->Render_Obj_Exists(itemName) &&
+                objEnum->Current_Item_Class_ID() == RenderObjClass::CLASSID_HMODEL) {
+                // Add hierarchy to list
+                long index = m_idc_hierarchy_list->InsertItem(0, wxString::FromUTF8(itemName));
+            }
+        }
+        delete objEnum;
+    }
+    
+    // Show current background object
+    W3DViewDoc *doc = GetCurrentDocument_wx();
+    if (doc) {
+        m_idc_curr_obj->SetLabel(doc->GetBackgroundObjectName());
+    }
+    
+    event.Skip();
+}
+
 void BackgroundObject::OnItemChangedHierarchyList(wxListEvent &event)
 {
-    // Hierarchy list item selection changed
-    // Update UI based on selected background object
+    // MFC: BackgroundObjectDialog.cpp:157-176 (OnItemChangedHierarchyList)
+    // Update current object label with selected item
+    long index = event.GetIndex();
+    if (index != -1) {
+        wxString itemName = m_idc_hierarchy_list->GetItemText(index);
+        m_idc_curr_obj->SetLabel(itemName);
+    }
 }
 
 void BackgroundObject::OnClear(wxCommandEvent &event)
 {
-    // Clear the selected background object
-    // Reset hierarchy list selection
+    // MFC: BackgroundObjectDialog.cpp:181-194 (OnClear)
+    // Clear the selection
+    long index = m_idc_hierarchy_list->GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
+    if (index != -1) {
+        m_idc_hierarchy_list->SetItemState(index, 0, wxLIST_STATE_SELECTED);
+    }
+    m_idc_curr_obj->SetLabel("");
 }
 
 
@@ -77,7 +124,19 @@ bool BackgroundObject::TransferDataToWindow()
 
 bool BackgroundObject::TransferDataFromWindow()
 {
-    // Selected object is managed by the hierarchy list control
-    // Calling code retrieves selection from the list directly
+    // MFC: BackgroundObjectDialog.cpp:199-221 (OnOK)
+    W3DViewDoc *doc = GetCurrentDocument_wx();
+    if (doc) {
+        // Get selected item index
+        long index = m_idc_hierarchy_list->GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
+        if (index != -1) {
+            // Get item name and set as background object
+            wxString itemName = m_idc_hierarchy_list->GetItemText(index);
+            doc->SetBackgroundObject(itemName);
+        } else {
+            // No selection - clear background object
+            doc->SetBackgroundObject(wxEmptyString);
+        }
+    }
     return true;
 }

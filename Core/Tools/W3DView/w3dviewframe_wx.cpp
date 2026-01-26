@@ -1981,9 +1981,8 @@ void W3DViewFrame::OnBackgroundBmp(wxCommandEvent &WXUNUSED(event))
 
 void W3DViewFrame::OnBackgroundObject(wxCommandEvent &WXUNUSED(event))
 {
-    // TODO(MFC-Verify): Verify BackgroundObject dialog matches MFC exactly
-    // Dialog appears implemented but needs visual/behavioral verification
-    // MFC Reference: BackgroundObject.cpp (CBackgroundObjectDialog)
+    // MFC: MainFrm.cpp (OnBackgroundObject - shows dialog)
+    // Dialog: BackgroundObjectDialog.cpp:44-221 (OnInitDialog, OnItemChangedHierarchyList, OnClear, OnOK)
     BackgroundObject dialog(this);
     dialog.ShowModal();
 }

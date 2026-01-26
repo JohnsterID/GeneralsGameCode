@@ -67,6 +67,7 @@ W3DViewDoc::W3DViewDoc()
     , m_bCompress_channel_Q(false)  // Channel Q compression disabled by default (MFC: W3DViewDoc.cpp)
     , m_nChannelQnBytes(2)  // Q bytes default to 2 (16-bit) (MFC: W3DViewDoc.cpp)
     , m_backgroundBMP(nullptr)  // Background bitmap (MFC: m_pCBackgroundBMP)
+    , m_backgroundObject(nullptr)  // Background object (MFC: m_pCBackgroundObject)
 {
     // MFC Reference: W3DViewDoc.cpp:121
     // Loads auto reset setting from registry: GetProfileInt("Config", "ResetCamera", 1)
@@ -493,5 +494,31 @@ void W3DViewDoc::SetBackgroundBMP(const wxString& filename)
     //   - 2D rendering support in graphics view
     
     m_backgroundBMPFilename = filename;
+    Modify(true);  // Mark document as modified
+}
+
+// MFC: W3DViewDoc.cpp:2943-3006 (SetBackgroundObject)
+void W3DViewDoc::SetBackgroundObject(const wxString& objectName)
+{
+    // TODO(MFC-Infrastructure): Full implementation requires background object scene support
+    // MFC uses separate scene/camera system for background objects:
+    //   - m_pCBackObjectScene (SceneClass*) - separate scene for background rendering
+    //   - m_pCBackObjectCamera (CameraClass*) - separate camera for background
+    // MFC implementation:
+    //   1. Remove old object: m_pCBackgroundObject->Remove(), Release_Ref()
+    //   2. Create object: WW3DAssetManager::Get_Instance()->Create_Render_Obj(objectName)
+    //   3. Position object: Set_Position(Vector3(0, 0, 0))
+    //   4. Setup camera: Set_Transform, Set_Position, Set_Clip_Planes
+    //   5. Add to scene: m_pCBackObjectScene->Add_Render_Object(m_pCBackgroundObject)
+    //   6. Store name: m_stringBackgroundObject = objectName
+    //
+    // Current implementation: Store object name only (dialog can save/load setting)
+    // Full implementation requires:
+    //   - SceneClass *m_backgroundObjectScene member
+    //   - CameraClass *m_backgroundObjectCamera member
+    //   - Background scene creation/management in document lifecycle
+    //   - Background rendering support in graphics view
+    
+    m_backgroundObjectName = objectName;
     Modify(true);  // Mark document as modified
 }

@@ -166,6 +166,10 @@ public:
     // Background BMP accessors (MFC: W3DViewDoc.h:231,244, W3DViewDoc.cpp:3008-3059)
     const wxString& GetBackgroundBMP() const { return m_backgroundBMPFilename; }
     void SetBackgroundBMP(const wxString& filename);
+    
+    // Background Object accessors (MFC: W3DViewDoc.h:228,243, W3DViewDoc.cpp:2943-3006)
+    const wxString& GetBackgroundObjectName() const { return m_backgroundObjectName; }
+    void SetBackgroundObject(const wxString& objectName);
 
 private:
     // Scene and object data
@@ -205,6 +209,11 @@ private:
     // Background BMP state (MFC: m_pCBackgroundBMP, m_stringBackgroundBMP)
     Bitmap2DObjClass *m_backgroundBMP;    // Background bitmap texture object
     wxString m_backgroundBMPFilename;     // Background bitmap filename
+    
+    // Background Object state (MFC: m_pCBackgroundObject, m_stringBackgroundObject)
+    // MFC also has: m_pCBackObjectScene, m_pCBackObjectCamera
+    RenderObjClass *m_backgroundObject;   // Background object
+    wxString m_backgroundObjectName;      // Background object name
 
     wxDECLARE_DYNAMIC_CLASS(W3DViewDoc);
 };

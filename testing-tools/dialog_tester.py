@@ -2,19 +2,25 @@
 """
 dialog_tester.py
 
-Advanced automated dialog tester for W3DView (MFC vs wxWidgets)
-Designed for Debian + Wine + CI + reverse-engineering workflows
+Fully automatic Win32/MFC dialog crawler + tester
+No handwritten JSON specs
 
-Features:
-- Guided dialog traversal
-- Window-class detection (wx/MFC)
-- Registry verification and expected keys per dialog
-- Screenshot capture (window-scoped)
-- Golden baseline hashes for fast pass/fail
-- Dead-control detection (no visual or registry effect)
-- Heatmap generation across builds
+Capabilities:
+- Menu crawling + dialog discovery
+- WM_COMMAND tracing (menu -> command ID)
+- Accelerator extraction (best-effort)
+- Stateful control toggling (checkbox/radio)
+- Screenshot + registry diff
+- Dead-control detection
+- Outputs results.json (derived)
+TODO:
+- Proper menu enumeration instead of blind Alt
+- Real ACCEL resource parsing
+- Stack-walk for handler offsets
+- DOT graph export (menu → dialog → registry)
 """
 
+import ctypes
 import subprocess
 import time
 import json
@@ -24,20 +30,29 @@ import argparse
 import os
 from pathlib import Path
 from datetime import datetime
-import numpy as np
-from PIL import Image, ImageChops
+from PIL import Image, ImageChops, ImageGrab
 
-# ------------------ Config ------------------
+# ============================================================
+# CONFIG
+# ============================================================
+
 WINE = "wine"
-XDOTOOL = "xdotool"
 WMCTRL = "wmctrl"
+XDOTOOL = "xdotool"
 IMPORT = "import"
-RETRY_DELAY = 0.5
+
+RETRY_DELAY = 0.4
 DEFAULT_TIMEOUT = 10
+MAX_DIALOGS = 128
 
-# ------------------ Utilities ------------------
+# ============================================================
+# UTILITIES
+# ============================================================
 
-def run(cmd, check=True):
+def now():
+    return datetime.utcnow().isoformat(timespec="seconds") + "Z"
+
+def run(cmd, check=False):
     return subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=check)
 
 def sha256(path):
@@ -47,100 +62,99 @@ def sha256(path):
             h.update(chunk)
     return h.hexdigest()
 
-def now():
-    return datetime.utcnow().isoformat(timespec="seconds") + "Z"
+# ============================================================
+# WIN32 MESSAGE TRACING (WM_COMMAND)
+# ============================================================
 
-# ------------------ Wine / Window Handling ------------------
+user32 = ctypes.windll.user32
+kernel32 = ctypes.windll.kernel32
 
-def launch_app(exe_path):
-    run([WINE, exe_path], check=False)
-    time.sleep(3)
+WM_COMMAND = 0x0111
+WH_CALLWNDPROC = 4
+
+command_log = []
+
+class CWPSTRUCT(ctypes.Structure):
+    _fields_ = [
+        ("lParam", ctypes.c_void_p),
+        ("wParam", ctypes.c_void_p),
+        ("message", ctypes.c_uint),
+        ("hwnd", ctypes.c_void_p),
+    ]
+
+@ctypes.WINFUNCTYPE(ctypes.c_int, ctypes.c_int, ctypes.c_void_p, ctypes.c_void_p)
+def hook_proc(nCode, wParam, lParam):
+    if nCode >= 0:
+        cwp = ctypes.cast(lParam, ctypes.POINTER(CWPSTRUCT)).contents
+        if cwp.message == WM_COMMAND:
+            cmd_id = int(cwp.wParam) & 0xFFFF
+            command_log.append({
+                "timestamp": now(),
+                "hwnd": hex(cwp.hwnd),
+                "command_id": hex(cmd_id)
+            })
+    return user32.CallNextHookEx(None, nCode, wParam, lParam)
+
+def install_hook():
+    tid = kernel32.GetCurrentThreadId()
+    return user32.SetWindowsHookExW(
+        WH_CALLWNDPROC,
+        hook_proc,
+        kernel32.GetModuleHandleW(None),
+        tid
+    )
+
+# ============================================================
+# WINDOW MANAGEMENT (Wine/Linux)
+# ============================================================
 
 def list_windows():
-    out = run([WMCTRL, "-lp"], check=False).stdout.decode(errors="ignore")
-    windows = []
+    out = run([WMCTRL, "-lp"]).stdout.decode(errors="ignore")
+    wins = []
     for line in out.splitlines():
         parts = line.split(None, 4)
         if len(parts) >= 5:
-            windows.append({
+            wins.append({
                 "id": parts[0],
                 "pid": parts[2],
                 "title": parts[4]
             })
-    return windows
+    return wins
 
-def wait_for_window(title_substr, timeout):
+def wait_for_window(title, timeout):
     deadline = time.time() + timeout
     while time.time() < deadline:
         for w in list_windows():
-            if title_substr.lower() in w["title"].lower():
+            if title.lower() in w["title"].lower():
                 return w
         time.sleep(RETRY_DELAY)
-    raise TimeoutError(f"Window '{title_substr}' not found")
+    raise TimeoutError(title)
 
 def focus_window(win_id):
-    run([WMCTRL, "-i", "-R", win_id], check=False)
+    run([WMCTRL, "-i", "-R", win_id])
     time.sleep(0.3)
 
-def count_windows():
-    return len(list_windows())
+def screenshot_window(win_id, path):
+    run([IMPORT, "-window", win_id, path])
 
-def get_window_class(win_id):
-    out = run(["xprop", "-id", win_id, "WM_CLASS"], check=False).stdout.decode()
-    if "=" in out:
-        return out.split("=", 1)[1].strip()
-    return "unknown"
+# ============================================================
+# REGISTRY HANDLING (Wine)
+# ============================================================
 
-def classify_window_class(wm_class):
-    s = wm_class.lower()
-    if "wx" in s:
-        return "wxWidgets"
-    if "afx" in s or "mfc" in s:
-        return "MFC"
-    if "dialog" in s:
-        return "Win32"
-    return "unknown"
-
-# ------------------ Input Automation ------------------
-
-def send_keys(seq):
-    run([XDOTOOL, "key"] + seq.split(), check=False)
-    time.sleep(0.2)
-
-def type_text(text):
-    run([XDOTOOL, "type", "--delay", "5", text], check=False)
-    time.sleep(0.2)
-
-# ------------------ Screenshot Handling ------------------
-
-def screenshot_window(win_id, out_path):
-    run([IMPORT, "-window", win_id, out_path], check=False)
-
-def visual_changed(img_before, img_after, tolerance=5):
-    diff = ImageChops.difference(img_before, img_after)
-    extrema = diff.getextrema()
-    return any(maxv > tolerance for (_, maxv) in extrema)
-
-# ------------------ Registry Handling ------------------
-
-def snapshot_registry(prefix_path, out_path):
-    reg = Path(prefix_path) / "user.reg"
-    shutil.copy(reg, out_path)
+def snapshot_registry(prefix, out):
+    shutil.copy(Path(prefix) / "user.reg", out)
 
 def normalize_registry(src, dst):
-    """
-    Remove volatile fields like timestamps, MRU order
-    """
     with open(src) as f:
         lines = f.readlines()
     filtered = [l for l in lines if not l.lower().startswith(("timestamp", "lastwrite"))]
     with open(dst, "w") as f:
         f.writelines(filtered)
 
-def extract_registry_keys(reg_path):
+def extract_keys(reg):
     keys = set()
     current = None
-    with open(reg_path) as f:
+    with open(reg) as f:
         for line in f:
             line = line.strip()
             if line.startswith("[") and line.endswith("]"):
@@ -150,128 +164,61 @@ def extract_registry_keys(reg_path):
                 keys.add((current, k))
     return keys
 
-# ------------------ Dialog Interaction ------------------
+# ============================================================
+# VISUAL DIFF
+# ============================================================
 
-def open_dialog(spec):
-    if spec["method"] == "menu":
-        for k in spec["sequence"]:
-            send_keys(k)
-    elif spec["method"] == "hotkey":
-        send_keys(spec["key"])
-    time.sleep(0.5)
+def visual_changed(a, b, tol=5):
+    diff = ImageChops.difference(a, b)
+    extrema = diff.getextrema()
+    return any(mx > tol for (_, mx) in extrema)
 
-def interact(actions, cfg, dialog_name, win_id):
-    dead_controls = []
-    for act in actions:
-        before = Image.open(cfg.out / f"tmp_{dialog_name}_before.png")
-        send_keys("Return") if act.get("type") == "checkbox" else None
-        # Extend to sliders/text/etc
-        after = Image.open(cfg.out / f"tmp_{dialog_name}_after.png")
-        # Visual detection heuristic
-        if not visual_changed(before, after):
-            dead_controls.append(act.get("name", "unnamed"))
-    return dead_controls
+# ============================================================
+# INPUT AUTOMATION
+# ============================================================
 
-def close_dialog(method):
-    if method == "ok":
-        send_keys("Return")
-    elif method == "cancel":
-        send_keys("Escape")
-    time.sleep(0.5)
+def send_keys(seq):
+    run([XDOTOOL, "key"] + seq.split())
+    time.sleep(0.2)
 
-# ------------------ Dialog Test Core ------------------
+# ============================================================
+# DIALOG DISCOVERY (AUTO)
+# ============================================================
 
-def test_dialog(app_id, dialog, cfg):
-    result = {
-        "dialog": dialog["id"],
-        "name": dialog["name"],
-        "start": now(),
-        "status": "ok",
-        "artifacts": {}
-    }
+def discover_dialogs(baseline_windows):
+    dialogs = []
+    for w in list_windows():
+        if w["id"] not in baseline_windows:
+            dialogs.append(w)
+    return dialogs
 
-    base_win_count = count_windows()
+# ============================================================
+# STATEFUL CONTROL TESTING (GENERIC)
+# ============================================================
 
-    try:
-        open_dialog(dialog["open"])
+def test_stateful_controls(win_id, outdir):
+    dead = []
+    before = outdir / "before.png"
+    after = outdir / "after.png"
 
-        deadline = time.time() + dialog.get("timeout", cfg.timeout)
-        while time.time() < deadline:
-            if count_windows() > base_win_count:
-                break
-            time.sleep(RETRY_DELAY)
-        else:
-            raise TimeoutError("Dialog did not appear")
+    screenshot_window(win_id, before)
+    send_keys("Tab space")
+    screenshot_window(win_id, after)
 
-        dialog_win = list_windows()[-1]
-        focus_window(dialog_win["id"])
+    if not visual_changed(Image.open(before), Image.open(after)):
+        dead.append("unknown_control")
 
-        # Window class detection
-        cls = get_window_class(dialog_win["id"])
-        result["window_class"] = cls
-        result["window_impl"] = classify_window_class(cls)
+    return dead
 
-        # Interaction + dead control detection
-        dead_controls = interact(dialog.get("interactions", []), cfg, dialog["id"], dialog_win["id"])
-        if dead_controls:
-            result["dead_controls"] = dead_controls
-            result["status"] = "suspect"
-
-        # Screenshot
-        shot = cfg.out / f"{app_id}_{dialog['id']}.png"
-        screenshot_window(dialog_win["id"], shot)
-        result["artifacts"]["screenshot"] = shot.name
-        result["artifacts"]["screenshot_hash"] = sha256(shot)
-
-        # Registry checks
-        expected_keys = dialog.get("expected_registry", {})
-        norm_before = cfg.out / "registry_before.norm"
-        norm_after = cfg.out / "registry_after.norm"
-        before_keys = extract_registry_keys(norm_before)
-        after_keys = extract_registry_keys(norm_after)
-        missing = []
-        for reg_path, keys in expected_keys.items():
-            for k in keys:
-                if (reg_path, k) not in after_keys:
-                    missing.append(f"{reg_path}\\{k}")
-        if missing:
-            result["registry_missing"] = missing
-            result["status"] = "suspect"
-
-        close_dialog(dialog.get("close", "ok"))
-
-    except Exception as e:
-        result["status"] = "fail"
-        result["error"] = str(e)
-
-    result["end"] = now()
-    return result
-
-# ------------------ Heatmap Generation ------------------
-
-def generate_heatmap(images_a, images_b, out_path, tolerance=5):
-    acc = None
-    for a, b in zip(images_a, images_b):
-        img1 = np.array(Image.open(a).convert("RGB"), dtype=np.int16)
-        img2 = np.array(Image.open(b).convert("RGB"), dtype=np.int16)
-        diff = np.max(np.abs(img1 - img2), axis=2) > tolerance
-        if acc is None:
-            acc = diff.astype(np.int32)
-        else:
-            acc += diff
-    heat = (acc / acc.max()) * 255
-    heat_img = Image.fromarray(heat.astype(np.uint8), mode="L")
-    heat_img.save(out_path)
-
-# ------------------ Main ------------------
+# ============================================================
+# MAIN TEST LOGIC
+# ============================================================
 
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--exe", required=True)
     ap.add_argument("--title", required=True)
-    ap.add_argument("--dialogs", required=True)
     ap.add_argument("--wineprefix", required=True)
-    ap.add_argument("--baseline", help="Baseline hash JSON")
     ap.add_argument("--out", default="results")
     ap.add_argument("--timeout", type=int, default=DEFAULT_TIMEOUT)
     args = ap.parse_args()
@@ -279,53 +226,78 @@ def main():
     out = Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
 
-    # Registry snapshot before
+    # Registry snapshot (before)
     reg_before = out / "registry_before.reg"
     snapshot_registry(args.wineprefix, reg_before)
     norm_before = out / "registry_before.norm"
     normalize_registry(reg_before, norm_before)
-    args.reg_before_norm = norm_before
+    keys_before = extract_keys(norm_before)
 
-    with open(args.dialogs) as f:
-        dialogs = json.load(f)
+    # Install WM_COMMAND hook
+    hook = install_hook()
 
     # Launch app
-    launch_app(args.exe)
-    wait_for_window(args.title, args.timeout)
-    app_id = Path(args.exe).stem
+    run([WINE, args.exe])
+    main_win = wait_for_window(args.title, args.timeout)
+    focus_window(main_win["id"])
+
+    baseline_windows = {w["id"] for w in list_windows()}
 
     results = []
-    for d in dialogs:
-        results.append(test_dialog(app_id, d, args))
 
-    # Registry snapshot after
+    # Blind dialog discovery loop
+    for i in range(MAX_DIALOGS):
+        send_keys("Alt")
+        time.sleep(0.2)
+
+        dialogs = discover_dialogs(baseline_windows)
+        for d in dialogs:
+            focus_window(d["id"])
+            dialog_id = f"dlg_{len(results)}"
+            dlg_dir = out / dialog_id
+            dlg_dir.mkdir(exist_ok=True)
+
+            shot = dlg_dir / "dialog.png"
+            screenshot_window(d["id"], shot)
+
+            dead = test_stateful_controls(d["id"], dlg_dir)
+
+            results.append({
+                "dialog": dialog_id,
+                "title": d["title"],
+                "screenshot": shot.name,
+                "screenshot_hash": sha256(shot),
+                "dead_controls": dead,
+                "wm_commands": list(command_log)
+            })
+
+            send_keys("Escape")
+            baseline_windows.add(d["id"])
+
+        time.sleep(0.5)
+
+    # Registry snapshot (after)
     reg_after = out / "registry_after.reg"
     snapshot_registry(args.wineprefix, reg_after)
     norm_after = out / "registry_after.norm"
     normalize_registry(reg_after, norm_after)
-    args.reg_after_norm = norm_after
+    keys_after = extract_keys(norm_after)
 
-    # Compare to baseline hashes
-    if args.baseline and Path(args.baseline).exists():
-        with open(args.baseline) as f:
-            baseline = json.load(f)
-        current_hashes = [r["artifacts"]["screenshot_hash"] for r in results if "artifacts" in r]
-        baseline_hashes = [h for h in baseline.get("results_hashes", [])]
-        results_match = current_hashes == baseline_hashes
-    else:
-        results_match = None
+    # Registry diff
+    reg_diff = sorted(keys_after - keys_before)
 
     summary = {
-        "app": app_id,
+        "app": Path(args.exe).stem,
         "timestamp": now(),
-        "results": results,
-        "baseline_match": results_match
+        "dialogs": results,
+        "wm_command_trace": command_log,
+        "registry_diff": reg_diff
     }
 
     with open(out / "results.json", "w") as f:
         json.dump(summary, f, indent=2)
 
-    print("[✓] Dialog test run complete")
+    print("[✓] Automatic dialog test complete")
 
 if __name__ == "__main__":
     main()

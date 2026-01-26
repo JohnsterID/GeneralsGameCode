@@ -3026,58 +3026,123 @@ void W3DViewFrame::OnUpdateEnableGammaCorrectionFile(wxUpdateUIEvent &event)
 
 void W3DViewFrame::OnSaveSettings(wxCommandEvent &WXUNUSED(event))
 {
-    // MFC: MainFrm.cpp:OnSaveSettings
+    // MFC Reference: MainFrm.cpp:3603-3609 (OnSaveSettings)
     // MFC ID: IDM_SAVE_SETTINGS (32796)
-    // Function: Save application settings to a file
+    // Function: Save application settings to INI file
     // Dialog: SaveSettings_wx.cpp (XRC-based, converted from MFC)
-    // TODO(MFC-Implement): Dialog UI exists, need to implement file save logic
-    //   Dialog shows:
-    //     - Checkboxes: Lighting, Background, Camera (select what to save)
-    //     - Filename edit + browse button
-    //   Need to implement in SaveSettings dialog:
-    //     1. File save dialog integration (browse button)
-    //     2. Write selected settings to file (when OK clicked)
-    //     3. File format: .cfg or .ini (investigate MFC format)
-    //     4. Settings to save: camera position, lighting state, background, etc.
-    //   MFC Reference: SaveSettingsDialog.cpp lines ~100-200
-    //   Impact: High - user workflow feature for saving/restoring work environment
+    //
+    // TODO(MFC-Implement): Implement settings save logic
+    //   BLOCKED BY: W3DViewDoc::SaveSettings() method not yet implemented
+    //
+    // MFC Implementation Flow:
+    //   1. Show SaveSettings dialog (MainFrm.cpp:3605-3606)
+    //   2. Dialog collects user preferences:
+    //      - Checkboxes: Lighting, Background, Camera (what to save)
+    //      - Filename text box + browse button (.dat file)
+    //   3. On OK, dialog calls (SaveSettingsDialog.cpp:209-227):
+    //      pCDoc->SaveSettings(filename, dwSettingsMask);
+    //
+    // Settings Mask Flags (SaveSettingsDialog.cpp):
+    //   - SAVE_SETTINGS_LIGHT = 0x1 (save lighting if checked)
+    //   - SAVE_SETTINGS_BACK = 0x2 (save background if checked)
+    //   - SAVE_SETTINGS_CAMERA = 0x4 (save camera if checked)
+    //
+    // W3DViewDoc::SaveSettings Implementation (W3DViewDoc.cpp:1793-1910):
+    //   Uses INIClass to write settings to file [Settings] section:
+    //   - If LIGHT flag: AmbientLightR/G/B, SceneLightR/G/B, orientation, distance, etc.
+    //   - If BACK flag: BackgroundColorR/G/B, BackgroundBmp, BackgroundObject
+    //   - If CAMERA flag: CameraX/Y/Z, CameraOriginX/Y/Z, CameraUpX/Y/Z
+    //
+    // REQUIRED INFRASTRUCTURE:
+    //   1. SaveSettings_wx dialog needs:
+    //      - Browse button handler (wxFileDialog with .dat filter)
+    //      - OK handler to extract checkbox states
+    //   2. W3DViewDoc::SaveSettings(filename, mask) method
+    //   3. INIClass integration (or wxFileConfig as alternative)
+    //
+    // COMPLEXITY: HIGH
+    //   - Dialog button wiring (browse button)
+    //   - File I/O with INI format (30+ keys)
+    //   - Scene/lighting/camera state extraction
+    //
+    // Impact: High - important workflow feature for saving work environment
+    // Priority: MEDIUM - companion to Load Settings
+    
     SaveSettings dialog(this);
     if (dialog.ShowModal() == wxID_OK) {
-        // TODO(MFC-Implement): Extract settings from dialog and save to file
-        //   Get filename from dialog: dialog.m_idc_filename_edit->GetValue()
-        //   Get checkboxes: dialog.m_idc_lighting_checkbox->GetValue(), etc.
-        //   Call save function with selected options
-        wxMessageBox("Settings save logic not yet implemented.\nDialog shown but file write pending.",
+        // TODO(MFC-Implement): Implement dialog logic
+        //   1. Wire up browse button to wxFileDialog
+        //   2. Extract checkbox states (lighting, background, camera)
+        //   3. Get filename from text control
+        //   4. Call W3DViewDoc::SaveSettings(filename, settingsMask)
+        //   5. SaveSettings writes INI file with selected sections
+        wxMessageBox("Settings save logic not yet implemented.\n\n"
+                     "Requires:\n"
+                     "- SaveSettings dialog browse button wiring\n"
+                     "- W3DViewDoc::SaveSettings(filename, mask) method\n\n"
+                     "See comprehensive TODO in code.",
                      "Feature Incomplete", wxOK | wxICON_INFORMATION, this);
     }
 }
 
 void W3DViewFrame::OnLoadSettings(wxCommandEvent &WXUNUSED(event))
 {
-    // MFC: MainFrm.cpp:OnLoadSettings
+    // MFC Reference: MainFrm.cpp:3616-3636 (OnLoadSettings)
     // MFC ID: IDM_LOAD_SETTINGS (32797)
-    // Function: Load application settings from a file
+    // Function: Load application settings from INI file
+    //
     // TODO(MFC-Implement): Implement settings load functionality
-    //   Show file open dialog with .cfg or .ini filter
-    //   wxFileDialog with wxFD_OPEN | wxFD_FILE_MUST_EXIST
-    //   Read settings file and apply to current session:
-    //     - Parse file format (investigate MFC format)
-    //     - Update camera settings (position, orientation, distance)
-    //     - Update lighting settings (ambient, scene light)
-    //     - Update background settings (color, bitmap, fog)
-    //     - Refresh UI to show loaded settings
-    //   MFC Reference: MainFrm.cpp OnLoadSettings (investigate implementation)
-    //   Impact: High - companion to Save Settings
+    //   BLOCKED BY: W3DViewDoc::LoadSettings() method not yet implemented
+    //
+    // MFC Implementation Flow (MainFrm.cpp:3616-3636):
+    //   1. Show file dialog:
+    //      - Default extension: ".dat"
+    //      - Filter: "Settings data files (*.dat)|*.dat||"
+    //      - Flags: OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT | OFN_EXPLORER
+    //   2. Call document method: pCDoc->LoadSettings(openFileDialog.GetPathName())
+    //
+    // W3DViewDoc::LoadSettings Implementation (W3DViewDoc.cpp:1910-2100+):
+    //   Uses INIClass to parse settings file with sections and keys:
+    //
+    //   [Settings] Section:
+    //     - AmbientLightR/G/B (float) - Ambient light color RGB
+    //     - SceneLightR/G/B (float) - Scene light color RGB
+    //     - SceneLightX/Y/Z/W (float) - Scene light orientation (quaternion)
+    //     - SceneLightDistance (float) - Distance from object center
+    //     - SceneLightIntensity (float) - Light intensity multiplier
+    //     - SceneLightAttenStart/End (float) - Attenuation range
+    //     - SceneLightAttenOn (bool) - Enable attenuation
+    //     - BackgroundColorR/G/B (float) - Background clear color RGB
+    //     - BackgroundBmp (string) - Background bitmap filename
+    //     - BackgroundObject (string) - Background object filename
+    //     - CameraX/Y/Z (float) - Camera position
+    //     - CameraOriginX/Y/Z (float) - Camera look-at point
+    //     - CameraUpX/Y/Z (float) - Camera up vector
+    //     - And more...
+    //
+    // REQUIRED INFRASTRUCTURE:
+    //   1. W3DViewDoc::LoadSettings(filename) - Main loading method
+    //   2. INIClass integration (or wxFileConfig as alternative)
+    //   3. Scene/lighting/camera access from document
+    //
+    // COMPLEXITY: HIGH
+    //   - Complex file parsing (30+ settings keys)
+    //   - Camera/lighting/background state management
+    //   - Coordinate transformations for light positioning
+    //
+    // Impact: High - important workflow feature for saving/restoring work environment
+    // Priority: MEDIUM - requires significant infrastructure
+    
     wxFileDialog dialog(this, "Load Settings", "", "",
-                       "Configuration files (*.cfg)|*.cfg|All files (*.*)|*.*",
+                       "Settings data files (*.dat)|*.dat|All files (*.*)|*.*",
                        wxFD_OPEN | wxFD_FILE_MUST_EXIST);
     
     if (dialog.ShowModal() == wxID_OK) {
         wxString filename = dialog.GetPath();
-        // TODO(MFC-Implement): Read and parse settings file, apply to application
-        //   1. Open and parse file (format investigation needed)
-        //   2. Extract settings values
-        //   3. Apply to camera, lighting, background
+        // TODO(MFC-Implement): Implement W3DViewDoc::LoadSettings(filename)
+        //   Parse INI file with sections: [Settings]
+        //   Apply values to scene (ambient light, scene light, background)
+        //   Apply values to camera (position, orientation, up vector)
         //   4. Refresh viewport/UI
         wxMessageBox(wxString::Format("Load Settings not yet implemented.\nSelected file: %s\nFile parsing and apply logic pending.",
                                       filename),
@@ -3087,17 +3152,46 @@ void W3DViewFrame::OnLoadSettings(wxCommandEvent &WXUNUSED(event))
 
 void W3DViewFrame::OnImportFacialAnims(wxCommandEvent &WXUNUSED(event))
 {
-    // MFC: MainFrm.cpp (need to investigate OnImportFacialAnims handler)
+    // MFC Reference: MainFrm.cpp:2090-2149 (OnImportFacialAnims)
     // MFC ID: IDM_IMPORT_FACIAL_ANIMS (32874)
-    // Function: Import facial animation data for character models
+    // Function: Import facial animation description files (.txt) for current hierarchy
+    //
     // TODO(MFC-Implement): Implement facial animation import
-    //   Show file open dialog with facial anim file filter
-    //   Parse facial animation file format (need to investigate format)
-    //   Apply facial animations to current character model
-    //   May involve bone mapping and animation channel setup
-    //   Impact: Medium - specialized feature for character animation
-    wxMessageBox("Import Facial Anims not yet implemented.\nSee TODO in OnImportFacialAnims.",
-                 "Feature Incomplete", wxOK | wxICON_INFORMATION, this);
+    //   BLOCKED BY: Multiple document/tree methods not yet implemented
+    //
+    // MFC Implementation Flow (MainFrm.cpp:2090-2149):
+    //   1. Get current hierarchy: const HTreeClass *htree = doc->Get_Current_HTree();
+    //   2. Show file dialog: 
+    //      - Filter: "Animation Description (*.txt)|*.txt||"
+    //      - Flags: OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT | OFN_ALLOWMULTISELECT
+    //   3. For each selected file:
+    //      - Call: doc->Import_Facial_Animation(htree->Get_Name(), filename);
+    //   4. Refresh asset tree:
+    //      - CDataTreeView *data_tree = doc->GetDataTreeView();
+    //      - data_tree->LoadAssetsIntoTree();
+    //
+    // REQUIRED INFRASTRUCTURE:
+    //   1. W3DViewDoc::Get_Current_HTree() - Returns currently selected hierarchy
+    //   2. W3DViewDoc::Import_Facial_Animation(htree_name, filename) - Imports anim file
+    //   3. W3DViewDoc::GetDataTreeView() - Returns tree control for refresh
+    //   4. W3DViewTreeCtrl::LoadAssetsIntoTree() - Refreshes tree with new assets
+    //
+    // OnUpdateImportFacialAnims (MainFrm.cpp:2158-2173):
+    //   - Enables only if current hierarchy exists: pCmdUI->Enable(htree != nullptr)
+    //
+    // COMPLEXITY: HIGH
+    //   - Needs hierarchy selection tracking (requires DataTreeView)
+    //   - Needs facial animation import logic (W3D animation parsing)
+    //   - Needs asset tree refresh
+    //
+    // Impact: Medium - specialized feature for character facial animation
+    // Priority: LOW - complex infrastructure dependency
+    wxMessageBox("Import Facial Anims not yet implemented.\n\n"
+                 "Requires:\n"
+                 "- Document methods: Get_Current_HTree(), Import_Facial_Animation()\n"
+                 "- DataTreeView integration for asset refresh\n\n"
+                 "See comprehensive TODO in code.",
+                 "Feature Blocked", wxOK | wxICON_INFORMATION, this);
 }
 
 void W3DViewFrame::OnTexturePathFile(wxCommandEvent &WXUNUSED(event))

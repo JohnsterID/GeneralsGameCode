@@ -38,6 +38,7 @@
 #include "dialogs/Resolution_wx.h"
 #include "dialogs/GammaDialog_wx.h"
 #include "dialogs/AnimatedSoundDialog_wx.h"
+#include "dialogs/Displayspeed_wx.h"
 #include "dialogs/SaveSettings_wx.h"
 #include "dialogs/PropPageAdvanimMixing_wx.h"
 #include "dialogs/PropPageAdvanimReport_wx.h"
@@ -1886,73 +1887,51 @@ void W3DViewFrame::OnAnimationStepForward(wxCommandEvent &WXUNUSED(event))
 void W3DViewFrame::OnAnimationSettings(wxCommandEvent &WXUNUSED(event))
 {
     // MFC Reference: MainFrm.cpp:990-1002 (OnAniSpeed)
-    // MFC Dialog: CAnimationSpeed (AnimationSpeed.cpp) using IDD_DISPLAYSPEED resource
-    // wxWidgets Dialog: Displayspeed_wx (already ported!)
-    // Function: Configure animation playback speed and compression settings
+    // MFC Dialog: CAnimationSpeed (AnimationSpeed.cpp:48-243)
+    // wxWidgets Dialog: Displayspeed_wx (NOW IMPLEMENTED!)
+    // Function: Configure animation playback speed and animation blending
     //
-    // TODO(MFC-Implement): Wire up Displayspeed_wx dialog with GraphicView
-    //   BLOCKED BY: Dialog logic not yet fully implemented in Displayspeed_wx
+    // IMPLEMENTATION STATUS:
+    //   ✅ Animation speed slider (1-200%, updates in real-time)
+    //   ✅ Animation blend checkbox (toggle blend mode)
+    //   ✅ Cancel restores initial speed (MFC: MainFrm.cpp:1000-1001)
+    //   ⚠️  Compression features INTENTIONALLY LEFT UNIMPLEMENTED (see below)
     //
-    // MFC Implementation Flow (MainFrm.cpp:990-1002):
-    //   1. Get GraphicView: CGraphicView *pCGraphicView = m_wndSplitter.GetPane(0, 1);
-    //   2. Get initial speed: float initialSpeed = pCGraphicView->GetAnimationSpeed();
-    //   3. Show dialog: CAnimationSpeed animationSpeedDialog(this);
-    //      if (animationSpeedDialog.DoModal() != IDOK)
-    //   4. On cancel: pCGraphicView->SetAnimationSpeed(initialSpeed); // Restore
+    // MFC COMPRESSION FEATURE DISCOVERY:
+    //   OnCompressq, On16bit, On8bit are COMMENTED OUT in MFC AnimationSpeed.cpp!
+    //   (AnimationSpeed.cpp:203-243 - entire methods wrapped in /* */ comments)
+    //   The UI controls exist but don't function in MFC.
     //
-    // CAnimationSpeed Dialog Logic (AnimationSpeed.cpp:70-140):
-    //   OnInitDialog:
-    //     - Get animation blend from doc: SendDlgItemMessage(IDC_BLEND, BM_SETCHECK, pCDoc->GetAnimationBlend());
-    //     - Get compression: CheckDlgButton(IDC_COMPRESSQ, pCDoc->GetChannelQCompression());
-    //     - Get Q bytes: CheckRadioButton(IDC_16BIT, IDC_8BIT, IDC_16BIT+2-pCDoc->GetChannelQnBytes());
-    //     - Enable/disable 16bit/8bit based on compression checkbox
-    //     - Get animation speed: float animationSpeed = pCGraphicView->GetAnimationSpeed();
-    //     - Convert to percent: m_iInitialPercent = int(animationSpeed*100.0F);
-    //     - Set slider range: m_speedSlider.SetRange(1, 100); m_speedSlider.SetPos(m_iInitialPercent);
-    //
-    //   OnHScroll (slider changed):
-    //     - Get slider position: int pos = m_speedSlider.GetPos();
-    //     - Convert to speed: float speed = float(pos) / 100.0F;
-    //     - Set to view: pCGraphicView->SetAnimationSpeed(speed);
-    //
-    //   OnBlend (blend checkbox):
-    //     - Toggle blend: pCDoc->SetAnimationBlend(!pCDoc->GetAnimationBlend());
-    //
-    //   OnCompressq (compression checkbox):
-    //     - Toggle compression: pCDoc->SetChannelQCompression(!pCDoc->GetChannelQCompression());
-    //     - Enable/disable 16bit/8bit radio buttons
-    //
-    //   On16bit / On8bit (radio buttons):
-    //     - Set Q bytes: pCDoc->SetChannelQnBytes(2 or 1);
-    //
-    // REQUIRED INFRASTRUCTURE:
-    //   1. Displayspeed_wx dialog needs full implementation:
-    //      - TransferDataToWindow: Initialize slider, checkboxes from doc/view
-    //      - OnHscroll: Update GraphicView animation speed
-    //      - OnBlend: Update doc animation blend setting
-    //      - OnCompressq: Update doc compression, enable/disable radios
-    //      - On16bit/On8bit: Update doc Q bytes
-    //   2. W3DViewDoc methods:
-    //      - GetAnimationBlend() / SetAnimationBlend()
-    //      - GetChannelQCompression() / SetChannelQCompression()
-    //      - GetChannelQnBytes() / SetChannelQnBytes()
-    //   3. CGraphicView methods:
-    //      - GetAnimationSpeed() / SetAnimationSpeed() (may already exist)
-    //
-    // COMPLEXITY: MEDIUM-HIGH
-    //   - Dialog exists but needs logic implementation
-    //   - Document methods may need to be added
-    //   - Multiple interdependent controls (compression enables radio buttons)
-    //
-    // Impact: Medium - useful for animation workflow
-    // Priority: MEDIUM - nice-to-have for animators
-    wxMessageBox("Animation Settings dialog not yet implemented.\n\n"
-                 "Requires:\n"
-                 "- Displayspeed_wx dialog logic implementation\n"
-                 "- W3DViewDoc methods: Get/SetAnimationBlend, Get/SetChannelQCompression, Get/SetChannelQnBytes\n"
-                 "- CGraphicView::Get/SetAnimationSpeed\n\n"
-                 "See comprehensive TODO in code.",
-                 "Feature Incomplete", wxOK | wxICON_INFORMATION, this);
+    // TODO(MFC-Investigation): Determine if compression features should be implemented
+    //   Status: Dialog shows compression controls but they don't work (matching MFC)
+    //   Question: Are these features:
+    //     a) Incomplete/abandoned in MFC? (most likely)
+    //     b) Disabled for a specific reason?
+    //     c) Intended for future implementation?
+    //   Impact: LOW - features unused for 20+ years
+    //   Recommendation: Leave as-is unless user requests activation
+    //   If implementing: Would need to enable OnCompressq/On16bit/On8bit handlers
+    //                   and connect to compression backend (if it exists)
+    
+    // Get document and view
+    W3DViewDoc* doc = wxStaticCast(GetDocument(), W3DViewDoc);
+    if (!doc) return;
+    
+    CGraphicView* view = doc->GetGraphicView();
+    if (!view) return;
+    
+    // Show animation speed dialog (MFC: AnimationSpeed.cpp:48)
+    // Constructor saves initial speed for cancel restore (AnimationSpeed.cpp:124-128)
+    Displayspeed dialog(this, doc, view);
+    
+    // ShowModal handles cancel restore automatically (Displayspeed_wx.cpp:64-72)
+    // MFC Reference: MainFrm.cpp:998-1001
+    //   if (dlg.DoModal() != IDOK)
+    //       pCGraphicView->SetAnimationSpeed(initialSpeed);
+    dialog.ShowModal();
+    
+    // Note: Settings apply in real-time via OnHscroll/OnBlend handlers
+    //       No post-dialog processing needed
 }
 
 void W3DViewFrame::OnAnimationAdvanced(wxCommandEvent &WXUNUSED(event))

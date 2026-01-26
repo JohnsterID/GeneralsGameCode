@@ -73,11 +73,15 @@ protected:
     wxCheckBox *m_idc_8bit;
 };
 
+// Forward declarations
+class W3DViewDoc;
+class CGraphicView;
+
 // Derived class for event handlers and custom logic
 class Displayspeed : public DisplayspeedBase
 {
 public:
-    Displayspeed(wxWindow *parent);
+    Displayspeed(wxWindow *parent, W3DViewDoc *doc, CGraphicView *view);
 
 protected:
     // Override for data transfer if needed
@@ -95,10 +99,17 @@ private:
     bool TransferDataFromWindow() override;
 
     // Event handlers (Phase 2)
-void OnHscroll(wxCommandEvent &event);  // Horizontal scroll (slider)
+    void OnHscroll(wxCommandEvent &event);  // Horizontal scroll (slider)
     void OnDestroy(wxWindowDestroyEvent &event);  // Window destruction
     void OnBlend(wxCommandEvent &event);  // Button/Checkbox click
     void OnCompressq(wxCommandEvent &event);  // Button/Checkbox click
     void On16bit(wxCommandEvent &event);  // Button/Checkbox click
     void On8bit(wxCommandEvent &event);  // Button/Checkbox click
+    
+    // Document and view references (not owned)
+    W3DViewDoc *m_doc;
+    CGraphicView *m_view;
+    
+    // Initial animation speed (for restore on cancel, MFC: m_iInitialPercent)
+    float m_initialSpeed;
 };

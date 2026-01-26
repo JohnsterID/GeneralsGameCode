@@ -63,6 +63,9 @@ W3DViewDoc::W3DViewDoc()
     , m_animTime(0.0f)
     , m_bAnimateCamera(false)  // Camera animation disabled by default
     , m_bAutoCameraReset(true)  // Auto reset enabled by default (MFC: W3DViewDoc.cpp:108)
+    , m_bAnimBlend(true)  // Animation blending enabled by default (MFC: W3DViewDoc.cpp:106)
+    , m_bCompress_channel_Q(false)  // Channel Q compression disabled by default (MFC: W3DViewDoc.cpp)
+    , m_nChannelQnBytes(2)  // Q bytes default to 2 (16-bit) (MFC: W3DViewDoc.cpp)
 {
     // MFC Reference: W3DViewDoc.cpp:121
     // Loads auto reset setting from registry: GetProfileInt("Config", "ResetCamera", 1)

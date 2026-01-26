@@ -112,6 +112,22 @@ public:
     void Animate_Camera(bool animate);
     bool Is_Camera_Animated() const { return m_bAnimateCamera; }
     
+    // Animation blend control (MFC: W3DViewDoc.h:151,155)
+    // Controls whether animation blending is enabled for smooth transitions
+    void SetAnimationBlend(bool blend) { m_bAnimBlend = blend; }
+    bool GetAnimationBlend() const { return m_bAnimBlend; }
+    
+    // Channel Q compression settings (MFC: W3DViewDoc.h:108,152-154)
+    // NOTE: These methods exist in MFC but are NOT USED in AnimationSpeed dialog
+    //       (OnCompressq, On16bit, On8bit are commented out in AnimationSpeed.cpp)
+    // TODO(MFC-Match): Investigate if these are used elsewhere in codebase
+    //   If compression features are never used, consider removing UI controls
+    //   If used elsewhere, implement compression logic when needed
+    void SetChannelQCompression(bool compress) { m_bCompress_channel_Q = compress; }
+    bool GetChannelQCompression() const { return m_bCompress_channel_Q; }
+    int GetChannelQnBytes() const { return m_nChannelQnBytes; }
+    void SetChannelQnBytes(int n_bytes) { m_nChannelQnBytes = n_bytes; }
+    
     // Camera auto reset control (MFC: W3DViewDoc.h:164-165, MainFrm.cpp:2564-2588)
     // Controls whether camera resets automatically when loading new objects
     // TODO(MFC-Implementation): Use m_bAutoCameraReset in DisplayObject/Display_Emitter methods
@@ -166,6 +182,14 @@ private:
     
     // Camera auto reset state (MFC: m_bAutoCameraReset, W3DViewDoc.h:316)
     bool m_bAutoCameraReset;         // Auto reset camera on object load
+    
+    // Animation blend state (MFC: m_bAnimBlend, W3DViewDoc.h:314)
+    bool m_bAnimBlend;               // Animation blending enabled (default: true)
+    
+    // Channel Q compression state (MFC: m_bCompress_channel_Q, m_nChannelQnBytes)
+    // NOTE: These exist in MFC but are unused in AnimationSpeed dialog
+    bool m_bCompress_channel_Q;      // Channel Q compression enabled
+    int m_nChannelQnBytes;           // Q bytes (1 or 2)
 
     wxDECLARE_DYNAMIC_CLASS(W3DViewDoc);
 };

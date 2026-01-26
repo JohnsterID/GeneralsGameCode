@@ -1975,7 +1975,6 @@ void W3DViewFrame::OnBackgroundBmp(wxCommandEvent &WXUNUSED(event))
 {
     // MFC: MainFrm.cpp (OnBackgroundBmp - shows dialog)
     // Dialog: BackgroundBMPDialog.cpp:38-92 (OnInitDialog, OnOK)
-    // NOTE: Full BMP display requires 2D scene infrastructure (see W3DViewDoc::SetBackgroundBMP)
     BackgroundBmp dialog(this);
     dialog.ShowModal();
 }
@@ -2916,9 +2915,8 @@ void W3DViewFrame::OnUpdateEnableGammaCorrection(wxUpdateUIEvent &event)
 
 void W3DViewFrame::OnGammaSettings(wxCommandEvent &WXUNUSED(event))
 {
-    // TODO MFC: MainFrm.cpp:4441-4451 (OnSetGamma - shows dialog if gamma enabled)
-    // TODO Dialog: GammaDialog.cpp:42-96 (OnInitDialog, OnOK, OnReleasedcaptureGammaSlider)
-    // TODO NOTE: DX8Wrapper::Set_Gamma() calls blocked by dx8wrapper.h include issues
+    // MFC: MainFrm.cpp:4441-4451 (OnSetGamma - shows dialog if gamma enabled)
+    // Dialog: GammaDialog.cpp:42-96 (OnInitDialog, OnOK, OnReleasedcaptureGammaSlider)
     wxConfigBase *config = wxConfigBase::Get();
     long enableGamma = config->Read("/Config/EnableGamma", 0L);
     

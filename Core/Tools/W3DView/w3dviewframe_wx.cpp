@@ -438,9 +438,31 @@ void W3DViewFrame::InitializeApplicationSettings()
         WW3D::Set_Gamma(1.0f, 0.0f, 1.0f);
     }
     
+    // 3. Restore Polygon Sorting setting
+    //    MFC: Registry key "Config\EnableSorting" (default: 1/true)
+    //    MFC Ref: MainFrm.cpp OnCreate - GetProfileInt("Config", "EnableSorting", 1)
+    long enableSorting = config->Read("/Config/EnableSorting", 1L);  // Default: enabled
+    WW3D::Enable_Sorting(enableSorting != 0);
+    
+    // 4. Restore N-Patches Subdivision Level
+    //    MFC: Registry key "Config\NPatchesSubdivision" (default: 4)
+    //    Range: 1-8 subdivision levels
+    //    MFC Ref: MainFrm.cpp OnCreate - GetProfileInt("Config", "NPatchesSubdivision", 4)
+    long subdivisionLevel = config->Read("/Config/NPatchesSubdivision", 4L);
+    if (subdivisionLevel < 1) subdivisionLevel = 1;
+    if (subdivisionLevel > 8) subdivisionLevel = 8;
+    WW3D::Set_NPatches_Level(static_cast<unsigned int>(subdivisionLevel));
+    
+    // 5. Restore N-Patches Gap Filling setting
+    //    MFC: Registry key "Config\NPatchesGapFilling" (default: 0/false)
+    //    MFC Ref: MainFrm.cpp OnCreate - GetProfileInt("Config", "NPatchesGapFilling", 0)
+    long gapFilling = config->Read("/Config/NPatchesGapFilling", 0L);  // Default: disabled
+    WW3D::Set_NPatches_Gap_Filling_Mode(gapFilling != 0 ? 
+        WW3D::NPATCHES_GAP_FILLING_ENABLED : WW3D::NPATCHES_GAP_FILLING_DISABLED);
+    
     // Note: Status bar visibility is restored in InitStatusBar()
     // Note: Camera reset on load is applied when files are loaded (see OnFileOpen)
-    // Note: Other settings (polygon sorting, wireframe) are per-document, not global
+    // Note: Wireframe mode is per-document (not global), no persistence needed
 }
 
 wxDocument* W3DViewFrame::GetDocument() const
@@ -3286,36 +3308,87 @@ void W3DViewFrame::OnCreateEmitter(wxCommandEvent &WXUNUSED(event))
 
 void W3DViewFrame::OnScaleEmitter(wxCommandEvent &WXUNUSED(event))
 {
-    // MFC: MainFrm.cpp (need to investigate OnScaleEmitter handler)
+    // MFC Reference: MainFrm.cpp:2046-2063 (OnScaleEmitter)
     // MFC ID: IDM_SCALE_EMITTER (32884)
-    // Function: Scale selected emitter properties (size, rate, etc.)
-    // TODO(MFC-Implement): Implement emitter scaling dialog
-    //   Show dialog with scale factors for:
-    //     - Emission rate
-    //     - Particle size
-    //     - Velocity
-    //     - Lifetime
-    //   Apply scaling to selected emitter object
-    //   May need to validate emitter is selected first
-    //   Impact: Medium - utility for quick emitter adjustments
-    wxMessageBox("Scale Emitter not yet implemented.\nNeeds dialog for scaling emitter properties.",
+    // Function: Scale all properties of selected particle emitter by a single factor
+    //
+    // TODO(MFC-Implement): Implement emitter scaling
+    //   BLOCKED BY: ScaleDialog_wx not yet ported
+    //
+    // MFC Implementation Flow (MainFrm.cpp:2046-2063):
+    //   1. Get document: CW3DViewDoc *pdoc = GetActiveDocument();
+    //   2. Show scale dialog:
+    //      ScaleDialogClass dlg(1.0, this, "Enter the scaling factor you want to apply to the current particle emitter");
+    //      if (dlg.DoModal() == IDCANCEL) return;
+    //      float scale = dlg.Get_Scale();
+    //   3. Get displayed emitter:
+    //      ParticleEmitterClass *emitter = (ParticleEmitterClass *)pdoc->GetDisplayedObject();
+    //   4. Scale emitter:
+    //      emitter->Scale(scale);
+    //
+    // REQUIRED INFRASTRUCTURE:
+    //   1. ScaleDialog_wx - Simple dialog with:
+    //      - Float text input for scale factor (default: 1.0)
+    //      - Prompt text (passed to constructor)
+    //      - Get_Scale() method to retrieve value
+    //      - OK/Cancel buttons
+    //   2. W3DViewDoc::GetDisplayedObject() - Returns currently displayed render object
+    //
+    // COMPLEXITY: LOW
+    //   - Simple dialog (single float input)
+    //   - Single API call: emitter->Scale(factor)
+    //
+    // Impact: Medium - useful for quickly adjusting emitter scale
+    // Priority: LOW - nice-to-have utility feature
+    wxMessageBox("Scale Emitter not yet implemented.\n\n"
+                 "Requires:\n"
+                 "- ScaleDialog_wx (simple float input dialog)\n"
+                 "- Calls ParticleEmitterClass::Scale(factor)\n\n"
+                 "See comprehensive TODO in code.",
                  "Feature Incomplete", wxOK | wxICON_INFORMATION, this);
 }
 
 void W3DViewFrame::OnEditEmitter(wxCommandEvent &WXUNUSED(event))
 {
-    // MFC: MainFrm.cpp (same handler as Object->Properties when emitter selected)
+    // MFC Reference: MainFrm.cpp:2070-2088 (OnEditEmitter)
     // MFC ID: IDM_EDIT_EMITTER (32809)
-    // Function: Edit properties of selected emitter
-    // TODO(MFC-Implement): Implement emitter properties dialog
-    //   MFC Reference: EmitterInstancePropPageClass_wx.cpp already exists
-    //   Check if emitter is currently selected
-    //   Show EmitterInstancePropPageClass dialog
-    //   Dialog includes: Name, Emission Rate, Particle Life, Velocity, Size, Color, etc.
-    //   Apply changes to selected emitter in scene
-    //   Impact: High - primary editing interface for emitters
-    //   Note: Keyboard shortcut is Enter (same as Object->Properties)
-    wxMessageBox("Edit Emitter not yet implemented.\nEmitterInstancePropPageClass exists but integration needed.",
+    // Function: Edit properties of currently displayed particle emitter
+    // Note: Keyboard shortcut is Enter (same as Object->Properties)
+    //
+    // TODO(MFC-Implement): Implement emitter property sheet
+    //   BLOCKED BY: EmitterPropertySheet_wx wrapper not yet created
+    //
+    // MFC Implementation Flow (MainFrm.cpp:2070-2088):
+    //   1. Get document: CW3DViewDoc *pdoc = GetActiveDocument();
+    //   2. Get displayed emitter:
+    //      ParticleEmitterClass *emitter = (ParticleEmitterClass *)pdoc->GetDisplayedObject();
+    //   3. Create emitter instance list:
+    //      EmitterInstanceListClass *instance_list = new EmitterInstanceListClass;
+    //      instance_list->Add_Emitter(emitter);
+    //   4. Show property sheet:
+    //      EmitterPropertySheetClass prop_sheet(instance_list, IDS_EMITTER_PROP_TITLE, this);
+    //      prop_sheet.DoModal();
+    //
+    // REQUIRED INFRASTRUCTURE:
+    //   1. EmitterPropertySheet_wx wrapper - wxPropertySheetDialog containing:
+    //      - Multiple property pages (EmitterInstancePropPage_wx already exists!)
+    //      - Pages cover: General, Emission, Physics, Appearance, etc.
+    //      - Constructor: (EmitterInstanceListClass*, title, parent)
+    //   2. EmitterInstanceListClass - Already exists in W3D library
+    //   3. W3DViewDoc::GetDisplayedObject() - Returns currently displayed render object
+    //
+    // COMPLEXITY: MEDIUM
+    //   - Property sheet wrapper needed (similar to AdvancedAnimSheet pattern)
+    //   - EmitterInstancePropPage_wx already ported!
+    //   - Just need wrapper to host the property page
+    //
+    // Impact: High - primary editing interface for particle emitters
+    // Priority: MEDIUM - important feature for emitter workflow
+    wxMessageBox("Edit Emitter not yet implemented.\n\n"
+                 "Requires:\n"
+                 "- EmitterPropertySheet_wx wrapper (wxPropertySheetDialog)\n"
+                 "- EmitterInstancePropPage_wx already exists!\n\n"
+                 "See comprehensive TODO in code.",
                  "Feature Incomplete", wxOK | wxICON_INFORMATION, this);
 }
 

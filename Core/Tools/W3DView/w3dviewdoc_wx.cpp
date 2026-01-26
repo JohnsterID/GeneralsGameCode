@@ -225,6 +225,33 @@ void W3DViewDoc::SetBackgroundColor(const Vector3& color)
     Modify(true);
 }
 
+Vector3 W3DViewDoc::GetAmbientLight() const
+{
+    // MFC: AmbientLightDialog.cpp:69 (pCDoc->GetScene()->Get_Ambient_Light())
+    // Returns current ambient light from scene, or default if no scene
+    if (m_scene)
+    {
+        return m_scene->Get_Ambient_Light();
+    }
+    
+    // Default ambient light (black - no ambient light)
+    return Vector3(0.0f, 0.0f, 0.0f);
+}
+
+void W3DViewDoc::SetAmbientLight(const Vector3& light)
+{
+    // MFC: AmbientLightDialog.cpp:117 (pCDoc->GetScene()->Set_Ambient_Light(lightSettings))
+    // Sets ambient light for scene (real-time update for dialog preview)
+    if (m_scene)
+    {
+        m_scene->Set_Ambient_Light(light);
+    }
+    
+    // Notify all views that document has changed
+    UpdateAllViews();
+    Modify(true);
+}
+
 bool W3DViewDoc::IsFogEnabled() const
 {
     // MFC: W3DViewDoc.cpp (CW3DViewDoc::IsFogEnabled)

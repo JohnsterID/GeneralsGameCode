@@ -76,6 +76,12 @@ public:
     const Vector3& GetBackgroundColor() const { return m_backgroundColor; }
     void SetBackgroundColor(const Vector3& color);
 
+    // Ambient light methods (MFC: AmbientLightDialog.cpp:69,117)
+    // Wrapper methods to avoid header include issues in dialog files
+    // Access scene ambient light without requiring ViewerScene.h in dialogs
+    Vector3 GetAmbientLight() const;
+    void SetAmbientLight(const Vector3& light);
+
     // Background fog methods (MFC: IsFogEnabled, EnableFog)
     bool IsFogEnabled() const;
     void EnableFog(bool enable);

@@ -2969,40 +2969,67 @@ void W3DViewFrame::OnUpdateObjectRestrictAnims(wxUpdateUIEvent &event)
 
 void W3DViewFrame::OnMungeSortOnLoad(wxCommandEvent &event)
 {
-    // MFC: MainFrm.cpp (need to investigate OnMungeSortOnLoad handler)
+    // MFC Reference: MainFrm.cpp:4397-4405 (OnMungeSortOnLoad)
     // MFC ID: IDM_MUNGE_SORT_ON_LOAD (32897)
-    // Function: Toggle whether loaded models are automatically sorted/munged
-    // TODO(MFC-Implement): Implement munge sort on load toggle
-    //   Store state in wxConfig: "/Config/MungeSortOnLoad" (bool)
-    //   Toggle current state and persist
-    //   May affect how W3D files are loaded/processed
-    //   Impact: Medium - affects asset loading pipeline
-    wxConfigBase *config = wxConfigBase::Get();
-    bool currentState = config->Read("/Config/MungeSortOnLoad", false);
-    config->Write("/Config/MungeSortOnLoad", !currentState);
+    // Function: Toggle whether loaded W3D models are automatically munged (sorted)
+    // Munging sorts mesh data for optimal rendering performance
+    
+    // Toggle WW3D munge sort state
+    bool currentState = WW3D::Is_Munge_Sort_On_Load_Enabled();
+    bool newState = !currentState;
+    WW3D::Enable_Munge_Sort_On_Load(newState);
+    
+    // Persist to wxConfig
+    wxConfig::Get()->Write("/Config/MungeSortOnLoad", newState ? 1L : 0L);
+    wxConfig::Get()->Flush();
 }
 
 void W3DViewFrame::OnUpdateMungeSortOnLoad(wxUpdateUIEvent &event)
 {
-    wxConfigBase *config = wxConfigBase::Get();
-    bool mungeSortEnabled = config->Read("/Config/MungeSortOnLoad", false);
-    event.Check(mungeSortEnabled);
+    // MFC Reference: MainFrm.cpp:4407-4411 (OnUpdateMungeSortOnLoad)
+    // Show checkmark based on WW3D munge sort state
+    event.Check(WW3D::Is_Munge_Sort_On_Load_Enabled());
 }
 
 void W3DViewFrame::OnEnableGammaCorrectionFile(wxCommandEvent &event)
 {
-    // MFC: MainFrm.cpp:4418-4436 (OnEnableGammaCorrection)
+    // MFC Reference: MainFrm.cpp:4418-4436 (OnEnableGammaCorrection)
     // MFC ID: IDM_ENABLE_GAMMA_CORRECTION (32898)
     // Function: Toggle gamma correction enable/disable
-    // Note: Same as existing OnEnableGammaCorrection handler
-    wxConfigBase *config = wxConfigBase::Get();
+    // When enabled, applies gamma value from config (range 1.0-3.0)
+    // When disabled, resets gamma to 1.0 (linear/no correction)
+    
+    wxConfigBase *config = wxConfig::Get();
     long enableGamma = config->Read("/Config/EnableGamma", 0L);
-    config->Write("/Config/EnableGamma", (enableGamma == 0) ? 1L : 0L);
+    bool newState = (enableGamma == 0);
+    
+    // Save new state
+    config->Write("/Config/EnableGamma", newState ? 1L : 0L);
+    config->Flush();
+    
+    // Apply gamma correction via WW3D
+    if (newState) {
+        // Read gamma value (stored as integer * 10, default 1.0 = 10)
+        long gammaInt = config->Read("/Config/Gamma", 10L);
+        float gamma = gammaInt / 10.0f;
+        
+        // Clamp to valid range
+        if (gamma < 1.0f) gamma = 1.0f;
+        if (gamma > 3.0f) gamma = 3.0f;
+        
+        // Apply gamma correction (brightness=0, contrast=1)
+        WW3D::Set_Gamma(gamma, 0.0f, 1.0f);
+    } else {
+        // Disable gamma (reset to linear 1.0)
+        WW3D::Set_Gamma(1.0f, 0.0f, 1.0f);
+    }
 }
 
 void W3DViewFrame::OnUpdateEnableGammaCorrectionFile(wxUpdateUIEvent &event)
 {
-    wxConfigBase *config = wxConfigBase::Get();
+    // MFC Reference: MainFrm.cpp:4438-4442 (OnUpdateEnableGammaCorrection)
+    // Show checkmark when gamma correction is enabled
+    wxConfigBase *config = wxConfig::Get();
     long enableGamma = config->Read("/Config/EnableGamma", 0L);
     event.Check(enableGamma != 0);
 }

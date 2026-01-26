@@ -54,6 +54,8 @@
 #include <wx/msgdlg.h>
 #include <wx/config.h>
 #include <wx/clipbrd.h>
+#include <wx/stdpaths.h>
+#include <wx/filename.h>
 
 // Engine includes for object manipulation
 #ifdef CString
@@ -3294,21 +3296,50 @@ void W3DViewFrame::OnMakeMovie(wxCommandEvent &WXUNUSED(event))
 
 void W3DViewFrame::OnSaveScreenshot(wxCommandEvent &WXUNUSED(event))
 {
-    // MFC: MainFrm.cpp (need to investigate OnSaveScreenshot handler)
+    // MFC: MainFrm.cpp:OnSaveScreenshot
     // MFC ID: IDM_SAVE_SCREENSHOT (32846)
-    // Function: Capture current viewport to image file
+    // Function: Capture current viewport to TGA image file
     // Keyboard: F7
-    // TODO(MFC-Implement): Implement screenshot capture
-    //   Show file save dialog with image format filters (PNG, JPG, TGA, BMP)
-    //   Capture current OpenGL/DirectX framebuffer
-    //   Save to selected image format
-    //   Implementation steps:
-    //     1. Get wxGLCanvas or rendering context
-    //     2. Read pixels from framebuffer (glReadPixels or equivalent)
-    //     3. Convert to wxImage
-    //     4. Save using wxImage::SaveFile()
-    //   Impact: High - essential for documentation and bug reporting
-    //   Files to review: ScreenshotDialog_wx.cpp (if exists), W3D rendering code
-    wxMessageBox("Capture Screen Shot not yet implemented.\nNeeds framebuffer capture and image save functionality.",
-                 "Feature Incomplete", wxOK | wxICON_INFORMATION, this);
+    // MFC Implementation (simple):
+    //   1. Gets executable directory
+    //   2. Hides cursor temporarily
+    //   3. Repaints view
+    //   4. Calls WW3D::Make_Screen_Shot("ScreenShot")
+    //   5. Restores cursor
+    // WW3D::Make_Screen_Shot handles everything:
+    //   - Auto-numbers files (ScreenShot01.tga, ScreenShot02.tga, etc.)
+    //   - Captures D3D surface (back buffer)
+    //   - Applies gamma correction
+    //   - Writes TGA or BMP format
+    //   - Located at: Generals/Code/Libraries/Source/WWVegas/WW3D2/ww3d.cpp:~2350
+    
+    // Get document and graphic view
+    W3DViewDoc* doc = wxDynamicCast(GetDocument(), W3DViewDoc);
+    if (doc != nullptr && doc->GetGraphicView() != nullptr) {
+        // TODO(MFC-Implement): Implement cursor hide/show
+        //   Need to add Is_Cursor_Shown() and Show_Cursor(bool) to W3DViewDoc
+        //   MFC: bool cursor_shown = GetCurrentDocument()->Is_Cursor_Shown();
+        //   MFC: GetCurrentDocument()->Show_Cursor(false);
+        
+        // Repaint view to ensure latest frame is captured
+        doc->GetGraphicView()->RepaintView();
+        
+        // Get executable directory for screenshot location
+        wxStandardPaths &paths = wxStandardPaths::Get();
+        wxString exePath = wxPathOnly(wxStandardPaths::Get().GetExecutablePath());
+        wxString screenshotBase = exePath + wxFILE_SEP_PATH + "ScreenShot";
+        
+        // Call WW3D screenshot function (handles numbering, capture, and file writing)
+        WW3D::Make_Screen_Shot(screenshotBase.mb_str(), 1.3f, WW3D::TGA);
+        
+        // TODO(MFC-Implement): Restore cursor visibility
+        //   MFC: GetCurrentDocument()->Show_Cursor(cursor_shown);
+        
+        // Show confirmation (optional - MFC doesn't show this)
+        // wxMessageBox(wxString::Format("Screenshot saved to:\n%s##.tga", screenshotBase),
+        //             "Screenshot Saved", wxOK | wxICON_INFORMATION, this);
+    } else {
+        wxMessageBox("Cannot capture screenshot:\nNo document or graphic view available.",
+                    "Screenshot Failed", wxOK | wxICON_ERROR, this);
+    }
 }

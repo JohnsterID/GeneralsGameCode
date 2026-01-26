@@ -700,6 +700,11 @@ void W3DViewFrame::InitStatusBar()
     int widths[] = {-1, 100, 100};
     m_statusBar->SetStatusWidths(3, widths);
     m_statusBar->SetStatusText("Ready", 0);
+    
+    // Restore status bar visibility from wxConfig (default: visible)
+    wxConfigBase *config = wxConfig::Get();
+    bool statusBarVisible = config->Read("/View/StatusBarVisible", true);
+    m_statusBar->Show(statusBarVisible);
 }
 
 void W3DViewFrame::CreateUI()
@@ -1481,30 +1486,20 @@ void W3DViewFrame::OnUpdateViewToolbar(wxUpdateUIEvent &event)
 void W3DViewFrame::OnViewStatusBar(wxCommandEvent &WXUNUSED(event))
 {
     // MFC Reference: Standard MFC ID_VIEW_STATUS_BAR (0xE801)
-    //
-    // MFC Implementation:
-    //   Standard MFC framework handler toggles status bar visibility
-    //   Uses ShowControlBar(m_wndStatusBar, !m_wndStatusBar.IsVisible())
-    //
-    // Expected Behavior:
-    //   - Toggle status bar visibility
-    //   - Status bar shows: Ready message, file info, animation frame, etc.
-    //
-    // TODO(MFC-Match): Implement status bar toggle
-    //   Need to:
-    //   1. Use GetStatusBar()->Show()/Hide()
-    //   2. Call Layout() to adjust window layout
-    //   3. Persist state in wxConfig
-    //   Until then: Placeholder
-
+    // MFC uses ShowControlBar(m_wndStatusBar, !m_wndStatusBar.IsVisible())
+    // Toggles status bar visibility and updates window layout
+    
     wxStatusBar *statusBar = GetStatusBar();
     if (statusBar)
     {
         bool isVisible = statusBar->IsShown();
         statusBar->Show(!isVisible);
-        Layout();  // Adjust layout after show/hide
+        Layout();  // Adjust window layout after show/hide
         
-        // TODO(MFC-Match): Persist status bar visibility in wxConfig
+        // Persist visibility state to wxConfig
+        wxConfigBase *config = wxConfig::Get();
+        config->Write("/View/StatusBarVisible", !isVisible);
+        config->Flush();
     }
     else
     {
@@ -1521,13 +1516,8 @@ void W3DViewFrame::OnViewStatusBar(wxCommandEvent &WXUNUSED(event))
 void W3DViewFrame::OnUpdateViewStatusBar(wxUpdateUIEvent &event)
 {
     // MFC Reference: Standard MFC OnUpdateControlBarMenu
-    //
-    // Expected Behavior:
-    //   - Checked if status bar is visible
-    //   - Always enabled
-    //
-    // TODO(MFC-Match): Check actual status bar visibility
-
+    // Shows checkmark when status bar is visible
+    
     wxStatusBar *statusBar = GetStatusBar();
     event.Enable(statusBar != nullptr);
     event.Check(statusBar && statusBar->IsShown());

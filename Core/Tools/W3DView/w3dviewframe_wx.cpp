@@ -2860,60 +2860,109 @@ void W3DViewFrame::OnExportLOD(wxCommandEvent &WXUNUSED(event))
 
 void W3DViewFrame::OnExportPrimitive(wxCommandEvent &WXUNUSED(event))
 {
-    // MFC: MainFrm.cpp (need to investigate OnExportPrimitive handler)
+    // MFC Reference: MainFrm.cpp:4073-4078 (OnExportPrimitive)
     // MFC ID: IDM_EXPORT_PRIMITIVE (32869)
-    // Function: Export primitive (sphere, ring, etc.) to file
-    // TODO(MFC-Implement): Implement primitive export functionality
-    //   1. Verify primitive is selected
-    //   2. Show file save dialog with primitive file filter
-    //   3. Serialize primitive geometry and properties
-    //   4. Handle errors (no primitive, write failure, etc.)
-    //   Impact: Low - specialized export for primitive objects
-    wxMessageBox("Export Primitive not yet implemented.\nSee TODO in OnExportPrimitive.",
-                 "Feature Incomplete", wxOK | wxICON_INFORMATION, this);
+    // Function: Export selected primitive (sphere, ring, etc.) to file
+    // TODO(MFC-BLOCKED): Requires W3DViewDoc::Save_Selected_Primitive() method
+    //   MFC Implementation: Calls ((CW3DViewDoc*)GetActiveDocument())->Save_Selected_Primitive()
+    //   Update Handler: Enabled only when m_currentAssetType == TypePrimitives
+    //   
+    //   Blocking Dependencies:
+    //   1. Port Save_Selected_Primitive() from W3DViewDoc.cpp to w3dviewdoc_wx.cpp
+    //      - Shows file save dialog with primitive filter
+    //      - Retrieves selected primitive from scene
+    //      - Serializes to W3D file format
+    //   2. Implement m_currentAssetType tracking in W3DViewFrame
+    //      - Track current asset type from selection changes
+    //      - See AssetTypes.h for ASSET_TYPE enum
+    //   3. Implement OnUpdateExportPrimitive to enable only when primitive selected
+    //   
+    //   Impact: LOW PRIORITY - Specialized export for primitive objects
+    wxMessageBox("Export Primitive requires Save_Selected_Primitive() method.\n"
+                 "See TODO in OnExportPrimitive for implementation details.",
+                 "Feature Blocked", wxOK | wxICON_INFORMATION, this);
 }
 
 void W3DViewFrame::OnExportSoundObject(wxCommandEvent &WXUNUSED(event))
 {
-    // MFC: MainFrm.cpp (need to investigate OnExportSoundObj handler)
+    // MFC Reference: MainFrm.cpp:4157-4162 (OnExportSoundObj)
     // MFC ID: IDM_EXPORT_SOUND_OBJ (32881)
-    // Function: Export sound object to file
-    // TODO(MFC-Implement): Implement sound object export functionality
-    //   1. Verify sound object is selected
-    //   2. Show file save dialog with sound object file filter
-    //   3. Serialize sound object properties (position, falloff, etc.)
-    //   4. Handle errors (no sound object, write failure, etc.)
-    //   Impact: Low - specialized export for audio objects
-    wxMessageBox("Export Sound Object not yet implemented.\nSee TODO in OnExportSoundObject.",
-                 "Feature Incomplete", wxOK | wxICON_INFORMATION, this);
+    // Function: Export selected sound object to file
+    // TODO(MFC-BLOCKED): Requires W3DViewDoc::Save_Selected_Sound_Object() method
+    //   MFC Implementation: Calls ((CW3DViewDoc*)GetActiveDocument())->Save_Selected_Sound_Object()
+    //   Update Handler: Enabled only when m_currentAssetType == TypeSound
+    //   
+    //   Blocking Dependencies:
+    //   1. Port Save_Selected_Sound_Object() from W3DViewDoc.cpp to w3dviewdoc_wx.cpp
+    //      - Shows file save dialog with sound object filter
+    //      - Retrieves selected SoundRenderObjClass from scene
+    //      - Serializes sound properties (position, falloff, volume, etc.)
+    //   2. Implement m_currentAssetType tracking in W3DViewFrame
+    //      - Track current asset type from selection changes
+    //      - See AssetTypes.h for ASSET_TYPE enum
+    //   3. Implement OnUpdateExportSoundObject to enable only when sound selected
+    //   
+    //   Impact: LOW PRIORITY - Specialized export for audio objects
+    wxMessageBox("Export Sound Object requires Save_Selected_Sound_Object() method.\n"
+                 "See TODO in OnExportSoundObject for implementation details.",
+                 "Feature Blocked", wxOK | wxICON_INFORMATION, this);
 }
 
 // Object menu handlers
 
 void W3DViewFrame::OnObjectRestrictAnims(wxCommandEvent &event)
 {
-    // MFC: MainFrm.cpp (need to investigate OnRestrictAnims handler)
+    // MFC Reference: MainFrm.cpp:4252-4264 (OnRestrictAnims)
     // MFC ID: IDM_RESTRICT_ANIMS (32875)
-    // Function: Toggle animation restriction mode
-    // TODO(MFC-Implement): Implement animation restriction functionality
-    //   1. Toggle restrict mode flag in scene/document
-    //   2. Update UI checkmark state
-    //   3. When enabled, filter available animations based on some criteria
-    //   4. Update animation list/controls to reflect restriction
-    //   Impact: Medium - animation workflow feature
-    //   Need to investigate MFC implementation to understand restriction logic
-    wxMessageBox("Restrict Anims toggle not yet implemented.\nSee TODO in OnObjectRestrictAnims.",
-                 "Feature Incomplete", wxOK | wxICON_INFORMATION, this);
+    // Function: Toggle animation restriction mode (filters animations based on hierarchy)
+    // TODO(MFC-BLOCKED): Requires DataTreeView integration
+    //   MFC Implementation:
+    //     CDataTreeView *data_tree = ::GetCurrentDocument()->GetDataTreeView();
+    //     if (data_tree != nullptr) {
+    //         bool enabled = data_tree->Are_Anims_Restricted();
+    //         data_tree->Restrict_Anims(!enabled);
+    //     }
+    //   
+    //   Blocking Dependencies:
+    //   1. Implement DataTreeView widget in wxWidgets
+    //      - Port CDataTreeView class from DataTreeView.cpp
+    //      - Tree control for browsing W3D assets (meshes, animations, sounds, etc.)
+    //      - Handles asset selection and display
+    //   2. Add GetDataTreeView() method to W3DViewDoc
+    //      - Returns pointer to tree view widget
+    //   3. Port Are_Anims_Restricted() and Restrict_Anims() to DataTreeView
+    //      - Are_Anims_Restricted(): Returns current restriction state (bool)
+    //      - Restrict_Anims(bool): Sets restriction mode
+    //      - When enabled, filters animations that don't match current hierarchy
+    //   4. Implement OnUpdateObjectRestrictAnims to show checkmark state
+    //   
+    //   Impact: MEDIUM PRIORITY - Animation workflow feature
+    //   Note: This is a complex feature requiring significant UI infrastructure
+    wxMessageBox("Restrict Anims requires DataTreeView integration.\n"
+                 "See TODO in OnObjectRestrictAnims for implementation details.",
+                 "Feature Blocked", wxOK | wxICON_INFORMATION, this);
 }
 
 void W3DViewFrame::OnUpdateObjectRestrictAnims(wxUpdateUIEvent &event)
 {
-    // MFC: MainFrm.cpp (need to investigate update handler)
-    // TODO(MFC-Implement): Implement checkmark state update
-    //   Read restrict mode flag from scene/document
-    //   Set event.Check(restrictMode) to update checkmark
-    //   May need to enable/disable based on whether animations are loaded
-    event.Check(false); // Default to unchecked until implemented
+    // MFC Reference: MainFrm.cpp:4274-4286 (OnUpdateRestrictAnims)
+    // TODO(MFC-BLOCKED): Requires DataTreeView integration
+    //   MFC Implementation:
+    //     bool check = true;
+    //     CDataTreeView *data_tree = ::GetCurrentDocument()->GetDataTreeView();
+    //     if (data_tree != nullptr) {
+    //         check = data_tree->Are_Anims_Restricted();
+    //     }
+    //     pCmdUI->SetCheck(check);
+    //   
+    //   Once DataTreeView is ported, update as:
+    //     W3DViewDoc *doc = GetDocument();
+    //     if (doc && doc->GetDataTreeView()) {
+    //         event.Check(doc->GetDataTreeView()->Are_Anims_Restricted());
+    //     } else {
+    //         event.Check(false);
+    //     }
+    event.Check(false); // Default to unchecked until DataTreeView implemented
 }
 
 // File menu handlers

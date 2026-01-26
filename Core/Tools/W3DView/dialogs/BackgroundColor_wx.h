@@ -90,6 +90,7 @@ protected:
 private:
     void OnOK(wxCommandEvent &event);
     void OnCancel(wxCommandEvent &event);
+    void OnInitDialog(wxInitDialogEvent &event);
 
     wxDECLARE_EVENT_TABLE();
 private:
@@ -98,6 +99,11 @@ private:
     bool TransferDataFromWindow() override;
 
     // Event handlers (Phase 2)
-void OnHscroll(wxCommandEvent &event);  // Horizontal scroll (slider)
+    void OnHscroll(wxCommandEvent &event);  // Horizontal scroll (slider)
     void OnGrayscaleCheck(wxCommandEvent &event);  // Button/Checkbox click
+    
+    // Member variables for MFC matching (BackgroundColorDialog.cpp)
+    int m_initialRed;    // Initial red value (0-100) for cancel restore
+    int m_initialGreen;  // Initial green value (0-100) for cancel restore
+    int m_initialBlue;   // Initial blue value (0-100) for cancel restore
 };

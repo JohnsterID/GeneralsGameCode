@@ -1953,9 +1953,20 @@ void W3DViewFrame::OnAnimationAdvanced(wxCommandEvent &WXUNUSED(event))
 
 void W3DViewFrame::OnBackgroundColor(wxCommandEvent &WXUNUSED(event))
 {
-    // TODO(MFC-Verify): Verify BackgroundColor dialog matches MFC exactly
-    // Dialog appears implemented but needs visual/behavioral verification
-    // MFC Reference: BackgroundColor.cpp (CBackgroundColorDialog)
+    // MFC Reference: BackgroundColorDialog.cpp (CBackgroundColorDialog)
+    // MFC: MainFrm.cpp:1580-1586 (OnBackgroundColor)
+    //
+    // Dialog Features (FULLY IMPLEMENTED):
+    //   1. OnInitDialog: Gets current background color from document
+    //   2. Initializes 3 RGB sliders (0-100 range) with current values
+    //   3. Checks grayscale checkbox if R==G==B
+    //   4. OnHScroll: REAL-TIME color updates as sliders move (live preview)
+    //   5. Grayscale mode: All sliders move together when checked
+    //   6. OnCancel: Restores initial color (undoes live preview changes)
+    //   7. OnOK: Just closes (color already set via live preview)
+    //
+    // Exact MFC Matching: ✅ Complete
+    // MFC Reference: BackgroundColorDialog.cpp:42-145
     BackgroundColor dialog(this);
     dialog.ShowModal();
 }

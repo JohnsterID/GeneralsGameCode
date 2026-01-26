@@ -66,6 +66,17 @@ private:
     void OnObjectRestrictAnims(wxCommandEvent &event);
     void OnUpdateObjectRestrictAnims(wxUpdateUIEvent &event);
     void OnObjectAlternateMaterials(wxCommandEvent &event);
+    // Emitters menu handlers
+    void OnCreateEmitter(wxCommandEvent &event);
+    void OnScaleEmitter(wxCommandEvent &event);
+    void OnEditEmitter(wxCommandEvent &event);
+    // Primitives menu handlers
+    void OnCreateSphere(wxCommandEvent &event);
+    void OnCreateRing(wxCommandEvent &event);
+    void OnEditPrimitive(wxCommandEvent &event);
+    // Sound menu handlers
+    void OnCreateSoundObject(wxCommandEvent &event);
+    void OnEditSoundObject(wxCommandEvent &event);
     void OnViewPatchGapFill(wxCommandEvent &event);
     void OnUpdateViewPatchGapFill(wxUpdateUIEvent &event);
     void OnViewSubdivision1(wxCommandEvent &event);

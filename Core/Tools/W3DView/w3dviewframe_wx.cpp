@@ -98,6 +98,17 @@ enum
     ID_OBJECT_ROTATE_Z_BACK,
     ID_OBJECT_RESTRICT_ANIMS,
     ID_OBJECT_ALTERNATE_MATERIALS,
+    // Emitters menu
+    ID_CREATE_EMITTER,
+    ID_SCALE_EMITTER,
+    ID_EDIT_EMITTER,
+    // Primitives menu
+    ID_CREATE_SPHERE,
+    ID_CREATE_RING,
+    ID_EDIT_PRIMITIVE,
+    // Sound menu
+    ID_CREATE_SOUND_OBJECT,
+    ID_EDIT_SOUND_OBJECT,
     ID_VIEW_WIREFRAME,
     ID_VIEW_POLYGON_SORTING,
     ID_VIEW_PATCH_GAP_FILL,
@@ -204,6 +215,17 @@ wxBEGIN_EVENT_TABLE(W3DViewFrame, wxDocParentFrame)
     EVT_MENU(ID_OBJECT_RESTRICT_ANIMS, W3DViewFrame::OnObjectRestrictAnims)
     EVT_UPDATE_UI(ID_OBJECT_RESTRICT_ANIMS, W3DViewFrame::OnUpdateObjectRestrictAnims)
     EVT_MENU(ID_OBJECT_ALTERNATE_MATERIALS, W3DViewFrame::OnObjectAlternateMaterials)
+    // Emitters menu
+    EVT_MENU(ID_CREATE_EMITTER, W3DViewFrame::OnCreateEmitter)
+    EVT_MENU(ID_SCALE_EMITTER, W3DViewFrame::OnScaleEmitter)
+    EVT_MENU(ID_EDIT_EMITTER, W3DViewFrame::OnEditEmitter)
+    // Primitives menu
+    EVT_MENU(ID_CREATE_SPHERE, W3DViewFrame::OnCreateSphere)
+    EVT_MENU(ID_CREATE_RING, W3DViewFrame::OnCreateRing)
+    EVT_MENU(ID_EDIT_PRIMITIVE, W3DViewFrame::OnEditPrimitive)
+    // Sound menu
+    EVT_MENU(ID_CREATE_SOUND_OBJECT, W3DViewFrame::OnCreateSoundObject)
+    EVT_MENU(ID_EDIT_SOUND_OBJECT, W3DViewFrame::OnEditSoundObject)
     EVT_MENU(ID_VIEW_WIREFRAME, W3DViewFrame::OnWireframe)
     EVT_UPDATE_UI(ID_VIEW_WIREFRAME, W3DViewFrame::OnUpdateWireframe)
     EVT_MENU(ID_VIEW_POLYGON_SORTING, W3DViewFrame::OnPolygonSorting)
@@ -536,6 +558,31 @@ void W3DViewFrame::CreateMenuBar()
     //   LOD menu appears contextually when LOD objects are selected
     //   Need to implement context-sensitive menu switching
     menuBar->Append(objectMenu, "&Object");
+
+    // Emitters menu - EXACT MFC matching (W3DView.rc:259-268)
+    wxMenu *emittersMenu = new wxMenu;
+    emittersMenu->Append(ID_CREATE_EMITTER, "&Create Emitter...");
+    emittersMenu->Append(ID_SCALE_EMITTER, "&Scale Emitter...");
+    emittersMenu->AppendSeparator();
+    emittersMenu->Append(ID_EDIT_EMITTER, "&Edit Emitter\tEnter");
+    // Note: MFC has "Edit" submenu with just a separator (W3DView.rc:266-267)
+    //   This appears to be unused/placeholder - not implementing empty submenu
+    menuBar->Append(emittersMenu, "&Emitters");
+
+    // Primitives menu - EXACT MFC matching (W3DView.rc:269-275)
+    wxMenu *primitivesMenu = new wxMenu;
+    primitivesMenu->Append(ID_CREATE_SPHERE, "Create &Sphere...");
+    primitivesMenu->Append(ID_CREATE_RING, "Create &Ring...");
+    primitivesMenu->AppendSeparator();
+    primitivesMenu->Append(ID_EDIT_PRIMITIVE, "&Edit Primitive...\tEnter");
+    menuBar->Append(primitivesMenu, "&Primitives");
+
+    // Sound menu - EXACT MFC matching (W3DView.rc:276-281)
+    wxMenu *soundMenu = new wxMenu;
+    soundMenu->Append(ID_CREATE_SOUND_OBJECT, "&Create Sound Object...");
+    soundMenu->AppendSeparator();
+    soundMenu->Append(ID_EDIT_SOUND_OBJECT, "&Edit Sound Object...\tEnter");
+    menuBar->Append(soundMenu, "&Sound");
 
     // Animation menu - EXACT MFC matching (W3DView.rc:363-373)
     wxMenu *animMenu = new wxMenu;
@@ -2963,5 +3010,164 @@ void W3DViewFrame::OnAnimatedSoundOptions(wxCommandEvent &WXUNUSED(event))
     //   Options likely include: sound trigger points, volume curves, falloff, etc.
     //   Impact: Medium - specialized feature for sound designers
     wxMessageBox("Animated Sound Options not yet fully implemented.\nDialog may exist (AnimatedSoundDialog_wx.cpp) but needs verification.",
+                 "Feature Incomplete", wxOK | wxICON_INFORMATION, this);
+}
+
+// Emitters menu handlers
+
+void W3DViewFrame::OnCreateEmitter(wxCommandEvent &WXUNUSED(event))
+{
+    // MFC: MainFrm.cpp (need to investigate OnCreateEmitter handler)
+    // MFC ID: IDM_CREATE_EMITTER (32808)
+    // Function: Create a new particle emitter object in the scene
+    // TODO(MFC-Implement): Implement emitter creation dialog and scene integration
+    //   MFC Reference: EmitterInstancePropPageClass already exists (EmitterInstanceProperties_wx.cpp)
+    //   Dialog likely shows emitter parameters: particle count, lifetime, velocity, etc.
+    //   Need to create emitter object and add to scene
+    //   Need to integrate with W3D scene graph
+    //   Emitter types: particle systems, sprite systems, line systems
+    //   Impact: High - core feature for particle effects artists
+    //   Files to review: EmitterInstanceProperties_wx.cpp, CreateEmitterDialog_wx.cpp (if exists)
+    wxMessageBox("Create Emitter not yet implemented.\nEmitterInstancePropPageClass exists but dialog integration needed.",
+                 "Feature Incomplete", wxOK | wxICON_INFORMATION, this);
+}
+
+void W3DViewFrame::OnScaleEmitter(wxCommandEvent &WXUNUSED(event))
+{
+    // MFC: MainFrm.cpp (need to investigate OnScaleEmitter handler)
+    // MFC ID: IDM_SCALE_EMITTER (32884)
+    // Function: Scale selected emitter properties (size, rate, etc.)
+    // TODO(MFC-Implement): Implement emitter scaling dialog
+    //   Show dialog with scale factors for:
+    //     - Emission rate
+    //     - Particle size
+    //     - Velocity
+    //     - Lifetime
+    //   Apply scaling to selected emitter object
+    //   May need to validate emitter is selected first
+    //   Impact: Medium - utility for quick emitter adjustments
+    wxMessageBox("Scale Emitter not yet implemented.\nNeeds dialog for scaling emitter properties.",
+                 "Feature Incomplete", wxOK | wxICON_INFORMATION, this);
+}
+
+void W3DViewFrame::OnEditEmitter(wxCommandEvent &WXUNUSED(event))
+{
+    // MFC: MainFrm.cpp (same handler as Object->Properties when emitter selected)
+    // MFC ID: IDM_EDIT_EMITTER (32809)
+    // Function: Edit properties of selected emitter
+    // TODO(MFC-Implement): Implement emitter properties dialog
+    //   MFC Reference: EmitterInstancePropPageClass_wx.cpp already exists
+    //   Check if emitter is currently selected
+    //   Show EmitterInstancePropPageClass dialog
+    //   Dialog includes: Name, Emission Rate, Particle Life, Velocity, Size, Color, etc.
+    //   Apply changes to selected emitter in scene
+    //   Impact: High - primary editing interface for emitters
+    //   Note: Keyboard shortcut is Enter (same as Object->Properties)
+    wxMessageBox("Edit Emitter not yet implemented.\nEmitterInstancePropPageClass exists but integration needed.",
+                 "Feature Incomplete", wxOK | wxICON_INFORMATION, this);
+}
+
+// Primitives menu handlers
+
+void W3DViewFrame::OnCreateSphere(wxCommandEvent &WXUNUSED(event))
+{
+    // MFC: MainFrm.cpp (need to investigate OnCreateSphere handler)
+    // MFC ID: IDM_CREATE_SPHERE (32866)
+    // Function: Create a sphere primitive mesh
+    // TODO(MFC-Implement): Implement sphere creation dialog and mesh generation
+    //   Show dialog with sphere parameters:
+    //     - Radius
+    //     - Segments (horizontal/vertical)
+    //     - Material/Texture
+    //     - UV mapping options
+    //   Generate sphere mesh using W3D mesh builder
+    //   Add to scene at current camera position or origin
+    //   Impact: Medium - useful for placeholder geometry and testing
+    //   Files to review: PrimitiveDialog_wx.cpp (if exists), W3D mesh generation code
+    wxMessageBox("Create Sphere not yet implemented.\nNeeds dialog and W3D sphere mesh generation.",
+                 "Feature Incomplete", wxOK | wxICON_INFORMATION, this);
+}
+
+void W3DViewFrame::OnCreateRing(wxCommandEvent &WXUNUSED(event))
+{
+    // MFC: MainFrm.cpp (need to investigate OnCreateRing handler)
+    // MFC ID: IDM_CREATE_RING (32867)
+    // Function: Create a ring/torus primitive mesh
+    // TODO(MFC-Implement): Implement ring creation dialog and mesh generation
+    //   Show dialog with ring parameters:
+    //     - Inner radius / Outer radius
+    //     - Segments (circular/tubular)
+    //     - Material/Texture
+    //     - UV mapping options
+    //   Generate ring mesh using W3D mesh builder
+    //   Add to scene at current camera position or origin
+    //   Impact: Medium - useful for special effects (halos, shields, etc.)
+    //   Files to review: PrimitiveDialog_wx.cpp (if exists), W3D mesh generation code
+    wxMessageBox("Create Ring not yet implemented.\nNeeds dialog and W3D ring mesh generation.",
+                 "Feature Incomplete", wxOK | wxICON_INFORMATION, this);
+}
+
+void W3DViewFrame::OnEditPrimitive(wxCommandEvent &WXUNUSED(event))
+{
+    // MFC: MainFrm.cpp (need to investigate OnEditPrimitive handler)
+    // MFC ID: IDM_EDIT_PRIMITIVE (32868)
+    // Function: Edit properties of selected primitive object
+    // TODO(MFC-Implement): Implement primitive properties dialog
+    //   Check if primitive object is currently selected
+    //   Show primitive properties dialog
+    //   Dialog may include:
+    //     - Name, transform (position, rotation, scale)
+    //     - Primitive-specific parameters (radius, segments, etc.)
+    //     - Material/texture assignment
+    //     - Collision/physics properties
+    //   Apply changes to selected primitive
+    //   Impact: Medium - editing interface for primitive objects
+    //   Note: Keyboard shortcut is Enter (same as Object->Properties)
+    //   Files to review: PrimitivePropertiesDialog_wx.cpp (if exists)
+    wxMessageBox("Edit Primitive not yet implemented.\nNeeds primitive properties dialog.",
+                 "Feature Incomplete", wxOK | wxICON_INFORMATION, this);
+}
+
+// Sound menu handlers
+
+void W3DViewFrame::OnCreateSoundObject(wxCommandEvent &WXUNUSED(event))
+{
+    // MFC: MainFrm.cpp (need to investigate OnCreateSoundObject handler)
+    // MFC ID: IDM_CREATE_SOUND_OBJECT (32879)
+    // Function: Create a positioned sound object in 3D space
+    // TODO(MFC-Implement): Implement sound object creation dialog
+    //   Show dialog with sound object parameters:
+    //     - Sound file selection (browse for audio file)
+    //     - Position in 3D space
+    //     - Volume, pitch
+    //     - 3D sound properties: min/max distance, rolloff factor
+    //     - Loop settings
+    //   Create W3D sound object and add to scene
+    //   Need to integrate with audio system
+    //   Impact: High - core feature for sound designers
+    //   Files to review: SoundObjectDialog_wx.cpp (may already exist), audio system integration
+    wxMessageBox("Create Sound Object not yet implemented.\nNeeds dialog and audio system integration.",
+                 "Feature Incomplete", wxOK | wxICON_INFORMATION, this);
+}
+
+void W3DViewFrame::OnEditSoundObject(wxCommandEvent &WXUNUSED(event))
+{
+    // MFC: MainFrm.cpp (need to investigate OnEditSoundObject handler)
+    // MFC ID: IDM_EDIT_SOUND_OBJECT (32880)
+    // Function: Edit properties of selected sound object
+    // TODO(MFC-Implement): Implement sound object properties dialog
+    //   Check if sound object is currently selected
+    //   Show sound object properties dialog
+    //   Dialog includes:
+    //     - Sound file (with option to change)
+    //     - Position, Volume, Pitch
+    //     - 3D sound properties (min/max distance, rolloff)
+    //     - Loop, autoplay settings
+    //     - Test/preview button to play sound
+    //   Apply changes to selected sound object
+    //   Impact: High - primary editing interface for sound objects
+    //   Note: Keyboard shortcut is Enter (same as Object->Properties)
+    //   Files to review: SoundObjectDialog_wx.cpp, EditSoundObjectDialog_wx.cpp
+    wxMessageBox("Edit Sound Object not yet implemented.\nNeeds sound object properties dialog.",
                  "Feature Incomplete", wxOK | wxICON_INFORMATION, this);
 }

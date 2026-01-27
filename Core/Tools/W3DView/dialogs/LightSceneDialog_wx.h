@@ -136,82 +136,51 @@ private:
     bool TransferDataToWindow() override;
     bool TransferDataFromWindow() override;
 
-    // Event handlers (Phase 2)
-void OnHscroll(wxCommandEvent &event);  // Horizontal scroll (slider)
-    void OnGrayscaleCheck(wxCommandEvent &event);  // Button/Checkbox click
-    void OnChannelBothRadio(wxCommandEvent &event);  // Button/Checkbox click
-    void OnChannelDiffuseRadio(wxCommandEvent &event);  // Button/Checkbox click
-    void OnChannelSpecularRadio(wxCommandEvent &event);  // Button/Checkbox click
-    void OnAttenuationCheck(wxCommandEvent &event);  // Button/Checkbox click
+    // Event handlers
+    void OnHscroll(wxCommandEvent &event);  // Intensity slider
+    void OnSliderRed(wxCommandEvent &event);  // RGB slider
+    void OnSliderGreen(wxCommandEvent &event);  // RGB slider
+    void OnSliderBlue(wxCommandEvent &event);  // RGB slider
+    void OnGrayscaleCheck(wxCommandEvent &event);
+    void OnChannelBothRadio(wxCommandEvent &event);
+    void OnChannelDiffuseRadio(wxCommandEvent &event);
+    void OnChannelSpecularRadio(wxCommandEvent &event);
+    void OnAttenuationCheck(wxCommandEvent &event);
+    void OnDistanceSpin(wxSpinEvent &event);
+    void OnStartAttenSpin(wxSpinEvent &event);
+    void OnEndAttenSpin(wxSpinEvent &event);
+    void OnInitDialog(wxInitDialogEvent &event);
     
-    // ============================================================================
-    // Phase 4: Additional Event Handlers and Methods Needed
-    // ============================================================================
+    // Helper methods (MFC: SceneLightDialog.cpp)
+    void Update_Light(const class Vector3 &color);
+    void Set_Color_Control_State(const class Vector3 &color);
+    void Update_Attenuation();
+    void Update_Distance(float distance);
+    void Update_Attenuation_Controls();
     
-    // TODO: Phase 4 - Add OnInitDialog event handler (MFC: SceneLightDialog.cpp lines 96-180)
-    // void OnInitDialog(wxInitDialogEvent& event);
-    // Required for loading initial values from scene light
+    // Channel selection enum (MFC: SceneLightDialog.h:104)
+    enum CHANNEL {
+        DIFFUSE = 2,
+        SPECULAR = 4,
+        BOTH = DIFFUSE | SPECULAR
+    };
     
-    // TODO: Phase 4 - Add slider event handlers (MFC: OnHScroll lines 188-242)
-    // Need separate handlers or unified handler for:
-    // - m_idc_slider_red (RGB color control)
-    // - m_idc_slider_green (RGB color control)
-    // - m_idc_slider_blue (RGB color control)
-    // - m_idc_intensity_slider (already has OnHscroll, but needs proper implementation)
+    // Initial values for cancel restore (MFC: SceneLightDialog.h:108-115)
+    int m_InitialRedDiffuse;
+    int m_InitialGreenDiffuse;
+    int m_InitialBlueDiffuse;
+    int m_InitialRedSpecular;
+    int m_InitialGreenSpecular;
+    int m_InitialBlueSpecular;
+    CHANNEL m_CurrentChannel;
     
-    // TODO: Phase 4 - Add spinner event handlers (MFC: WindowProc lines 289-360)
-    // void OnDistanceSpin(wxSpinEvent& event);
-    // void OnStartAttenSpin(wxSpinEvent& event);
-    // void OnEndAttenSpin(wxSpinEvent& event);
+    // Initial light settings (MFC: SceneLightDialog.h:116)
+    float m_InitialStartAtten;
+    float m_InitialEndAtten;
+    float m_InitialDistance;
+    float m_InitialIntensity;
+    bool m_InitialAttenOn;
     
-    // TODO: Phase 4 - Add helper methods (MFC: SceneLightDialog.cpp lines 432-545)
-    // void Update_Light(const Vector3 &color);  // Lines 432-451
-    // void Set_Color_Control_State(const Vector3 &color);  // Lines 459-474
-    // void Update_Attenuation();  // Lines 482-496
-    // void Update_Distance(float distance);  // Lines 504-528
-    // void Update_Attenuation_Controls();  // Lines 536-545
-    
-    // ============================================================================
-    // Phase 4: Member Variables Needed for State Tracking
-    // ============================================================================
-    
-    // TODO: Phase 4 - Add member variables for state tracking (MFC: SceneLightDialog.h lines 104-116)
-    // Required for OnCancel restoration:
-    //
-    // // Channel selection enum
-    // enum CHANNEL {
-    //     DIFFUSE = 2,
-    //     SPECULAR = 4,
-    //     BOTH = DIFFUSE | SPECULAR
-    // };
-    //
-    // // Initial color values (saved on OnInitDialog, restored on OnCancel)
-    // int m_InitialRedDiffuse;
-    // int m_InitialGreenDiffuse;
-    // int m_InitialBlueDiffuse;
-    // int m_InitialRedSpecular;
-    // int m_InitialGreenSpecular;
-    // int m_InitialBlueSpecular;
-    // CHANNEL m_CurrentChannel;
-    //
-    // // Initial light settings
-    // float m_InitialStartAtten;
-    // float m_InitialEndAtten;
-    // float m_InitialDistance;
-    // float m_InitialIntensity;
-    // bool m_InitialAttenOn;
-    
-    // ============================================================================
-    // Phase 4: BLOCKER - Missing W3DViewDoc Method
-    // ============================================================================
-    
-    // TODO: Phase 4 - BLOCKER: GetSceneLight() doesn't exist in W3DViewDoc_wx yet!
-    //   Must add to W3DViewDoc_wx before this dialog can work:
-    //   1. w3dviewdoc_wx.h: Add forward declaration: class LightClass;
-    //   2. w3dviewdoc_wx.h: Add member variable: LightClass* m_sceneLight;
-    //   3. w3dviewdoc_wx.h: Add accessor: LightClass* GetSceneLight() { return m_sceneLight; }
-    //   4. w3dviewdoc_wx.cpp: Initialize m_sceneLight in constructor
-    //   5. w3dviewdoc_wx.cpp: Clean up in destructor if needed
-    //   See MFC reference: W3DViewDoc.h line 118 (GetSceneLight)
-    //                      W3DViewDoc.h member variable m_pCSceneLight
 };
+// NOTE: All methods declared above are implemented in LightSceneDialog_wx.cpp
+// MFC Reference: SceneLightDialog.cpp (563 lines)

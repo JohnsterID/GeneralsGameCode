@@ -54,17 +54,28 @@ void Opacity::OnCancel(wxCommandEvent &event)
 
 void Opacity::OnInitDialog(wxInitDialogEvent& event)
 {
-    // Initialize controls after they're created
-    // TODO: Convert: m_OpacityBar = ColorBarClass::Get_Color_Bar (::GetDlgItem (m_hWnd, IDC_OPACITY_BAR));
-    // TODO: Convert: ASSERT (m_OpacityBar);
+    // BLOCKER TODO: Requires ColorBarClass custom control to be ported to wxWidgets
+    // MFC: OpacitySettingsDialog.cpp lines 90-106
     //
-    // Setup the opacity bar
+    // ColorBarClass is a complex custom gradient editor control (ColorBar.h/cpp)
+    // with the following features:
+    // - Gradient visualization with color points
+    // - Interactive point manipulation (move, insert, delete)
+    // - Multiple notification types (CBRN_MOVED_POINT, CBRN_DBLCLK_POINT, etc.)
+    // - Configurable styles (CBRS_SUNKEN, CBRS_RAISED, CBRS_HORZ, CBRS_VERT)
+    // - Range and selection position management
     //
-    // TODO: Convert: m_OpacityBar->Set_Range (0, 1);
-    // TODO: Convert: m_OpacityBar->Modify_Point (0, 0, 0, 0, 0);
-    // TODO: Convert: m_OpacityBar->Insert_Point (1, 1, 255, 255, 255);
-    // TODO: Convert: m_OpacityBar->Set_Selection_Pos (m_Opacity);
-    // TODO: Convert: return TRUE;
+    // Required implementation:
+    // 1. Create wxColorBarCtrl as wxWidgets custom control
+    // 2. Port ColorBarClass functionality (gradient rendering, point editing)
+    // 3. Then implement:
+    //    - m_OpacityBar = ColorBarClass::Get_Color_Bar(IDC_OPACITY_BAR)
+    //    - m_OpacityBar->Set_Range(0, 1)
+    //    - m_OpacityBar->Modify_Point(0, 0, 0, 0, 0)
+    //    - m_OpacityBar->Insert_Point(1, 1, 255, 255, 255)
+    //    - m_OpacityBar->Set_Selection_Pos(m_Opacity)
+    //
+    // This is a significant undertaking requiring custom control development.
 
     event.Skip();
 }
@@ -77,10 +88,11 @@ bool Opacity::TransferDataToWindow()
 
 bool Opacity::TransferDataFromWindow()
 {
-    // Extract data from controls and apply to business logic
-
-    // TODO: Convert: m_Opacity = m_OpacityBar->Get_Selection_Pos ();
-    // TODO: Convert: return ;
+    // BLOCKER TODO: Requires ColorBarClass custom control
+    // MFC: OpacitySettingsDialog.cpp line 117
+    //   m_Opacity = m_OpacityBar->Get_Selection_Pos();
+    //
+    // Cannot implement until ColorBarClass is ported (see OnInitDialog comments)
 
     return true;
 }

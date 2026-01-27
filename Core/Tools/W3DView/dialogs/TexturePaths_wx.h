@@ -94,9 +94,9 @@ private:
     bool TransferDataFromWindow() override;
 
     // Event handlers (Phase 2)
-void OnBrowse1(wxCommandEvent &event);  // Button/Checkbox click
+    void OnBrowse1(wxCommandEvent &event);  // Button/Checkbox click
     void OnBrowse2(wxCommandEvent &event);  // Button/Checkbox click
-
-    // Phase 2.5: Member variables
-    void* doc;  // TODO: Replace with proper W3DViewDoc* type
+    
+    // NOTE: No member variables needed - document obtained via GetCurrentDocument_wx() on-demand
+    // MFC Reference: TexturePathDialog.cpp (no member variables used)
 };

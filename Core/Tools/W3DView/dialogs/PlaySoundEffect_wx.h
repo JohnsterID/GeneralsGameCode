@@ -73,7 +73,15 @@ public:
     
     // Dialog data (MFC compatibility)
     wxString Filename;  // Sound effect filename
-    // TODO: Phase 3 - Add: SoundEffectClass* SoundObj;  // Sound object for playback
+    
+    // BLOCKER TODO: Cannot add SoundObj member due to WWAudio header compilation errors
+    // MFC: PlaySoundDialog.h line 64
+    //   AudibleSoundClass* SoundObj;
+    //
+    // Including AudibleSound.h or WWAudio.h causes compilation failures in WWSaveLoad
+    // library headers (parameter.h, definition.h) due to StringClass/const char*
+    // return type mismatches. See PlaySoundEffect_wx.cpp OnPlaySoundEffect comments
+    // for detailed explanation and potential solutions.
 
 protected:
     // Override for data transfer if needed

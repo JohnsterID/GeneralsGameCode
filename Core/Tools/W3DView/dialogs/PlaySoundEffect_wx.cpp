@@ -45,7 +45,12 @@ void PlaySoundEffect::OnOK(wxCommandEvent &event)
 
 void PlaySoundEffect::OnCancel(wxCommandEvent &event)
 {
-    // Close without saving
+    // BLOCKER TODO: Need to stop and release sound object before closing
+    // MFC: PlaySoundDialog.cpp lines 99-107
+    //   SoundObj->Stop();
+    //   REF_PTR_RELEASE(SoundObj);
+    //
+    // For now, just close (no sound object to clean up)
     EndModal(wxID_CANCEL);
 }
 
@@ -55,14 +60,32 @@ void PlaySoundEffect::OnCancel(wxCommandEvent &event)
 
 void PlaySoundEffect::OnPlaySoundEffect(wxCommandEvent &event)
 {
-    // TODO: Implement OnPlaySoundEffect
-    // Control ID: IDC_PLAY_SOUND_EFFECT
+    // BLOCKER TODO: Requires WWAudio infrastructure to compile in wxWidgets build
+    // MFC: PlaySoundDialog.cpp lines 81-91
+    //   SoundObj->Stop();
+    //   SoundObj->Play();
+    //
+    // Implementation blocked by compilation errors in WWAudio headers:
+    // Including WWAudio.h and AudibleSound.h causes errors in parameter.h and definition.h
+    // from WWSaveLoad library (StringClass return type mismatch with const char*).
+    //
+    // These are pre-existing bugs in the codebase where functions declare "const char*"
+    // return type but actually return StringClass members. MFC build likely has compiler
+    // settings that allow implicit conversion, but MinGW cross-compiler rejects it.
+    //
+    // Required fixes:
+    // 1. Fix parameter.h/definition.h return type bugs (change to StringClass or add .c_str())
+    // 2. OR: Configure wxWidgets build with permissive type conversion settings
+    // 3. OR: Create audio infrastructure wrapper that doesn't pull in WWSaveLoad headers
+    //
+    // Cannot proceed until audio infrastructure compilation issues are resolved.
 }
 
 void PlaySoundEffect::OnStopSoundEffect(wxCommandEvent &event)
 {
-    // TODO: Implement OnStopSoundEffect
-    // Control ID: IDC_STOP_SOUND_EFFECT
+    // BLOCKER TODO: Requires WWAudio infrastructure (see OnPlaySoundEffect comments)
+    // MFC: PlaySoundDialog.cpp lines 147-156
+    //   SoundObj->Stop();
 }
 
 
@@ -73,22 +96,25 @@ void PlaySoundEffect::OnStopSoundEffect(wxCommandEvent &event)
 void PlaySoundEffect::OnInitDialog(wxInitDialogEvent& event)
 {
     // Initialize controls after they're created
-    //
-    //	Put the filename into the dialog
-    //
+    
+    // Put the filename into the dialog (this part works)
     if (m_idc_filename) {
         m_idc_filename->SetValue(Filename);
     }
+    
+    // BLOCKER TODO: Requires WWAudio infrastructure (see OnPlaySoundEffect comments)
+    // MFC: PlaySoundDialog.cpp lines 115-139
+    //   SoundObj = WWAudioClass::Get_Instance()->Create_Sound_Effect(Filename);
+    //   if (SoundObj == nullptr) {
+    //       CString message;
+    //       message.Format("Cannot find sound file: %s!", (LPCTSTR)Filename);
+    //       MessageBox(message, "File Not Found", MB_ICONEXCLAMATION | MB_OK);
+    //       EndDialog(IDCANCEL);
+    //   } else {
+    //       OnPlaySoundEffect();
+    //   }
     //
-    //	Create the sound effect so we can play it
-    //
-    // TODO: Convert: SoundObj = WWAudioClass::Get_Instance ()->Create_Sound_Effect (Filename);
-    // TODO: Convert: CString message;
-    // TODO: Convert: message.Format ("Cannot find sound file: %s!", (LPCTSTR)Filename, MB_OK);
-    // TODO: Convert: MessageBox (message, "File Not Found", MB_ICONEXCLAMATION | MB_OK);
-    // TODO: Convert: EndDialog (IDCANCEL);
-    // TODO: Convert: OnPlaySoundEffect ();
-    // TODO: Convert: return TRUE;
+    // Cannot implement until WWAudio headers compile without errors.
 
     event.Skip();
 }

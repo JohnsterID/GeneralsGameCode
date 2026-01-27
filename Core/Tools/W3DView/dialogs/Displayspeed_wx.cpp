@@ -115,15 +115,13 @@ void Displayspeed::OnBlend(wxCommandEvent &event)
 void Displayspeed::OnCompressq(wxCommandEvent &event)
 {
     // MFC Reference: AnimationSpeed.cpp:203-226 (OnCompressq)
-    // NOTE: This method is COMMENTED OUT in MFC AnimationSpeed.cpp!
-    // The code exists but is wrapped in /* */ comments
-    //
-    // TODO(MFC-Match): This feature is disabled in MFC
-    //   Behavior: Would toggle channel Q compression and enable/disable radio buttons
-    //   Required: pCDoc->SetChannelQCompression(b_compress)
+    // NOTE(MFC-Match): This method is COMMENTED OUT in MFC AnimationSpeed.cpp!
+    // The code exists but is wrapped in /* */ comments - intentionally not implemented here.
+    //   Original behavior: Would toggle channel Q compression and enable/disable radio buttons
+    //   Would require: pCDoc->SetChannelQCompression(b_compress)
     //   Enable state: GetDlgItem(IDC_16BIT/IDC_8BIT)->EnableWindow(b_compress)
     //   Impact: LOW - feature is unused in MFC
-    //   Decision: Leave unimplemented to match MFC behavior
+    //   Decision: Leave unimplemented to match MFC behavior exactly
     
     // Empty implementation matches MFC (commented out code)
 }
@@ -131,13 +129,12 @@ void Displayspeed::OnCompressq(wxCommandEvent &event)
 void Displayspeed::On16bit(wxCommandEvent &event)
 {
     // MFC Reference: AnimationSpeed.cpp:228-234 (On16bit)
-    // NOTE: This method is COMMENTED OUT in MFC AnimationSpeed.cpp!
-    //
-    // TODO(MFC-Match): This feature is disabled in MFC
-    //   Behavior: Would set Q bytes to 2 (16-bit compression)
-    //   Required: pCDoc->SetChannelQnBytes(2); QnBytes = 2;
+    // NOTE(MFC-Match): This method is COMMENTED OUT in MFC AnimationSpeed.cpp!
+    // Intentionally not implemented here to match MFC behavior.
+    //   Original behavior: Would set Q bytes to 2 (16-bit compression)
+    //   Would require: pCDoc->SetChannelQnBytes(2); QnBytes = 2;
     //   Impact: LOW - feature is unused in MFC
-    //   Decision: Leave unimplemented to match MFC behavior
+    //   Decision: Leave unimplemented to match MFC behavior exactly
     
     // Empty implementation matches MFC (commented out code)
 }
@@ -145,13 +142,12 @@ void Displayspeed::On16bit(wxCommandEvent &event)
 void Displayspeed::On8bit(wxCommandEvent &event)
 {
     // MFC Reference: AnimationSpeed.cpp:236-243 (On8bit)
-    // NOTE: This method is COMMENTED OUT in MFC AnimationSpeed.cpp!
-    //
-    // TODO(MFC-Match): This feature is disabled in MFC
-    //   Behavior: Would set Q bytes to 1 (8-bit compression)
-    //   Required: pCDoc->SetChannelQnBytes(1); QnBytes = 1;
+    // NOTE(MFC-Match): This method is COMMENTED OUT in MFC AnimationSpeed.cpp!
+    // Intentionally not implemented here to match MFC behavior.
+    //   Original behavior: Would set Q bytes to 1 (8-bit compression)
+    //   Would require: pCDoc->SetChannelQnBytes(1); QnBytes = 1;
     //   Impact: LOW - feature is unused in MFC
-    //   Decision: Leave unimplemented to match MFC behavior
+    //   Decision: Leave unimplemented to match MFC behavior exactly
     
     // Empty implementation matches MFC (commented out code)
 }

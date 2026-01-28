@@ -91,17 +91,17 @@ public:
 	bool operator == (const RenderDeviceDescClass & /*src*/) { return false; }
 	bool operator != (const RenderDeviceDescClass & /*src*/) { return true; }
 
-	const char *		Get_Device_Name() const			{ return DeviceName; }
-	const char *		Get_Device_Vendor() const		{ return DeviceVendor; }
-	const char *		Get_Device_Platform() const	{ return DevicePlatform; }
+	const TCHAR *		Get_Device_Name() const			{ return DeviceName.str(); }
+	const TCHAR *		Get_Device_Vendor() const		{ return DeviceVendor.str(); }
+	const TCHAR *		Get_Device_Platform() const	{ return DevicePlatform.str(); }
 
-	const char *		Get_Driver_Name() const			{ return DriverName; }
-	const char *		Get_Driver_Vendor() const		{ return DriverVendor; }
-	const char *		Get_Driver_Version() const		{ return DriverVersion; }
+	const TCHAR *		Get_Driver_Name() const			{ return DriverName.str(); }
+	const TCHAR *		Get_Driver_Vendor() const		{ return DriverVendor.str(); }
+	const TCHAR *		Get_Driver_Version() const		{ return DriverVersion.str(); }
 
-	const char *		Get_Hardware_Name() const		{ return HardwareName; }
-	const char *		Get_Hardware_Vendor() const	{ return HardwareVendor; }
-	const char *		Get_Hardware_Chipset() const	{ return HardwareChipset; }
+	const TCHAR *		Get_Hardware_Name() const		{ return HardwareName.str(); }
+	const TCHAR *		Get_Hardware_Vendor() const	{ return HardwareVendor.str(); }
+	const TCHAR *		Get_Hardware_Chipset() const	{ return HardwareChipset.str(); }
 
 	const DynamicVectorClass<ResolutionDescClass> & Enumerate_Resolutions(void) const	{ return ResArray; }
 	const D3DCAPS8& 	Get_Caps() const { return Caps; }
@@ -109,15 +109,15 @@ public:
 
 private:
 
-	void set_device_name(const char * name)		{ DeviceName=name; }
-	void set_device_vendor(const char * name)		{ DeviceVendor=name; }
-	void set_device_platform(const char * name)	{ DevicePlatform=name; }
-	void set_driver_name(const char * name)		{ DriverName=name; }
-	void set_driver_vendor(const char * name)		{ DriverVendor=name; }
-	void set_driver_version(const char * name)	{ DriverVersion=name; }
-	void set_hardware_name(const char * name)		{ HardwareName=name; }
-	void set_hardware_vendor(const char * name)	{ HardwareVendor=name; }
-	void set_hardware_chipset(const char * name)	{ HardwareChipset=name; }
+	void set_device_name(const TCHAR * name)		{ DeviceName=name; }
+	void set_device_vendor(const TCHAR * name)		{ DeviceVendor=name; }
+	void set_device_platform(const TCHAR * name)	{ DevicePlatform=name; }
+	void set_driver_name(const TCHAR * name)		{ DriverName=name; }
+	void set_driver_vendor(const TCHAR * name)		{ DriverVendor=name; }
+	void set_driver_version(const TCHAR * name)	{ DriverVersion=name; }
+	void set_hardware_name(const TCHAR * name)		{ HardwareName=name; }
+	void set_hardware_vendor(const TCHAR * name)	{ HardwareVendor=name; }
+	void set_hardware_chipset(const TCHAR * name)	{ HardwareChipset=name; }
 
 	void reset_resolution_list(void)					{ ResArray.Delete_All(); }
 	void add_resolution(int w,int h,int bits);

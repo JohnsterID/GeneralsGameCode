@@ -23,7 +23,7 @@
 #include <wx/xrc/xmlres.h>
 #include <wx/config.h>
 #include "ww3d.h"
-// #include "rddesc.h"  // TODO: RenderDeviceDescClass Get_*() methods have StringClass return type bug
+#include "rddesc.h"  // StringClass bug fixed (Session 40 Part 4)
 
 wxBEGIN_EVENT_TABLE(RenderDeviceSelector, RenderDeviceSelectorBase)
     EVT_INIT_DIALOG(RenderDeviceSelector::OnInitDialog)
@@ -132,46 +132,67 @@ void RenderDeviceSelector::OnSelchangeRenderDeviceCombo(wxCommandEvent &event)
 void RenderDeviceSelector::UpdateDeviceDescription()
 {
     // MFC: DeviceSelectionDialog.cpp:129-145
-    // TODO(StringClass-Bug): RenderDeviceDescClass Get_*() methods have broken return types
-    //   Issue: rddesc.h declares methods as `const char* Get_Device_Name() const`
-    //          but implementation returns `StringClass` directly: `{ return DeviceName; }`
-    //   Root Cause: StringClass has no implicit conversion to const char* in wxWidgets builds
-    //   MFC Build: Works because MFC's StdAfx.h may add conversion operator or uses different StringClass
-    //   wxWidgets Build: Compiler error "cannot convert 'const StringClass' to 'const char*'"
-    //   
-    //   Attempted fixes that failed:
-    //   1. Call .Peek_Buffer() - not const, can't call from const method
-    //   2. Call .str() - returns const TCHAR* (wchar_t*), still type mismatch
-    //   3. Cast to wxString - can't construct from StringClass
-    //   
-    //   Proper solution (needs header change in rddesc.h):
-    //   Option A: Change return type to `const StringClass&` (breaks MFC compatibility)
-    //   Option B: Fix implementation to call .str(): `{ return DeviceName.str(); }`
-    //            Then cast to wxString in calling code
-    //   Option C: Add const version of Peek_Buffer to StringClass
-    //   
-    //   Current workaround: Skip device info display, focus on device selection functionality
-    //   Device selection (combo box, checkboxes, registry) works without device_desc access
-    //   
-    //   MFC fields that would be populated (currently skipped):
-    //   - IDC_DRIVER_NAME (m_driver_name) - driver name from registry
-    //   - IDC_DEVICE_NAME_STATIC - device_desc.Get_Device_Name()
-    //   - IDC_DEVICE_VENDOR_STATIC - device_desc.Get_Device_Vendor()
-    //   - IDC_DEVICE_PLATFORM_STATIC - device_desc.Get_Device_Platform()
-    //   - IDC_DRIVER_NAME_STATIC - device_desc.Get_Driver_Name()
-    //   - IDC_DRIVER_VENDOR_STATIC - device_desc.Get_Driver_Vendor()
-    //   - IDC_DRIVER_VERSION_STATIC - device_desc.Get_Driver_Version()
-    //   - IDC_HARDWARE_NAME_STATIC - device_desc.Get_Hardware_Name()
-    //   - IDC_HARDWARE_VENDOR_STATIC - device_desc.Get_Hardware_Vendor()
-    //   - IDC_HARDWARE_CHIPSET_STATIC - device_desc.Get_Hardware_Chipset()
-    //
-    // For now: Set driver name only (from m_driver_name, not from device_desc)
+    // Get currently selected device index
+    int selectedItem = m_idc_render_device_combo->GetSelection();
+    if (selectedItem == wxNOT_FOUND) {
+        return; // No device selected
+    }
+    
+    // Get device index from client data
+    void* clientData = m_idc_render_device_combo->GetClientData(selectedItem);
+    if (!clientData) {
+        return;
+    }
+    
+    int deviceIndex = reinterpret_cast<intptr_t>(clientData);
+    
+    // Get device description from WW3D (returns const reference)
+    const RenderDeviceDescClass &device_desc = WW3D::Get_Render_Device_Desc(deviceIndex);
+    
+    // Populate all device info fields (StringClass bug fixed in rddesc.h!)
+    // Get_*() methods now return const TCHAR* (wchar_t*), wxString handles directly
     if (m_idc_driver_name) {
         m_idc_driver_name->SetLabelText(m_driver_name);
     }
     
-    // TODO: Populate other device info fields once StringClass issue is resolved
-    // Until then, these fields will show placeholder text from XRC dialog definition
+    if (m_idc_device_name_static) {
+        m_idc_device_name_static->SetLabelText(device_desc.Get_Device_Name());
+    }
+    
+    if (m_idc_device_vendor_static) {
+        m_idc_device_vendor_static->SetLabelText(device_desc.Get_Device_Vendor());
+    }
+    
+    if (m_idc_device_platform_static) {
+        m_idc_device_platform_static->SetLabelText(device_desc.Get_Device_Platform());
+    }
+    
+    if (m_idc_driver_name_static) {
+        m_idc_driver_name_static->SetLabelText(device_desc.Get_Driver_Name());
+    }
+    
+    if (m_idc_driver_vendor_static) {
+        m_idc_driver_vendor_static->SetLabelText(device_desc.Get_Driver_Vendor());
+    }
+    
+    if (m_idc_driver_version_static) {
+        m_idc_driver_version_static->SetLabelText(device_desc.Get_Driver_Version());
+    }
+    
+    if (m_idc_hardware_name_static) {
+        m_idc_hardware_name_static->SetLabelText(device_desc.Get_Hardware_Name());
+    }
+    
+    if (m_idc_hardware_vendor_static) {
+        m_idc_hardware_vendor_static->SetLabelText(device_desc.Get_Hardware_Vendor());
+    }
+    
+    if (m_idc_hardware_chipset_static) {
+        m_idc_hardware_chipset_static->SetLabelText(device_desc.Get_Hardware_Chipset());
+    }
+    
+    // MFC Reference: DeviceSelectionDialog.cpp:129-145
+    // All 9 device info fields now populated (matches MFC exactly)
 }
 
 void RenderDeviceSelector::OnOK(wxCommandEvent &event)

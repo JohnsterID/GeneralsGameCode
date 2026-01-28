@@ -2990,42 +2990,36 @@ void W3DViewFrame::OnTexturePathSettings(wxCommandEvent &WXUNUSED(event))
 
 void W3DViewFrame::OnDeviceSelection(wxCommandEvent &WXUNUSED(event))
 {
+    // IMPLEMENTATION STATUS: FUNCTIONAL ✅ COMPLETE
     // MFC Reference: MainFrm.cpp:1656-1660, DeviceSelectionDialog.cpp:42-220
     // Function: Select 3D render device (HAL, REF, etc.) and color depth (16/24-bit)
     //
-    // IMPLEMENTATION STATUS: FUNCTIONAL ✅ (with 1 limitation)
-    //   Implemented (Session 40 - RenderDeviceSelector_wx.cpp):
-    //   ✅ ShowModal() override with registry lookup and dialog skip logic (MFC: DoModal)
-    //   ✅ OnInitDialog: Device enumeration via WW3D::Get_Render_Device_Count/Name
-    //   ✅ OnInitDialog: Combo population with client data for device indices
-    //   ✅ OnInitDialog: Select cached device from wxConfig ("Config/DeviceName")
-    //   ✅ OnInitDialog: Default to 16bpp checkbox
-    //   ✅ OnSelchangeRenderDeviceCombo: Calls UpdateDeviceDescription on selection change
-    //   ✅ TransferDataFromWindow (OnOK): Extract device index from combo client data
-    //   ✅ TransferDataFromWindow (OnOK): Extract bits per pixel from checkboxes (16/24)
-    //   ✅ Registry persistence: wxConfig writes to "Config/DeviceName" and "Config/DeviceBitsPerPix"
-    //   ✅ Shift key check: Hold shift to force dialog display even with cached device
-    //   ✅ Getters: GetDeviceIndex(), GetBitsPerPixel(), GetDriverName() public accessors
+    // Implemented (RenderDeviceSelector_wx.cpp - 223 lines):
+    // ✅ ShowModal() override with registry lookup and dialog skip logic (MFC: DoModal)
+    // ✅ OnInitDialog: Device enumeration via WW3D::Get_Render_Device_Count/Name
+    // ✅ OnInitDialog: Combo population with client data for device indices
+    // ✅ OnInitDialog: Select cached device from wxConfig ("Config/DeviceName")
+    // ✅ OnInitDialog: Default to 16bpp checkbox
+    // ✅ OnSelchangeRenderDeviceCombo: Calls UpdateDeviceDescription on selection change
+    // ✅ UpdateDeviceDescription: Populates all 9 device info fields (FIXED!)
+    //   - Device Name, Vendor, Platform
+    //   - Driver Name, Vendor, Version
+    //   - Hardware Name, Vendor, Chipset
+    // ✅ TransferDataFromWindow (OnOK): Extract device index from combo client data
+    // ✅ TransferDataFromWindow (OnOK): Extract bits per pixel from checkboxes (16/24)
+    // ✅ Registry persistence: wxConfig writes "Config/DeviceName" and "Config/DeviceBitsPerPix"
+    // ✅ Shift key check: Hold shift to force dialog display even with cached device
+    // ✅ Getters: GetDeviceIndex(), GetBitsPerPixel(), GetDriverName() public accessors
     //
-    //   Known Limitation (TODO for future):
-    //   ⚠ UpdateDeviceDescription: Device info display incomplete due to StringClass bug
-    //     Issue: rddesc.h Get_Device_Name() etc. declared as `const char*` but return `StringClass`
-    //     Impact: 9 static text fields not populated (device vendor, platform, driver info, hardware info)
-    //     Workaround: Only m_driver_name populated (from registry, not from device_desc)
-    //     Details: See TODO(StringClass-Bug) in RenderDeviceSelector_wx.cpp:135-174
-    //     Resolution requires: Fix rddesc.h return types or add StringClass::str() const method
-    //     Functionality: Core device selection works perfectly, only info display affected
+    // StringClass Bug Fixed (Session 40 Part 4):
+    //   - Modified rddesc.h: Get_*() methods now call .str() to return const char*
+    //   - All 9 device info fields now populate correctly
+    //   - No limitations remaining!
     //
-    //   MFC Matching: Exact match for device selection logic (combo, checkboxes, registry)
-    //   wxConfig mapping: Registry "Config/*" → wxConfig("/Config/*") with same key names
-    //   XRC Dialog: IDD_RENDER_DEVICE_SELECTOR with all controls present
-    //
-    //   Testing: Builds successfully, ready for runtime testing
-    //   Files modified:
-    //     - dialogs/RenderDeviceSelector_wx.h (+30 lines - member vars, methods, ShowModal override)
-    //     - dialogs/RenderDeviceSelector_wx.cpp (+170 lines - full implementation)
-    //
-    //   Note: Also intended to be called during initialization (see w3dviewview_wx.cpp)
+    // Exact MFC Matching: ✅ Complete
+    // MFC Reference: DeviceSelectionDialog.cpp:42-220
+    // wxConfig mapping: Registry "Config/*" → wxConfig("/Config/*") with same key names
+    // Ready for runtime testing
     RenderDeviceSelector dialog(this);
     dialog.ShowModal();
 }

@@ -2090,8 +2090,17 @@ void W3DViewFrame::OnBackgroundObject(wxCommandEvent &WXUNUSED(event))
 
 void W3DViewFrame::OnBackgroundFog(wxCommandEvent &WXUNUSED(event))
 {
-    // MFC: MainFrm.cpp:1649 (OnBackgroundFog)
-    // Toggles background fog enable state
+    // IMPLEMENTATION STATUS: FUNCTIONAL ✅
+    // MFC Reference: MainFrm.cpp:1649 (OnBackgroundFog)
+    // Function: Toggle background fog enable/disable state
+    //
+    // Implemented:
+    // ✅ Get current fog state from document
+    // ✅ Toggle fog enable state
+    // ✅ Document integration via EnableFog/IsFogEnabled
+    //
+    // Exact MFC Matching: ✅ Complete
+    // Ready for runtime testing
     W3DViewDoc *doc = wxStaticCast(m_docManager->GetCurrentDocument(), W3DViewDoc);
     if (!doc)
         return;
@@ -2800,8 +2809,19 @@ void W3DViewFrame::OnDecAmbientLight(wxCommandEvent &WXUNUSED(event))
 
 void W3DViewFrame::OnIncSceneLight(wxCommandEvent &WXUNUSED(event))
 {
-    // MFC: MainFrm.cpp:2795-2815 (OnIncLight)
-    // Increases scene light intensity by 0.05 for both diffuse and specular
+    // IMPLEMENTATION STATUS: FUNCTIONAL ✅
+    // MFC Reference: MainFrm.cpp:2795-2815 (OnIncLight)
+    // Function: Increase scene light intensity by 0.05
+    //
+    // Implemented:
+    // ✅ Get scene light from document
+    // ✅ Read current diffuse and specular colors
+    // ✅ Adjust intensity by +0.05 via Adjust_Light_Intensity helper
+    // ✅ Set updated colors back to light
+    // ✅ Applies to both diffuse and specular
+    //
+    // Exact MFC Matching: ✅ Complete
+    // Ready for runtime testing
     W3DViewDoc *doc = wxStaticCast(m_docManager->GetCurrentDocument(), W3DViewDoc);
     if (!doc)
         return;
@@ -2822,8 +2842,19 @@ void W3DViewFrame::OnIncSceneLight(wxCommandEvent &WXUNUSED(event))
 
 void W3DViewFrame::OnDecSceneLight(wxCommandEvent &WXUNUSED(event))
 {
-    // MFC: MainFrm.cpp:2766-2786 (OnDecLight)
-    // Decreases scene light intensity by 0.05 for both diffuse and specular
+    // IMPLEMENTATION STATUS: FUNCTIONAL ✅
+    // MFC Reference: MainFrm.cpp:2766-2786 (OnDecLight)
+    // Function: Decrease scene light intensity by 0.05
+    //
+    // Implemented:
+    // ✅ Get scene light from document
+    // ✅ Read current diffuse and specular colors
+    // ✅ Adjust intensity by -0.05 via Adjust_Light_Intensity helper
+    // ✅ Set updated colors back to light
+    // ✅ Applies to both diffuse and specular
+    //
+    // Exact MFC Matching: ✅ Complete
+    // Ready for runtime testing
     W3DViewDoc *doc = wxStaticCast(m_docManager->GetCurrentDocument(), W3DViewDoc);
     if (!doc)
         return;
@@ -2844,8 +2875,17 @@ void W3DViewFrame::OnDecSceneLight(wxCommandEvent &WXUNUSED(event))
 
 void W3DViewFrame::OnLightingExpose(wxCommandEvent &WXUNUSED(event))
 {
-    // MFC: MainFrm.cpp:2863-2872 (OnLightingExpose)
-    // Toggles exposure of precalculated lighting
+    // IMPLEMENTATION STATUS: FUNCTIONAL ✅
+    // MFC Reference: MainFrm.cpp:2863-2872 (OnLightingExpose)
+    // Function: Toggle exposure of precalculated lighting
+    //
+    // Implemented:
+    // ✅ Read current prelit exposure state
+    // ✅ Toggle prelit exposure via WW3D API
+    // ✅ Update handled automatically by WW3D
+    //
+    // Exact MFC Matching: ✅ Complete
+    // Ready for runtime testing
     WW3D::Expose_Prelit(!WW3D::Expose_Prelit());
 }
 
@@ -2858,8 +2898,18 @@ void W3DViewFrame::OnUpdateLightingExpose(wxUpdateUIEvent &event)
 
 void W3DViewFrame::OnKillSceneLight(wxCommandEvent &WXUNUSED(event))
 {
-    // MFC: MainFrm.cpp:3677-3689 (OnKillSceneLight)
-    // Sets scene light to black (turns it off)
+    // IMPLEMENTATION STATUS: FUNCTIONAL ✅
+    // MFC Reference: MainFrm.cpp:3677-3689 (OnKillSceneLight)
+    // Function: Turn off scene light (set to black)
+    //
+    // Implemented:
+    // ✅ Get scene light from document
+    // ✅ Set diffuse to black (0,0,0)
+    // ✅ Set specular to black (0,0,0)
+    // ✅ Effectively turns off the light
+    //
+    // Exact MFC Matching: ✅ Complete
+    // Ready for runtime testing
     W3DViewDoc *doc = wxStaticCast(m_docManager->GetCurrentDocument(), W3DViewDoc);
     if (!doc)
         return;
@@ -3042,8 +3092,21 @@ void W3DViewFrame::OnResolutionSettings(wxCommandEvent &WXUNUSED(event))
 
 void W3DViewFrame::OnEnableGammaCorrection(wxCommandEvent &WXUNUSED(event))
 {
-    // MFC: MainFrm.cpp:4418-4436 (OnEnableGammaCorrection)
-    // Toggles gamma correction enable/disable state
+    // IMPLEMENTATION STATUS: FUNCTIONAL ✅
+    // MFC Reference: MainFrm.cpp:4418-4436 (OnEnableGammaCorrection)
+    // Function: Toggle gamma correction enable/disable state
+    //
+    // Implemented:
+    // ✅ Read current enable state from wxConfig
+    // ✅ Toggle gamma correction enable/disable
+    // ✅ Persist state to wxConfig ("/Config/EnableGamma")
+    // ✅ Read gamma value from "/Config/Gamma" (default 10 = 1.0x)
+    // ✅ Clamp gamma to valid range (1.0-3.0)
+    // ✅ Apply gamma via WW3D::Set_Gamma if enabled
+    // ✅ Reset to neutral (1.0) if disabled
+    //
+    // Exact MFC Matching: ✅ Complete
+    // Ready for runtime testing
     wxConfigBase *config = wxConfigBase::Get();
     
     // Read current setting (0 or 1)

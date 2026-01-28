@@ -1159,8 +1159,18 @@ void W3DViewFrame::OnObjectAlternateMaterials(wxCommandEvent &WXUNUSED(event))
 
 void W3DViewFrame::OnViewPatchGapFill(wxCommandEvent &WXUNUSED(event))
 {
+    // IMPLEMENTATION STATUS: FUNCTIONAL ✅
     // MFC Reference: MainFrm.cpp:4255-4265 (OnViewPatchGapFill)
-    // Toggle N-Patches gap-filling mode between enabled and disabled
+    // Function: Toggle N-Patches gap-filling mode
+    //
+    // Implemented:
+    // ✅ Check current gap-filling mode
+    // ✅ Toggle between ENABLED and DISABLED
+    // ✅ Persist to wxConfig ("/Config/NPatchesGapFilling")
+    // ✅ UI update handler (OnUpdateViewPatchGapFill) implemented
+    //
+    // Exact MFC Matching: ✅ Complete
+    // Ready for runtime testing
     if (WW3D::Get_NPatches_Gap_Filling_Mode() == WW3D::NPATCHES_GAP_FILLING_ENABLED) {
         WW3D::Set_NPatches_Gap_Filling_Mode(WW3D::NPATCHES_GAP_FILLING_DISABLED);
         wxConfig::Get()->Write("/Config/NPatchesGapFilling", 0L);
@@ -1181,8 +1191,10 @@ void W3DViewFrame::OnUpdateViewPatchGapFill(wxUpdateUIEvent &event)
 
 void W3DViewFrame::OnViewSubdivision1(wxCommandEvent &WXUNUSED(event))
 {
+    // IMPLEMENTATION STATUS: FUNCTIONAL ✅
     // MFC Reference: MainFrm.cpp:4277-4284 (OnViewSubdivision1)
-    // Set N-Patches subdivision level to 1
+    // Function: Set N-Patches subdivision level to 1
+    // ✅ Exact MFC match - Ready for runtime testing
     WW3D::Set_NPatches_Level(1);
     wxConfig::Get()->Write("/Config/NPatchesSubdivision", 1L);
     wxConfig::Get()->Flush();
@@ -1191,14 +1203,15 @@ void W3DViewFrame::OnViewSubdivision1(wxCommandEvent &WXUNUSED(event))
 void W3DViewFrame::OnUpdateViewSubdivision1(wxUpdateUIEvent &event)
 {
     // MFC Reference: MainFrm.cpp:4286-4291 (OnUpdateViewSubdivision1)
-    // Check the menu item if current subdivision level is 1
     event.Check(WW3D::Get_NPatches_Level() == 1);
 }
 
 void W3DViewFrame::OnViewSubdivision2(wxCommandEvent &WXUNUSED(event))
 {
+    // IMPLEMENTATION STATUS: FUNCTIONAL ✅
     // MFC Reference: MainFrm.cpp:4293-4300 (OnViewSubdivision2)
-    // Set N-Patches subdivision level to 2
+    // Function: Set N-Patches subdivision level to 2
+    // ✅ Exact MFC match - Ready for runtime testing
     WW3D::Set_NPatches_Level(2);
     wxConfig::Get()->Write("/Config/NPatchesSubdivision", 2L);
     wxConfig::Get()->Flush();
@@ -1207,14 +1220,15 @@ void W3DViewFrame::OnViewSubdivision2(wxCommandEvent &WXUNUSED(event))
 void W3DViewFrame::OnUpdateViewSubdivision2(wxUpdateUIEvent &event)
 {
     // MFC Reference: MainFrm.cpp:4302-4307 (OnUpdateViewSubdivision2)
-    // Check the menu item if current subdivision level is 2
     event.Check(WW3D::Get_NPatches_Level() == 2);
 }
 
 void W3DViewFrame::OnViewSubdivision3(wxCommandEvent &WXUNUSED(event))
 {
+    // IMPLEMENTATION STATUS: FUNCTIONAL ✅
     // MFC Reference: MainFrm.cpp:4309-4316 (OnViewSubdivision3)
-    // Set N-Patches subdivision level to 3
+    // Function: Set N-Patches subdivision level to 3
+    // ✅ Exact MFC match - Ready for runtime testing
     WW3D::Set_NPatches_Level(3);
     wxConfig::Get()->Write("/Config/NPatchesSubdivision", 3L);
     wxConfig::Get()->Flush();
@@ -1223,14 +1237,15 @@ void W3DViewFrame::OnViewSubdivision3(wxCommandEvent &WXUNUSED(event))
 void W3DViewFrame::OnUpdateViewSubdivision3(wxUpdateUIEvent &event)
 {
     // MFC Reference: MainFrm.cpp:4318-4323 (OnUpdateViewSubdivision3)
-    // Check the menu item if current subdivision level is 3
     event.Check(WW3D::Get_NPatches_Level() == 3);
 }
 
 void W3DViewFrame::OnViewSubdivision4(wxCommandEvent &WXUNUSED(event))
 {
+    // IMPLEMENTATION STATUS: FUNCTIONAL ✅
     // MFC Reference: MainFrm.cpp:4325-4332 (OnViewSubdivision4)
-    // Set N-Patches subdivision level to 4
+    // Function: Set N-Patches subdivision level to 4
+    // ✅ Exact MFC match - Ready for runtime testing
     WW3D::Set_NPatches_Level(4);
     wxConfig::Get()->Write("/Config/NPatchesSubdivision", 4L);
     wxConfig::Get()->Flush();
@@ -1245,8 +1260,10 @@ void W3DViewFrame::OnUpdateViewSubdivision4(wxUpdateUIEvent &event)
 
 void W3DViewFrame::OnViewSubdivision5(wxCommandEvent &WXUNUSED(event))
 {
+    // IMPLEMENTATION STATUS: FUNCTIONAL ✅
     // MFC Reference: MainFrm.cpp:4341-4348 (OnViewSubdivision5)
-    // Set N-Patches subdivision level to 5
+    // Function: Set N-Patches subdivision level to 5
+    // ✅ Exact MFC match - Ready for runtime testing
     WW3D::Set_NPatches_Level(5);
     wxConfig::Get()->Write("/Config/NPatchesSubdivision", 5L);
     wxConfig::Get()->Flush();
@@ -1255,14 +1272,15 @@ void W3DViewFrame::OnViewSubdivision5(wxCommandEvent &WXUNUSED(event))
 void W3DViewFrame::OnUpdateViewSubdivision5(wxUpdateUIEvent &event)
 {
     // MFC Reference: MainFrm.cpp:4350-4355 (OnUpdateViewSubdivision5)
-    // Check the menu item if current subdivision level is 5
     event.Check(WW3D::Get_NPatches_Level() == 5);
 }
 
 void W3DViewFrame::OnViewSubdivision6(wxCommandEvent &WXUNUSED(event))
 {
+    // IMPLEMENTATION STATUS: FUNCTIONAL ✅
     // MFC Reference: MainFrm.cpp:4357-4364 (OnViewSubdivision6)
-    // Set N-Patches subdivision level to 6
+    // Function: Set N-Patches subdivision level to 6
+    // ✅ Exact MFC match - Ready for runtime testing
     WW3D::Set_NPatches_Level(6);
     wxConfig::Get()->Write("/Config/NPatchesSubdivision", 6L);
     wxConfig::Get()->Flush();
@@ -1271,14 +1289,15 @@ void W3DViewFrame::OnViewSubdivision6(wxCommandEvent &WXUNUSED(event))
 void W3DViewFrame::OnUpdateViewSubdivision6(wxUpdateUIEvent &event)
 {
     // MFC Reference: MainFrm.cpp:4366-4371 (OnUpdateViewSubdivision6)
-    // Check the menu item if current subdivision level is 6
     event.Check(WW3D::Get_NPatches_Level() == 6);
 }
 
 void W3DViewFrame::OnViewSubdivision7(wxCommandEvent &WXUNUSED(event))
 {
+    // IMPLEMENTATION STATUS: FUNCTIONAL ✅
     // MFC Reference: MainFrm.cpp:4373-4380 (OnViewSubdivision7)
-    // Set N-Patches subdivision level to 7
+    // Function: Set N-Patches subdivision level to 7
+    // ✅ Exact MFC match - Ready for runtime testing
     WW3D::Set_NPatches_Level(7);
     wxConfig::Get()->Write("/Config/NPatchesSubdivision", 7L);
     wxConfig::Get()->Flush();
@@ -1287,14 +1306,15 @@ void W3DViewFrame::OnViewSubdivision7(wxCommandEvent &WXUNUSED(event))
 void W3DViewFrame::OnUpdateViewSubdivision7(wxUpdateUIEvent &event)
 {
     // MFC Reference: MainFrm.cpp:4382-4387 (OnUpdateViewSubdivision7)
-    // Check the menu item if current subdivision level is 7
     event.Check(WW3D::Get_NPatches_Level() == 7);
 }
 
 void W3DViewFrame::OnViewSubdivision8(wxCommandEvent &WXUNUSED(event))
 {
+    // IMPLEMENTATION STATUS: FUNCTIONAL ✅
     // MFC Reference: MainFrm.cpp:4389-4396 (OnViewSubdivision8)
-    // Set N-Patches subdivision level to 8
+    // Function: Set N-Patches subdivision level to 8
+    // ✅ Exact MFC match - Ready for runtime testing
     WW3D::Set_NPatches_Level(8);
     wxConfig::Get()->Write("/Config/NPatchesSubdivision", 8L);
     wxConfig::Get()->Flush();
@@ -1303,7 +1323,6 @@ void W3DViewFrame::OnViewSubdivision8(wxCommandEvent &WXUNUSED(event))
 void W3DViewFrame::OnUpdateViewSubdivision8(wxUpdateUIEvent &event)
 {
     // MFC Reference: MainFrm.cpp:4398-4403 (OnUpdateViewSubdivision8)
-    // Check the menu item if current subdivision level is 8
     event.Check(WW3D::Get_NPatches_Level() == 8);
 }
 

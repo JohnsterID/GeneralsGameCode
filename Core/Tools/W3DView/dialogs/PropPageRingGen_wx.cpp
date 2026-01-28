@@ -21,6 +21,7 @@
 #include "PropPageRingGen_wx.h"
 #include <wx/xrc/xmlres.h>
 #include <wx/spinbutt.h>
+#include <wx/filedlg.h>
 
 wxBEGIN_EVENT_TABLE(PropPageRingGen, PropPageRingGenBase)
 EVT_BUTTON(XRCID("IDC_BROWSE_BUTTON"), PropPageRingGen::OnBrowseButton)  // Button/Checkbox click
@@ -63,8 +64,37 @@ void PropPageRingGen::OnCancel(wxCommandEvent &event)
 
 void PropPageRingGen::OnBrowseButton(wxCommandEvent &event)
 {
-    // TODO: Implement OnBrowseButton
-    // Control ID: IDC_BROWSE_BUTTON
+    // MFC Reference: RingGeneralPropPage.cpp (OnBrowseButton)
+    // Function: Browse for texture file (.tga) and populate filename edit control
+    //
+    // MFC Implementation:
+    //   CFileDialog(TRUE, ".tga", nullptr, OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT | OFN_EXPLORER,
+    //               "Textures files (*.tga)|*.tga||", ::AfxGetMainWnd());
+    //   if (dialog.DoModal() == IDOK) {
+    //       SetDlgItemText(IDC_FILENAME_EDIT, dialog.GetPathName());
+    //       SetModified();
+    //   }
+    
+    wxFileDialog fileDialog(
+        this,
+        "Select Texture File",  // Title
+        "",  // Default directory (empty = current)
+        "",  // Default filename (empty = none)
+        "Texture files (*.tga)|*.tga",  // Wildcard filter
+        wxFD_OPEN | wxFD_FILE_MUST_EXIST  // Flags (Open mode, file must exist)
+    );
+    
+    if (fileDialog.ShowModal() == wxID_OK)
+    {
+        // Get selected file path and set it in the filename edit control
+        wxString filepath = fileDialog.GetPath();
+        if (m_idc_filename_edit)
+        {
+            m_idc_filename_edit->SetValue(filepath);
+            // Note: SetModified() equivalent would be needed if this were in a property sheet book
+            // For standalone dialog, change tracking happens through TransferDataFromWindow
+        }
+    }
 }
 
 void PropPageRingGen::OnChangeFilenameEdit(wxCommandEvent &event)

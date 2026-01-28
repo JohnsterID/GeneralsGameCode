@@ -108,23 +108,36 @@ protected:
 class RenderDeviceSelector : public RenderDeviceSelectorBase
 {
 public:
-    RenderDeviceSelector(wxWindow *parent);
+    RenderDeviceSelector(wxWindow *parent, bool lookup_cached_info = true);
+    
+    // Override ShowModal to implement registry lookup and skip dialog if device found
+    // MFC: CDeviceSelectionDialog::DoModal()
+    int ShowModal() override;
+    
+    // Getters for selected values (MFC: GetDeviceIndex, GetBitsPerPixel, GetDriverName)
+    int GetDeviceIndex() const { return m_device_index; }
+    int GetBitsPerPixel() const { return m_bits_per_pixel; }
+    wxString GetDriverName() const { return m_driver_name; }
 
 protected:
-    // Override for data transfer if needed
-    // bool TransferDataToWindow() override;
-    // bool TransferDataFromWindow() override;
+    // MFC: UpdateDeviceDescription()
+    void UpdateDeviceDescription();
 
 private:
     void OnOK(wxCommandEvent &event);
     void OnCancel(wxCommandEvent &event);
+    void OnInitDialog(wxInitDialogEvent &event);
+    void OnSelchangeRenderDeviceCombo(wxCommandEvent &event);
 
-    wxDECLARE_EVENT_TABLE();
-private:
-    // Phase 2.5: Dialog infrastructure
+    // Data transfer
     bool TransferDataToWindow() override;
     bool TransferDataFromWindow() override;
 
-    // Event handlers (Phase 2)
-void OnSelchangeRenderDeviceCombo(wxCommandEvent &event);  // Combobox selection change
+    // Member variables (MFC equivalent)
+    bool m_lookup_cached_info;  // MFC: m_bLookupCachedInfo
+    int m_device_index;         // MFC: m_iDeviceIndex
+    int m_bits_per_pixel;       // MFC: m_iBitsPerPixel
+    wxString m_driver_name;     // MFC: m_DriverName
+
+    wxDECLARE_EVENT_TABLE();
 };

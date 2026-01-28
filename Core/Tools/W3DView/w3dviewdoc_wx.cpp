@@ -21,6 +21,8 @@
 #include "w3dviewdoc_wx.h"
 #include "w3dcompat_wx.h"
 #include "GraphicView_wx.h"
+#include "w3dviewframe_wx.h"
+#include "w3dviewapp_wx.h"
 
 #include <wx/msgdlg.h>
 #include <wx/config.h>
@@ -146,6 +148,14 @@ bool W3DViewDoc::OnOpenDocument(const wxString &filename)
         SetFilename(filename, true);
         Modify(false);
         UpdateAllViews();
+        
+        // Add file to recent files history (MFC: Automatic)
+        // Get the main frame and add to MRU list
+        W3DViewFrame* frame = wxDynamicCast(wxGetApp().GetTopWindow(), W3DViewFrame);
+        if (frame) {
+            frame->AddFileToHistory(filename);
+        }
+        
         return true;
         
         /*

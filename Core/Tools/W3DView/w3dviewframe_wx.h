@@ -35,6 +35,9 @@ public:
     
     // TODO: Helper to get the current document (wxDocParentFrame doesn't have GetDocument())
     wxDocument* GetDocument() const;
+    
+    // Add file to recent files history (MFC: Automatic in CWinApp)
+    void AddFileToHistory(const wxString& filename);
 
 private:
     void OnClose(wxCloseEvent &event);
@@ -183,6 +186,9 @@ private:
     void OnEnableGammaCorrection(wxCommandEvent &event);
     void OnUpdateEnableGammaCorrection(wxUpdateUIEvent &event);
     void OnGammaSettings(wxCommandEvent &event);
+    
+    // Recent files (MRU) handler
+    void OnMRUFile(wxCommandEvent &event);
 
     void CreateMenuBar();
     void InitToolBar();
@@ -194,6 +200,7 @@ private:
     wxDocManager *m_docManager;
     wxSplitterWindow *m_splitter;
     wxStatusBar *m_statusBar;
+    wxFileHistory *m_fileHistory;  // MFC: Recent File list
 
     wxDECLARE_EVENT_TABLE();
 };

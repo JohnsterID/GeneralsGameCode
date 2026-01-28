@@ -57,6 +57,7 @@
 #include <wx/clipbrd.h>
 #include <wx/stdpaths.h>
 #include <wx/filename.h>
+#include <wx/filehistory.h>
 
 // Engine includes for object manipulation
 #ifdef CString
@@ -346,6 +347,8 @@ wxBEGIN_EVENT_TABLE(W3DViewFrame, wxDocParentFrame)
     EVT_MENU(ID_ENABLE_GAMMA_CORRECTION, W3DViewFrame::OnEnableGammaCorrection)
     EVT_UPDATE_UI(ID_ENABLE_GAMMA_CORRECTION, W3DViewFrame::OnUpdateEnableGammaCorrection)
     EVT_MENU(ID_GAMMA_SETTINGS, W3DViewFrame::OnGammaSettings)
+    // Recent Files (MRU)
+    EVT_MENU_RANGE(wxID_FILE1, wxID_FILE9, W3DViewFrame::OnMRUFile)
 wxEND_EVENT_TABLE()
 
 W3DViewFrame::W3DViewFrame(wxDocManager *manager)
@@ -354,7 +357,13 @@ W3DViewFrame::W3DViewFrame(wxDocManager *manager)
     , m_docManager(manager)
     , m_splitter(nullptr)
     , m_statusBar(nullptr)
+    , m_fileHistory(nullptr)
 {
+    // Create file history (MRU - Most Recently Used files)
+    // MFC Reference: W3DView.rc:205 - "Recent File" menu item
+    m_fileHistory = new wxFileHistory(9);  // MFC default is 4-9 files
+    m_fileHistory->Load(*wxConfig::Get());
+    
     CreateMenuBar();
     InitToolBar();
     InitStatusBar();
@@ -403,6 +412,13 @@ W3DViewFrame::W3DViewFrame(wxDocManager *manager)
 
 W3DViewFrame::~W3DViewFrame()
 {
+    // Save file history to config and cleanup
+    // MFC Reference: Automatic cleanup in CWinApp
+    if (m_fileHistory) {
+        m_fileHistory->Save(*wxConfig::Get());
+        delete m_fileHistory;
+        m_fileHistory = nullptr;
+    }
 }
 
 void W3DViewFrame::InitializeApplicationSettings()
@@ -548,11 +564,13 @@ void W3DViewFrame::CreateMenuBar()
     fileMenu->Append(ID_TEXTURE_PATH_FILE, "&Texture Path...");
     fileMenu->Append(ID_ANIMATED_SOUND_OPTIONS, "&Animated Sound Options...");
     fileMenu->AppendSeparator();
-    // TODO(MFC-Match): Add Recent File (MRU) here
-    //   MFC: W3DView.rc:205 - "Recent File" (ID_FILE_MRU_FILE1, GRAYED)
-    //   Handler: MFC framework automatic, wxWidgets has wxFileHistory
-    //   Impact: Medium - user convenience feature
-    //   Need to integrate wxFileHistory with wxConfig persistence
+    // Add Recent Files (MRU) menu
+    // MFC Reference: W3DView.rc:205 - "Recent File" (ID_FILE_MRU_FILE1)
+    // wxWidgets automatically manages MRU list with wxFileHistory
+    if (m_fileHistory) {
+        m_fileHistory->UseMenu(fileMenu);
+        m_fileHistory->AddFilesToMenu();
+    }
     fileMenu->AppendSeparator();
     fileMenu->Append(wxID_EXIT, "E&xit\tAlt+F4");
     menuBar->Append(fileMenu, "&File");
@@ -823,6 +841,44 @@ void W3DViewFrame::OnAbout(wxCommandEvent &WXUNUSED(event))
     // MFC Reference: AboutBox.cpp (CAboutDlg)
     Aboutbox dialog(this);
     dialog.ShowModal();
+}
+
+void W3DViewFrame::OnMRUFile(wxCommandEvent &event)
+{
+    // MFC Reference: Automatic MRU handling in CWinApp/CDocument framework
+    // wxWidgets: Manual implementation using wxFileHistory
+    // Handler for Recent Files menu selection (File → Recent Files → [filename])
+    
+    if (!m_fileHistory) {
+        return;
+    }
+    
+    // Get the selected file from history
+    wxString filename = m_fileHistory->GetHistoryFile(event.GetId() - wxID_FILE1);
+    
+    if (!filename.empty()) {
+        // Open the document through the document manager
+        // This matches MFC's automatic MRU behavior
+        if (m_docManager) {
+            m_docManager->CreateDocument(filename, wxDOC_SILENT);
+        }
+    }
+}
+
+void W3DViewFrame::AddFileToHistory(const wxString& filename)
+{
+    // Add file to recent files list
+    // MFC Reference: Automatic in CWinApp::AddToRecentFileList
+    // wxWidgets: Manual update using wxFileHistory::AddFileToHistory
+    
+    if (m_fileHistory && !filename.empty()) {
+        m_fileHistory->AddFileToHistory(filename);
+        
+        // Update menu items to show new history
+        // GetMenuBar()->FindItem() would work, but wxFileHistory manages it
+        m_fileHistory->Save(*wxConfig::Get());
+        wxConfig::Get()->Flush();
+    }
 }
 
 void W3DViewFrame::OnObjectProperties(wxCommandEvent &WXUNUSED(event))

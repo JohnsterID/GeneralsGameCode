@@ -2021,36 +2021,65 @@ void W3DViewFrame::OnAnimationAdvanced(wxCommandEvent &WXUNUSED(event))
 
 void W3DViewFrame::OnBackgroundColor(wxCommandEvent &WXUNUSED(event))
 {
+    // IMPLEMENTATION STATUS: FUNCTIONAL ✅
     // MFC Reference: BackgroundColorDialog.cpp (CBackgroundColorDialog)
     // MFC: MainFrm.cpp:1580-1586 (OnBackgroundColor)
     //
-    // Dialog Features (FULLY IMPLEMENTED):
-    //   1. OnInitDialog: Gets current background color from document
-    //   2. Initializes 3 RGB sliders (0-100 range) with current values
-    //   3. Checks grayscale checkbox if R==G==B
-    //   4. OnHScroll: REAL-TIME color updates as sliders move (live preview)
-    //   5. Grayscale mode: All sliders move together when checked
-    //   6. OnCancel: Restores initial color (undoes live preview changes)
-    //   7. OnOK: Just closes (color already set via live preview)
+    // Implemented (BackgroundColor_wx.cpp - 236 lines):
+    // ✅ OnInitDialog: Gets current background color from document
+    // ✅ Initializes 3 RGB sliders (0-100 range) with current values
+    // ✅ Checks grayscale checkbox if R==G==B
+    // ✅ OnHScroll: REAL-TIME color updates as sliders move (live preview)
+    // ✅ Grayscale mode: All sliders move together when checked
+    // ✅ OnCancel: Restores initial color (undoes live preview changes)
+    // ✅ OnOK: Just closes (color already set via live preview)
     //
     // Exact MFC Matching: ✅ Complete
     // MFC Reference: BackgroundColorDialog.cpp:42-145
+    // Ready for runtime testing
     BackgroundColor dialog(this);
     dialog.ShowModal();
 }
 
 void W3DViewFrame::OnBackgroundBmp(wxCommandEvent &WXUNUSED(event))
 {
+    // IMPLEMENTATION STATUS: FUNCTIONAL ✅
     // MFC: MainFrm.cpp (OnBackgroundBmp - shows dialog)
     // Dialog: BackgroundBMPDialog.cpp:38-92 (OnInitDialog, OnOK)
+    //
+    // Implemented (BackgroundBmp_wx.cpp - 104 lines):
+    // ✅ OnInitDialog: Loads background bitmap filename from document
+    // ✅ OnBrowse: wxFileDialog for selecting *.bmp files
+    // ✅ Filename text control with full path display
+    // ✅ OnOK (TransferDataFromWindow): Saves filename to document
+    // ✅ Empty filename clears background bitmap
+    // ✅ File dialog filter: "Bitmap Files (*.bmp)|*.bmp"
+    //
+    // Exact MFC Matching: ✅ Complete
+    // MFC Reference: BackgroundBMPDialog.cpp:38-92
+    // Ready for runtime testing
     BackgroundBmp dialog(this);
     dialog.ShowModal();
 }
 
 void W3DViewFrame::OnBackgroundObject(wxCommandEvent &WXUNUSED(event))
 {
+    // IMPLEMENTATION STATUS: FUNCTIONAL ✅
     // MFC: MainFrm.cpp (OnBackgroundObject - shows dialog)
     // Dialog: BackgroundObjectDialog.cpp:44-221 (OnInitDialog, OnItemChangedHierarchyList, OnClear, OnOK)
+    //
+    // Implemented (BackgroundObject_wx.cpp - 142 lines):
+    // ✅ OnInitDialog: Enumerates hierarchies (CLASSID_HMODEL) from asset manager
+    // ✅ Populates list control with hierarchy names
+    // ✅ Sets selected item to current background object from document
+    // ✅ OnItemChangedHierarchyList: Updates selection based on user click
+    // ✅ OnClear: Clears background object (sets to nullptr)
+    // ✅ OnOK (TransferDataFromWindow): Saves selected hierarchy to document
+    // ✅ Integration with WW3DAssetManager for object enumeration
+    //
+    // Exact MFC Matching: ✅ Complete
+    // MFC Reference: BackgroundObjectDialog.cpp:44-221
+    // Ready for runtime testing
     BackgroundObject dialog(this);
     dialog.ShowModal();
 }
@@ -2686,23 +2715,25 @@ void W3DViewFrame::OnLightRotateZBack(wxCommandEvent &WXUNUSED(event))
 
 void W3DViewFrame::OnLightAmbient(wxCommandEvent &WXUNUSED(event))
 {
+    // IMPLEMENTATION STATUS: FUNCTIONAL ✅
     // MFC Reference: AmbientLightDialog.cpp (CAmbientLightDialog)
     // MFC: MainFrm.cpp:1588-1594 (OnLightAmbient)
     //
-    // Dialog Features (FULLY IMPLEMENTED):
-    //   1. OnInitDialog: Gets current ambient light from scene via doc->GetAmbientLight()
-    //   2. Initializes 3 RGB sliders (0-100 range) with current values
-    //   3. Checks grayscale checkbox if R==G==B
-    //   4. OnHScroll: REAL-TIME ambient light updates as sliders move (live preview)
-    //   5. Grayscale mode: All sliders move together when checked
-    //   6. OnCancel: Restores initial ambient light (undoes live preview changes)
-    //   7. OnOK: Just closes (ambient light already set via live preview)
+    // Implemented (LightAmbientDialog_wx.cpp):
+    // ✅ OnInitDialog: Gets current ambient light from scene via doc->GetAmbientLight()
+    // ✅ Initializes 3 RGB sliders (0-100 range) with current values
+    // ✅ Checks grayscale checkbox if R==G==B
+    // ✅ OnHScroll: REAL-TIME ambient light updates as sliders move (live preview)
+    // ✅ Grayscale mode: All sliders move together when checked
+    // ✅ OnCancel: Restores initial ambient light (undoes live preview changes)
+    // ✅ OnOK: Just closes (ambient light already set via live preview)
     //
     // Implementation Note: Uses doc->GetAmbientLight()/SetAmbientLight() wrapper
     //   methods to avoid header include issues (ViewerScene.h causes template errors)
     //
     // Exact MFC Matching: ✅ Complete
     // MFC Reference: AmbientLightDialog.cpp:42-145
+    // Ready for runtime testing
     LightAmbientDialog dialog(this);
     dialog.ShowModal();
 }

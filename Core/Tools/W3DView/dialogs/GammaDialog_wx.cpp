@@ -16,17 +16,14 @@
 **along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// Auto-generated from XRC by xrc2cpp.py
+// GammaDialog - MFC to wxWidgets conversion
+// MFC Reference: GammaDialog.cpp:42-96
 
 #include "GammaDialog_wx.h"
-// BLOCKER TODO: dx8wrapper.h inclusion causes StringClass/const char* conflict
-// BLOCKER TODO: dx8wrapper.h includes vertmaterial.h which has StringClass issues with wxWidgets
-// BLOCKER TODO: Need DX8Wrapper::Set_Gamma(float gamma, float, float) for gamma adjustment
-// BLOCKER TODO: This is an infrastructure issue affecting all dx8wrapper.h dependent dialogs
-// #include "dx8wrapper.h"  // Cannot include until StringClass conflicts resolved
 #include <wx/xrc/xmlres.h>
 #include <wx/slider.h>
 #include <wx/config.h>
+#include "ww3d.h"  // For WW3D::Set_Gamma (wrapper for DX8Wrapper::Set_Gamma)
 
 wxBEGIN_EVENT_TABLE(GammaDialog, GammaDialogBase)
 EVT_SLIDER(XRCID("IDC_GAMMA_SLIDER"), GammaDialog::OnReleasedcaptureGammaSlider)  // Slider value changed
@@ -62,16 +59,20 @@ void GammaDialog::OnCancel(wxCommandEvent &event)
 
 void GammaDialog::OnReleasedcaptureGammaSlider(wxCommandEvent &event)
 {
+    // MFC: GammaDialog.cpp:77-86 (OnReleasedcaptureGammaSlider)
     // Update gamma preview when slider moves
     // MFC: m_gamma = m_gammaslider.GetPos(); DX8Wrapper::Set_Gamma(...); SetDlgItemText(...)
     m_gamma = m_idc_gamma_slider->GetValue();
     
-    // Apply gamma immediately for preview
-    // BLOCKER TODO: Re-enable after fixing dx8wrapper.h include issue (see header)
-    // DX8Wrapper::Set_Gamma(m_gamma / 10.0f, 0.0f, 1.0f);
+    // Apply gamma immediately for real-time preview
+    // MFC: DX8Wrapper::Set_Gamma(m_gamma/10.0f, 0.0f, 1.0f)
+    // wxWidgets: Use WW3D wrapper (avoids dx8wrapper.h StringClass conflicts)
+    float gamma = m_gamma / 10.0f;
+    WW3D::Set_Gamma(gamma, 0.0f, 1.0f);
     
-    // Update display text
-    wxString gamma_text = wxString::Format("%3.2f", m_gamma / 10.0f);
+    // Update display text (format: "X.XX")
+    // MFC: SetDlgItemText(IDC_GAMMA_DISPLAY, str)
+    wxString gamma_text = wxString::Format("%3.2f", gamma);
     m_idc_gamma_display->SetLabel(gamma_text);
 }
 
@@ -118,11 +119,12 @@ bool GammaDialog::TransferDataToWindow()
 
 bool GammaDialog::TransferDataFromWindow()
 {
+    // MFC: GammaDialog.cpp:65-75 (OnOK)
     // Extract data from controls and apply to business logic
     // MFC: m_gamma = m_gammaslider.GetPos();
     m_gamma = m_idc_gamma_slider->GetValue();
     
-    // Validate range
+    // Validate range (1.0-3.0, stored as 10-30)
     if (m_gamma < 10) m_gamma = 10;
     if (m_gamma > 30) m_gamma = 30;
     
@@ -130,11 +132,13 @@ bool GammaDialog::TransferDataFromWindow()
     // MFC: AfxGetApp()->WriteProfileInt("Config", "Gamma", m_gamma);
     wxConfig config("W3DView");
     config.Write("/Config/Gamma", m_gamma);
+    config.Flush();
     
     // Apply gamma setting
     // MFC: DX8Wrapper::Set_Gamma(m_gamma/10.0f, 0.0f, 1.0f);
-    // BLOCKER TODO: Re-enable after fixing dx8wrapper.h include issue (see header)
-    // DX8Wrapper::Set_Gamma(m_gamma / 10.0f, 0.0f, 1.0f);
+    // wxWidgets: Use WW3D wrapper (avoids dx8wrapper.h StringClass conflicts)
+    float gamma = m_gamma / 10.0f;
+    WW3D::Set_Gamma(gamma, 0.0f, 1.0f);
 
     return true;
 }

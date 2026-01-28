@@ -1309,18 +1309,27 @@ void W3DViewFrame::OnUpdateViewSubdivision8(wxUpdateUIEvent &event)
 
 void W3DViewFrame::OnWireframe(wxCommandEvent &WXUNUSED(event))
 {
+    // IMPLEMENTATION STATUS: FUNCTIONAL ✅
     // MFC Reference: MainFrm.cpp:4172-4179 (OnWireframeMode)
-    // Toggle wireframe rendering mode (scene-specific setting)
+    // Function: Toggle wireframe rendering mode
+    //
+    // Implemented:
+    // ✅ Get scene from document
+    // ✅ Check current polygon mode
+    // ✅ Toggle between LINE (wireframe) and FILL (normal)
+    // ✅ Scene-specific setting (no config persistence)
+    // ✅ UI update handler (OnUpdateWireframe) implemented
+    //
+    // Exact MFC Matching: ✅ Complete
+    // Ready for runtime testing
     W3DViewDoc *doc = wxDynamicCast(GetDocument(), W3DViewDoc);
     if (!doc) return;
     
     ViewerSceneClass *scene = doc->GetScene();
     if (!scene) return;
     
-    // Toggle between LINE (wireframe) and FILL (normal) rendering
     bool enable = (scene->Get_Polygon_Mode() != SceneClass::LINE);
     scene->Set_Polygon_Mode(enable ? SceneClass::LINE : SceneClass::FILL);
-    // Note: No config persistence (scene-specific, not global setting)
 }
 
 void W3DViewFrame::OnUpdateWireframe(wxUpdateUIEvent &event)
@@ -1344,12 +1353,22 @@ void W3DViewFrame::OnUpdateWireframe(wxUpdateUIEvent &event)
 
 void W3DViewFrame::OnPolygonSorting(wxCommandEvent &WXUNUSED(event))
 {
+    // IMPLEMENTATION STATUS: FUNCTIONAL ✅
     // MFC Reference: MainFrm.cpp:4202-4210 (OnToggleSorting)
-    // Toggle polygon sorting state (global WW3D setting)
+    // Function: Toggle polygon sorting (global setting)
+    //
+    // Implemented:
+    // ✅ Toggle WW3D sorting state
+    // ✅ Invalidate mesh cache (required after toggle)
+    // ✅ Enable/disable sorting via WW3D API
+    // ✅ Persist to wxConfig ("/Config/EnableSorting")
+    // ✅ UI update handler (OnUpdatePolygonSorting) implemented
+    //
+    // Exact MFC Matching: ✅ Complete
+    // Ready for runtime testing
     bool sorting = !WW3D::Is_Sorting_Enabled();
     WW3D::_Invalidate_Mesh_Cache();
     WW3D::Enable_Sorting(sorting);
-    // Save the new value in wxConfig
     wxConfig::Get()->Write("/Config/EnableSorting", sorting ? 1L : 0L);
     wxConfig::Get()->Flush();
 }

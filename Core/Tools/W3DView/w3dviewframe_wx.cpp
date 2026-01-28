@@ -2987,47 +2987,126 @@ void W3DViewFrame::OnGammaSettings(wxCommandEvent &WXUNUSED(event))
 
 void W3DViewFrame::OnExportAggregate(wxCommandEvent &WXUNUSED(event))
 {
-    // MFC: MainFrm.cpp (need to investigate OnSaveAggregate handler)
+    // MFC Reference: MainFrm.cpp:2687 (OnSaveAggregate)
     // MFC ID: IDM_SAVE_AGGREGATE (32813)
-    // Function: Export aggregate model to file
-    // TODO(MFC-Implement): Implement aggregate export functionality
-    //   1. Show file save dialog with .w3d filter
-    //   2. Get current aggregate from document/scene
-    //   3. Serialize aggregate to W3D file format
-    //   4. Handle errors (no aggregate, write failure, etc.)
-    //   Impact: High - primary export feature for aggregate models
-    wxMessageBox("Export Aggregate not yet implemented.\nSee TODO in OnExportAggregate.",
-                 "Feature Incomplete", wxOK | wxICON_INFORMATION, this);
+    // Function: Export aggregate model to .w3d file
+    //
+    // MFC Implementation:
+    //   ((CW3DViewDoc *)GetActiveDocument())->Save_Selected_Aggregate();
+    //
+    // TODO(MFC-BLOCKED): Requires W3DViewDoc::Save_Selected_Aggregate() method
+    //   MFC Reference: W3DViewDoc.cpp:2273-2307 (Save_Selected_Aggregate)
+    //   MFC Algorithm:
+    //     1. Get render object (m_pCRenderObj != nullptr check)
+    //     2. Build default filename from DataTreeView->GetCurrentSelectionName() + ".w3d"
+    //     3. Show RestrictedFileDialog with:
+    //        - Type: Save (FALSE)
+    //        - Filter: "Westwood 3D Files (*.w3d)|*.w3d||"
+    //        - Title: "Export Aggregate"
+    //        - Flags: OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT | OFN_EXPLORER
+    //     4. If dialog OK: Call Save_Current_Aggregate(path)
+    //     5. Save_Current_Aggregate (W3DViewDoc.cpp:2315-2380):
+    //        a. Get AggregatePrototypeClass from WW3DAssetManager
+    //        b. Get AggregateDefClass from prototype
+    //        c. Create FileClass for output
+    //        d. Call ChunkSaveClass::Save_Aggregate (agg_save.cpp)
+    //        e. Close file, return success/failure
+    //
+    //   Blocking Dependencies:
+    //   1. DataTreeView integration (for GetCurrentSelectionName)
+    //   2. Port Save_Selected_Aggregate() to w3dviewdoc_wx.cpp
+    //   3. Port Save_Current_Aggregate() to w3dviewdoc_wx.cpp
+    //   4. Asset manager integration (GetDisplayedObject, WW3DAssetManager)
+    //   
+    //   Impact: HIGH PRIORITY - Primary export feature for aggregate models
+    //   Note: ChunkSaveClass::Save_Aggregate already exists, just need document methods
+    wxMessageBox("Export Aggregate requires DataTreeView integration.\n"
+                 "See detailed TODO in OnExportAggregate for MFC implementation.\n\n"
+                 "MFC: Calls doc->Save_Selected_Aggregate() which uses DataTreeView.",
+                 "Feature Blocked", wxOK | wxICON_INFORMATION, this);
 }
 
 void W3DViewFrame::OnExportEmitter(wxCommandEvent &WXUNUSED(event))
 {
-    // MFC: MainFrm.cpp (need to investigate OnSaveEmitter handler)
+    // MFC Reference: MainFrm.cpp:2699 (OnSaveEmitter)
     // MFC ID: IDM_SAVE_EMITTER (32810)
-    // Function: Export particle emitter to file
-    // TODO(MFC-Implement): Implement emitter export functionality
-    //   1. Show file save dialog with emitter file filter
-    //   2. Get current emitter from scene
-    //   3. Serialize emitter properties to file
-    //   4. Handle errors (no emitter selected, write failure, etc.)
-    //   Impact: Medium - specialized export for particle effects
-    wxMessageBox("Export Emitter not yet implemented.\nSee TODO in OnExportEmitter.",
-                 "Feature Incomplete", wxOK | wxICON_INFORMATION, this);
+    // Function: Export particle emitter to .w3d file
+    //
+    // MFC Implementation:
+    //   ((CW3DViewDoc *)GetActiveDocument())->Save_Selected_Emitter();
+    //
+    // TODO(MFC-BLOCKED): Requires W3DViewDoc::Save_Selected_Emitter() method
+    //   MFC Reference: W3DViewDoc.cpp:2052-2087 (Save_Selected_Emitter)
+    //   MFC Algorithm:
+    //     1. Check if m_pCRenderObj is ParticleEmitter (Class_ID check)
+    //     2. Build default filename from DataTreeView->GetCurrentSelectionName() + ".w3d"
+    //     3. Show RestrictedFileDialog with:
+    //        - Type: Save (FALSE)
+    //        - Filter: "Westwood 3D Files (*.w3d)|*.w3d||"
+    //        - Title: "Export Emitter"
+    //        - Flags: OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT | OFN_EXPLORER
+    //     4. If dialog OK: Call Save_Current_Emitter(path)
+    //     5. Save_Current_Emitter (W3DViewDoc.cpp:2095-2136):
+    //        a. Get ParticleEmitterPrototypeClass from WW3DAssetManager
+    //        b. Get ParticleEmitterDefClass from prototype
+    //        c. Create FileClass for output
+    //        d. Call ParticleEmitterDefClass::Save_W3D (emitter save method)
+    //        e. Close file, return success/failure
+    //
+    //   Blocking Dependencies:
+    //   1. DataTreeView integration (for GetCurrentSelectionName)
+    //   2. Port Save_Selected_Emitter() to w3dviewdoc_wx.cpp
+    //   3. Port Save_Current_Emitter() to w3dviewdoc_wx.cpp
+    //   4. Asset manager integration (m_pCRenderObj, WW3DAssetManager)
+    //   
+    //   Impact: MEDIUM PRIORITY - Specialized export for particle effects
+    //   Note: ParticleEmitterDefClass::Save_W3D already exists, just need document methods
+    wxMessageBox("Export Emitter requires DataTreeView integration.\n"
+                 "See detailed TODO in OnExportEmitter for MFC implementation.\n\n"
+                 "MFC: Calls doc->Save_Selected_Emitter() which uses DataTreeView.",
+                 "Feature Blocked", wxOK | wxICON_INFORMATION, this);
 }
 
 void W3DViewFrame::OnExportLOD(wxCommandEvent &WXUNUSED(event))
 {
-    // MFC: MainFrm.cpp (need to investigate OnLodSave handler)
+    // MFC Reference: MainFrm.cpp:2523 (OnLODSave)
     // MFC ID: IDM_LOD_SAVE (32794)
-    // Function: Export LOD (Level of Detail) model to file
-    // TODO(MFC-Implement): Implement LOD export functionality
-    //   1. Verify LOD model is valid (at least 2 levels)
-    //   2. Show file save dialog with LOD file filter
-    //   3. Serialize all LOD levels to file
-    //   4. Handle errors (insufficient levels, no LOD, write failure, etc.)
-    //   Impact: High - critical for LOD workflow
-    wxMessageBox("Export LOD not yet implemented.\nSee TODO in OnExportLOD.",
-                 "Feature Incomplete", wxOK | wxICON_INFORMATION, this);
+    // Function: Export hierarchical LOD (HLOD) model to .w3d file
+    //
+    // MFC Implementation:
+    //   CW3DViewDoc *pdoc = (CW3DViewDoc *)GetActiveDocument();
+    //   if (pdoc != nullptr) pdoc->Save_Selected_LOD();
+    //
+    // TODO(MFC-BLOCKED): Requires W3DViewDoc::Save_Selected_LOD() method
+    //   MFC Reference: W3DViewDoc.cpp:1724-1759 (Save_Selected_LOD)
+    //   MFC Algorithm:
+    //     1. Check if m_pCRenderObj is HLOD (Class_ID == CLASSID_HLOD)
+    //     2. Build default filename from DataTreeView->GetCurrentSelectionName() + ".w3d"
+    //     3. Show RestrictedFileDialog with:
+    //        - Type: Save (FALSE)
+    //        - Filter: "Westwood 3D Files (*.w3d)|*.w3d||"
+    //        - Title: "Export LOD"
+    //        - Flags: OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT | OFN_EXPLORER
+    //     4. If dialog OK: Call Save_Current_LOD(path)
+    //     5. Save_Current_LOD (W3DViewDoc.cpp:1767-1806):
+    //        a. Get HLodPrototypeClass from WW3DAssetManager
+    //        b. Get HLodDefClass from prototype
+    //        c. Create FileClass for output
+    //        d. Call HLodDefClass::Save (ChunkSaveClass) to serialize all LOD levels
+    //        e. Close file, return success/failure
+    //
+    //   Blocking Dependencies:
+    //   1. DataTreeView integration (for GetCurrentSelectionName)
+    //   2. Port Save_Selected_LOD() to w3dviewdoc_wx.cpp
+    //   3. Port Save_Current_LOD() to w3dviewdoc_wx.cpp
+    //   4. Asset manager integration (m_pCRenderObj, WW3DAssetManager)
+    //   
+    //   Impact: HIGH PRIORITY - Critical for LOD workflow
+    //   Note: HLodDefClass::Save already exists, just need document methods
+    wxMessageBox("Export LOD requires DataTreeView integration.\n"
+                 "See detailed TODO in OnExportLOD for MFC implementation.\n\n"
+                 "MFC: Calls doc->Save_Selected_LOD() which uses DataTreeView.",
+                 "Feature Blocked", wxOK | wxICON_INFORMATION, this);
 }
 
 void W3DViewFrame::OnExportPrimitive(wxCommandEvent &WXUNUSED(event))

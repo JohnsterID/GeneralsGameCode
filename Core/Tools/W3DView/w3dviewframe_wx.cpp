@@ -3495,18 +3495,54 @@ void W3DViewFrame::OnAnimatedSoundOptions(wxCommandEvent &WXUNUSED(event))
 
 void W3DViewFrame::OnCreateEmitter(wxCommandEvent &WXUNUSED(event))
 {
-    // MFC: MainFrm.cpp (need to investigate OnCreateEmitter handler)
+    // MFC Reference: MainFrm.cpp:2179-2198 (OnCreateEmitter)
     // MFC ID: IDM_CREATE_EMITTER (32808)
-    // Function: Create a new particle emitter object in the scene
-    // TODO(MFC-Implement): Implement emitter creation dialog and scene integration
-    //   MFC Reference: EmitterInstancePropPageClass already exists (EmitterInstanceProperties_wx.cpp)
-    //   Dialog likely shows emitter parameters: particle count, lifetime, velocity, etc.
-    //   Need to create emitter object and add to scene
-    //   Need to integrate with W3D scene graph
-    //   Emitter types: particle systems, sprite systems, line systems
-    //   Impact: High - core feature for particle effects artists
-    //   Files to review: EmitterInstanceProperties_wx.cpp, CreateEmitterDialog_wx.cpp (if exists)
-    wxMessageBox("Create Emitter not yet implemented.\nEmitterInstancePropPageClass exists but dialog integration needed.",
+    // Function: Create a new particle emitter and show property sheet for configuration
+    //
+    // MFC Implementation:
+    //   1. Clear current display: pdoc->DisplayObject((RenderObjClass *)nullptr);
+    //   2. Show EmitterPropertySheetClass modal dialog:
+    //      - Constructor: EmitterPropertySheetClass(nullptr, IDS_EMITTER_PROP_TITLE, this)
+    //      - nullptr = creating new emitter (not editing existing)
+    //      - Title resource: IDS_EMITTER_PROP_TITLE
+    //   3. Dialog has multiple pages (EmitterPropertySheet.h):
+    //      - General properties (EmitterGeneralPropPage)
+    //      - Particle properties (EmitterParticlePropPage)
+    //      - Physics properties (EmitterPhysicsPropPage)
+    //      - Color properties (EmitterColorPropPage)
+    //      - Rotation properties (EmitterRotationPropPage)
+    //      - Size properties (EmitterSizePropPage)
+    //      - Frame properties (EmitterFramePropPage)
+    //      - Line properties (EmitterLinePropPage/LineGroupPropPage)
+    //      - User properties (EmitterUserPropPage)
+    //
+    // TODO(MFC-COMPLEX): Implement emitter creation with property sheet
+    //   Required Infrastructure:
+    //   1. Port EmitterPropertySheet as wxPropertySheetDialog (or notebook-based dialog)
+    //   2. Wire up all 9 property pages (already exist in dialogs/PropPageEmitter*.cpp)
+    //   3. Implement OK handler to create ParticleEmitterDefClass from property values
+    //   4. Add emitter to scene and display it
+    //   5. Integrate with document for persistence
+    //
+    //   Emitter Property Sheet Pages (all exist in dialogs/):
+    //   ✓ PropPageEmitterGen_wx.cpp (General: name, type, emission rate)
+    //   ✓ PropPageEmitterParticle_wx.cpp (Particle: shader, texture, blend mode)
+    //   ✓ PropPageEmitterPhysics_wx.cpp (Physics: velocity, gravity, drag)
+    //   ✓ PropPageEmitterColor_wx.cpp (Color: start/end colors, gradients)
+    //   ✓ PropPageEmitterRotation_wx.cpp (Rotation: spin, tumble)
+    //   ✓ PropPageEmitterSize_wx.cpp (Size: start/end size, scaling)
+    //   ✓ PropPageEmitterFrame_wx.cpp (Frame: animation frames)
+    //   ✓ PropPageEmitterLineprops_wx.cpp (Line: line rendering properties)
+    //   ✓ PropPageEmitterLinegroup_wx.cpp (Line Group: multiple lines)
+    //   ✓ PropPageEmitterUser_wx.cpp (User: custom user data)
+    //
+    //   Impact: HIGH PRIORITY - Core feature for particle effects workflow
+    //   Complexity: HIGH - Multi-page dialog with extensive property handling
+    //   Note: All individual property pages already converted to wxWidgets
+    wxMessageBox("Create Emitter not yet implemented.\n\n"
+                 "MFC: Shows EmitterPropertySheet with 9 property pages.\n"
+                 "All property pages exist in dialogs/ but parent sheet needs implementation.\n\n"
+                 "See detailed TODO in OnCreateEmitter.",
                  "Feature Incomplete", wxOK | wxICON_INFORMATION, this);
 }
 
@@ -3600,39 +3636,77 @@ void W3DViewFrame::OnEditEmitter(wxCommandEvent &WXUNUSED(event))
 
 void W3DViewFrame::OnCreateSphere(wxCommandEvent &WXUNUSED(event))
 {
-    // MFC: MainFrm.cpp (need to investigate OnCreateSphere handler)
+    // MFC Reference: MainFrm.cpp:3069-3085 (OnCreateSphere)
     // MFC ID: IDM_CREATE_SPHERE (32866)
-    // Function: Create a sphere primitive mesh
-    // TODO(MFC-Implement): Implement sphere creation dialog and mesh generation
-    //   Show dialog with sphere parameters:
-    //     - Radius
-    //     - Segments (horizontal/vertical)
-    //     - Material/Texture
-    //     - UV mapping options
-    //   Generate sphere mesh using W3D mesh builder
-    //   Add to scene at current camera position or origin
-    //   Impact: Medium - useful for placeholder geometry and testing
-    //   Files to review: PrimitiveDialog_wx.cpp (if exists), W3D mesh generation code
-    wxMessageBox("Create Sphere not yet implemented.\nNeeds dialog and W3D sphere mesh generation.",
+    // Function: Create a sphere primitive and show property sheet for configuration
+    //
+    // MFC Implementation:
+    //   1. Clear current display: doc->DisplayObject((RenderObjClass *)nullptr);
+    //   2. Show SpherePropertySheetClass modal dialog:
+    //      - Constructor: SpherePropertySheetClass(nullptr, IDS_SPHERE_PROP_TITLE, this)
+    //      - nullptr = creating new sphere (not editing existing)
+    //      - Title resource: IDS_SPHERE_PROP_TITLE
+    //   3. Dialog has multiple pages (SpherePropertySheet.h):
+    //      - General properties (SphereGeneralPropPage)
+    //      - Color properties (SphereColorPropPage)
+    //      - Scale properties (SphereScalePropPage)
+    //
+    // TODO(MFC-COMPLEX): Implement sphere creation with property sheet
+    //   Required Infrastructure:
+    //   1. Port SpherePropertySheet as wxPropertySheetDialog (or notebook-based dialog)
+    //   2. Wire up all 3 property pages:
+    //      ✓ PropPageSphereGen_wx.cpp exists (General: radius, segments, name)
+    //      ✓ PropPageSphereColor_wx.cpp exists (Color: material, texturing)
+    //      ✓ PropPageSphereScale_wx.cpp exists (Scale: uniform/non-uniform scaling)
+    //   3. Implement OK handler to generate sphere mesh from property values
+    //   4. Add sphere to scene and display it
+    //   5. Integrate with document for persistence
+    //
+    //   Impact: MEDIUM PRIORITY - Useful for placeholder geometry and testing
+    //   Complexity: MEDIUM - Multi-page dialog with procedural mesh generation
+    //   Note: All 3 property pages already converted to wxWidgets (see dialogs/PropPageSphere*.cpp)
+    wxMessageBox("Create Sphere not yet implemented.\n\n"
+                 "MFC: Shows SpherePropertySheet with 3 property pages.\n"
+                 "All property pages exist in dialogs/ but parent sheet needs implementation.\n\n"
+                 "See detailed TODO in OnCreateSphere.",
                  "Feature Incomplete", wxOK | wxICON_INFORMATION, this);
 }
 
 void W3DViewFrame::OnCreateRing(wxCommandEvent &WXUNUSED(event))
 {
-    // MFC: MainFrm.cpp (need to investigate OnCreateRing handler)
+    // MFC Reference: MainFrm.cpp:3095-3111 (OnCreateRing)
     // MFC ID: IDM_CREATE_RING (32867)
-    // Function: Create a ring/torus primitive mesh
-    // TODO(MFC-Implement): Implement ring creation dialog and mesh generation
-    //   Show dialog with ring parameters:
-    //     - Inner radius / Outer radius
-    //     - Segments (circular/tubular)
-    //     - Material/Texture
-    //     - UV mapping options
-    //   Generate ring mesh using W3D mesh builder
-    //   Add to scene at current camera position or origin
-    //   Impact: Medium - useful for special effects (halos, shields, etc.)
-    //   Files to review: PrimitiveDialog_wx.cpp (if exists), W3D mesh generation code
-    wxMessageBox("Create Ring not yet implemented.\nNeeds dialog and W3D ring mesh generation.",
+    // Function: Create a ring/torus primitive and show property sheet for configuration
+    //
+    // MFC Implementation:
+    //   1. Clear current display: doc->DisplayObject((RenderObjClass *)nullptr);
+    //   2. Show RingPropertySheetClass modal dialog:
+    //      - Constructor: RingPropertySheetClass(nullptr, IDS_RING_PROP_TITLE, this)
+    //      - nullptr = creating new ring (not editing existing)
+    //      - Title resource: IDS_RING_PROP_TITLE
+    //   3. Dialog has multiple pages (RingPropertySheet.h):
+    //      - General properties (RingGeneralPropPage)
+    //      - Color properties (RingColorPropPage)
+    //      - Scale properties (RingScalePropPage)
+    //
+    // TODO(MFC-COMPLEX): Implement ring creation with property sheet
+    //   Required Infrastructure:
+    //   1. Port RingPropertySheet as wxPropertySheetDialog (or notebook-based dialog)
+    //   2. Wire up all 3 property pages:
+    //      ✓ PropPageRingGen_wx.cpp exists (General: inner/outer radius, segments, name)
+    //      ✓ PropPageRingColor_wx.cpp exists (Color: material, texturing)
+    //      ✓ PropPageRingScale_wx.cpp exists (Scale: uniform/non-uniform scaling)
+    //   3. Implement OK handler to generate ring mesh from property values
+    //   4. Add ring to scene and display it
+    //   5. Integrate with document for persistence
+    //
+    //   Impact: MEDIUM PRIORITY - Useful for special effects (halos, shields, portals)
+    //   Complexity: MEDIUM - Multi-page dialog with procedural mesh generation
+    //   Note: All 3 property pages already converted to wxWidgets (see dialogs/PropPageRing*.cpp)
+    wxMessageBox("Create Ring not yet implemented.\n\n"
+                 "MFC: Shows RingPropertySheet with 3 property pages.\n"
+                 "All property pages exist in dialogs/ but parent sheet needs implementation.\n\n"
+                 "See detailed TODO in OnCreateRing.",
                  "Feature Incomplete", wxOK | wxICON_INFORMATION, this);
 }
 

@@ -175,10 +175,12 @@ bool Resolution::TransferDataFromWindow()
             config->Write("/Config/DeviceBitsPerPix", selected_res.BitDepth);
             config->Flush();
             
-            // TODO(MFC-Implement-LOW): Set globals g_iWidth, g_iHeight, g_iBitsPerPixel
-            //   Issue: Linker can't find these symbols (may be MFC-specific)
-            //   wxConfig persistence works, globals may not be needed
-            //   Priority: LOW (config persistence is primary mechanism)
+            // Set globals (MFC: Resolution.cpp:138-140)
+            // These are defined in Globals.h/Globals.cpp
+            extern int g_iWidth, g_iHeight, g_iBitsPerPixel;
+            g_iWidth = selected_res.Width;
+            g_iHeight = selected_res.Height;
+            g_iBitsPerPixel = selected_res.BitDepth;
         }
     }
     
@@ -189,10 +191,14 @@ bool Resolution::TransferDataFromWindow()
     config->Flush();
     curr_windowed = !fullscreen;
     
-    // TODO(MFC-Implement-MEDIUM): Apply fullscreen setting via Get_Graphic_View()->Set_Fullscreen()
-    //   MFC calls: Get_Graphic_View()->Set_Fullscreen(!curr_windowed)
-    //   Requires: GraphicView_wx::Set_Fullscreen() implementation
-    //   Priority: MEDIUM (fullscreen state saved, just not applied immediately)
+    // Apply fullscreen setting (MFC: ResolutionDialog.cpp:214)
+    // Get_Graphic_View() is declared in Utils.h, implemented in Utils.cpp (line 873)
+    // Set_Fullscreen() is implemented in GraphicView_wx.cpp (line 248)
+    CGraphicView *graphic_view = Get_Graphic_View();
+    if (graphic_view)
+    {
+        graphic_view->Set_Fullscreen(fullscreen);
+    }
     
     return true;
 }

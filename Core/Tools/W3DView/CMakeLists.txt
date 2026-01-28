@@ -29,6 +29,8 @@ if(wxWidgets_FOUND)
         "ViewerScene.h"
         "Utils_wx.cpp"  # wxWidgets-compatible subset of Utils.cpp
         "Utils.h"
+        "Globals_wx.cpp"  # wxWidgets version of Globals.cpp (defines g_iWidth, g_iHeight, etc.)
+        "Globals.h"
         
         # XRC resource initialization (auto-generated)
         "W3DViewUI.cpp"

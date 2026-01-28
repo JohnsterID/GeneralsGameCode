@@ -3869,21 +3869,66 @@ void W3DViewFrame::OnCreateRing(wxCommandEvent &WXUNUSED(event))
 
 void W3DViewFrame::OnEditPrimitive(wxCommandEvent &WXUNUSED(event))
 {
-    // MFC: MainFrm.cpp (need to investigate OnEditPrimitive handler)
-    // MFC ID: IDM_EDIT_PRIMITIVE (32868)
-    // Function: Edit properties of selected primitive object
-    // TODO(MFC-Implement): Implement primitive properties dialog
-    //   Check if primitive object is currently selected
-    //   Show primitive properties dialog
-    //   Dialog may include:
-    //     - Name, transform (position, rotation, scale)
-    //     - Primitive-specific parameters (radius, segments, etc.)
-    //     - Material/texture assignment
-    //     - Collision/physics properties
-    //   Apply changes to selected primitive
-    //   Impact: Medium - editing interface for primitive objects
-    //   Note: Keyboard shortcut is Enter (same as Object->Properties)
-    //   Files to review: PrimitivePropertiesDialog_wx.cpp (if exists)
+    // MFC Reference: MainFrm.cpp:4055-4091 (OnEditPrimitive), MainFrm.cpp:4093-4106 (OnUpdateEditPrimitive)
+    // Function: Edit properties of currently displayed primitive (sphere/ring) via property sheet
+    //
+    // TODO(MFC-BLOCKED): Requires Property Sheet wrappers + GetDisplayedObject()
+    //   MFC Algorithm (MainFrm.cpp:4055-4091):
+    //   
+    //   1. Get doc = GetActiveDocument()
+    //   2. Get render_obj = doc->GetDisplayedObject()
+    //   3. If render_obj == nullptr: return (nothing to edit)
+    //   4. Check Class_ID:
+    //      A. If render_obj->Class_ID() == CLASSID_SPHERE:
+    //         - Cast to SphereRenderObjClass*
+    //         - SpherePropertySheetClass dialog(sphere_obj, IDS_SPHERE_PROP_TITLE, this)
+    //         - dialog.DoModal()
+    //      
+    //      B. If render_obj->Class_ID() == CLASSID_RING:
+    //         - Cast to RingRenderObjClass*
+    //         - RingPropertySheetClass dialog(ring_obj, IDS_RING_PROP_TITLE, this)
+    //         - dialog.DoModal()
+    //   
+    //   5. Property sheets modify object properties in-place
+    //   
+    //   OnUpdateEditPrimitive (MainFrm.cpp:4093-4106):
+    //     - data_tree = GetDataTreeView()
+    //     - Enable if data_tree->GetCurrentSelectionType() == TypePrimitives
+    //     - Otherwise disable
+    //
+    //   Property Sheet Content (same pages as creation handlers):
+    //   
+    //   Sphere Property Sheet (3 pages):
+    //     1. SphereGeneralPage: Name, segments (horizontal/vertical)
+    //     2. SpherePositionPage: Position X/Y/Z, radius
+    //     3. SphereColorPage: RGB color values
+    //
+    //   Ring Property Sheet (3 pages):
+    //     1. RingGeneralPage: Name, segments
+    //     2. RingPositionPage: Position X/Y/Z, inner/outer radius
+    //     3. RingColorPage: RGB color values
+    //
+    //   Note: Edit uses EXISTING object, Create uses NEW object
+    //     - Property sheets take RenderObjClass* instead of nullptr
+    //     - Pages populate from object's current values
+    //     - OK applies changes directly to render object
+    //
+    //   Blocking Factors:
+    //     1. Property sheet wrappers not implemented:
+    //        - SpherePropertySheet_wx (wraps 3 pages)
+    //        - RingPropertySheet_wx (wraps 3 pages)
+    //     2. W3DViewDoc::GetDisplayedObject() not ported
+    //     3. DataTreeView integration for OnUpdate handler
+    //
+    //   Implementation Priority: MEDIUM-LOW
+    //     - Useful for editing existing primitives
+    //     - Less critical than creation (can recreate primitives)
+    //     - Requires same property sheet infrastructure as OnCreateSphere/Ring
+    //
+    //   Related Handlers:
+    //     - OnCreateSphere: Creates new sphere (property sheet with nullptr)
+    //     - OnCreateRing: Creates new ring (property sheet with nullptr)
+    //     - All property pages already exist in wxWidgets (verified)
     wxMessageBox("Edit Primitive not yet implemented.\nNeeds primitive properties dialog.",
                  "Feature Incomplete", wxOK | wxICON_INFORMATION, this);
 }

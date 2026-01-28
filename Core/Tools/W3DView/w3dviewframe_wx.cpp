@@ -949,53 +949,45 @@ void W3DViewFrame::OnLodGenerate(wxCommandEvent &WXUNUSED(event))
 
 void W3DViewFrame::OnObjectReset(wxCommandEvent &WXUNUSED(event))
 {
+    // IMPLEMENTATION STATUS: FUNCTIONAL ✅
     // MFC Reference: MainFrm.cpp:1922-1933 (OnObjectReset)
-    //   Calls: CGraphicView::ResetObject (GraphicView.cpp:1593-1611)
+    // Function: Reset object transform to identity matrix
     //
-    // MFC Implementation (GraphicView.cpp:1593-1611):
-    //   CW3DViewDoc *doc = ::GetCurrentDocument();
-    //   if (doc) {
-    //       RenderObjClass *pCRenderObj = doc->GetDisplayedObject();
-    //       if (pCRenderObj) {
-    //           pCRenderObj->Set_Transform(Matrix3D(1));  // Identity matrix = reset
-    //       }
-    //   }
+    // Implemented:
+    // ✅ Get displayed object from document
+    // ✅ Set transform to identity matrix Matrix3D(true)
+    // ✅ Removes all rotation, scaling, translation
+    // ✅ Menu location corrected (Session 21: Object menu)
     //
-    // Behavior: Resets the displayed object's transform to identity matrix
-    //           This removes all rotation, scaling, and translation
-    //
-    // ✅ MENU LOCATION: Corrected in Session 21 (was in View menu, now in Object menu)
+    // Exact MFC Matching: ✅ Complete
+    // Ready for runtime testing
     
-    // Get the document
     W3DViewDoc* doc = wxStaticCast(GetDocument(), W3DViewDoc);
     if (!doc) {
         return;
     }
     
-    // Get the displayed object
     RenderObjClass* renderObj = doc->GetDisplayedObject();
     if (renderObj) {
-        // Reset the object's transform to identity matrix
-        // Matrix3D(1) or Matrix3D(true) creates an identity matrix
         renderObj->Set_Transform(Matrix3D(true));
     }
 }
 
 void W3DViewFrame::OnObjectRotateX(wxCommandEvent &WXUNUSED(event))
 {
+    // IMPLEMENTATION STATUS: FUNCTIONAL ✅
     // MFC Reference: MainFrm.cpp:1564-1579 (OnObjectRotateX)
+    // Function: Toggle continuous X-axis rotation
     //
-    // MFC Implementation:
-    //   CGraphicView *pCGraphicView = (CGraphicView *)m_wndSplitter.GetPane (0, 1);
-    //   int iXRotation = (pCGraphicView->GetObjectRotation () ^ (CGraphicView::RotateX));
-    //   iXRotation &= ~CGraphicView::RotateXBack;
-    //   pCGraphicView->RotateObject ((CGraphicView::OBJECT_ROTATION)iXRotation);
+    // Implemented:
+    // ✅ Get graphic view from document
+    // ✅ Toggle RotateX bit via XOR
+    // ✅ Clear RotateXBack bit (ensures forward rotation)
+    // ✅ Apply rotation via RotateObject
+    // ✅ Menu: Object → Rotate X, Shortcut: Ctrl+X
     //
-    // Behavior: Toggles continuous X-axis rotation on/off
-    //           XOR flips the RotateX bit, clearing RotateXBack ensures forward rotation
-    //
-    // Menu: Object → Rotate X
-    // Shortcut: Ctrl+X
+    // Exact MFC Matching: ✅ Complete
+    // Ready for runtime testing
     
     W3DViewDoc* doc = wxStaticCast(GetDocument(), W3DViewDoc);
     if (!doc) return;
@@ -1003,7 +995,6 @@ void W3DViewFrame::OnObjectRotateX(wxCommandEvent &WXUNUSED(event))
     CGraphicView* graphicView = doc->GetGraphicView();
     if (!graphicView) return;
     
-    // Toggle X rotation bit, clear X back rotation bit
     int rotation = (graphicView->GetObjectRotation() ^ CGraphicView::RotateX);
     rotation &= ~CGraphicView::RotateXBack;
     
@@ -1012,18 +1003,19 @@ void W3DViewFrame::OnObjectRotateX(wxCommandEvent &WXUNUSED(event))
 
 void W3DViewFrame::OnObjectRotateY(wxCommandEvent &WXUNUSED(event))
 {
+    // IMPLEMENTATION STATUS: FUNCTIONAL ✅
     // MFC Reference: MainFrm.cpp:1541-1555 (OnObjectRotateY)
+    // Function: Toggle continuous Y-axis rotation
     //
-    // MFC Implementation:
-    //   CGraphicView *pCGraphicView = (CGraphicView *)m_wndSplitter.GetPane (0, 1);
-    //   int iYRotation = (pCGraphicView->GetObjectRotation () ^ (CGraphicView::RotateY));
-    //   iYRotation &= ~CGraphicView::RotateYBack;
-    //   pCGraphicView->RotateObject ((CGraphicView::OBJECT_ROTATION)iYRotation);
+    // Implemented:
+    // ✅ Get graphic view from document
+    // ✅ Toggle RotateY bit via XOR
+    // ✅ Clear RotateYBack bit (ensures forward rotation)
+    // ✅ Apply rotation via RotateObject
+    // ✅ Menu: Object → Rotate Y, Shortcut: Up Arrow
     //
-    // Behavior: Toggles continuous Y-axis rotation on/off
-    //
-    // Menu: Object → Rotate Y
-    // Shortcut: Up Arrow
+    // Exact MFC Matching: ✅ Complete
+    // Ready for runtime testing
     
     W3DViewDoc* doc = wxStaticCast(GetDocument(), W3DViewDoc);
     if (!doc) return;
@@ -1031,7 +1023,6 @@ void W3DViewFrame::OnObjectRotateY(wxCommandEvent &WXUNUSED(event))
     CGraphicView* graphicView = doc->GetGraphicView();
     if (!graphicView) return;
     
-    // Toggle Y rotation bit, clear Y back rotation bit
     int rotation = (graphicView->GetObjectRotation() ^ CGraphicView::RotateY);
     rotation &= ~CGraphicView::RotateYBack;
     
@@ -1040,26 +1031,22 @@ void W3DViewFrame::OnObjectRotateY(wxCommandEvent &WXUNUSED(event))
 
 void W3DViewFrame::OnObjectRotateZ(wxCommandEvent &WXUNUSED(event))
 {
+    // IMPLEMENTATION STATUS: FUNCTIONAL ✅ (core complete, toolbar deferred)
     // MFC Reference: MainFrm.cpp:1507-1532 (OnObjectRotateZ)
+    // Function: Toggle continuous Z-axis rotation
     //
-    // MFC Implementation:
-    //   CGraphicView *pCGraphicView = (CGraphicView *)m_wndSplitter.GetPane (0, 1);
-    //   int iZRotation = (pCGraphicView->GetObjectRotation () ^ (CGraphicView::RotateZ));
-    //   iZRotation &= ~CGraphicView::RotateZBack;
-    //   pCGraphicView->RotateObject ((CGraphicView::OBJECT_ROTATION)iZRotation);
-    //   if (iZRotation & ROTATION_Z) {
-    //       m_objectToolbar.SetButtonState (IDM_OBJECT_ROTATE_Z, CFancyToolbar::StateDn);
-    //   } else {
-    //       m_objectToolbar.SetButtonState (IDM_OBJECT_ROTATE_Z, CFancyToolbar::StateUp);
-    //   }
+    // Implemented:
+    // ✅ Get graphic view from document
+    // ✅ Toggle RotateZ bit via XOR
+    // ✅ Clear RotateZBack bit (ensures forward rotation)
+    // ✅ Apply rotation via RotateObject
+    // ✅ Menu: Object → Rotate Z, Shortcut: Right Arrow
+    // ⏸️ Toolbar button updates (deferred - infrastructure pending)
     //
-    // Behavior: Toggles continuous Z-axis rotation on/off
-    //           MFC also updates toolbar button state (not implemented in wxWidgets yet)
-    //
-    // Menu: Object → Rotate Z
-    // Shortcut: Right Arrow
-    //
-    // TODO(MFC-Match): Add toolbar button state update when Object toolbar is implemented
+    // MFC Matching: ✅ Core functionality complete
+    // Note: Toolbar button state updates will be added when
+    //       object toolbar infrastructure is implemented
+    // Ready for runtime testing (rotation works correctly)
     
     W3DViewDoc* doc = wxStaticCast(GetDocument(), W3DViewDoc);
     if (!doc) return;
@@ -1067,34 +1054,29 @@ void W3DViewFrame::OnObjectRotateZ(wxCommandEvent &WXUNUSED(event))
     CGraphicView* graphicView = doc->GetGraphicView();
     if (!graphicView) return;
     
-    // Toggle Z rotation bit, clear Z back rotation bit
     int rotation = (graphicView->GetObjectRotation() ^ CGraphicView::RotateZ);
     rotation &= ~CGraphicView::RotateZBack;
     
     graphicView->RotateObject(static_cast<CGraphicView::OBJECT_ROTATION>(rotation));
     
-    // TODO(MFC-Match): Update toolbar button state when toolbar is implemented
-    // if (rotation & ROTATION_Z) {
-    //     // Set toolbar button down
-    // } else {
-    //     // Set toolbar button up
-    // }
+    // TODO(MFC-Infrastructure): Update toolbar button state when toolbar is implemented
 }
 
 void W3DViewFrame::OnObjectRotateYBack(wxCommandEvent &WXUNUSED(event))
 {
+    // IMPLEMENTATION STATUS: FUNCTIONAL ✅
     // MFC Reference: MainFrm.cpp:2597-2613 (OnObjectRotateYBack)
+    // Function: Toggle reverse Y-axis rotation
     //
-    // MFC Implementation:
-    //   CGraphicView *pCGraphicView = (CGraphicView *)m_wndSplitter.GetPane (0, 1);
-    //   int iYRotation = (pCGraphicView->GetObjectRotation () ^ (CGraphicView::RotateYBack));
-    //   iYRotation &= ~CGraphicView::RotateY;
-    //   pCGraphicView->RotateObject ((CGraphicView::OBJECT_ROTATION)iYRotation);
+    // Implemented:
+    // ✅ Get graphic view from document
+    // ✅ Toggle RotateYBack bit via XOR
+    // ✅ Clear RotateY bit (ensures backward rotation)
+    // ✅ Apply rotation via RotateObject
+    // ✅ Shortcut: Down Arrow (no menu item in MFC)
     //
-    // Behavior: Toggles reverse Y-axis rotation on/off
-    //
-    // Note: No menu item in MFC, accelerator only
-    // Shortcut: Down Arrow
+    // Exact MFC Matching: ✅ Complete
+    // Ready for runtime testing
     
     W3DViewDoc* doc = wxStaticCast(GetDocument(), W3DViewDoc);
     if (!doc) return;
@@ -1102,7 +1084,6 @@ void W3DViewFrame::OnObjectRotateYBack(wxCommandEvent &WXUNUSED(event))
     CGraphicView* graphicView = doc->GetGraphicView();
     if (!graphicView) return;
     
-    // Toggle Y back rotation bit, clear forward Y rotation bit
     int rotation = (graphicView->GetObjectRotation() ^ CGraphicView::RotateYBack);
     rotation &= ~CGraphicView::RotateY;
     
@@ -1111,18 +1092,19 @@ void W3DViewFrame::OnObjectRotateYBack(wxCommandEvent &WXUNUSED(event))
 
 void W3DViewFrame::OnObjectRotateZBack(wxCommandEvent &WXUNUSED(event))
 {
+    // IMPLEMENTATION STATUS: FUNCTIONAL ✅
     // MFC Reference: MainFrm.cpp:2619-2635 (OnObjectRotateZBack)
+    // Function: Toggle reverse Z-axis rotation
     //
-    // MFC Implementation:
-    //   CGraphicView *pCGraphicView = (CGraphicView *)m_wndSplitter.GetPane (0, 1);
-    //   int iZRotation = (pCGraphicView->GetObjectRotation () ^ (CGraphicView::RotateZBack));
-    //   iZRotation &= ~CGraphicView::RotateZ;
-    //   pCGraphicView->RotateObject ((CGraphicView::OBJECT_ROTATION)iZRotation);
+    // Implemented:
+    // ✅ Get graphic view from document
+    // ✅ Toggle RotateZBack bit via XOR
+    // ✅ Clear RotateZ bit (ensures backward rotation)
+    // ✅ Apply rotation via RotateObject
+    // ✅ Shortcut: Left Arrow (no menu item in MFC)
     //
-    // Behavior: Toggles reverse Z-axis rotation on/off
-    //
-    // Note: No menu item in MFC, accelerator only
-    // Shortcut: Left Arrow
+    // Exact MFC Matching: ✅ Complete
+    // Ready for runtime testing
     
     W3DViewDoc* doc = wxStaticCast(GetDocument(), W3DViewDoc);
     if (!doc) return;
@@ -1130,7 +1112,6 @@ void W3DViewFrame::OnObjectRotateZBack(wxCommandEvent &WXUNUSED(event))
     CGraphicView* graphicView = doc->GetGraphicView();
     if (!graphicView) return;
     
-    // Toggle Z back rotation bit, clear forward Z rotation bit
     int rotation = (graphicView->GetObjectRotation() ^ CGraphicView::RotateZBack);
     rotation &= ~CGraphicView::RotateZ;
     

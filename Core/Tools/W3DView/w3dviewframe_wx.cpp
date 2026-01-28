@@ -2125,107 +2125,152 @@ void W3DViewFrame::OnUpdateBackgroundFog(wxUpdateUIEvent &event)
 
 void W3DViewFrame::OnCameraFront(wxCommandEvent &WXUNUSED(event))
 {
+    // IMPLEMENTATION STATUS: FUNCTIONAL ✅
     // MFC Reference: MainFrm.cpp:1397-1408 (OnCameraFront)
-    // Positions camera to front view (looking at object from front)
+    // Function: Position camera to front view
+    //
+    // Implemented:
+    // ✅ Get graphic view from document
+    // ✅ Set camera position to CameraFront
+    // ✅ View updates automatically
+    //
+    // Exact MFC Matching: ✅ Complete
+    // Ready for runtime testing
     W3DViewDoc* doc = wxStaticCast(GetDocument(), W3DViewDoc);
     if (!doc) return;
     
     CGraphicView* graphicView = doc->GetGraphicView();
     if (!graphicView) return;
     
-    // Position the camera to front view
     graphicView->SetCameraPos(CGraphicView::CameraFront);
 }
 
 void W3DViewFrame::OnCameraBack(wxCommandEvent &WXUNUSED(event))
 {
+    // IMPLEMENTATION STATUS: FUNCTIONAL ✅
     // MFC Reference: MainFrm.cpp:1357-1368 (OnCameraBack)
-    // Positions camera to back view (looking at object from behind)
+    // Function: Position camera to back view
+    //
+    // Implemented:
+    // ✅ Get graphic view from document
+    // ✅ Set camera position to CameraBack
+    // ✅ View updates automatically
+    //
+    // Exact MFC Matching: ✅ Complete
+    // Ready for runtime testing
     W3DViewDoc* doc = wxStaticCast(GetDocument(), W3DViewDoc);
     if (!doc) return;
     
     CGraphicView* graphicView = doc->GetGraphicView();
     if (!graphicView) return;
     
-    // Position the camera to back view
     graphicView->SetCameraPos(CGraphicView::CameraBack);
 }
 
 void W3DViewFrame::OnCameraLeft(wxCommandEvent &WXUNUSED(event))
 {
+    // IMPLEMENTATION STATUS: FUNCTIONAL ✅
     // MFC Reference: MainFrm.cpp:1417-1428 (OnCameraLeft)
-    // Positions camera to left view (looking at object from left side)
+    // Function: Position camera to left view
+    //
+    // Implemented:
+    // ✅ Get graphic view from document
+    // ✅ Set camera position to CameraLeft
+    // ✅ View updates automatically
+    //
+    // Exact MFC Matching: ✅ Complete
+    // Ready for runtime testing
     W3DViewDoc* doc = wxStaticCast(GetDocument(), W3DViewDoc);
     if (!doc) return;
     
     CGraphicView* graphicView = doc->GetGraphicView();
     if (!graphicView) return;
     
-    // Position the camera to left view
     graphicView->SetCameraPos(CGraphicView::CameraLeft);
 }
 
 void W3DViewFrame::OnCameraRight(wxCommandEvent &WXUNUSED(event))
 {
+    // IMPLEMENTATION STATUS: FUNCTIONAL ✅
     // MFC Reference: MainFrm.cpp:1467-1478 (OnCameraRight)
-    // Positions camera to right view (looking at object from right side)
+    // Function: Position camera to right view
+    //
+    // Implemented:
+    // ✅ Get graphic view from document
+    // ✅ Set camera position to CameraRight
+    // ✅ View updates automatically
+    //
+    // Exact MFC Matching: ✅ Complete
+    // Ready for runtime testing
     W3DViewDoc* doc = wxStaticCast(GetDocument(), W3DViewDoc);
     if (!doc) return;
     
     CGraphicView* graphicView = doc->GetGraphicView();
     if (!graphicView) return;
     
-    // Position the camera to right view
     graphicView->SetCameraPos(CGraphicView::CameraRight);
 }
 
 void W3DViewFrame::OnCameraTop(wxCommandEvent &WXUNUSED(event))
 {
+    // IMPLEMENTATION STATUS: FUNCTIONAL ✅
     // MFC Reference: MainFrm.cpp:1487-1498 (OnCameraTop)
-    // Positions camera to top view (looking down at object from above)
+    // Function: Position camera to top view
+    //
+    // Implemented:
+    // ✅ Get graphic view from document
+    // ✅ Set camera position to CameraTop
+    // ✅ View updates automatically
+    //
+    // Exact MFC Matching: ✅ Complete
+    // Ready for runtime testing
     W3DViewDoc* doc = wxStaticCast(GetDocument(), W3DViewDoc);
     if (!doc) return;
     
     CGraphicView* graphicView = doc->GetGraphicView();
     if (!graphicView) return;
     
-    // Position the camera to top view
     graphicView->SetCameraPos(CGraphicView::CameraTop);
 }
 
 void W3DViewFrame::OnCameraBottom(wxCommandEvent &WXUNUSED(event))
 {
+    // IMPLEMENTATION STATUS: FUNCTIONAL ✅
     // MFC Reference: MainFrm.cpp:1377-1388 (OnCameraBottom)
-    // Positions camera to bottom view (looking up at object from below)
+    // Function: Position camera to bottom view
+    //
+    // Implemented:
+    // ✅ Get graphic view from document
+    // ✅ Set camera position to CameraBottom
+    // ✅ View updates automatically
+    //
+    // Exact MFC Matching: ✅ Complete
+    // Ready for runtime testing
     W3DViewDoc* doc = wxStaticCast(GetDocument(), W3DViewDoc);
     if (!doc) return;
     
     CGraphicView* graphicView = doc->GetGraphicView();
     if (!graphicView) return;
     
-    // Position the camera to bottom view
     graphicView->SetCameraPos(CGraphicView::CameraBottom);
 }
 
 void W3DViewFrame::OnCameraReset(wxCommandEvent &WXUNUSED(event))
 {
+    // IMPLEMENTATION STATUS: FUNCTIONAL ✅
     // MFC Reference: MainFrm.cpp:1437-1458 (OnCameraReset)
+    // Function: Reset camera to optimal viewing position for displayed object
     //
-    // MFC Implementation:
-    //   CGraphicView *pCGraphicView = (CGraphicView *)m_wndSplitter.GetPane (0, 1);
-    //   CW3DViewDoc *pCDoc = (CW3DViewDoc *)GetActiveDocument ();
-    //   if (pCDoc && pCDoc->GetDisplayedObject ())
-    //   {
-    //       RenderObjClass *prender_obj = pCDoc->GetDisplayedObject ();
-    //       if (prender_obj->Class_ID () == RenderObjClass::CLASSID_PARTICLEEMITTER) {
-    //           pCGraphicView->Reset_Camera_To_Display_Emitter (*((ParticleEmitterClass *)prender_obj));
-    //       } else {
-    //           pCGraphicView->Reset_Camera_To_Display_Object (*prender_obj);
-    //       }
-    //   }
+    // Implemented:
+    // ✅ Get graphic view from document
+    // ✅ Get displayed render object
+    // ✅ Check object type (particle emitter vs regular)
+    // ✅ Call Reset_Camera_To_Display_Emitter for particle emitters
+    // ✅ Call Reset_Camera_To_Display_Object for regular objects
+    // ✅ Optimal camera positioning handled by graphic view
     //
-    // Behavior: Resets camera to optimal position for viewing the displayed object
-    //           Different reset method for particle emitters vs regular objects
+    // Exact MFC Matching: ✅ Complete
+    // Ready for runtime testing
     
     W3DViewDoc* doc = wxStaticCast(GetDocument(), W3DViewDoc);
     if (!doc) return;
@@ -2233,17 +2278,13 @@ void W3DViewFrame::OnCameraReset(wxCommandEvent &WXUNUSED(event))
     CGraphicView* graphicView = doc->GetGraphicView();
     if (!graphicView) return;
     
-    // Get the displayed object
     RenderObjClass* renderObj = doc->GetDisplayedObject();
     if (!renderObj) return;
     
     // Reset camera based on object type
     if (renderObj->Class_ID() == RenderObjClass::CLASSID_PARTICLEEMITTER) {
-        // Particle emitters need special camera positioning
-        // Note: Using reinterpret_cast because ParticleEmitterClass is forward declared
         graphicView->Reset_Camera_To_Display_Emitter(*reinterpret_cast<ParticleEmitterClass*>(renderObj));
     } else {
-        // Regular render objects use standard camera reset
         graphicView->Reset_Camera_To_Display_Object(*renderObj);
     }
 }

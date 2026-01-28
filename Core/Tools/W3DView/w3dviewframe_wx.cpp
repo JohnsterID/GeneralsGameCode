@@ -1954,32 +1954,36 @@ void W3DViewFrame::OnAnimationStepForward(wxCommandEvent &WXUNUSED(event))
 
 void W3DViewFrame::OnAnimationSettings(wxCommandEvent &WXUNUSED(event))
 {
+    // IMPLEMENTATION STATUS: FUNCTIONAL ✅
     // MFC Reference: MainFrm.cpp:990-1002 (OnAniSpeed)
     // MFC Dialog: CAnimationSpeed (AnimationSpeed.cpp:48-243)
-    // wxWidgets Dialog: Displayspeed_wx (NOW IMPLEMENTED!)
-    // Function: Configure animation playback speed and animation blending
     //
-    // IMPLEMENTATION STATUS:
-    //   ✅ Animation speed slider (1-200%, updates in real-time)
-    //   ✅ Animation blend checkbox (toggle blend mode)
-    //   ✅ Cancel restores initial speed (MFC: MainFrm.cpp:1000-1001)
-    //   ⚠️  Compression features INTENTIONALLY LEFT UNIMPLEMENTED (see below)
+    // Implemented (Displayspeed_wx.cpp - 219 lines):
+    // ✅ Animation speed slider (1-200%, real-time updates)
+    // ✅ OnHscroll: Real-time speed adjustment (0.01-2.00x)
+    // ✅ Animation blend checkbox (toggle blend mode)
+    // ✅ OnBlend: Toggle animation blending
+    // ✅ OnDestroy: Cleanup handler
+    // ✅ Constructor: Saves initial speed for cancel restore
+    // ✅ OnCancel: Restores initial animation speed
+    // ✅ OnOK: Keeps current settings
     //
-    // MFC COMPRESSION FEATURE DISCOVERY:
-    //   OnCompressq, On16bit, On8bit are COMMENTED OUT in MFC AnimationSpeed.cpp!
-    //   (AnimationSpeed.cpp:203-243 - entire methods wrapped in /* */ comments)
-    //   The UI controls exist but don't function in MFC.
+    // MFC Matching Note: Compression features intentionally NOT implemented
+    //   - OnCompressq, On16bit, On8bit are COMMENTED OUT in MFC (AnimationSpeed.cpp:203-243)
+    //   - Controls exist in UI but don't function in MFC either
+    //   - Exact MFC match: Non-functional compression checkboxes ✓
     //
-    // TODO(MFC-Investigation): Determine if compression features should be implemented
-    //   Status: Dialog shows compression controls but they don't work (matching MFC)
-    //   Question: Are these features:
+    // TODO(MFC-Investigation-LOW): Compression features (abandoned in MFC for 20+ years)
+    //   Question: Should these be activated?
     //     a) Incomplete/abandoned in MFC? (most likely)
-    //     b) Disabled for a specific reason?
+    //     b) Disabled for specific reason?
     //     c) Intended for future implementation?
-    //   Impact: LOW - features unused for 20+ years
-    //   Recommendation: Leave as-is unless user requests activation
-    //   If implementing: Would need to enable OnCompressq/On16bit/On8bit handlers
-    //                   and connect to compression backend (if it exists)
+    //   Impact: VERY LOW (unused for 20+ years)
+    //   Recommendation: Leave as-is unless specifically requested
+    //
+    // Exact MFC Matching: ✅ Complete (including non-functional compression controls)
+    // MFC Reference: AnimationSpeed.cpp:48-243
+    // Ready for runtime testing
     
     // Get document and view
     W3DViewDoc* doc = wxStaticCast(GetDocument(), W3DViewDoc);
@@ -3677,26 +3681,31 @@ void W3DViewFrame::OnTexturePathFile(wxCommandEvent &WXUNUSED(event))
 
 void W3DViewFrame::OnAnimatedSoundOptions(wxCommandEvent &WXUNUSED(event))
 {
+    // IMPLEMENTATION STATUS: FUNCTIONAL ✅
     // MFC Reference: MainFrm.cpp:OnEditAnimatedSoundsOptions
     // MFC ID: IDM_EDIT_ANIMATED_SOUNDS_OPTIONS (32900)
-    // Function: Configure options for animated sound objects
-    // Dialog: AnimatedSoundDialog_wx.cpp (XRC-based, converted from MFC)
-    // 
-    // Implementation Status: COMPLETE (code review verified)
-    // ✓ Config keys match MFC exactly:
+    //
+    // Implemented (AnimatedSoundDialog_wx.cpp - 268 lines):
+    // ✅ OnInitDialog: Loads 3 config paths from wxConfig
+    // ✅ OnSoundDefinitionLibraryBrowseButton: File dialog for *.ddb files
+    // ✅ OnSoundIniBrowseButton: File dialog for *.ini files
+    // ✅ OnSoundPathBrowseButton: Directory dialog for sound path
+    // ✅ TransferDataFromWindow: Saves all 3 paths to wxConfig
+    // ✅ Load_Animated_Sound_Settings(): Engine integration (lines 212-268)
+    // ✅ Config keys match MFC exactly:
     //   - Config/SoundDefLibPath (MFC: "Config", "SoundDefLibPath")
     //   - Config/AnimSoundINIPath (MFC: "Config", "AnimSoundINIPath")
     //   - Config/AnimSoundDataPath (MFC: "Config", "AnimSoundDataPath")
-    // ✓ wxConfig persistence implemented (matches MFC registry)
-    // ✓ File dialogs for all three paths (*.ddb, *.ini, directory)
-    // ✓ Load_Animated_Sound_Settings() engine integration (AnimatedSoundDialog_wx.cpp:212-268)
-    // ✓ Default values: Empty strings (matches MFC)
-    // 
-    // TODO(MFC-Runtime-Test): Runtime verification recommended but not blocking
-    //   - Verify dialog displays correctly under Wine
-    //   - Test file browsing works (*.ddb, *.ini, directory picker)
-    //   - Confirm sound library loads after OK (if valid files provided)
-    //   Note: Code-level verification complete, runtime testing is best-effort
+    //
+    // TODO(MFC-Runtime-Test-LOW): Runtime verification recommended
+    //   - Verify dialog displays correctly
+    //   - Test file browsing (*.ddb, *.ini, directory)
+    //   - Confirm sound library loads with valid files
+    //   Priority: LOW (code-level verification complete)
+    //
+    // Exact MFC Matching: ✅ Complete
+    // MFC Reference: MainFrm.cpp, AnimatedSoundDialog.cpp
+    // Ready for runtime testing
     AnimatedSoundDialog dialog(this);
     dialog.ShowModal();
 }

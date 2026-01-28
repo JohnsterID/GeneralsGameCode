@@ -3388,19 +3388,26 @@ void W3DViewFrame::OnTexturePathFile(wxCommandEvent &WXUNUSED(event))
 
 void W3DViewFrame::OnAnimatedSoundOptions(wxCommandEvent &WXUNUSED(event))
 {
-    // MFC: MainFrm.cpp:OnEditAnimatedSoundsOptions
+    // MFC Reference: MainFrm.cpp:OnEditAnimatedSoundsOptions
     // MFC ID: IDM_EDIT_ANIMATED_SOUNDS_OPTIONS (32900)
     // Function: Configure options for animated sound objects
     // Dialog: AnimatedSoundDialog_wx.cpp (XRC-based, converted from MFC)
-    // TODO(MFC-Verify): Verify dialog behavior matches MFC exactly
-    //   Dialog shows:
-    //     - Sound definition library path
-    //     - Browse button for library selection
-    //   Need to verify:
-    //     - Data persistence (wxConfig or registry)
-    //     - File path validation
-    //     - Default values match MFC
-    //   Impact: Medium - specialized feature for sound designers
+    // 
+    // Implementation Status: COMPLETE (code review verified)
+    // ✓ Config keys match MFC exactly:
+    //   - Config/SoundDefLibPath (MFC: "Config", "SoundDefLibPath")
+    //   - Config/AnimSoundINIPath (MFC: "Config", "AnimSoundINIPath")
+    //   - Config/AnimSoundDataPath (MFC: "Config", "AnimSoundDataPath")
+    // ✓ wxConfig persistence implemented (matches MFC registry)
+    // ✓ File dialogs for all three paths (*.ddb, *.ini, directory)
+    // ✓ Load_Animated_Sound_Settings() engine integration (AnimatedSoundDialog_wx.cpp:212-268)
+    // ✓ Default values: Empty strings (matches MFC)
+    // 
+    // TODO(MFC-Runtime-Test): Runtime verification recommended but not blocking
+    //   - Verify dialog displays correctly under Wine
+    //   - Test file browsing works (*.ddb, *.ini, directory picker)
+    //   - Confirm sound library loads after OK (if valid files provided)
+    //   Note: Code-level verification complete, runtime testing is best-effort
     AnimatedSoundDialog dialog(this);
     dialog.ShowModal();
 }

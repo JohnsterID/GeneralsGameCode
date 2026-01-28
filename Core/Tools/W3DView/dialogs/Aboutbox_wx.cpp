@@ -30,10 +30,25 @@ Aboutbox::Aboutbox(wxWindow *parent)
     : AboutboxBase(parent)
 {
     // Set the version text
-    // NOTE: MFC version reads from executable version resource (VS_VERSION_INFO).
-    // wxWidgets equivalent would use platform-specific methods:
-    //   Windows: GetFileVersionInfo/VerQueryValue
-    //   Cross-platform: Parse custom resource or embed in source
+    // MFC Reference: W3DView.cpp:317-361 (CAboutDlg::OnInitDialog)
+    // MFC reads version from executable resource: GetFileVersionInfo/VerQueryValue
+    // Format: IDS_VERSION string resource with major.minor (from dwFileVersionMS)
+    // 
+    // TODO(MFC-Match): Implement dynamic version reading from executable
+    //   MFC Implementation:
+    //     1. GetModuleFileName(nullptr, filename, MAX_PATH) - get exe path
+    //     2. GetFileVersionInfoSize(filename, &dummy) - get version block size
+    //     3. GetFileVersionInfo(filename, 0, size, pblock) - read version block
+    //     4. VerQueryValue(pblock, "\\", &pVersionInfo, &len) - query VS_FIXEDFILEINFO
+    //     5. Extract major.minor from dwFileVersionMS: (major >> 16), (major & 0xFFFF)
+    //     6. Format using IDS_VERSION string resource: "W3DView Version %d.%d"
+    //   wxWidgets Options:
+    //     - MinGW: Can use Windows API (GetFileVersionInfo) if available
+    //     - Cross-platform: Embed version in source/CMakeLists.txt
+    //     - Hybrid: Try Windows API, fallback to embedded version
+    //   Current: Hardcoded "W3DView Version 1.0" (default from MFC)
+    //   Impact: MEDIUM - user convenience (shows actual build version)
+    //   Note: MFC defaults to 1.0 if version resource missing, so current behavior valid
     if (m_idc_version)
     {
         m_idc_version->SetLabel("W3DView Version 1.0");

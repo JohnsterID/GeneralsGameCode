@@ -20,6 +20,7 @@
 
 #include "TextureSettings_wx.h"
 #include <wx/xrc/xmlres.h>
+#include <wx/filedlg.h>
 
 wxBEGIN_EVENT_TABLE(TextureSettings, TextureSettingsBase)
 EVT_CHECKBOX(XRCID("IDC_ANIMATION_CHECK"), TextureSettings::OnAnimationCheck)  // Button/Checkbox click
@@ -58,19 +59,105 @@ void TextureSettings::OnCancel(wxCommandEvent &event)
 
 void TextureSettings::OnAnimationCheck(wxCommandEvent &event)
 {
-    // TODO: Implement OnAnimationCheck
-    // Control ID: IDC_ANIMATION_CHECK
+    // MFC Reference: TextureSettingsDialog.cpp (OnAnimationCheck)
+    // Function: Enable/disable animation-related controls based on checkbox state
+    //
+    // MFC Implementation:
+    //   bool benable = (SendDlgItemMessage(IDC_ANIMATION_CHECK, BM_GETCHECK) == 1);
+    //   EnableWindow(GetDlgItem(IDC_FRAME_COUNT_EDIT), benable);
+    //   EnableWindow(GetDlgItem(IDC_FPS_EDIT), benable);
+    //   EnableWindow(m_TypeCombo, benable);
+    //   EnableWindow(m_FrameRateSpin, benable);
+    //   EnableWindow(m_FrameCountSpin, benable);
+    
+    bool enable = false;
+    if (m_idc_animation_check)
+    {
+        enable = m_idc_animation_check->GetValue();  // Checkbox state
+    }
+    
+    // Enable/disable animation controls based on checkbox state
+    if (m_idc_frame_count_edit) m_idc_frame_count_edit->Enable(enable);
+    if (m_idc_fps_edit) m_idc_fps_edit->Enable(enable);
+    if (m_idc_type_combo) m_idc_type_combo->Enable(enable);
+    if (m_idc_fps_spin) m_idc_fps_spin->Enable(enable);
+    if (m_idc_frame_count_spin) m_idc_frame_count_spin->Enable(enable);
 }
 
 void TextureSettings::OnDestroy(wxWindowDestroyEvent &event)
 {
-    // TODO: Implement OnDestroy
+    // MFC Reference: TextureSettingsDialog.cpp (OnDestroy)
+    // Function: Cleanup dialog resources
+    //
+    // MFC Implementation:
+    //   if (m_hThumbnail != nullptr) {
+    //       DeleteObject(m_hThumbnail);
+    //       m_hThumbnail = nullptr;
+    //   }
+    //   CDialog::OnDestroy();
+    //
+    // wxWidgets: 
+    //   Bitmap cleanup is automatic (no manual DeleteObject needed)
+    //   wxWidgets uses smart pointers/automatic memory management
+    //   Just call event.Skip() to allow base class processing
+    
+    event.Skip();  // Allow base class to process destruction
 }
 
 void TextureSettings::OnBrowseButton(wxCommandEvent &event)
 {
-    // TODO: Implement OnBrowseButton
-    // Control ID: IDC_BROWSE_BUTTON
+    // MFC Reference: TextureSettingsDialog.cpp (OnBrowseButton)
+    // Function: Browse for .tga texture file, update filename control, enable apply button
+    //
+    // MFC Implementation:
+    //   1. Get current filename from control as default
+    //   2. Show CFileDialog with .tga filter
+    //   3. On OK:
+    //      - WW3D::Add_Search_Path(Strip_Filename_From_Path(dialog.GetFileName()))
+    //      - SetDlgItemText(IDC_FILENAME_EDIT, dialog.GetFileName())
+    //      - Select all text in control (EM_SETSEL)
+    //      - Enable apply button
+    
+    // Get current filename to use as default
+    wxString currentFilename;
+    if (m_idc_filename_edit)
+    {
+        currentFilename = m_idc_filename_edit->GetValue();
+    }
+    
+    wxFileDialog fileDialog(
+        this,
+        "Select Texture File",  // Title
+        "",  // Default directory (empty = use current)
+        currentFilename,  // Default filename
+        "Targa files (*.tga)|*.tga",  // Wildcard filter (MFC: "Targa files (*.tga)|*.tga||")
+        wxFD_OPEN | wxFD_FILE_MUST_EXIST  // Flags
+    );
+    
+    if (fileDialog.ShowModal() == wxID_OK)
+    {
+        wxString filepath = fileDialog.GetPath();  // Full path (matches MFC GetFileName())
+        
+        // TODO(MFC-Match): Add search path for texture loading
+        //   MFC calls: WW3D::Add_Search_Path(Strip_Filename_From_Path(filepath))
+        //   This adds the directory containing the texture to WW3D's search paths
+        //   Need to verify if WW3D::Add_Search_Path() is available in wxWidgets build
+        //   and if Strip_Filename_From_Path is in Utils_wx.cpp
+        //   Priority: MEDIUM - texture loading may fail without correct search path
+        
+        // Set filename in control
+        if (m_idc_filename_edit)
+        {
+            m_idc_filename_edit->SetValue(filepath);
+            m_idc_filename_edit->SelectAll();  // MFC: SendDlgItemMessage(EM_SETSEL, 0, -1)
+        }
+        
+        // Enable apply button (MFC: EnableWindow(GetDlgItem(IDC_APPLY), TRUE))
+        if (m_idc_apply)
+        {
+            m_idc_apply->Enable(true);
+        }
+    }
 }
 
 void TextureSettings::OnRestore(wxCommandEvent &event)

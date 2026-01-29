@@ -144,6 +144,9 @@ void OnBrowse(wxCommandEvent &event);  // Button/Checkbox click
     void On3DRadio(wxCommandEvent &event);  // Button/Checkbox click
     void OnPlay(wxCommandEvent &event);  // Button/Checkbox click
     void OnHscroll(wxCommandEvent &event);  // Horizontal scroll (slider)
+    
+    // Helper functions
+    void Update_Enable_State();  // Enable/disable controls based on 2D/3D radio state
 
     // Phase 2.5: Member variables
     wxString OldName;

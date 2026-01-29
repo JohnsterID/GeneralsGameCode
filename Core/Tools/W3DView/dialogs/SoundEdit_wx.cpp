@@ -20,6 +20,8 @@
 
 #include "SoundEdit_wx.h"
 #include <wx/xrc/xmlres.h>
+#include <wx/filedlg.h>
+#include <wx/filename.h>
 
 wxBEGIN_EVENT_TABLE(SoundEdit, SoundEditBase)
 EVT_BUTTON(XRCID("IDC_BROWSE"), SoundEdit::OnBrowse)  // Button/Checkbox click
@@ -58,20 +60,79 @@ void SoundEdit::OnCancel(wxCommandEvent &event)
 
 void SoundEdit::OnBrowse(wxCommandEvent &event)
 {
-    // TODO: Implement OnBrowse
-    // Control ID: IDC_BROWSE
+    // MFC Reference: SoundEditDialog.cpp (OnBrowse)
+    // Function: Browse for sound file (.wav or .mp3), store filename only in control
+    //
+    // MFC Implementation:
+    //   1. Get current filename from control
+    //   2. Extract path from filename using Strip_Filename_From_Path
+    //   3. Show CFileDialog with .wav/.mp3 filters, set initial directory to extracted path
+    //   4. On OK: Extract just filename using Get_Filename_From_Path and store in control
+    //   Note: Unlike TextureSettings, this stores ONLY the filename, not the full path
+    
+    wxString defaultFilename;
+    wxString initialDir;
+    
+    // Get current filename from control
+    if (m_idc_filename_edit)
+    {
+        defaultFilename = m_idc_filename_edit->GetValue();
+        
+        // Extract directory path if filename contains path separator
+        if (!defaultFilename.IsEmpty())
+        {
+            wxFileName fn(defaultFilename);
+            if (fn.HasVolume() || fn.HasName())  // Has path or just filename
+            {
+                initialDir = fn.GetPath();  // wxWidgets equivalent of Strip_Filename_From_Path
+            }
+        }
+    }
+    
+    wxFileDialog fileDialog(
+        this,
+        "Select Sound File",  // Title
+        initialDir,  // Initial directory (MFC: dialog.m_ofn.lpstrInitialDir)
+        defaultFilename,  // Default filename
+        "All Sound Files|*.wav;*.mp3|WAV File (*.wav)|*.wav|MP3 File (*.mp3)|*.mp3",  // Wildcard
+        wxFD_OPEN | wxFD_FILE_MUST_EXIST  // Flags
+    );
+    
+    if (fileDialog.ShowModal() == wxID_OK)
+    {
+        wxString fullPath = fileDialog.GetPath();
+        wxFileName fn(fullPath);
+        wxString filenameOnly = fn.GetFullName();  // wxWidgets equivalent of Get_Filename_From_Path
+        
+        // Store only the filename (not full path) in control
+        // MFC: SetDlgItemText(IDC_FILENAME_EDIT, Get_Filename_From_Path(dialog.GetPathName()))
+        if (m_idc_filename_edit)
+        {
+            m_idc_filename_edit->SetValue(filenameOnly);
+        }
+    }
 }
 
 void SoundEdit::On2DRadio(wxCommandEvent &event)
 {
-    // TODO: Implement On2DRadio
-    // Control ID: IDC_2D_RADIO
+    // MFC Reference: SoundEditDialog.cpp (On2DRadio)
+    // Function: Update control enable states when 2D radio selected
+    //
+    // MFC Implementation:
+    //   Update_Enable_State();
+    
+    Update_Enable_State();
 }
 
 void SoundEdit::On3DRadio(wxCommandEvent &event)
 {
-    // TODO: Implement On3DRadio
-    // Control ID: IDC_3D_RADIO
+    // MFC Reference: SoundEditDialog.cpp (On3DRadio)
+    // Function: Update control enable states when 3D radio selected
+    //
+    // MFC Implementation:
+    //   Update_Enable_State();
+    
+    Update_Enable_State();
 }
 
 void SoundEdit::OnPlay(wxCommandEvent &event)
@@ -83,6 +144,35 @@ void SoundEdit::OnPlay(wxCommandEvent &event)
 void SoundEdit::OnHscroll(wxCommandEvent &event)
 {
     // TODO: Implement OnHscroll
+}
+
+// ============================================================================
+// Helper Functions
+// ============================================================================
+
+void SoundEdit::Update_Enable_State()
+{
+    // MFC Reference: SoundEditDialog.cpp (Update_Enable_State)
+    // Function: Enable/disable controls based on 2D/3D radio button state
+    //
+    // MFC Implementation:
+    //   bool enable_3d = (SendDlgItemMessage(IDC_3D_RADIO, BM_GETCHECK) == 1);
+    //   EnableWindow(GetDlgItem(IDC_MAX_VOL_EDIT), enable_3d);
+    //   EnableWindow(GetDlgItem(IDC_DROP_OFF_EDIT), enable_3d);
+    //   EnableWindow(GetDlgItem(IDC_TRIGGER_RADIUS_EDIT), !enable_3d);
+    
+    bool enable_3d = false;
+    if (m_idc_3d_radio)
+    {
+        enable_3d = m_idc_3d_radio->GetValue();  // Check if 3D radio is checked
+    }
+    
+    // Enable 3D-specific controls when 3D mode is selected
+    if (m_idc_max_vol_edit) m_idc_max_vol_edit->Enable(enable_3d);
+    if (m_idc_drop_off_edit) m_idc_drop_off_edit->Enable(enable_3d);
+    
+    // Enable 2D-specific controls when 2D mode is selected (opposite of 3D)
+    if (m_idc_trigger_radius_edit) m_idc_trigger_radius_edit->Enable(!enable_3d);
 }
 
 

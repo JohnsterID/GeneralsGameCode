@@ -103,8 +103,39 @@ void PropPageEmitterGen::OnSelchangeShaderCombo(wxCommandEvent &event)
 
 void PropPageEmitterGen::OnParticleLifetimeCheck(wxCommandEvent &event)
 {
-    // TODO: Implement OnParticleLifetimeCheck
-    // Control ID: IDC_PARTICLE_LIFETIME_CHECK
+    // MFC Reference: EmitterGeneralPropPage.cpp (OnParticleLifetimeCheck)
+    // Function: Enable/disable particle lifetime controls based on checkbox state
+    //
+    // MFC Implementation:
+    //   bool enable = (SendDlgItemMessage(IDC_PARTICLE_LIFETIME_CHECK, BM_GETCHECK) == 1);
+    //   EnableWindow(GetDlgItem(IDC_PARTICLE_LIFETIME_EDIT), enable);
+    //   EnableWindow(GetDlgItem(IDC_PARTICLE_LIFETIME_SPIN), enable);
+    //   if (enable == false) {
+    //       m_Lifetime = 0;
+    //       SetDlgItemFloat(IDC_PARTICLE_LIFETIME_EDIT, 0);
+    //   }
+    //   SetModified();
+    
+    bool enable = false;
+    if (m_idc_particle_lifetime_check)
+    {
+        enable = m_idc_particle_lifetime_check->GetValue();
+    }
+    
+    // Enable/disable lifetime controls based on checkbox
+    if (m_idc_particle_lifetime_edit) m_idc_particle_lifetime_edit->Enable(enable);
+    if (m_idc_particle_lifetime_spin) m_idc_particle_lifetime_spin->Enable(enable);
+    
+    // If disabled, clear the lifetime value
+    if (!enable && m_idc_particle_lifetime_edit)
+    {
+        m_idc_particle_lifetime_edit->SetValue("0");
+    }
+    
+    // TODO(MFC-Match): Call SetModified() equivalent for property page
+    //   MFC property pages use SetModified() to mark the page as modified
+    //   Need to implement property page modification tracking in wxWidgets
+    //   Priority: LOW - functionality works, but Apply button state may not update correctly
 }
 
 

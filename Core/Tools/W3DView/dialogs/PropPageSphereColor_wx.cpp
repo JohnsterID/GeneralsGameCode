@@ -61,14 +61,60 @@ void PropPageSphereColor::OnDestroy(wxWindowDestroyEvent &event)
 
 void PropPageSphereColor::OnOpacityVectorCheck(wxCommandEvent &event)
 {
-    // TODO: Implement OnOpacityVectorCheck
-    // Control ID: IDC_OPACITY_VECTOR_CHECK
+    // MFC Reference: SphereColorPropPage.cpp (OnOpacityVectorCheck)
+    // Function: Enable/disable alpha vector controls and update render object
+    //
+    // MFC Implementation:
+    //   bool is_checked = (IsDlgButtonChecked(IDC_OPACITY_VECTOR_CHECK) == 1);
+    //   EnableWindow(GetDlgItem(IDC_VECTOR_BAR), is_checked);
+    //   EnableWindow(GetDlgItem(IDC_INVERT_VECTOR_CHECK), is_checked);
+    //   m_RenderObj->Set_Flag(SphereRenderObjClass::USE_ALPHA_VECTOR, is_checked);
+    //   SetModified();
+    
+    bool is_checked = false;
+    if (m_idc_opacity_vector_check)
+    {
+        is_checked = m_idc_opacity_vector_check->GetValue();
+    }
+    
+    // Enable/disable alpha-vector timeline controls
+    if (m_idc_vector_bar) m_idc_vector_bar->Enable(is_checked);
+    if (m_idc_invert_vector_check) m_idc_invert_vector_check->Enable(is_checked);
+    
+    // TODO(Phase 3 - Rendering): Update render object flag
+    //   MFC: m_RenderObj->Set_Flag(SphereRenderObjClass::USE_ALPHA_VECTOR, is_checked);
+    //   Need to implement render object integration for sphere particles
+    //   Priority: HIGH - required for correct particle rendering behavior
+    
+    // TODO(MFC-Match): Call SetModified() equivalent for property page
+    //   Priority: LOW - functionality works, but Apply button state may not update
 }
 
 void PropPageSphereColor::OnInvertVectorCheck(wxCommandEvent &event)
 {
-    // TODO: Implement OnInvertVectorCheck
-    // Control ID: IDC_INVERT_VECTOR_CHECK
+    // MFC Reference: SphereColorPropPage.cpp (OnInvertVectorCheck)
+    // Function: Update render object with inverted alpha setting
+    //
+    // MFC Implementation:
+    //   bool is_checked = (IsDlgButtonChecked(IDC_INVERT_VECTOR_CHECK) == 1);
+    //   m_RenderObj->Set_Flag(SphereRenderObjClass::USE_INVERSE_ALPHA, is_checked);
+    //   SetModified();
+    //
+    // Note: This handler only updates render object, no UI changes
+    
+    bool is_checked = false;
+    if (m_idc_invert_vector_check)
+    {
+        is_checked = m_idc_invert_vector_check->GetValue();
+    }
+    
+    // TODO(Phase 3 - Rendering): Update render object flag
+    //   MFC: m_RenderObj->Set_Flag(SphereRenderObjClass::USE_INVERSE_ALPHA, is_checked);
+    //   Need to implement render object integration for sphere particles
+    //   Priority: HIGH - required for correct particle rendering behavior
+    
+    // TODO(MFC-Match): Call SetModified() equivalent for property page
+    //   Priority: LOW - functionality works, but Apply button state may not update
 }
 
 

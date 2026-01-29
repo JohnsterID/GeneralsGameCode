@@ -56,7 +56,15 @@ void PropPageRingScale::OnCancel(wxCommandEvent &event)
 
 void PropPageRingScale::OnDestroy(wxWindowDestroyEvent &event)
 {
-    // TODO: Implement OnDestroy
+    // MFC Reference: RingSizePropPage.cpp (OnDestroy)
+    // Function: Cleanup property page resources
+    //
+    // MFC Implementation:
+    //   CPropertyPage::OnDestroy();
+    //
+    // wxWidgets: Automatic cleanup, just call base class handler
+    
+    event.Skip();  // Allow base class to process destruction
 }
 
 

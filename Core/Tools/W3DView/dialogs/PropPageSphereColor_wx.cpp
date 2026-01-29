@@ -56,7 +56,26 @@ void PropPageSphereColor::OnCancel(wxCommandEvent &event)
 
 void PropPageSphereColor::OnDestroy(wxWindowDestroyEvent &event)
 {
-    // TODO: Implement OnDestroy
+    // MFC Reference: SphereColorPropPage.cpp (OnDestroy)
+    // Function: Cleanup alpha vector data and property page resources
+    //
+    // MFC Implementation:
+    //   int count = m_VectorBar->Get_Point_Count();
+    //   for (int index = 0; index < count; index++) {
+    //       AlphaVectorStruct *data = (AlphaVectorStruct *)m_VectorBar->Get_User_Data(index);
+    //       if (data != nullptr) {
+    //           delete data;
+    //           m_VectorBar->Set_User_Data(index, 0L);
+    //       }
+    //   }
+    //   CPropertyPage::OnDestroy();
+    
+    // TODO(Phase 3 - Rendering): Cleanup AlphaVectorStruct data
+    //   Need to iterate through m_VectorBar points and delete AlphaVectorStruct instances
+    //   This requires VectorBar integration (timeline control for particle alpha)
+    //   Priority: HIGH - memory leak if not implemented
+    
+    event.Skip();  // Allow base class to process destruction
 }
 
 void PropPageSphereColor::OnOpacityVectorCheck(wxCommandEvent &event)

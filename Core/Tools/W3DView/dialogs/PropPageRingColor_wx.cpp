@@ -54,7 +54,15 @@ void PropPageRingColor::OnCancel(wxCommandEvent &event)
 
 void PropPageRingColor::OnDestroy(wxWindowDestroyEvent &event)
 {
-    // TODO: Implement OnDestroy
+    // MFC Reference: RingColorPropPage.cpp (OnDestroy)
+    // Function: Cleanup property page resources
+    //
+    // MFC Implementation:
+    //   CPropertyPage::OnDestroy();
+    //
+    // wxWidgets: Automatic cleanup, just call base class handler
+    
+    event.Skip();  // Allow base class to process destruction
 }
 
 

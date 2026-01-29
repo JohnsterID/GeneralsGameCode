@@ -56,7 +56,15 @@ void PropPageEmitterColor::OnCancel(wxCommandEvent &event)
 
 void PropPageEmitterColor::OnDestroy(wxWindowDestroyEvent &event)
 {
-    // TODO: Implement OnDestroy
+    // MFC Reference: EmitterColorPropPage.cpp (OnDestroy)
+    // Function: Cleanup property page resources
+    //
+    // MFC Implementation:
+    //   CPropertyPage::OnDestroy();
+    //
+    // wxWidgets: Automatic cleanup, just call base class handler
+    
+    event.Skip();  // Allow base class to process destruction
 }
 
 void PropPageEmitterColor::OnDeltaposRedRandomSpin(wxSpinEvent &event)

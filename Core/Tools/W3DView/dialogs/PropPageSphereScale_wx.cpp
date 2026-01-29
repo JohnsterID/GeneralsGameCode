@@ -55,7 +55,15 @@ void PropPageSphereScale::OnCancel(wxCommandEvent &event)
 
 void PropPageSphereScale::OnDestroy(wxWindowDestroyEvent &event)
 {
-    // TODO: Implement OnDestroy
+    // MFC Reference: SphereSizePropPage.cpp (OnDestroy)
+    // Function: Cleanup property page resources
+    //
+    // MFC Implementation:
+    //   CPropertyPage::OnDestroy();
+    //
+    // wxWidgets: Automatic cleanup, just call base class handler
+    
+    event.Skip();  // Allow base class to process destruction
 }
 
 

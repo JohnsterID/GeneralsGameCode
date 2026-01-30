@@ -22,7 +22,9 @@
 #include <wx/xrc/xmlres.h>
 
 wxBEGIN_EVENT_TABLE(ColorSel, ColorSelBase)
-EVT_SLIDER(XRCID("IDC_SLIDER_BLUE"), ColorSel::OnHscroll)  // Horizontal scroll (slider)
+EVT_SLIDER(XRCID("IDC_SLIDER_RED"), ColorSel::OnHscroll)  // Red slider
+    EVT_SLIDER(XRCID("IDC_SLIDER_GREEN"), ColorSel::OnHscroll)  // Green slider
+    EVT_SLIDER(XRCID("IDC_SLIDER_BLUE"), ColorSel::OnHscroll)  // Blue slider
     // TODO: Map ON_WM_PAINT manually
     // MFC: ON_WM_PAINT()
     EVT_CHECKBOX(XRCID("IDC_GRAYSCALE_CHECK"), ColorSel::OnGrayscaleCheck)  // Button/Checkbox click
@@ -60,7 +62,40 @@ void ColorSel::OnCancel(wxCommandEvent &event)
 
 void ColorSel::OnHscroll(wxCommandEvent &event)
 {
-    // TODO: Implement OnHscroll
+    // MFC Reference: ColorSelectionDialog.cpp (OnHScroll)
+    // Function: Update text edits when slider moves
+    //
+    // MFC Implementation:
+    //   Update_Sliders(::GetWindowLong(*pScrollBar, GWL_ID));
+    //   CDialog::OnHScroll(nSBCode, nPos, pScrollBar);
+    
+    // Update text edit controls to match slider values
+    if (m_idc_slider_red && m_idc_red_edit)
+    {
+        int value = m_idc_slider_red->GetValue();
+        m_idc_red_edit->SetValue(wxString::Format("%d", value));
+    }
+    
+    if (m_idc_slider_green && m_idc_green_edit)
+    {
+        int value = m_idc_slider_green->GetValue();
+        m_idc_green_edit->SetValue(wxString::Format("%d", value));
+    }
+    
+    if (m_idc_slider_blue && m_idc_blue_edit)
+    {
+        int value = m_idc_slider_blue->GetValue();
+        m_idc_blue_edit->SetValue(wxString::Format("%d", value));
+    }
+    
+    // TODO(Phase 3 - Color Preview): Update_Sliders() for grayscale sync and preview
+    //   MFC calls Update_Sliders which:
+    //   1. Determines which slider moved (from event source)
+    //   2. If grayscale mode, syncs all sliders to moved slider
+    //   3. Updates m_PaintColor Vector3 (normalized RGB)
+    //   4. Calls Paint_Color_Window() to update color preview
+    //   5. Updates spin controls
+    //   Priority: MEDIUM - text edits update but no grayscale sync/preview
 }
 
 void ColorSel::OnGrayscaleCheck(wxCommandEvent &event)
@@ -116,20 +151,116 @@ void ColorSel::OnGrayscaleCheck(wxCommandEvent &event)
 
 void ColorSel::OnChangeBlueEdit(wxCommandEvent &event)
 {
-    // TODO: Implement OnChangeBlueEdit
-    // Control ID: IDC_BLUE_EDIT
+    // MFC Reference: ColorSelectionDialog.cpp (OnChangeBlueEdit)
+    // Function: Sync slider when blue text edit changes
+    //
+    // MFC Implementation:
+    //   if (::IsWindow(m_BlueSlider)) {
+    //       int value = GetDlgItemInt(IDC_BLUE_EDIT);
+    //       m_BlueSlider.SetPos(value);
+    //       Update_Sliders(IDC_SLIDER_BLUE);
+    //       SendDlgItemMessage(IDC_BLUE_EDIT, EM_SETSEL, (WPARAM)(int)10, (LPARAM)(int)20);
+    //   }
+    
+    if (m_idc_slider_blue && m_idc_blue_edit)
+    {
+        wxString text = m_idc_blue_edit->GetValue();
+        long value = 0;
+        
+        if (text.ToLong(&value))
+        {
+            // Clamp to valid range (0-255)
+            if (value < 0) value = 0;
+            if (value > 255) value = 255;
+            
+            // Update slider
+            m_idc_slider_blue->SetValue(static_cast<int>(value));
+            
+            // TODO(Phase 3 - Color Preview): Update_Sliders(IDC_SLIDER_BLUE)
+            //   MFC calls Update_Sliders which:
+            //   1. Syncs other sliders if grayscale mode enabled
+            //   2. Updates m_PaintColor Vector3 (normalized RGB)
+            //   3. Calls Paint_Color_Window() to update preview
+            //   4. Updates spin controls
+            //   Priority: MEDIUM - slider syncs but no preview update
+        }
+    }
 }
 
 void ColorSel::OnChangeGreenEdit(wxCommandEvent &event)
 {
-    // TODO: Implement OnChangeGreenEdit
-    // Control ID: IDC_GREEN_EDIT
+    // MFC Reference: ColorSelectionDialog.cpp (OnChangeGreenEdit)
+    // Function: Sync slider when green text edit changes
+    //
+    // MFC Implementation:
+    //   if (::IsWindow(m_GreenSlider)) {
+    //       int value = GetDlgItemInt(IDC_GREEN_EDIT);
+    //       m_GreenSlider.SetPos(value);
+    //       Update_Sliders(IDC_SLIDER_GREEN);
+    //       SendDlgItemMessage(IDC_GREEN_EDIT, EM_SETSEL, (WPARAM)(int)10, (LPARAM)(int)20);
+    //   }
+    
+    if (m_idc_slider_green && m_idc_green_edit)
+    {
+        wxString text = m_idc_green_edit->GetValue();
+        long value = 0;
+        
+        if (text.ToLong(&value))
+        {
+            // Clamp to valid range (0-255)
+            if (value < 0) value = 0;
+            if (value > 255) value = 255;
+            
+            // Update slider
+            m_idc_slider_green->SetValue(static_cast<int>(value));
+            
+            // TODO(Phase 3 - Color Preview): Update_Sliders(IDC_SLIDER_GREEN)
+            //   MFC calls Update_Sliders which:
+            //   1. Syncs other sliders if grayscale mode enabled
+            //   2. Updates m_PaintColor Vector3 (normalized RGB)
+            //   3. Calls Paint_Color_Window() to update preview
+            //   4. Updates spin controls
+            //   Priority: MEDIUM - slider syncs but no preview update
+        }
+    }
 }
 
 void ColorSel::OnChangeRedEdit(wxCommandEvent &event)
 {
-    // TODO: Implement OnChangeRedEdit
-    // Control ID: IDC_RED_EDIT
+    // MFC Reference: ColorSelectionDialog.cpp (OnChangeRedEdit)
+    // Function: Sync slider when red text edit changes
+    //
+    // MFC Implementation:
+    //   if (::IsWindow(m_RedSlider)) {
+    //       int value = GetDlgItemInt(IDC_RED_EDIT);
+    //       m_RedSlider.SetPos(value);
+    //       Update_Sliders(IDC_SLIDER_RED);
+    //       SendDlgItemMessage(IDC_RED_EDIT, EM_SETSEL, (WPARAM)(int)10, (LPARAM)(int)20);
+    //   }
+    
+    if (m_idc_slider_red && m_idc_red_edit)
+    {
+        wxString text = m_idc_red_edit->GetValue();
+        long value = 0;
+        
+        if (text.ToLong(&value))
+        {
+            // Clamp to valid range (0-255)
+            if (value < 0) value = 0;
+            if (value > 255) value = 255;
+            
+            // Update slider
+            m_idc_slider_red->SetValue(static_cast<int>(value));
+            
+            // TODO(Phase 3 - Color Preview): Update_Sliders(IDC_SLIDER_RED)
+            //   MFC calls Update_Sliders which:
+            //   1. Syncs other sliders if grayscale mode enabled
+            //   2. Updates m_PaintColor Vector3 (normalized RGB)
+            //   3. Calls Paint_Color_Window() to update preview
+            //   4. Updates spin controls
+            //   Priority: MEDIUM - slider syncs but no preview update
+        }
+    }
 }
 
 

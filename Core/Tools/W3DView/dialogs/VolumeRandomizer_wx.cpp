@@ -201,7 +201,8 @@ void VolumeRandomizer::OnInitDialog(wxInitDialogEvent& event)
         m_idc_sphere_radius_spin->SetValue(static_cast<int>(initial_sphere_radius));
     }
     if (m_idc_sphere_hollow_check) {
-        m_idc_sphere_hollow_check->SetValue(initial_sphere_hollow != 0);  // TODO: Verify boolean logic
+        // MFC: SendDlgItemMessage(IDC_SPHERE_HOLLOW_CHECK, BM_SETCHECK, (WPARAM)initial_sphere_hollow);
+        m_idc_sphere_hollow_check->SetValue(initial_sphere_hollow);
     }
     //
     //	Initialize the cylinder controls

@@ -206,7 +206,8 @@ void PropPageEmitterGen::OnInitDialog(wxInitDialogEvent& event)
     // Initialize the lifetime control
     //
     if (m_idc_particle_lifetime_check) {
-        m_idc_particle_lifetime_check->SetValue(m_Lifetime < 100 != 0);  // TODO: Verify boolean logic
+        // MFC: SendDlgItemMessage(IDC_PARTICLE_LIFETIME_CHECK, BM_SETCHECK, (WPARAM)(m_Lifetime < 100));
+        m_idc_particle_lifetime_check->SetValue(m_Lifetime < 100);
     }
     // TODO: Convert: m_Lifetime = 0;
     if (m_idc_particle_lifetime_spin) {

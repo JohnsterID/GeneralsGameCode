@@ -225,23 +225,29 @@ void SoundEdit::OnInitDialog(wxInitDialogEvent& event)
     //
     // Check the appropriate controls
     //
+    // MFC: SendDlgItemMessage(IDC_INFINITE_LOOPS_CHECK, BM_SETCHECK, (WPARAM)(loop_count == 0));
+    // MFC: SendDlgItemMessage(IDC_3D_RADIO, BM_SETCHECK, (WPARAM)is_3d);
+    // MFC: SendDlgItemMessage(IDC_2D_RADIO, BM_SETCHECK, (WPARAM)(is_3d == false));
+    // MFC: SendDlgItemMessage(IDC_MUSIC_RADIO, BM_SETCHECK, (WPARAM)is_music);
+    // MFC: SendDlgItemMessage(IDC_SOUNDEFFECT_RADIO, BM_SETCHECK, (WPARAM)(is_music == false));
+    // MFC: SendDlgItemMessage(IDC_STOP_WHEN_HIDDEN_CHECK, BM_SETCHECK, (WPARAM)(stop_on_hide));
     if (m_idc_infinite_loops_check) {
-        m_idc_infinite_loops_check->SetValue(loop_count == 0 != 0);  // TODO: Verify boolean logic
+        m_idc_infinite_loops_check->SetValue(loop_count == 0);
     }
     if (m_idc_3d_radio) {
-        m_idc_3d_radio->SetValue(is_3d != 0);  // TODO: Verify boolean logic
+        m_idc_3d_radio->SetValue(is_3d);
     }
     if (m_idc_2d_radio) {
-        m_idc_2d_radio->SetValue(is_3d == false != 0);  // TODO: Verify boolean logic
+        m_idc_2d_radio->SetValue(is_3d == false);
     }
     if (m_idc_music_radio) {
-        m_idc_music_radio->SetValue(is_music != 0);  // TODO: Verify boolean logic
+        m_idc_music_radio->SetValue(is_music);
     }
     if (m_idc_soundeffect_radio) {
-        m_idc_soundeffect_radio->SetValue(is_music == false != 0);  // TODO: Verify boolean logic
+        m_idc_soundeffect_radio->SetValue(is_music == false);
     }
     if (m_idc_stop_when_hidden_check) {
-        m_idc_stop_when_hidden_check->SetValue(stop_on_hide != 0);  // TODO: Verify boolean logic
+        m_idc_stop_when_hidden_check->SetValue(stop_on_hide);
     }
     //
     // Set up the sliders

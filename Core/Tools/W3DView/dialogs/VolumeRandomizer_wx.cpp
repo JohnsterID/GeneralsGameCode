@@ -226,9 +226,11 @@ void VolumeRandomizer::OnInitDialog(wxInitDialogEvent& event)
     // } else if (m_initial_type == CYLINDER_TYPE && m_idc_cylinder_radio) {
     //     m_idc_cylinder_radio->SetValue(true);
     // }
-    // TODO: Convert: Update_Enable_State ();
-    // TODO: Convert: return TRUE;
-
+    
+    // MFC: Update_Enable_State();
+    Update_Enable_State();
+    
+    // MFC: return TRUE;
     event.Skip();
 }
 

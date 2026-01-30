@@ -271,9 +271,10 @@ void SoundEdit::OnInitDialog(wxInitDialogEvent& event)
     //
     //	Make sure the appropriate controls are enabled/disabled
     //
-    // TODO: Convert: Update_Enable_State ();
-    // TODO: Convert: return TRUE;
-
+    // MFC: Update_Enable_State();
+    Update_Enable_State();
+    
+    // MFC: return TRUE;
     event.Skip();
 }
 

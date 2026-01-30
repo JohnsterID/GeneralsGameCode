@@ -113,8 +113,14 @@ void OpacityVector::OnInitDialog(wxInitDialogEvent& event)
     //
     //	Setup the sliders
     //
-    // TODO: Convert: m_SliderY.SetRange (0, 179);
-    // TODO: Convert: m_SliderZ.SetRange (0, 179);
+    // MFC: m_SliderY.SetRange(0, 179);
+    // MFC: m_SliderZ.SetRange(0, 179);
+    if (m_idc_slider_y) {
+        m_idc_slider_y->SetRange(0, 179);
+    }
+    if (m_idc_slider_z) {
+        m_idc_slider_z->SetRange(0, 179);
+    }
     // TODO: Declare: float log_test = ::log (8.0F);
     // TODO: Declare: float log_test2 = ::_logb (log_test);
     // TODO: Declare: float log_test3 = ::exp (log_test);

@@ -105,10 +105,22 @@ void PropPageEmitterColor::OnInitDialog(wxInitDialogEvent& event)
     //
     // Setup the spinners
     //
-    // TODO: Convert: m_OpacityRandomSpin.SetRange (0, 100);
-    // TODO: Convert: m_RedRandomSpin.SetRange (0, 255);
-    // TODO: Convert: m_GreenRandomSpin.SetRange (0, 255);
-    // TODO: Convert: m_BlueRandomSpin.SetRange (0, 255);
+    // MFC: m_OpacityRandomSpin.SetRange(0, 100);
+    // MFC: m_RedRandomSpin.SetRange(0, 255);
+    // MFC: m_GreenRandomSpin.SetRange(0, 255);
+    // MFC: m_BlueRandomSpin.SetRange(0, 255);
+    if (m_idc_opacity_random_spin) {
+        m_idc_opacity_random_spin->SetRange(0, 100);
+    }
+    if (m_idc_red_random_spin) {
+        m_idc_red_random_spin->SetRange(0, 255);
+    }
+    if (m_idc_green_random_spin) {
+        m_idc_green_random_spin->SetRange(0, 255);
+    }
+    if (m_idc_blue_random_spin) {
+        m_idc_blue_random_spin->SetRange(0, 255);
+    }
     // TODO: Convert: m_OpacityRandomSpin.SetPos (m_OrigOpacities.Rand * 100);
     // TODO: Convert: m_RedRandomSpin.SetPos (m_OrigColors.Rand.X * 255);
     // TODO: Convert: m_GreenRandomSpin.SetPos (m_OrigColors.Rand.Y * 255);

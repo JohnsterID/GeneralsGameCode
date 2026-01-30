@@ -272,13 +272,32 @@ void ColorSel::OnInitDialog(wxInitDialogEvent& event)
 {
     // Initialize controls after they're created
     // Allow the base class to process this message
+    
     // Set the ranges of the slider and spin controls
-    // TODO: Convert: m_RedSlider.SetRange (0, 255);
-    // TODO: Convert: m_GreenSlider.SetRange (0, 255);
-    // TODO: Convert: m_BlueSlider.SetRange (0, 255);
-    // TODO: Convert: m_RedSpin.SetRange (0, 255);
-    // TODO: Convert: m_GreenSpin.SetRange (0, 255);
-    // TODO: Convert: m_BlueSpin.SetRange (0, 255);
+    // MFC: m_RedSlider.SetRange(0, 255);
+    // MFC: m_GreenSlider.SetRange(0, 255);
+    // MFC: m_BlueSlider.SetRange(0, 255);
+    // MFC: m_RedSpin.SetRange(0, 255);
+    // MFC: m_GreenSpin.SetRange(0, 255);
+    // MFC: m_BlueSpin.SetRange(0, 255);
+    if (m_idc_slider_red) {
+        m_idc_slider_red->SetRange(0, 255);
+    }
+    if (m_idc_slider_green) {
+        m_idc_slider_green->SetRange(0, 255);
+    }
+    if (m_idc_slider_blue) {
+        m_idc_slider_blue->SetRange(0, 255);
+    }
+    if (m_idc_red_spin) {
+        m_idc_red_spin->SetRange(0, 255);
+    }
+    if (m_idc_green_spin) {
+        m_idc_green_spin->SetRange(0, 255);
+    }
+    if (m_idc_blue_spin) {
+        m_idc_blue_spin->SetRange(0, 255);
+    }
     // Determine the initial settings (in integers)
     // TODO: Declare: int red_value = int(m_Color.X * 255.00F);
     // TODO: Declare: int green_value = int(m_Color.Y * 255.00F);

@@ -80,7 +80,43 @@ void TextureManagment::OnKeydownMeshTextureListCtrl(wxListEvent &event)
 
 void TextureManagment::OnDestroy(wxWindowDestroyEvent &event)
 {
-    // TODO: Implement OnDestroy
+    // MFC Reference: TextureMgrDialog.cpp (OnDestroy)
+    // Function: Cleanup image lists and texture names
+    //
+    // MFC Implementation:
+    //   m_ListCtrl.SetImageList(nullptr, LVSIL_NORMAL);
+    //   m_ListCtrl.SetImageList(nullptr, LVSIL_SMALL);
+    //   SAFE_DELETE(m_pImageList);
+    //   SAFE_DELETE(m_pImageListSmall);
+    //   SAFE_DELETE(m_pTextureImageList);
+    //   SAFE_DELETE(m_pTextureImageListSmall);
+    //   m_TextureNames.Delete_All();
+    //   CDialog::OnDestroy();
+    
+    // TODO(Phase 3 - List Control Integration): Image lists and texture data cleanup
+    //   When OnInitDialog creates image lists for m_idc_mesh_texture_list_ctrl:
+    //   1. Store image list pointers as member variables:
+    //      - m_pImageList (normal icons)
+    //      - m_pImageListSmall (small icons)
+    //      - m_pTextureImageList (texture preview normal)
+    //      - m_pTextureImageListSmall (texture preview small)
+    //   2. Store texture names collection (m_TextureNames)
+    //   3. OnDestroy: Detach from list control and delete all
+    //   wxWidgets pattern:
+    //     if (m_idc_mesh_texture_list_ctrl) {
+    //         m_idc_mesh_texture_list_ctrl->SetImageList(nullptr, wxIMAGE_LIST_NORMAL);
+    //         m_idc_mesh_texture_list_ctrl->SetImageList(nullptr, wxIMAGE_LIST_SMALL);
+    //     }
+    //     delete m_pImageList; m_pImageList = nullptr;
+    //     delete m_pImageListSmall; m_pImageListSmall = nullptr;
+    //     delete m_pTextureImageList; m_pTextureImageList = nullptr;
+    //     delete m_pTextureImageListSmall; m_pTextureImageListSmall = nullptr;
+    //     m_TextureNames.clear();  // Or appropriate cleanup
+    //   Priority: LOW - wxWidgets may auto-cleanup, but explicit is safer
+    //   Note: Only needed if OnInitDialog creates image lists
+    
+    // Allow base class processing
+    event.Skip();
 }
 
 

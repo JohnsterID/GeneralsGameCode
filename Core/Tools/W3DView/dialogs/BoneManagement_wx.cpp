@@ -69,7 +69,30 @@ void BoneManagement::OnSelchangeObjectCombo(wxCommandEvent &event)
 
 void BoneManagement::OnDestroy(wxWindowDestroyEvent &event)
 {
-    // TODO: Implement OnDestroy
+    // MFC Reference: BoneMgrDialog.cpp (OnDestroy)
+    // Function: Cleanup image list associated with tree control
+    //
+    // MFC Implementation:
+    //   CImageList* pimagelist = m_BoneTree.GetImageList(TVSIL_NORMAL);
+    //   m_BoneTree.SetImageList(nullptr, TVSIL_NORMAL);
+    //   SAFE_DELETE(pimagelist);
+    //   CDialog::OnDestroy();
+    
+    // TODO(Phase 3 - Tree Control Integration): Image list cleanup
+    //   When OnInitDialog creates wxImageList for m_idc_bone_tree:
+    //   1. Store image list pointer as member variable
+    //   2. OnDestroy: Detach from tree and delete
+    //   wxWidgets pattern:
+    //     if (m_bone_tree_imagelist) {
+    //         m_idc_bone_tree->SetImageList(nullptr);
+    //         delete m_bone_tree_imagelist;
+    //         m_bone_tree_imagelist = nullptr;
+    //     }
+    //   Priority: LOW - wxWidgets may auto-cleanup, but explicit is safer
+    //   Note: Only needed if OnInitDialog creates image list
+    
+    // Allow base class processing
+    event.Skip();
 }
 
 void BoneManagement::OnAttachButton(wxCommandEvent &event)

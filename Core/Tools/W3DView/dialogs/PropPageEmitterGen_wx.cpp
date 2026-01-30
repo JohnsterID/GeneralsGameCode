@@ -79,26 +79,62 @@ void PropPageEmitterGen::OnBrowseButton(wxCommandEvent &event)
 
 void PropPageEmitterGen::OnChangeFilenameEdit(wxCommandEvent &event)
 {
-    // TODO: Implement OnChangeFilenameEdit
-    // Control ID: IDC_FILENAME_EDIT
+    // MFC Reference: EmitterGeneralPropPage.cpp (OnChangeFilenameEdit)
+    // Function: Mark property page as modified when filename changes
+    //
+    // MFC Implementation:
+    //   SetModified();
+    
+    // TODO(Phase 3 - Property Page Tracking): SetModified()
+    //   MFC calls SetModified() to enable Apply button in property sheet
+    //   wxWidgets requires property sheet tracking infrastructure
+    //   Workaround: No-op for now, changes applied immediately on OK
+    //   Priority: LOW - functional but no Apply button state tracking
 }
 
 void PropPageEmitterGen::OnChangeNameEdit(wxCommandEvent &event)
 {
-    // TODO: Implement OnChangeNameEdit
-    // Control ID: IDC_NAME_EDIT
+    // MFC Reference: EmitterGeneralPropPage.cpp (OnChangeNameEdit)
+    // Function: Mark property page as modified when name changes
+    //
+    // MFC Implementation:
+    //   SetModified();
+    
+    // TODO(Phase 3 - Property Page Tracking): SetModified()
+    //   MFC calls SetModified() to enable Apply button in property sheet
+    //   wxWidgets requires property sheet tracking infrastructure
+    //   Workaround: No-op for now, changes applied immediately on OK
+    //   Priority: LOW - functional but no Apply button state tracking
 }
 
 void PropPageEmitterGen::OnChangeParticleLifetimeEdit(wxCommandEvent &event)
 {
-    // TODO: Implement OnChangeParticleLifetimeEdit
-    // Control ID: IDC_PARTICLE_LIFETIME_EDIT
+    // MFC Reference: EmitterGeneralPropPage.cpp (OnChangeParticleLifetimeEdit)
+    // Function: Mark property page as modified when particle lifetime changes
+    //
+    // MFC Implementation:
+    //   SetModified();
+    
+    // TODO(Phase 3 - Property Page Tracking): SetModified()
+    //   MFC calls SetModified() to enable Apply button in property sheet
+    //   wxWidgets requires property sheet tracking infrastructure
+    //   Workaround: No-op for now, changes applied immediately on OK
+    //   Priority: LOW - functional but no Apply button state tracking
 }
 
 void PropPageEmitterGen::OnSelchangeShaderCombo(wxCommandEvent &event)
 {
-    // TODO: Implement OnSelchangeShaderCombo
-    // Control ID: IDC_SHADER_COMBO
+    // MFC Reference: EmitterGeneralPropPage.cpp (OnSelchangeShaderCombo)
+    // Function: Mark property page as modified when shader selection changes
+    //
+    // MFC Implementation:
+    //   SetModified();
+    
+    // TODO(Phase 3 - Property Page Tracking): SetModified()
+    //   MFC calls SetModified() to enable Apply button in property sheet
+    //   wxWidgets requires property sheet tracking infrastructure
+    //   Workaround: No-op for now, changes applied immediately on OK
+    //   Priority: LOW - functional but no Apply button state tracking
 }
 
 void PropPageEmitterGen::OnParticleLifetimeCheck(wxCommandEvent &event)

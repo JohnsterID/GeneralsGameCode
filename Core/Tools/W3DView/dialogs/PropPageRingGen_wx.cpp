@@ -99,32 +99,77 @@ void PropPageRingGen::OnBrowseButton(wxCommandEvent &event)
 
 void PropPageRingGen::OnChangeFilenameEdit(wxCommandEvent &event)
 {
-    // TODO: Implement OnChangeFilenameEdit
-    // Control ID: IDC_FILENAME_EDIT
+    // MFC Reference: RingGeneralPropPage.cpp (OnChangeFilenameEdit)
+    // Function: Mark property page as modified when filename changes
+    //
+    // MFC Implementation:
+    //   SetModified();
+    
+    // TODO(Phase 3 - Property Page Tracking): SetModified()
+    //   MFC calls SetModified() to enable Apply button in property sheet
+    //   wxWidgets requires property sheet tracking infrastructure
+    //   Workaround: No-op for now, changes applied immediately on OK
+    //   Priority: LOW - functional but no Apply button state tracking
 }
 
 void PropPageRingGen::OnChangeNameEdit(wxCommandEvent &event)
 {
-    // TODO: Implement OnChangeNameEdit
-    // Control ID: IDC_NAME_EDIT
+    // MFC Reference: RingGeneralPropPage.cpp (OnChangeNameEdit)
+    // Function: Mark property page as modified when name changes
+    //
+    // MFC Implementation:
+    //   SetModified();
+    
+    // TODO(Phase 3 - Property Page Tracking): SetModified()
+    //   MFC calls SetModified() to enable Apply button in property sheet
+    //   wxWidgets requires property sheet tracking infrastructure
+    //   Workaround: No-op for now, changes applied immediately on OK
+    //   Priority: LOW - functional but no Apply button state tracking
 }
 
 void PropPageRingGen::OnChangeLifetimeEdit(wxCommandEvent &event)
 {
-    // TODO: Implement OnChangeLifetimeEdit
-    // Control ID: IDC_LIFETIME_EDIT
+    // MFC Reference: RingGeneralPropPage.cpp (OnChangeLifetimeEdit)
+    // Function: Mark property page as modified when lifetime changes
+    //
+    // MFC Implementation:
+    //   SetModified();
+    
+    // TODO(Phase 3 - Property Page Tracking): SetModified()
+    //   MFC calls SetModified() to enable Apply button in property sheet
+    //   wxWidgets requires property sheet tracking infrastructure
+    //   Workaround: No-op for now, changes applied immediately on OK
+    //   Priority: LOW - functional but no Apply button state tracking
 }
 
 void PropPageRingGen::OnSelchangeShaderCombo(wxCommandEvent &event)
 {
-    // TODO: Implement OnSelchangeShaderCombo
-    // Control ID: IDC_SHADER_COMBO
+    // MFC Reference: RingGeneralPropPage.cpp (OnSelchangeShaderCombo)
+    // Function: Mark property page as modified when shader selection changes
+    //
+    // MFC Implementation:
+    //   SetModified();
+    
+    // TODO(Phase 3 - Property Page Tracking): SetModified()
+    //   MFC calls SetModified() to enable Apply button in property sheet
+    //   wxWidgets requires property sheet tracking infrastructure
+    //   Workaround: No-op for now, changes applied immediately on OK
+    //   Priority: LOW - functional but no Apply button state tracking
 }
 
 void PropPageRingGen::OnChangeTextureTileEdit(wxCommandEvent &event)
 {
-    // TODO: Implement OnChangeTextureTileEdit
-    // Control ID: IDC_TEXTURE_TILE_EDIT
+    // MFC Reference: RingGeneralPropPage.cpp (OnChangeTextureTileEdit)
+    // Function: Mark property page as modified when texture tile count changes
+    //
+    // MFC Implementation:
+    //   SetModified();
+    
+    // TODO(Phase 3 - Property Page Tracking): SetModified()
+    //   MFC calls SetModified() to enable Apply button in property sheet
+    //   wxWidgets requires property sheet tracking infrastructure
+    //   Workaround: No-op for now, changes applied immediately on OK
+    //   Priority: LOW - functional but no Apply button state tracking
 }
 
 

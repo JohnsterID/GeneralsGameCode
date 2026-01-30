@@ -65,8 +65,53 @@ void ColorSel::OnHscroll(wxCommandEvent &event)
 
 void ColorSel::OnGrayscaleCheck(wxCommandEvent &event)
 {
-    // TODO: Implement OnGrayscaleCheck
-    // Control ID: IDC_GRAYSCALE_CHECK
+    // MFC Reference: ColorSelectionDialog.cpp (OnGrayscaleCheck)
+    // Function: Sync green/blue sliders to red when grayscale mode enabled
+    //
+    // MFC Implementation:
+    //   if (SendDlgItemMessage(IDC_GRAYSCALE_CHECK, BM_GETCHECK)) {
+    //       m_GreenSlider.SetPos(m_RedSlider.GetPos());
+    //       m_BlueSlider.SetPos(m_RedSlider.GetPos());
+    //       m_PaintColor.X = float(m_RedSlider.GetPos()) / 255.00F;
+    //       m_PaintColor.Y = float(m_GreenSlider.GetPos()) / 255.00F;
+    //       m_PaintColor.Z = float(m_BlueSlider.GetPos()) / 255.00F;
+    //       Paint_Color_Window();
+    //   }
+    
+    // Check if grayscale mode is enabled
+    bool is_checked = false;
+    if (m_idc_grayscale_check)
+    {
+        is_checked = m_idc_grayscale_check->GetValue();
+    }
+    
+    if (is_checked)
+    {
+        // Sync green and blue sliders to match red slider
+        int red_value = 0;
+        if (m_idc_slider_red)
+        {
+            red_value = m_idc_slider_red->GetValue();
+        }
+        
+        if (m_idc_slider_green)
+        {
+            m_idc_slider_green->SetValue(red_value);
+        }
+        
+        if (m_idc_slider_blue)
+        {
+            m_idc_slider_blue->SetValue(red_value);
+        }
+        
+        // TODO(Phase 3 - Rendering): Update m_PaintColor Vector3 and call Paint_Color_Window()
+        //   MFC calculates: m_PaintColor.X/Y/Z = float(slider_pos) / 255.0F
+        //   Then calls Paint_Color_Window() to update the color preview panel
+        //   This requires:
+        //   1. m_PaintColor member variable (Vector3)
+        //   2. Paint_Color_Window() implementation (uses GDI/wxDC to draw preview)
+        //   Priority: MEDIUM - grayscale sync works, but preview won't update
+    }
 }
 
 void ColorSel::OnChangeBlueEdit(wxCommandEvent &event)

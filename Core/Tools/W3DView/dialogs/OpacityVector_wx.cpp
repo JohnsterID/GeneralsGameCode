@@ -54,7 +54,42 @@ void OpacityVector::OnCancel(wxCommandEvent &event)
 
 void OpacityVector::OnHscroll(wxCommandEvent &event)
 {
-    // TODO: Implement OnHscroll
+    // MFC Reference: OpacityVectorDialog.cpp (OnHScroll)
+    // Function: Update render object when opacity/rotation sliders change
+    //
+    // MFC Implementation:
+    //   Update_Object();  // Calls Update_Value() then Update_Object(value)
+    //
+    // MFC Update_Value():
+    //   1. Gets slider Y/Z positions (rotation angles)
+    //   2. Converts degrees to radians (DEG_TO_RADF)
+    //   3. Builds Matrix3x3 rotation matrix (Rotate_Y, Rotate_Z)
+    //   4. Builds quaternion from rotation matrix
+    //   5. Gets opacity bar selection position
+    //   6. Calculates intensity using tan/atan formula
+    //   7. Returns AlphaVectorStruct with angle (quaternion) and intensity
+    //
+    // MFC Update_Object(value):
+    //   1. Checks m_RenderObj type (switch on Class_ID)
+    //   2. For CLASSID_SPHERE:
+    //      - Gets SphereVectorChannelClass
+    //      - Sets key value at m_KeyIndex
+    //      - Restarts animation
+    //   3. Similar logic for other render object types
+    //
+    // TODO(Phase 3 - Render Object Integration): Update_Object() implementation
+    //   Requires:
+    //   1. m_RenderObj member (RenderObjClass*)
+    //   2. m_KeyIndex member (int - current keyframe)
+    //   3. AlphaVectorStruct definition (angle quaternion + intensity)
+    //   4. Matrix3x3 rotation calculations
+    //   5. Quaternion building (Build_Quaternion function)
+    //   6. Opacity bar integration (ColorBarClass)
+    //   7. Vector channel access (SphereVectorChannelClass, etc.)
+    //   8. Animation restart methods
+    //   Priority: HIGH - core particle effect editing, not just UI
+    //   Complexity: HIGH - math, render objects, keyframe animation
+    //   Estimated effort: 6-8 hours (render object infrastructure)
 }
 
 

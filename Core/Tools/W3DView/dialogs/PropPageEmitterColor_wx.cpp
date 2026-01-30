@@ -69,8 +69,20 @@ void PropPageEmitterColor::OnDestroy(wxWindowDestroyEvent &event)
 
 void PropPageEmitterColor::OnDeltaposRedRandomSpin(wxSpinEvent &event)
 {
-    // TODO: Implement OnDeltaposRedRandomSpin
-    // Control ID: IDC_RED_RANDOM_SPIN
+    // MFC Reference: EmitterColorPropPage.cpp (OnDeltaposRedRandomSpin)
+    // Function: Spin control handler for red random value
+    //
+    // MFC Implementation:
+    //   NM_UPDOWN* pNMUpDown = (NM_UPDOWN*)pNMHDR;
+    //   // TODO: Add your control notification handler code here
+    //   int test = 0;
+    //   *pResult = 0;
+    //
+    // NOTE: MFC version is also a stub/no-op
+    //       No actual functionality implemented in MFC
+    //       This is intentional - exact MFC match
+    
+    // No-op to match MFC behavior
 }
 
 

@@ -58,20 +58,80 @@ void VolumeRandomizer::OnCancel(wxCommandEvent &event)
 
 void VolumeRandomizer::OnBoxRadio(wxCommandEvent &event)
 {
-    // TODO: Implement OnBoxRadio
-    // Control ID: IDC_BOX_RADIO
+    // MFC Reference: VolumeRandomDialog.cpp (OnBoxRadio)
+    // Function: Update control enable states when box radio selected
+    //
+    // MFC Implementation:
+    //   Update_Enable_State();
+    
+    Update_Enable_State();
 }
 
 void VolumeRandomizer::OnCylinderRadio(wxCommandEvent &event)
 {
-    // TODO: Implement OnCylinderRadio
-    // Control ID: IDC_CYLINDER_RADIO
+    // MFC Reference: VolumeRandomDialog.cpp (OnCylinderRadio)
+    // Function: Update control enable states when cylinder radio selected
+    //
+    // MFC Implementation:
+    //   Update_Enable_State();
+    
+    Update_Enable_State();
 }
 
 void VolumeRandomizer::OnSphereRadio(wxCommandEvent &event)
 {
-    // TODO: Implement OnSphereRadio
-    // Control ID: IDC_SPHERE_RADIO
+    // MFC Reference: VolumeRandomDialog.cpp (OnSphereRadio)
+    // Function: Update control enable states when sphere radio selected
+    //
+    // MFC Implementation:
+    //   Update_Enable_State();
+    
+    Update_Enable_State();
+}
+
+// ============================================================================
+// Helper Functions
+// ============================================================================
+
+void VolumeRandomizer::Update_Enable_State()
+{
+    // MFC Reference: VolumeRandomDialog.cpp (Update_Enable_State)
+    // Function: Enable/disable controls based on which shape type is selected
+    //
+    // MFC Implementation:
+    //   bool enable_box_ctrls = (SendDlgItemMessage(IDC_BOX_RADIO, BM_GETCHECK) == 1);
+    //   bool enable_sphere_ctrls = (SendDlgItemMessage(IDC_SPHERE_RADIO, BM_GETCHECK) == 1);
+    //   bool enable_cylinder_ctrls = (SendDlgItemMessage(IDC_CYLINDER_RADIO, BM_GETCHECK) == 1);
+    //   EnableWindow(GetDlgItem(IDC_BOX_X_EDIT), enable_box_ctrls);
+    //   ... (same for all box/sphere/cylinder controls)
+    
+    bool enable_box_ctrls = false;
+    bool enable_sphere_ctrls = false;
+    bool enable_cylinder_ctrls = false;
+    
+    // Check which radio button is selected
+    if (m_idc_box_radio) enable_box_ctrls = m_idc_box_radio->GetValue();
+    if (m_idc_sphere_radio) enable_sphere_ctrls = m_idc_sphere_radio->GetValue();
+    if (m_idc_cylinder_radio) enable_cylinder_ctrls = m_idc_cylinder_radio->GetValue();
+    
+    // Update box controls
+    if (m_idc_box_x_edit) m_idc_box_x_edit->Enable(enable_box_ctrls);
+    if (m_idc_box_y_edit) m_idc_box_y_edit->Enable(enable_box_ctrls);
+    if (m_idc_box_z_edit) m_idc_box_z_edit->Enable(enable_box_ctrls);
+    if (m_idc_box_x_spin) m_idc_box_x_spin->Enable(enable_box_ctrls);
+    if (m_idc_box_y_spin) m_idc_box_y_spin->Enable(enable_box_ctrls);
+    if (m_idc_box_z_spin) m_idc_box_z_spin->Enable(enable_box_ctrls);
+    
+    // Update sphere controls
+    if (m_idc_sphere_radius_edit) m_idc_sphere_radius_edit->Enable(enable_sphere_ctrls);
+    if (m_idc_sphere_radius_spin) m_idc_sphere_radius_spin->Enable(enable_sphere_ctrls);
+    if (m_idc_sphere_hollow_check) m_idc_sphere_hollow_check->Enable(enable_sphere_ctrls);
+    
+    // Update cylinder controls
+    if (m_idc_cylinder_radius_edit) m_idc_cylinder_radius_edit->Enable(enable_cylinder_ctrls);
+    if (m_idc_cylinder_radius_spin) m_idc_cylinder_radius_spin->Enable(enable_cylinder_ctrls);
+    if (m_idc_cylinder_height_edit) m_idc_cylinder_height_edit->Enable(enable_cylinder_ctrls);
+    if (m_idc_cylinder_height_spin) m_idc_cylinder_height_spin->Enable(enable_cylinder_ctrls);
 }
 
 

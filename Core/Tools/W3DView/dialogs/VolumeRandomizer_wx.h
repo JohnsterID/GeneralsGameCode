@@ -139,6 +139,9 @@ private:
 void OnBoxRadio(wxCommandEvent &event);  // Button/Checkbox click
     void OnCylinderRadio(wxCommandEvent &event);  // Button/Checkbox click
     void OnSphereRadio(wxCommandEvent &event);  // Button/Checkbox click
+    
+    // Helper functions
+    void Update_Enable_State();  // Enable/disable controls based on selected shape type
 
     // Phase 2.5: Member variables
     Vector3 initial_box;

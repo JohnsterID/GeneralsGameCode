@@ -169,8 +169,8 @@ void TextureManagment::OnInitDialog(wxInitDialogEvent& event)
     // Build a list of mesh's and textures
     // TODO: Convert: Add_Subobjs_To_List (m_pBaseModel);
     // TODO: Convert: Fill_List_Ctrl_With_Meshes ();
-    // TODO: Convert: return TRUE;
-
+    
+    // MFC: return TRUE;
     event.Skip();
 }
 

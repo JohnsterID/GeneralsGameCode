@@ -159,8 +159,8 @@ void BoneManagement::OnInitDialog(wxInitDialogEvent& event)
     // TODO: Convert: OnSelchangeObjectCombo ();
     // Select the first item in the tree
     // TODO: Convert: m_BoneTree.SelectItem (hfirst_item);
-    // TODO: Convert: return TRUE;
-
+    
+    // MFC: return TRUE;
     event.Skip();
 }
 

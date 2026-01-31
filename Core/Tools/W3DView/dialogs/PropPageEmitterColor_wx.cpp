@@ -161,7 +161,7 @@ void PropPageEmitterColor::OnInitDialog(wxInitDialogEvent& event)
     // TODO: Convert: m_CurrentOpacities.Rand = m_OrigOpacities.Rand;
     // TODO: Convert: Update_Colors ();
     // TODO: Convert: Update_Opacities ();
-    // TODO: Convert: return TRUE;
+	// MFC: return TRUE;
 
     event.Skip();
 }

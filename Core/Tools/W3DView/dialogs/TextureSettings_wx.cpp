@@ -199,8 +199,8 @@ void TextureSettings::OnInitDialog(wxInitDialogEvent& event)
     // TODO: Convert: ::EnableWindow (::GetDlgItem (m_hWnd, IDC_APPLY), FALSE);
     // Fill the dialog controls with data from the texture
     // TODO: Convert: Load_Texture_Settings ();
-    // TODO: Convert: return TRUE;
-
+    
+    // MFC: return TRUE;
     event.Skip();
 }
 

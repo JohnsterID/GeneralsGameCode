@@ -79,7 +79,7 @@ void PropPageEmitterSize::OnInitDialog(wxInitDialogEvent& event)
     // TODO: Convert: 0,
     // TODO: Convert: 0);
     // TODO: Convert: m_SizeBar->Set_Graph_Percent (index + 1, m_OrigSizes.Values[index] / m_MaxSize);
-    // TODO: Convert: return TRUE;
+	// MFC: return TRUE;
 
     event.Skip();
 }

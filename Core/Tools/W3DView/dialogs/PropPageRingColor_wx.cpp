@@ -103,7 +103,7 @@ void PropPageRingColor::OnInitDialog(wxInitDialogEvent& event)
     //
     // TODO: Convert: Update_Colors ();
     // TODO: Convert: Update_Opacities ();
-    // TODO: Convert: return TRUE;
+	// MFC: return TRUE;
 
     event.Skip();
 }

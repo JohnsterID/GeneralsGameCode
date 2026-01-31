@@ -193,7 +193,7 @@ void PropPageSphereColor::OnInitDialog(wxInitDialogEvent& event)
     // TODO: Convert: CheckDlgButton (IDC_OPACITY_VECTOR_CHECK, (m_RenderObj->Get_Flags () & SphereRenderObjClass::USE_ALPHA_VECTOR) != 0);
     // TODO: Convert: CheckDlgButton (IDC_INVERT_VECTOR_CHECK, (m_RenderObj->Get_Flags () & SphereRenderObjClass::USE_INVERSE_ALPHA) != 0);
     // TODO: Convert: OnOpacityVectorCheck ();
-    // TODO: Convert: return TRUE;
+	// MFC: return TRUE;
 
     event.Skip();
 }

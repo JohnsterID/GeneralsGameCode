@@ -211,7 +211,7 @@ void PropPageRingGen::OnInitDialog(wxInitDialogEvent& event)
         m_idc_lifetime_spin->SetRange(0, 1000);
         m_idc_lifetime_spin->SetValue(static_cast<int>(m_Lifetime));
     }
-    // TODO: Convert: return TRUE;
+	// MFC: return TRUE;
 
     event.Skip();
 }

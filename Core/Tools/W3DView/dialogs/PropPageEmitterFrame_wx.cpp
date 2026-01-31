@@ -104,7 +104,7 @@ void PropPageEmitterFrame::OnInitDialog(wxInitDialogEvent& event)
     // TODO: Convert: 0,
     // TODO: Convert: 0);
     // TODO: Convert: m_FrameBar->Set_Graph_Percent (index + 1, Normalize_Frame(m_Frames.Values[index]));
-    // TODO: Convert: return TRUE;  // return TRUE unless you set the focus to a control
+	// MFC: return TRUE;
     // EXCEPTION: OCX Property Pages should return FALSE
 
     event.Skip();

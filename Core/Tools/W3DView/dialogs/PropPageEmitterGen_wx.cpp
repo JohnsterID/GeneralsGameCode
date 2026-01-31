@@ -225,7 +225,7 @@ void PropPageEmitterGen::OnInitDialog(wxInitDialogEvent& event)
     if (m_idc_render_mode_combo) {
         m_idc_render_mode_combo->SetSelection(0);  // Default selection
     }
-    // TODO: Convert: return TRUE;
+	// MFC: return TRUE;
 
     event.Skip();
 }

@@ -171,7 +171,7 @@ void PropPageSphereScale::OnInitDialog(wxInitDialogEvent& event)
     //	Ensure our initial 'current' values are up-to-date
     //
     // TODO: Convert: Update_Scale_Array ();
-    // TODO: Convert: return TRUE;
+	// MFC: return TRUE;
 
     event.Skip();
 }

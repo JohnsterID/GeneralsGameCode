@@ -169,8 +169,8 @@ void OpacityVector::OnInitDialog(wxInitDialogEvent& event)
     // TODO: Convert: z_rot = WWMath::Wrap (z_rot, 0, 360);
     // TODO: Convert: m_SliderY.SetPos ((int)y_rot);
     // TODO: Convert: m_SliderZ.SetPos ((int)z_rot);
-    // TODO: Convert: return TRUE;
-
+    
+    // MFC: return TRUE;
     event.Skip();
 }
 

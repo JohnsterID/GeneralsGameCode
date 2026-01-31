@@ -81,7 +81,7 @@ void PropPageEmitterRotation::OnInitDialog(wxInitDialogEvent& event)
     // TODO: Convert: 0,
     // TODO: Convert: 0);
     // TODO: Convert: m_RotationBar->Set_Graph_Percent (index + 1, Normalize_Rotation(m_Rotations.Values[index]));
-    // TODO: Convert: return TRUE;
+	// MFC: return TRUE;
 
     event.Skip();
 }

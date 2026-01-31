@@ -211,7 +211,7 @@ void PropPageRingScale::OnInitDialog(wxInitDialogEvent& event)
     //
     // TODO: Convert: Update_Inner_Scale_Array ();
     // TODO: Convert: Update_Outer_Scale_Array ();
-    // TODO: Convert: return TRUE;
+	// MFC: return TRUE;
 
     event.Skip();
 }

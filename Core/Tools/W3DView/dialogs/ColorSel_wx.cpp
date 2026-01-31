@@ -314,8 +314,8 @@ void ColorSel::OnInitDialog(wxInitDialogEvent& event)
     // TODO: Convert: m_RedSpin.SetPos (red_value);
     // TODO: Convert: m_GreenSpin.SetPos (green_value);
     // TODO: Convert: m_BlueSpin.SetPos (blue_value);
-    // TODO: Convert: return TRUE;
-
+    
+    // MFC: return TRUE;
     event.Skip();
 }
 

@@ -252,8 +252,14 @@ void SoundEdit::OnInitDialog(wxInitDialogEvent& event)
     //
     // Set up the sliders
     //
-    // TODO: Convert: VolumeSlider.SetRange (0, 100);
-    // TODO: Convert: PrioritySlider.SetRange (0, 100);
+    // MFC: VolumeSlider.SetRange (0, 100);
+    if (m_idc_volume_slider) {
+        m_idc_volume_slider->SetRange(0, 100);
+    }
+    // MFC: PrioritySlider.SetRange (0, 100);
+    if (m_idc_priority_slider) {
+        m_idc_priority_slider->SetRange(0, 100);
+    }
     // TODO: Convert: VolumeSlider.SetPos (int(volume * 100.00F));
     // TODO: Convert: PrioritySlider.SetPos (int(priority * 100.00F));
     //

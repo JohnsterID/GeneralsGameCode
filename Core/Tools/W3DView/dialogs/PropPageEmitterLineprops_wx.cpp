@@ -94,13 +94,13 @@ void PropPageEmitterLineprops::OnInitDialog(wxInitDialogEvent& event)
     }
     // Set the checkboxes
     if (m_idc_merge_intersections_check) {
-        m_idc_merge_intersections_check->SetValue(m_MergeIntersections != 0 != 0);  // Boolean logic verified
+        m_idc_merge_intersections_check->SetValue(m_MergeIntersections);
     }
     if (m_idc_end_caps_check) {
-        m_idc_end_caps_check->SetValue(m_EndCaps != 0 != 0);  // Boolean logic verified
+        m_idc_end_caps_check->SetValue(m_EndCaps);
     }
     if (m_idc_disable_sorting_check) {
-        m_idc_disable_sorting_check->SetValue(m_DisableSorting != 0 != 0);  // Boolean logic verified
+        m_idc_disable_sorting_check->SetValue(m_DisableSorting);
     }
     
     // TODO(MFC-Implementation): Control enable/disable logic requires m_pEmitterList

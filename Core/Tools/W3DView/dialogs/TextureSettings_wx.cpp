@@ -187,8 +187,14 @@ void TextureSettings::OnInitDialog(wxInitDialogEvent& event)
     // TODO: Convert: m_pStartingTexture = m_pTexture->Get_Texture ();
     //m_pStartingTexture->addReference ();
     // Set the range of the spin controls
-    // TODO: Convert: m_FrameCountSpin.SetRange (1, 10000);
-    // TODO: Convert: m_FrameRateSpin.SetRange (1, 10000);
+    // MFC: m_FrameCountSpin.SetRange (1, 10000);
+    if (m_idc_frame_count_spin) {
+        m_idc_frame_count_spin->SetRange(1, 10000);
+    }
+    // MFC: m_FrameRateSpin.SetRange (1, 10000);
+    if (m_idc_fps_spin) {
+        m_idc_fps_spin->SetRange(1, 10000);
+    }
     // Remove the border from around our child window
     // TODO: Convert: HWND hchild_wnd = ::GetDlgItem (m_hWnd, IDC_TEXTURE_THUMBNAIL);
     // TODO: Convert: LONG style = ::GetWindowLong (hchild_wnd, GWL_STYLE);

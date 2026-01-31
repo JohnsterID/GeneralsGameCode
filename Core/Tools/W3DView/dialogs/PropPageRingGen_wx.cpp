@@ -202,7 +202,10 @@ void PropPageRingGen::OnInitDialog(wxInitDialogEvent& event)
     //
     //	Initialize the texture tiling controls...
     //
-    // TODO: Convert: m_TextureTileSpin.SetRange (0, 8);
+    // MFC: m_TextureTileSpin.SetRange (0, 8);
+    if (m_idc_texture_tile_spin) {
+        m_idc_texture_tile_spin->SetRange(0, 8);
+    }
     // TODO: Convert: m_TextureTileSpin.SetPos (m_RenderObj->Get_Texture_Tiling ());
     //
     // Initialize the lifetime control

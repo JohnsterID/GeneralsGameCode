@@ -92,9 +92,8 @@ bool PropPageEmitterSize::TransferDataToWindow()
 
 bool PropPageEmitterSize::TransferDataFromWindow()
 {
-    // Extract data from controls and apply to business logic
-
-    // TODO: Extract data from controls
-
+    // TODO(Phase 3 - ColorBarClass): Extract size keyframes from m_SizeBar
+    // MFC reads: m_CurrentSizes.Rand = GetDlgItemFloat(IDC_SIZE_RANDOM_EDIT)
+    // MFC reads keyframe data from m_SizeBar (ColorBarClass)
     return true;
 }

@@ -55,57 +55,32 @@ void PropPageEmitterFrame::OnCancel(wxCommandEvent &event)
 
 void PropPageEmitterFrame::OnInitDialog(wxInitDialogEvent& event)
 {
-    // Initialize controls after they're created
-    //
-    // Set the frame layout combo box
-    //
-    // TODO: Declare: int mode = m_pEmitterList->Get_Frame_Mode();
+    // Set the frame layout combo box based on emitter mode
+    // TODO(Phase 3): Requires m_pEmitterList->Get_Frame_Mode() to select correct item
+    // MFC: switch (mode) {
+    //   case W3D_EMITTER_FRAME_MODE_1x1: SetCurSel(0); break;
+    //   case W3D_EMITTER_FRAME_MODE_2x2: SetCurSel(1); break;
+    //   case W3D_EMITTER_FRAME_MODE_4x4: SetCurSel(2); break;
+    //   case W3D_EMITTER_FRAME_MODE_8x8: SetCurSel(3); break;
+    //   case W3D_EMITTER_FRAME_MODE_16x16: SetCurSel(4); break;
+    //   default: SetCurSel(4); break;
+    // }
     if (m_idc_frame_layout_combo) {
-        m_idc_frame_layout_combo->SetSelection(0);
+        m_idc_frame_layout_combo->SetSelection(4);  // Default to 16x16 until m_pEmitterList available
     }
-    if (m_idc_frame_layout_combo) {
-        m_idc_frame_layout_combo->SetSelection(1);
-    }
-    if (m_idc_frame_layout_combo) {
-        m_idc_frame_layout_combo->SetSelection(2);
-    }
-    if (m_idc_frame_layout_combo) {
-        m_idc_frame_layout_combo->SetSelection(3);
-    }
-    if (m_idc_frame_layout_combo) {
-        m_idc_frame_layout_combo->SetSelection(4);
-    }
-    // TODO: Convert: default:
-    if (m_idc_frame_layout_combo) {
-        m_idc_frame_layout_combo->SetSelection(4);
-    }
-    // TODO: Convert: break;
-    //
-    // Create the keyframe control
-    //
-    // TODO: Convert: m_FrameBar = ColorBarClass::Get_Color_Bar (::GetDlgItem (m_hWnd, IDC_FRAME_BAR));
-    //
-    // Setup the spinners
-    //
-    // TODO: Convert: Initialize_Spinner (m_FrameRandomSpin, m_Frames.Rand, 0, 10000);
-    //
-    //	Reset the keyframe control
-    //
-    // TODO: Convert: m_FrameBar->Set_Range (0, 1);
-    // TODO: Convert: m_FrameBar->Clear_Points ();
-    // TODO: Convert: m_FrameBar->Modify_Point (0, 0, 0, 0, 0);
-    // TODO: Convert: m_FrameBar->Set_Graph_Percent (0, Normalize_Frame(m_Frames.Start));
-    //
-    // Load the current set of frame keyframes into the control
-    //
-    // TODO: Convert: m_FrameBar->Modify_Point (index + 1,
-    // TODO: Convert: m_Frames.KeyTimes[index] / m_Lifetime,
-    // TODO: Convert: 0,
-    // TODO: Convert: 0,
-    // TODO: Convert: 0);
-    // TODO: Convert: m_FrameBar->Set_Graph_Percent (index + 1, Normalize_Frame(m_Frames.Values[index]));
-	// MFC: return TRUE;
-    // EXCEPTION: OCX Property Pages should return FALSE
+
+    // TODO(Phase 3 - ColorBarClass): Create keyframe control
+    // MFC: m_FrameBar = ColorBarClass::Get_Color_Bar(::GetDlgItem(m_hWnd, IDC_FRAME_BAR));
+
+    // TODO(Phase 3): Setup spinner with emitter data
+    // MFC: Initialize_Spinner(m_FrameRandomSpin, m_Frames.Rand, 0, 10000);
+
+    // TODO(Phase 3 - ColorBarClass): Reset and populate keyframe control
+    // MFC: m_FrameBar->Set_Range(0, 1);
+    // MFC: m_FrameBar->Clear_Points();
+    // MFC: m_FrameBar->Modify_Point(0, 0, 0, 0, 0);
+    // MFC: m_FrameBar->Set_Graph_Percent(0, Normalize_Frame(m_Frames.Start));
+    // MFC: for loop to load keyframes from m_Frames
 
     event.Skip();
 }
@@ -118,9 +93,8 @@ bool PropPageEmitterFrame::TransferDataToWindow()
 
 bool PropPageEmitterFrame::TransferDataFromWindow()
 {
-    // Extract data from controls and apply to business logic
-
-    // TODO: Extract data from controls
-
+    // TODO(Phase 3 - ColorBarClass): Extract frame keyframes from m_FrameBar
+    // MFC reads: m_Frames.Rand = GetDlgItemFloat(IDC_FRAME_RANDOM_EDIT)
+    // MFC reads keyframe data from m_FrameBar (ColorBarClass)
     return true;
 }

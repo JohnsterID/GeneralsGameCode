@@ -116,9 +116,7 @@ bool PropPageRingColor::TransferDataToWindow()
 
 bool PropPageRingColor::TransferDataFromWindow()
 {
-    // Extract data from controls and apply to business logic
-
-    // TODO: Extract data from controls
-
+    // TODO(Phase 3 - ColorBarClass): Extract color/opacity keyframes
+    // MFC reads keyframe data from m_ColorBar and m_OpacityBar (ColorBarClass)
     return true;
 }

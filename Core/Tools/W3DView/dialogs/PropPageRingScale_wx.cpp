@@ -224,9 +224,11 @@ bool PropPageRingScale::TransferDataToWindow()
 
 bool PropPageRingScale::TransferDataFromWindow()
 {
-    // Extract data from controls and apply to business logic
-
-    // TODO: Extract data from controls
-
+    // TODO(Phase 3 - ColorBarClass): Extract scale keyframes
+    // MFC (RingSizePropPage): Reads from 4 ColorBarClass instances:
+    //   m_InnerScaleXBar, m_InnerScaleYBar, m_OuterScaleXBar, m_OuterScaleYBar
+    // Also reads size from edit controls:
+    //   m_InnerSize.X/Y = GetDlgItemFloat(IDC_INNER_SIZE_X/Y_EDIT)
+    //   m_OuterSize.X/Y = GetDlgItemFloat(IDC_OUTER_SIZE_X/Y_EDIT)
     return true;
 }

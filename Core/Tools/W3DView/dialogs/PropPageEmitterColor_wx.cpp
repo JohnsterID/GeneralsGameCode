@@ -174,9 +174,12 @@ bool PropPageEmitterColor::TransferDataToWindow()
 
 bool PropPageEmitterColor::TransferDataFromWindow()
 {
-    // Extract data from controls and apply to business logic
-
-    // TODO: Extract data from controls
-
+    // TODO(Phase 3 - ColorBarClass): Extract color/opacity keyframes
+    // MFC reads keyframes from m_ColorBar and m_OpacityBar (ColorBarClass)
+    // Random values can be extracted from spin controls:
+    //   m_CurrentColors.Rand.X = GetDlgItemInt(IDC_RED_RANDOM_EDIT) / 255.0f
+    //   m_CurrentColors.Rand.Y = GetDlgItemInt(IDC_GREEN_RANDOM_EDIT) / 255.0f
+    //   m_CurrentColors.Rand.Z = GetDlgItemInt(IDC_BLUE_RANDOM_EDIT) / 255.0f
+    //   m_CurrentOpacities.Rand = GetDlgItemInt(IDC_OPACITY_RANDOM_EDIT) / 100.0f
     return true;
 }

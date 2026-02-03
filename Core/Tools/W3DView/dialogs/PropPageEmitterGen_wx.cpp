@@ -21,6 +21,7 @@
 #include "PropPageEmitterGen_wx.h"
 #include <wx/xrc/xmlres.h>
 #include <wx/spinbutt.h>
+#include <wx/filedlg.h>
 
 wxBEGIN_EVENT_TABLE(PropPageEmitterGen, PropPageEmitterGenBase)
 EVT_BUTTON(XRCID("IDC_BROWSE_BUTTON"), PropPageEmitterGen::OnBrowseButton)  // Button/Checkbox click
@@ -65,16 +66,25 @@ void PropPageEmitterGen::OnBrowseButton(wxCommandEvent &event)
 {
     // MFC: CFileDialog openFileDialog(TRUE, ".tga", nullptr, OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT | OFN_EXPLORER,
     //                                  "Textures files (*.tga)|*.tga||", ::AfxGetMainWnd());
-    // MFC: if (openFileDialog.DoModal() == IDOK) {
-    // MFC:     SetDlgItemText(IDC_FILENAME_EDIT, openFileDialog.GetPathName());
-    // MFC:     SetModified();
-    // MFC: }
-    
-    // TODO: BLOCKER - Requires EmitterInstanceListClass* pointer (constructor dependency)
-    // TODO: BLOCKER - File dialog result needs SetModified() for property page architecture
-    // TODO: BLOCKER - Texture filename applied to emitter object in TransferDataFromWindow
-    // TODO: Can implement wxFileDialog for .tga files (simple)
-    // TODO: But cannot complete handler without engine integration (Phase 4)
+    wxFileDialog openFileDialog(
+        this,
+        "Select Texture File",
+        "",  // Default directory
+        "",  // Default filename
+        "Texture files (*.tga)|*.tga",
+        wxFD_OPEN | wxFD_FILE_MUST_EXIST
+    );
+
+    if (openFileDialog.ShowModal() == wxID_OK)
+    {
+        // MFC: SetDlgItemText(IDC_FILENAME_EDIT, openFileDialog.GetPathName());
+        if (m_idc_filename_edit)
+        {
+            m_idc_filename_edit->SetValue(openFileDialog.GetPath());
+        }
+        // TODO(Phase 3 - Property Page Tracking): SetModified()
+        // MFC calls SetModified() to enable Apply button in property sheet
+    }
 }
 
 void PropPageEmitterGen::OnChangeFilenameEdit(wxCommandEvent &event)
@@ -239,11 +249,19 @@ bool PropPageEmitterGen::TransferDataToWindow()
 bool PropPageEmitterGen::TransferDataFromWindow()
 {
     // Extract data from controls to member variables
+    // MFC: GetDlgItemText(IDC_NAME_EDIT, m_EmitterName);
+    if (m_idc_name_edit)
+    {
+        m_EmitterName = m_idc_name_edit->GetValue();
+    }
+
+    // MFC: GetDlgItemText(IDC_FILENAME_EDIT, m_TextureFilename);
     if (m_idc_filename_edit)
     {
         m_TextureFilename = m_idc_filename_edit->GetValue();
     }
-    
+
+    // MFC: m_Lifetime = GetDlgItemFloat(IDC_PARTICLE_LIFETIME_EDIT);
     if (m_idc_particle_lifetime_edit)
     {
         double val;
@@ -252,7 +270,10 @@ bool PropPageEmitterGen::TransferDataFromWindow()
             m_Lifetime = static_cast<float>(val);
         }
     }
-    
-    // Note: Applying to emitter object requires m_pEmitterList (Phase 4)
+
+    // TODO(Phase 4): Apply extracted data to emitter object
+    // MFC: m_pEmitterList->Set_Name(m_EmitterName);
+    // MFC: m_pEmitterList->Set_Texture_Filename(m_TextureFilename);
+    // MFC: m_pEmitterList->Set_Lifetime(m_Lifetime);
     return true;
 }

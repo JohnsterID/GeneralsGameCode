@@ -127,9 +127,7 @@ bool PlaySoundEffect::TransferDataToWindow()
 
 bool PlaySoundEffect::TransferDataFromWindow()
 {
-    // Extract data from controls and apply to business logic
-
-    // TODO: Extract data from controls
-
+    // MFC: No data extraction - Filename is input-only (passed via constructor)
+    // Dialog purpose is to play/preview a sound, not return modified data
     return true;
 }

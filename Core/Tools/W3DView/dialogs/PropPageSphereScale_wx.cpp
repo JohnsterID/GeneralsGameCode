@@ -184,9 +184,10 @@ bool PropPageSphereScale::TransferDataToWindow()
 
 bool PropPageSphereScale::TransferDataFromWindow()
 {
-    // Extract data from controls and apply to business logic
-
-    // TODO: Extract data from controls
-
+    // TODO(Phase 3 - ColorBarClass): Extract scale keyframes
+    // MFC (SphereSizePropPage): Reads from 3 ColorBarClass instances:
+    //   m_ScaleXBar, m_ScaleYBar, m_ScaleZBar
+    // Also reads size from edit controls:
+    //   m_Size.X/Y/Z = GetDlgItemFloat(IDC_SIZE_X/Y/Z_EDIT)
     return true;
 }

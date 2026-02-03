@@ -227,9 +227,25 @@ bool PropPageRingGen::TransferDataToWindow()
 
 bool PropPageRingGen::TransferDataFromWindow()
 {
-    // Extract data from controls and apply to business logic
-
-    // TODO: Extract data from controls
+    // Extract data from controls to member variables
+    if (m_idc_name_edit)
+    {
+        m_Name = m_idc_name_edit->GetValue();
+    }
+    
+    if (m_idc_filename_edit)
+    {
+        m_TextureFilename = m_idc_filename_edit->GetValue();
+    }
+    
+    if (m_idc_lifetime_edit)
+    {
+        double val;
+        if (m_idc_lifetime_edit->GetValue().ToDouble(&val))
+        {
+            m_Lifetime = static_cast<float>(val);
+        }
+    }
 
     return true;
 }

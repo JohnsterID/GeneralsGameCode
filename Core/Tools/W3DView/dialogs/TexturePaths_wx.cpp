@@ -15,6 +15,7 @@
 **You should have received a copy of the GNU General Public License
 **along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+// MFC Reference: TexturePaths.cpp
 
 // Auto-generated from XRC by xrc2cpp.py
 
@@ -58,8 +59,6 @@ void TexturePaths::OnCancel(wxCommandEvent &event)
 
 void TexturePaths::OnBrowse1(wxCommandEvent &event)
 {
-    // MFC: CString initial_path; GetDlgItemText(IDC_PATH1, initial_path);
-    // MFC: if (::Browse_For_Folder(m_hWnd, initial_path, path)) { SetDlgItemText(IDC_PATH1, path); }
     
     // Get initial path from text control
     wxString initial_path = m_idc_path1->GetValue();
@@ -76,8 +75,6 @@ void TexturePaths::OnBrowse1(wxCommandEvent &event)
 
 void TexturePaths::OnBrowse2(wxCommandEvent &event)
 {
-    // MFC: CString initial_path; GetDlgItemText(IDC_PATH2, initial_path);
-    // MFC: if (::Browse_For_Folder(m_hWnd, initial_path, path)) { SetDlgItemText(IDC_PATH2, path); }
     
     // Get initial path from text control
     wxString initial_path = m_idc_path2->GetValue();
@@ -100,9 +97,6 @@ void TexturePaths::OnBrowse2(wxCommandEvent &event)
 void TexturePaths::OnInitDialog(wxInitDialogEvent& event)
 {
     // Initialize controls after they're created
-    // MFC: CW3DViewDoc *doc = ::GetCurrentDocument();
-    // MFC: SetDlgItemText(IDC_PATH1, doc->Get_Texture_Path1());
-    // MFC: SetDlgItemText(IDC_PATH2, doc->Get_Texture_Path2());
     
     W3DViewDoc* doc = GetCurrentDocument_wx();
     if (doc) {
@@ -126,9 +120,6 @@ bool TexturePaths::TransferDataToWindow()
 bool TexturePaths::TransferDataFromWindow()
 {
     // Extract data from controls and apply to business logic
-    // MFC: GetDlgItemText(IDC_PATH1, path1); GetDlgItemText(IDC_PATH2, path2);
-    // MFC: CW3DViewDoc *doc = ::GetCurrentDocument();
-    // MFC: doc->Set_Texture_Path1(path1); doc->Set_Texture_Path2(path2);
     
     W3DViewDoc* doc = GetCurrentDocument_wx();
     if (doc) {

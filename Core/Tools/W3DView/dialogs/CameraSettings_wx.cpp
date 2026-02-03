@@ -16,6 +16,7 @@
 **along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+// MFC Reference: CameraSettingsDialog.cpp
 // Auto-generated from XRC by xrc2cpp.py
 
 #include "CameraSettings_wx.h"
@@ -68,13 +69,6 @@ void CameraSettings::OnCancel(wxCommandEvent &event)
 
 void CameraSettings::OnFovCheck(wxCommandEvent &event)
 {
-    // MFC: bool manual_fov = (SendDlgItemMessage (IDC_FOV_CHECK, BM_GETCHECK) == 1);
-    // MFC: ::EnableWindow (m_VFOVSpin, manual_fov);
-    // MFC: ::EnableWindow (m_HFOVSpin, manual_fov);
-    // MFC: ::EnableWindow (m_LensSpin, manual_fov);
-    // MFC: ::EnableWindow (::GetDlgItem (m_hWnd, IDC_VFOV_EDIT), manual_fov);
-    // MFC: ::EnableWindow (::GetDlgItem (m_hWnd, IDC_HFOV_EDIT), manual_fov);
-    // MFC: ::EnableWindow (::GetDlgItem (m_hWnd, IDC_LENS_EDIT), manual_fov);
     
     bool manual_fov = m_idc_fov_check->GetValue();
     
@@ -88,11 +82,6 @@ void CameraSettings::OnFovCheck(wxCommandEvent &event)
 
 void CameraSettings::OnClipPlaneCheck(wxCommandEvent &event)
 {
-    // MFC: bool manual_planes = (SendDlgItemMessage (IDC_CLIP_PLANE_CHECK, BM_GETCHECK) == 1);
-    // MFC: ::EnableWindow (m_NearClipSpin, manual_planes);
-    // MFC: ::EnableWindow (m_FarClipSpin, manual_planes);
-    // MFC: ::EnableWindow (::GetDlgItem (m_hWnd, IDC_NEAR_CLIP_EDIT), manual_planes);
-    // MFC: ::EnableWindow (::GetDlgItem (m_hWnd, IDC_FAR_CLIP_EDIT), manual_planes);
     
     bool manual_planes = m_idc_clip_plane_check->GetValue();
     
@@ -104,9 +93,6 @@ void CameraSettings::OnClipPlaneCheck(wxCommandEvent &event)
 
 void CameraSettings::OnReset(wxCommandEvent &event)
 {
-    // MFC: CW3DViewDoc *doc                             = ::GetCurrentDocument ();
-    // MFC: CGraphicView *graphic_view = doc->GetGraphicView ();
-    // MFC: CameraClass *camera                  = graphic_view->GetCamera ();
     
     W3DViewDoc *doc = GetCurrentDocument_wx();
     if (!doc)
@@ -129,32 +115,17 @@ void CameraSettings::OnReset(wxCommandEvent &event)
         return;
     }
     
-    // MFC: doc->Set_Manual_FOV (false);
-    // MFC: doc->Set_Manul_Clip_Planes (false);
     doc->Set_Manual_FOV(false);
     doc->Set_Manul_Clip_Planes(false);  // Note: MFC has typo "Manul" - we match it
     
-    // MFC: graphic_view->Reset_FOV ();
     graphic_view->Reset_FOV();
     
-    // MFC: RenderObjClass *render_obj = doc->GetDisplayedObject ();
-    // MFC: if (render_obj != nullptr) {
-    // MFC:     graphic_view->Reset_Camera_To_Display_Object (*render_obj);
-    // MFC: }
     RenderObjClass *render_obj = doc->GetDisplayedObject();
     if (render_obj != nullptr)
     {
         graphic_view->Reset_Camera_To_Display_Object(*render_obj);
     }
     
-    // MFC: //
-    // MFC: //      Update the clip plane controls
-    // MFC: //
-    // MFC: float znear = 0;
-    // MFC: float zfar = 0;
-    // MFC: camera->Get_Clip_Planes (znear, zfar);
-    // MFC: ::SetDlgItemFloat (m_hWnd, IDC_NEAR_CLIP_EDIT, znear);
-    // MFC: ::SetDlgItemFloat (m_hWnd, IDC_FAR_CLIP_EDIT, zfar);
     
     float znear = 0;
     float zfar = 0;
@@ -162,25 +133,12 @@ void CameraSettings::OnReset(wxCommandEvent &event)
     SetDlgItemFloat(m_idc_near_clip_edit, znear);
     SetDlgItemFloat(m_idc_far_clip_edit, zfar);
     
-    // MFC: //
-    // MFC: //      Update the FOV controls
-    // MFC: //
-    // MFC: int hfov_deg = (int)RAD_TO_DEG (camera->Get_Horizontal_FOV ());
-    // MFC: int vfov_deg = (int)RAD_TO_DEG (camera->Get_Vertical_FOV ());
-    // MFC: ::SetDlgItemFloat (m_hWnd, IDC_HFOV_EDIT, hfov_deg);
-    // MFC: ::SetDlgItemFloat (m_hWnd, IDC_VFOV_EDIT, vfov_deg);
     
     int hfov_deg = (int)RAD_TO_DEG(camera->Get_Horizontal_FOV());
     int vfov_deg = (int)RAD_TO_DEG(camera->Get_Vertical_FOV());
     SetDlgItemFloat(m_idc_hfov_edit, (float)hfov_deg);
     SetDlgItemFloat(m_idc_vfov_edit, (float)vfov_deg);
     
-    // MFC: //
-    // MFC: //      Setup the camera lens controls
-    // MFC: //
-    // MFC: float vfov = camera->Get_Vertical_FOV ();
-    // MFC: float lens = ((::atan ((18.0F / 1000.0F)) / vfov) * 2.0F) * 1000.0F;
-    // MFC: ::SetDlgItemFloat (m_hWnd, IDC_LENS_EDIT, lens);
     
     float vfov = camera->Get_Vertical_FOV();
     float lens = ((::atan((18.0F / 1000.0F)) / vfov) * 2.0F) * 1000.0F;
@@ -203,10 +161,6 @@ void CameraSettings::OnReset(wxCommandEvent &event)
 
 void CameraSettings::OnInitDialog(wxInitDialogEvent& event)
 {
-    // MFC: CDialog::OnInitDialog ();
-    // MFC: CW3DViewDoc *doc                             = ::GetCurrentDocument ();
-    // MFC: CGraphicView *graphic_view = doc->GetGraphicView ();
-    // MFC: CameraClass *camera                  = graphic_view->GetCamera ();
     
     W3DViewDoc *doc = GetCurrentDocument_wx();
     if (!doc)
@@ -229,22 +183,12 @@ void CameraSettings::OnInitDialog(wxInitDialogEvent& event)
         return;
     }
     
-    // MFC: //
-    // MFC: //      Enable/disable the group boxes
-    // MFC: //
-    // MFC: SendDlgItemMessage (IDC_FOV_CHECK, BM_SETCHECK, (WPARAM)doc->Is_FOV_Manual ());
-    // MFC: SendDlgItemMessage (IDC_CLIP_PLANE_CHECK, BM_SETCHECK, (WPARAM)doc->Are_Clip_Planes_Manual ());
     
     bool manual_fov = doc->Is_FOV_Manual();
     bool manual_planes = doc->Are_Clip_Planes_Manual();
     m_idc_fov_check->SetValue(manual_fov);
     m_idc_clip_plane_check->SetValue(manual_planes);
     
-    // MFC: float znear = 0;
-    // MFC: float zfar = 0;
-    // MFC: camera->Get_Clip_Planes (znear, zfar);
-    // MFC: ::Initialize_Spinner (m_NearClipSpin, znear, 0.0F, 999999.0F);
-    // MFC: ::Initialize_Spinner (m_FarClipSpin, zfar, 1.0F, 999999.0F);
     
     float znear = 0;
     float zfar = 0;
@@ -255,35 +199,18 @@ void CameraSettings::OnInitDialog(wxInitDialogEvent& event)
     // Note: Spinner range setup - wxSpinButton doesn't have float range like MFC
     // We'll handle this through validation if needed
     
-    // MFC: //
-    // MFC: //      Setup the FOV controls
-    // MFC: //
-    // MFC: int hfov_deg = (int)RAD_TO_DEG (camera->Get_Horizontal_FOV ());
-    // MFC: int vfov_deg = (int)RAD_TO_DEG (camera->Get_Vertical_FOV ());
-    // MFC: ::Initialize_Spinner (m_HFOVSpin, hfov_deg, 0.0F, 180.0F);
-    // MFC: ::Initialize_Spinner (m_VFOVSpin, vfov_deg, 0.0F, 180.0F);
     
     int hfov_deg = (int)RAD_TO_DEG(camera->Get_Horizontal_FOV());
     int vfov_deg = (int)RAD_TO_DEG(camera->Get_Vertical_FOV());
     SetDlgItemFloat(m_idc_hfov_edit, (float)hfov_deg);
     SetDlgItemFloat(m_idc_vfov_edit, (float)vfov_deg);
     
-    // MFC: //
-    // MFC: //      Setup the camera lens controls
-    // MFC: //
-    // MFC: float hfov = camera->Get_Horizontal_FOV ();
-    // MFC: const float constant    = (18.0F / 1000.0F);
-    // MFC: float lens                              = (constant / (::tan (hfov / 2))) * 1000.0F;
-    // MFC: ::Initialize_Spinner (m_LensSpin, lens, 1.0F, 200.0F);
     
     float hfov = camera->Get_Horizontal_FOV();
     const float constant = (18.0F / 1000.0F);
     float lens = (constant / (::tan(hfov / 2))) * 1000.0F;
     SetDlgItemFloat(m_idc_lens_edit, lens);
     
-    // MFC: OnFovCheck ();
-    // MFC: OnClipPlaneCheck ();
-    // MFC: return TRUE;
     
     // Call handlers to set initial enable/disable state
     wxCommandEvent dummy_event;
@@ -301,9 +228,6 @@ bool CameraSettings::TransferDataToWindow()
 
 bool CameraSettings::TransferDataFromWindow()
 {
-    // MFC: CW3DViewDoc *doc                             = ::GetCurrentDocument ();
-    // MFC: CGraphicView *graphic_view = doc->GetGraphicView ();
-    // MFC: CameraClass *camera                  = graphic_view->GetCamera ();
     
     W3DViewDoc *doc = GetCurrentDocument_wx();
     if (!doc)
@@ -326,27 +250,13 @@ bool CameraSettings::TransferDataFromWindow()
         return false;
     }
     
-    // MFC: bool manual_fov         = (SendDlgItemMessage (IDC_FOV_CHECK, BM_GETCHECK) == 1);
-    // MFC: bool manual_planes      = (SendDlgItemMessage (IDC_CLIP_PLANE_CHECK, BM_GETCHECK) == 1);
     
     bool manual_fov = m_idc_fov_check->GetValue();
     bool manual_planes = m_idc_clip_plane_check->GetValue();
     
-    // MFC: doc->Set_Manual_FOV (manual_fov);
-    // MFC: doc->Set_Manul_Clip_Planes (manual_planes);
     doc->Set_Manual_FOV(manual_fov);
     doc->Set_Manul_Clip_Planes(manual_planes);  // Note: MFC typo preserved
     
-    // MFC: if (manual_fov == false) {
-    // MFC:     graphic_view->Reset_FOV ();
-    // MFC: } else {
-    // MFC:     //
-    // MFC:     //      Update the camera's FOV
-    // MFC:     //
-    // MFC:     float hfov_deg = ::GetDlgItemFloat (m_hWnd, IDC_HFOV_EDIT);
-    // MFC:     float vfov_deg = ::GetDlgItemFloat (m_hWnd, IDC_VFOV_EDIT);
-    // MFC:     camera->Set_View_Plane (DEG_TO_RAD (hfov_deg), DEG_TO_RAD (vfov_deg));
-    // MFC: }
     
     if (manual_fov == false)
     {
@@ -360,31 +270,14 @@ bool CameraSettings::TransferDataFromWindow()
         camera->Set_View_Plane(DEG_TO_RAD(hfov_deg), DEG_TO_RAD(vfov_deg));
     }
     
-    // MFC: //
-    // MFC: //      Update the camera's clip planes
-    // MFC: //
-    // MFC: float znear = ::GetDlgItemFloat (m_hWnd, IDC_NEAR_CLIP_EDIT);
-    // MFC: float zfar = ::GetDlgItemFloat (m_hWnd, IDC_FAR_CLIP_EDIT);
-    // MFC: camera->Set_Clip_Planes (znear, zfar);
-    // MFC: doc->Save_Camera_Settings ();
     
     float znear = GetDlgItemFloat(m_idc_near_clip_edit);
     float zfar = GetDlgItemFloat(m_idc_far_clip_edit);
     camera->Set_Clip_Planes(znear, zfar);
     
-    // MFC: doc->Save_Camera_Settings();
     // Save camera settings to wxConfig (registry/config file)
     doc->Save_Camera_Settings();
     
-    // MFC: //
-    // MFC: // Update the fog settings. The fog near clip plane should always be equal
-    // MFC: // to the camera near clip plane, but the fog far clip plane is scene
-    // MFC: // dependent. We will be sure to modify only the near clip plane here.
-    // MFC: //
-    // MFC: float fog_near, fog_far;
-    // MFC: doc->GetScene()->Get_Fog_Range(&fog_near, &fog_far);
-    // MFC: doc->GetScene()->Set_Fog_Range(znear, fog_far);
-    // MFC: doc->GetScene()->Recalculate_Fog_Planes();
     
     ViewerSceneClass *scene = doc->GetScene();
     if (scene)
@@ -395,13 +288,6 @@ bool CameraSettings::TransferDataFromWindow()
         scene->Recalculate_Fog_Planes();
     }
     
-    // MFC: //
-    // MFC: //      Refresh the camera settings
-    // MFC: //
-    // MFC: RenderObjClass *render_obj = doc->GetDisplayedObject ();
-    // MFC: if (render_obj != nullptr) {
-    // MFC:     graphic_view->Reset_Camera_To_Display_Object (*render_obj);
-    // MFC: }
     
     RenderObjClass *render_obj = doc->GetDisplayedObject();
     if (render_obj != nullptr)
@@ -409,8 +295,6 @@ bool CameraSettings::TransferDataFromWindow()
         graphic_view->Reset_Camera_To_Display_Object(*render_obj);
     }
     
-    // MFC: CDialog::OnOK ();
-    // MFC: return ;
     
     return true;  // Success
 }

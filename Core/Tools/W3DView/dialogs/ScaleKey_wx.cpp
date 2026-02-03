@@ -15,6 +15,7 @@
 **You should have received a copy of the GNU General Public License
 **along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+// MFC Reference: ScaleKey.cpp
 
 // Auto-generated from XRC by xrc2cpp.py
 
@@ -63,7 +64,6 @@ void ScaleKey::OnCancel(wxCommandEvent &event)
 void ScaleKey::OnInitDialog(wxInitDialogEvent& event)
 {
     // Initialize spinner control with range and initial value
-    // MFC: m_ScaleSpin.SetRange(1, 10000); m_ScaleSpin.SetPos(int(m_Scale * 100.0F));
     m_idc_size_spin->SetRange(1, 10000);
     m_idc_size_spin->SetValue((int)(m_Scale * 100.0F));
     
@@ -71,7 +71,6 @@ void ScaleKey::OnInitDialog(wxInitDialogEvent& event)
     m_idc_size_edit->SetValue(wxString::Format("%.2f", m_Scale));
     
     // If we were given a different prompt upon creation, apply it now
-    // MFC: if (!m_Prompt.IsEmpty()) SetDlgItemText(IDC_PROMPT, m_Prompt);
     if (!m_Prompt.IsEmpty()) {
         m_idc_prompt->SetLabel(m_Prompt);
     }
@@ -88,10 +87,8 @@ bool ScaleKey::TransferDataToWindow()
 bool ScaleKey::TransferDataFromWindow()
 {
     // Extract data from controls and apply to business logic
-    // MFC: int pos = m_ScaleSpin.GetPos();
     int pos = m_idc_size_spin->GetValue();
     
-    // MFC: if (pos & 0xffff0000) - Error condition (out of range)
     // wxWidgets handles range internally, but we still validate
     if (pos < 1 || pos > 10000) {
         wxMessageBox("Invalid scale value. Please enter a number between 1 and 10,000",
@@ -99,10 +96,8 @@ bool ScaleKey::TransferDataFromWindow()
         return false;  // Prevent dialog close
     }
     
-    // MFC: m_Scale = ((float)pos) / 100.0F;
     m_Scale = ((float)pos) / 100.0F;
     
-    // MFC: We cannot accept this value if it is less than or equal to zero
     if (m_Scale <= 0.0f) {
         wxMessageBox("Scale must be a value greater than zero!", 
                      "Invalid Scale", wxOK | wxICON_INFORMATION);

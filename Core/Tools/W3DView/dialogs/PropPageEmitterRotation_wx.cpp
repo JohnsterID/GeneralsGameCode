@@ -94,9 +94,7 @@ bool PropPageEmitterRotation::TransferDataToWindow()
 
 bool PropPageEmitterRotation::TransferDataFromWindow()
 {
-    // Extract data from controls and apply to business logic
-
-    // TODO: Extract data from controls
-
+    // BLOCKER: Requires Phase 3 member variables (m_Rotations, m_InitialOrientationRandom)
+    // and ColorBarClass control for keyframe data extraction
     return true;
 }

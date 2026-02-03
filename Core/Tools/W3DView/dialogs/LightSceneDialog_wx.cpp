@@ -15,6 +15,7 @@
 **You should have received a copy of the GNU General Public License
 **along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+// MFC Reference: SceneLightDialog.cpp
 
 #include "LightSceneDialog_wx.h"
 #include "../w3dcompat_wx.h"
@@ -64,7 +65,6 @@ void LightSceneDialog::OnOK(wxCommandEvent &event)
     }
 }
 
-// MFC: SceneLightDialog.cpp lines 250-281
 void LightSceneDialog::OnCancel(wxCommandEvent &event)
 {
     W3DViewDoc *pCDoc = GetCurrentDocument_wx();
@@ -92,7 +92,6 @@ void LightSceneDialog::OnCancel(wxCommandEvent &event)
     EndModal(wxID_CANCEL);
 }
 
-// MFC: SceneLightDialog.cpp lines 188-242 (intensity slider)
 void LightSceneDialog::OnHscroll(wxCommandEvent &event)
 {
     W3DViewDoc *pCDoc = GetCurrentDocument_wx();
@@ -148,7 +147,6 @@ void LightSceneDialog::OnSliderBlue(wxCommandEvent &event)
     Update_Light(color);
 }
 
-// MFC: SceneLightDialog.cpp lines 364-380
 void LightSceneDialog::OnGrayscaleCheck(wxCommandEvent &event)
 {
     if (m_idc_grayscale_check->GetValue()) {
@@ -161,13 +159,11 @@ void LightSceneDialog::OnGrayscaleCheck(wxCommandEvent &event)
     }
 }
 
-// MFC: SceneLightDialog.cpp lines 388-392
 void LightSceneDialog::OnChannelBothRadio(wxCommandEvent &event)
 {
     m_CurrentChannel = BOTH;
 }
 
-// MFC: SceneLightDialog.cpp lines 400-408
 void LightSceneDialog::OnChannelDiffuseRadio(wxCommandEvent &event)
 {
     W3DViewDoc *pCDoc = GetCurrentDocument_wx();
@@ -182,7 +178,6 @@ void LightSceneDialog::OnChannelDiffuseRadio(wxCommandEvent &event)
     }
 }
 
-// MFC: SceneLightDialog.cpp lines 416-424
 void LightSceneDialog::OnChannelSpecularRadio(wxCommandEvent &event)
 {
     W3DViewDoc *pCDoc = GetCurrentDocument_wx();
@@ -197,7 +192,6 @@ void LightSceneDialog::OnChannelSpecularRadio(wxCommandEvent &event)
     }
 }
 
-// MFC: SceneLightDialog.cpp lines 553-563
 void LightSceneDialog::OnAttenuationCheck(wxCommandEvent &event)
 {
     W3DViewDoc *pCDoc = GetCurrentDocument_wx();
@@ -211,7 +205,6 @@ void LightSceneDialog::OnAttenuationCheck(wxCommandEvent &event)
     }
 }
 
-// MFC: WindowProc lines 289-360
 void LightSceneDialog::OnDistanceSpin(wxSpinEvent &event)
 {
     wxString value_str = m_idc_distance_edit->GetValue();
@@ -248,7 +241,6 @@ void LightSceneDialog::OnEndAttenSpin(wxSpinEvent &event)
     }
 }
 
-// MFC: SceneLightDialog.cpp lines 96-180
 void LightSceneDialog::OnInitDialog(wxInitDialogEvent &event)
 {
     m_idc_slider_red->SetRange(0, 100);
@@ -316,7 +308,6 @@ bool LightSceneDialog::TransferDataFromWindow()
     return true;
 }
 
-// MFC: SceneLightDialog.cpp lines 432-451
 void LightSceneDialog::Update_Light(const Vector3 &color)
 {
     W3DViewDoc *pCDoc = GetCurrentDocument_wx();
@@ -333,7 +324,6 @@ void LightSceneDialog::Update_Light(const Vector3 &color)
     }
 }
 
-// MFC: SceneLightDialog.cpp lines 459-474
 void LightSceneDialog::Set_Color_Control_State(const Vector3 &color)
 {
     if (color.X == color.Y && color.X == color.Z) {
@@ -346,7 +336,6 @@ void LightSceneDialog::Set_Color_Control_State(const Vector3 &color)
     m_idc_slider_blue->SetValue(int(color.Z * 100.0f));
 }
 
-// MFC: SceneLightDialog.cpp lines 482-496
 void LightSceneDialog::Update_Attenuation()
 {
     W3DViewDoc *pCDoc = GetCurrentDocument_wx();
@@ -363,7 +352,6 @@ void LightSceneDialog::Update_Attenuation()
     }
 }
 
-// MFC: SceneLightDialog.cpp lines 504-528
 void LightSceneDialog::Update_Distance(float distance)
 {
     W3DViewDoc *pCDoc = GetCurrentDocument_wx();
@@ -384,7 +372,6 @@ void LightSceneDialog::Update_Distance(float distance)
     }
 }
 
-// MFC: SceneLightDialog.cpp lines 536-545
 void LightSceneDialog::Update_Attenuation_Controls()
 {
     bool enable = m_idc_attenuation_check->GetValue();

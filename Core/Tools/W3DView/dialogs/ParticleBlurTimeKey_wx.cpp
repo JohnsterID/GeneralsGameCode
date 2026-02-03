@@ -15,6 +15,7 @@
 **You should have received a copy of the GNU General Public License
 **along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+// MFC Reference: ParticleBlurTimeKey.cpp
 
 // Auto-generated from XRC by xrc2cpp.py
 
@@ -60,7 +61,6 @@ void ParticleBlurTimeKey::OnCancel(wxCommandEvent &event)
 
 void ParticleBlurTimeKey::OnOk2(wxCommandEvent &event)
 {
-    // MFC: m_BlurTime = GetDlgItemFloat(m_hWnd, IDC_BLUR_TIME_EDIT); CDialog::OnOK();
     if (Validate() && TransferDataFromWindow()) {
         EndModal(wxID_OK);
     }
@@ -74,7 +74,6 @@ void ParticleBlurTimeKey::OnOk2(wxCommandEvent &event)
 void ParticleBlurTimeKey::OnInitDialog(wxInitDialogEvent& event)
 {
     // Initialize spinner control with range and initial value
-    // MFC: Initialize_Spinner(m_BlurTimeSpin, m_BlurTime, -1024, 1024)
     m_idc_blur_time_spin->SetRange(-1024, 1024);
     m_idc_blur_time_spin->SetValue((int)m_BlurTime);
     
@@ -93,7 +92,6 @@ bool ParticleBlurTimeKey::TransferDataToWindow()
 bool ParticleBlurTimeKey::TransferDataFromWindow()
 {
     // Extract data from controls and apply to business logic
-    // MFC: m_BlurTime = GetDlgItemFloat(m_hWnd, IDC_BLUR_TIME_EDIT)
     
     wxString value = m_idc_blur_time_edit->GetValue();
     double temp;
@@ -107,7 +105,6 @@ bool ParticleBlurTimeKey::TransferDataFromWindow()
 void ParticleBlurTimeKey::OnBlurTimeSpinChange(wxSpinEvent& event)
 {
     // Handle spinner updates (matches MFC OnNotify with UDN_DELTAPOS)
-    // MFC: Update_Spinner_Buddy(pheader->hwndFrom, pupdown->iDelta)
     
     int newValue = m_idc_blur_time_spin->GetValue();
     m_idc_blur_time_edit->SetValue(wxString::Format("%d", newValue));

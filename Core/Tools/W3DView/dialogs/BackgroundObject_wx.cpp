@@ -15,6 +15,7 @@
 **You should have received a copy of the GNU General Public License
 **along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+// MFC Reference: BackgroundObject.cpp
 
 // Auto-generated from XRC by xrc2cpp.py
 
@@ -59,7 +60,6 @@ void BackgroundObject::OnCancel(wxCommandEvent &event)
 
 void BackgroundObject::OnInitDialog(wxInitDialogEvent& event)
 {
-    // MFC: BackgroundObjectDialog.cpp:44-96 (OnInitDialog)
     
     // Setup list columns
     m_idc_hierarchy_list->InsertColumn(0, "Name", wxLIST_FORMAT_LEFT, 200);
@@ -91,7 +91,6 @@ void BackgroundObject::OnInitDialog(wxInitDialogEvent& event)
 
 void BackgroundObject::OnItemChangedHierarchyList(wxListEvent &event)
 {
-    // MFC: BackgroundObjectDialog.cpp:157-176 (OnItemChangedHierarchyList)
     // Update current object label with selected item
     long index = event.GetIndex();
     if (index != -1) {
@@ -102,7 +101,6 @@ void BackgroundObject::OnItemChangedHierarchyList(wxListEvent &event)
 
 void BackgroundObject::OnClear(wxCommandEvent &event)
 {
-    // MFC: BackgroundObjectDialog.cpp:181-194 (OnClear)
     // Clear the selection
     long index = m_idc_hierarchy_list->GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
     if (index != -1) {
@@ -124,7 +122,6 @@ bool BackgroundObject::TransferDataToWindow()
 
 bool BackgroundObject::TransferDataFromWindow()
 {
-    // MFC: BackgroundObjectDialog.cpp:199-221 (OnOK)
     W3DViewDoc *doc = GetCurrentDocument_wx();
     if (doc) {
         // Get selected item index

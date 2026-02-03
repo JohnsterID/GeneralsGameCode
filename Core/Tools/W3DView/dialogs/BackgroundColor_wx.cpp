@@ -16,6 +16,7 @@
 **along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+// MFC Reference: BackgroundColor.cpp
 // Auto-generated from XRC by xrc2cpp.py
 
 #include "BackgroundColor_wx.h"
@@ -39,7 +40,6 @@ BackgroundColor::BackgroundColor(wxWindow *parent)
       m_initialGreen(0),
       m_initialBlue(0)
 {
-    // MFC: OnInitDialog is called automatically after construction
     // wxWidgets: We trigger it explicitly with InitDialog()
     Centre();
 }
@@ -65,11 +65,9 @@ void BackgroundColor::OnInitDialog(wxInitDialogEvent &event)
     if (doc)
     {
         // Get the background color from the document
-        // MFC: Vector3 colorSettings = pCDoc->GetBackgroundColor();
         const Vector3& colorSettings = doc->GetBackgroundColor();
 
         // Remember these initial settings so we can restore them if the user cancels
-        // MFC: BackgroundColorDialog.cpp:64-66
         m_initialRed = int(colorSettings.X * 100.0f);
         m_initialGreen = int(colorSettings.Y * 100.0f);
         m_initialBlue = int(colorSettings.Z * 100.0f);
@@ -83,14 +81,12 @@ void BackgroundColor::OnInitDialog(wxInitDialogEvent &event)
     }
 
     // Check the grayscale checkbox if all RGB values are equal
-    // MFC: BackgroundColorDialog.cpp:69-73
     if ((m_initialRed == m_initialGreen) && (m_initialRed == m_initialBlue))
     {
         m_idc_grayscale_check->SetValue(true);
     }
 
     // Set the initial slider positions
-    // MFC: BackgroundColorDialog.cpp:75-77
     m_idc_slider_red->SetValue(m_initialRed);
     m_idc_slider_green->SetValue(m_initialGreen);
     m_idc_slider_blue->SetValue(m_initialBlue);
@@ -104,7 +100,6 @@ void BackgroundColor::OnInitDialog(wxInitDialogEvent &event)
 
 void BackgroundColor::OnOK(wxCommandEvent &event)
 {
-    // MFC: No explicit OnOK - uses base class (just closes)
     // Color was already set via real-time updates in OnHScroll
     EndModal(wxID_OK);
 }
@@ -117,7 +112,6 @@ void BackgroundColor::OnOK(wxCommandEvent &event)
 
 void BackgroundColor::OnCancel(wxCommandEvent &event)
 {
-    // MFC: BackgroundColorDialog.cpp:129-132
     // Restore the initial color values
     Vector3 colorSettings;
     colorSettings.X = float(m_initialRed) / 100.0f;
@@ -125,7 +119,6 @@ void BackgroundColor::OnCancel(wxCommandEvent &event)
     colorSettings.Z = float(m_initialBlue) / 100.0f;
 
     // Get a pointer to the document so we can restore the background color
-    // MFC: BackgroundColorDialog.cpp:135-142
     wxDocManager *docManager = wxDocManager::GetDocumentManager();
     W3DViewDoc *doc = wxStaticCast(docManager->GetCurrentDocument(), W3DViewDoc);
     if (doc)
@@ -147,7 +140,6 @@ void BackgroundColor::OnCancel(wxCommandEvent &event)
 
 void BackgroundColor::OnHscroll(wxCommandEvent &event)
 {
-    // MFC: BackgroundColorDialog.cpp:88-104
     // If grayscale is checked, make all sliders move together
     if (m_idc_grayscale_check->GetValue())
     {
@@ -170,14 +162,12 @@ void BackgroundColor::OnHscroll(wxCommandEvent &event)
     }
 
     // Get current slider values and convert to 0.0-1.0 range
-    // MFC: BackgroundColorDialog.cpp:106-109
     Vector3 colorSettings;
     colorSettings.X = float(m_idc_slider_red->GetValue()) / 100.0f;
     colorSettings.Y = float(m_idc_slider_green->GetValue()) / 100.0f;
     colorSettings.Z = float(m_idc_slider_blue->GetValue()) / 100.0f;
 
     // Update the document's background color (REAL-TIME UPDATE)
-    // MFC: BackgroundColorDialog.cpp:112-117
     wxDocManager *docManager = wxDocManager::GetDocumentManager();
     W3DViewDoc *doc = wxStaticCast(docManager->GetCurrentDocument(), W3DViewDoc);
     if (doc)
@@ -189,7 +179,6 @@ void BackgroundColor::OnHscroll(wxCommandEvent &event)
 // ============================================================================
 // OnGrayscaleCheck - Handle grayscale checkbox toggle
 // ============================================================================
-// MFC: No explicit handler, but behavior implied by OnHScroll logic
 // Behavior: When checked, sync all sliders immediately
 
 void BackgroundColor::OnGrayscaleCheck(wxCommandEvent &event)

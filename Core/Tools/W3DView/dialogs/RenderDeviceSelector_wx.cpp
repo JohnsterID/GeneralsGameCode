@@ -30,7 +30,6 @@ wxBEGIN_EVENT_TABLE(RenderDeviceSelector, RenderDeviceSelectorBase)
     EVT_COMBOBOX(XRCID("IDC_RENDER_DEVICE_COMBO"), RenderDeviceSelector::OnSelchangeRenderDeviceCombo)
 wxEND_EVENT_TABLE()
 
-// MFC: CDeviceSelectionDialog::CDeviceSelectionDialog(BOOL bLookupCachedInfo, CWnd* pParent)
 RenderDeviceSelector::RenderDeviceSelector(wxWindow *parent, bool lookup_cached_info)
     : RenderDeviceSelectorBase(parent),
       m_lookup_cached_info(lookup_cached_info),
@@ -41,7 +40,6 @@ RenderDeviceSelector::RenderDeviceSelector(wxWindow *parent, bool lookup_cached_
     Centre();
 }
 
-// MFC: CDeviceSelectionDialog::DoModal()
 int RenderDeviceSelector::ShowModal()
 {
     bool found_device = false;
@@ -51,13 +49,11 @@ int RenderDeviceSelector::ShowModal()
     wxConfig config("W3DView", "TheSuperHackers");
     m_driver_name = config.Read("/Config/DeviceName", wxEmptyString);
     
-    // MFC: If cached info enabled, device name exists, and shift key not held
     if (m_lookup_cached_info && 
         !m_driver_name.IsEmpty() &&
         !(wxGetKeyState(WXK_SHIFT))) {
         
         // Loop through all devices to find the cached one
-        // MFC: DeviceSelectionDialog.cpp:120-140
         int device_count = WW3D::Get_Render_Device_Count();
         for (int index = 0; (index < device_count) && !found_device; index++) {
             
@@ -79,11 +75,9 @@ int RenderDeviceSelector::ShowModal()
     return result;
 }
 
-// MFC: CDeviceSelectionDialog::OnInitDialog()
 void RenderDeviceSelector::OnInitDialog(wxInitDialogEvent &event)
 {
     // Loop through all the devices and add them to the combobox
-    // MFC: DeviceSelectionDialog.cpp:42-79
     int device_count = WW3D::Get_Render_Device_Count();
     int selected_index = 0;
     
@@ -104,7 +98,6 @@ void RenderDeviceSelector::OnInitDialog(wxInitDialogEvent &event)
     }
     
     // Check the '16bpp' checkbox by default
-    // MFC: SendDlgItemMessage(IDC_COLORDEPTH_16, BM_SETCHECK, TRUE)
     m_idc_colordepth_16->SetValue(true);
     m_idc_colordepth_24->SetValue(false);
     
@@ -117,10 +110,8 @@ void RenderDeviceSelector::OnInitDialog(wxInitDialogEvent &event)
     event.Skip();
 }
 
-// MFC: CDeviceSelectionDialog::OnSelchangeRenderDeviceCombo()
 void RenderDeviceSelector::OnSelchangeRenderDeviceCombo(wxCommandEvent &event)
 {
-    // MFC: DeviceSelectionDialog.cpp:153-163
     int index = m_idc_render_device_combo->GetSelection();
     if (index != wxNOT_FOUND) {
         // Update the static controls with the information from the device
@@ -128,10 +119,8 @@ void RenderDeviceSelector::OnSelchangeRenderDeviceCombo(wxCommandEvent &event)
     }
 }
 
-// MFC: CDeviceSelectionDialog::UpdateDeviceDescription()
 void RenderDeviceSelector::UpdateDeviceDescription()
 {
-    // MFC: DeviceSelectionDialog.cpp:129-145
     // Get currently selected device index
     int selectedItem = m_idc_render_device_combo->GetSelection();
     if (selectedItem == wxNOT_FOUND) {
@@ -213,10 +202,8 @@ bool RenderDeviceSelector::TransferDataToWindow()
     return true;
 }
 
-// MFC: CDeviceSelectionDialog::OnOK()
 bool RenderDeviceSelector::TransferDataFromWindow()
 {
-    // MFC: DeviceSelectionDialog.cpp:171-198
     
     // Get the selected device index from client data
     int sel = m_idc_render_device_combo->GetSelection();
@@ -226,15 +213,12 @@ bool RenderDeviceSelector::TransferDataFromWindow()
     }
     
     // Get bits per pixel from checkboxes
-    // MFC: SendDlgItemMessage(IDC_COLORDEPTH_16, BM_GETCHECK) == TRUE ? 16 : 24
     m_bits_per_pixel = m_idc_colordepth_16->GetValue() ? 16 : 24;
     
     // Get device name string from combobox
     m_driver_name = m_idc_render_device_combo->GetStringSelection();
     
     // Cache this information in the registry (wxConfig)
-    // MFC: theApp.WriteProfileString("Config", "DeviceName", stringDeviceName)
-    // MFC: theApp.WriteProfileInt("Config", "DeviceBitsPerPix", m_iBitsPerPixel)
     wxConfig config("W3DView", "TheSuperHackers");
     config.Write("/Config/DeviceName", m_driver_name);
     config.Write("/Config/DeviceBitsPerPix", static_cast<long>(m_bits_per_pixel));

@@ -238,9 +238,21 @@ bool PropPageEmitterGen::TransferDataToWindow()
 
 bool PropPageEmitterGen::TransferDataFromWindow()
 {
-    // Extract data from controls and apply to business logic
-
-    // TODO: Extract data from controls
-
+    // Extract data from controls to member variables
+    if (m_idc_filename_edit)
+    {
+        m_TextureFilename = m_idc_filename_edit->GetValue();
+    }
+    
+    if (m_idc_particle_lifetime_edit)
+    {
+        double val;
+        if (m_idc_particle_lifetime_edit->GetValue().ToDouble(&val))
+        {
+            m_Lifetime = static_cast<float>(val);
+        }
+    }
+    
+    // Note: Applying to emitter object requires m_pEmitterList (Phase 4)
     return true;
 }

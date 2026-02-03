@@ -200,8 +200,7 @@ bool Displayspeed::TransferDataToWindow()
         // Convert to percentage (1-200)
         int percent = static_cast<int>(animSpeed * 100.0f);
         
-        // Set slider range and position (MFC: SetRange(1, 200))
-        // NOTE: MFC uses range 1-200, not 1-100 as documented in earlier TODO
+        // MFC uses range 1-200 (percentage where 100 = normal speed)
         m_idc_speed_slider->SetRange(1, 200);
         m_idc_speed_slider->SetValue(percent);
     }

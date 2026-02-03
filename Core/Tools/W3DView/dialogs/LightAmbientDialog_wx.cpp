@@ -16,6 +16,7 @@
 **along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+// MFC Reference: LightAmbientDialog.cpp
 // Auto-generated from XRC by xrc2cpp.py
 
 #include "LightAmbientDialog_wx.h"
@@ -39,7 +40,6 @@ LightAmbientDialog::LightAmbientDialog(wxWindow *parent)
       m_initialGreen(0),
       m_initialBlue(0)
 {
-    // MFC: OnInitDialog is called automatically after construction
     // wxWidgets: We trigger it explicitly with InitDialog()
     Centre();
 }
@@ -65,12 +65,10 @@ void LightAmbientDialog::OnInitDialog(wxInitDialogEvent &event)
     if (doc)
     {
         // Get the ambient light from the document/scene
-        // MFC: Vector3 lightSettings = pCDoc->GetScene()->Get_Ambient_Light();
         // wxWidgets: Use wrapper method to avoid header include issues
         Vector3 lightSettings = doc->GetAmbientLight();
 
         // Remember these initial settings so we can restore them if the user cancels
-        // MFC: AmbientLightDialog.cpp:64-66
         m_initialRed = int(lightSettings.X * 100.0f);
         m_initialGreen = int(lightSettings.Y * 100.0f);
         m_initialBlue = int(lightSettings.Z * 100.0f);
@@ -84,14 +82,12 @@ void LightAmbientDialog::OnInitDialog(wxInitDialogEvent &event)
     }
 
     // Check the grayscale checkbox if all RGB values are equal
-    // MFC: AmbientLightDialog.cpp:69-73
     if ((m_initialRed == m_initialGreen) && (m_initialRed == m_initialBlue))
     {
         m_idc_grayscale_check->SetValue(true);
     }
 
     // Set the initial slider positions
-    // MFC: AmbientLightDialog.cpp:75-77
     m_idc_slider_red->SetValue(m_initialRed);
     m_idc_slider_green->SetValue(m_initialGreen);
     m_idc_slider_blue->SetValue(m_initialBlue);
@@ -105,7 +101,6 @@ void LightAmbientDialog::OnInitDialog(wxInitDialogEvent &event)
 
 void LightAmbientDialog::OnOK(wxCommandEvent &event)
 {
-    // MFC: No explicit OnOK - uses base class (just closes)
     // Ambient light was already set via real-time updates in OnHScroll
     EndModal(wxID_OK);
 }
@@ -118,7 +113,6 @@ void LightAmbientDialog::OnOK(wxCommandEvent &event)
 
 void LightAmbientDialog::OnCancel(wxCommandEvent &event)
 {
-    // MFC: AmbientLightDialog.cpp:129-132
     // Restore the initial light values
     Vector3 lightSettings;
     lightSettings.X = float(m_initialRed) / 100.0f;
@@ -126,13 +120,11 @@ void LightAmbientDialog::OnCancel(wxCommandEvent &event)
     lightSettings.Z = float(m_initialBlue) / 100.0f;
 
     // Get a pointer to the document so we can restore the ambient light
-    // MFC: AmbientLightDialog.cpp:135-142
     wxDocManager *docManager = wxDocManager::GetDocumentManager();
     W3DViewDoc *doc = wxStaticCast(docManager->GetCurrentDocument(), W3DViewDoc);
     if (doc)
     {
         // Restore the ambient light (undo all live preview changes)
-        // MFC: pCDoc->GetScene()->Set_Ambient_Light(lightSettings);
         // wxWidgets: Use wrapper method to avoid header include issues
         doc->SetAmbientLight(lightSettings);
     }
@@ -150,7 +142,6 @@ void LightAmbientDialog::OnCancel(wxCommandEvent &event)
 
 void LightAmbientDialog::OnHscroll(wxCommandEvent &event)
 {
-    // MFC: AmbientLightDialog.cpp:88-104
     // If grayscale is checked, make all sliders move together
     if (m_idc_grayscale_check->GetValue())
     {
@@ -173,19 +164,16 @@ void LightAmbientDialog::OnHscroll(wxCommandEvent &event)
     }
 
     // Get current slider values and convert to 0.0-1.0 range
-    // MFC: AmbientLightDialog.cpp:106-109
     Vector3 lightSettings;
     lightSettings.X = float(m_idc_slider_red->GetValue()) / 100.0f;
     lightSettings.Y = float(m_idc_slider_green->GetValue()) / 100.0f;
     lightSettings.Z = float(m_idc_slider_blue->GetValue()) / 100.0f;
 
     // Update the scene's ambient light (REAL-TIME UPDATE)
-    // MFC: AmbientLightDialog.cpp:112-117
     wxDocManager *docManager = wxDocManager::GetDocumentManager();
     W3DViewDoc *doc = wxStaticCast(docManager->GetCurrentDocument(), W3DViewDoc);
     if (doc)
     {
-        // MFC: pCDoc->GetScene()->Set_Ambient_Light(lightSettings);
         // wxWidgets: Use wrapper method to avoid header include issues
         doc->SetAmbientLight(lightSettings);
     }
@@ -194,7 +182,6 @@ void LightAmbientDialog::OnHscroll(wxCommandEvent &event)
 // ============================================================================
 // OnGrayscaleCheck - Handle grayscale checkbox toggle
 // ============================================================================
-// MFC: No explicit handler, but behavior implied by OnHScroll logic
 // Behavior: When checked, sync all sliders immediately
 
 void LightAmbientDialog::OnGrayscaleCheck(wxCommandEvent &event)
@@ -217,7 +204,6 @@ void LightAmbientDialog::OnGrayscaleCheck(wxCommandEvent &event)
         wxDocManager *docManager = wxDocManager::GetDocumentManager();
         W3DViewDoc *doc = wxStaticCast(docManager->GetCurrentDocument(), W3DViewDoc);
         if (doc) {
-            // MFC: pCDoc->GetScene()->Set_Ambient_Light(lightSettings);
             // wxWidgets: Use wrapper method to avoid header include issues
             doc->SetAmbientLight(lightSettings);
         }

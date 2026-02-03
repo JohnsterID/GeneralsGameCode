@@ -59,19 +59,15 @@ void GammaDialog::OnCancel(wxCommandEvent &event)
 
 void GammaDialog::OnReleasedcaptureGammaSlider(wxCommandEvent &event)
 {
-    // MFC: GammaDialog.cpp:77-86 (OnReleasedcaptureGammaSlider)
     // Update gamma preview when slider moves
-    // MFC: m_gamma = m_gammaslider.GetPos(); DX8Wrapper::Set_Gamma(...); SetDlgItemText(...)
     m_gamma = m_idc_gamma_slider->GetValue();
     
     // Apply gamma immediately for real-time preview
-    // MFC: DX8Wrapper::Set_Gamma(m_gamma/10.0f, 0.0f, 1.0f)
     // wxWidgets: Use WW3D wrapper (avoids dx8wrapper.h StringClass conflicts)
     float gamma = m_gamma / 10.0f;
     WW3D::Set_Gamma(gamma, 0.0f, 1.0f);
     
     // Update display text (format: "X.XX")
-    // MFC: SetDlgItemText(IDC_GAMMA_DISPLAY, str)
     wxString gamma_text = wxString::Format("%3.2f", gamma);
     m_idc_gamma_display->SetLabel(gamma_text);
 }
@@ -84,7 +80,6 @@ void GammaDialog::OnReleasedcaptureGammaSlider(wxCommandEvent &event)
 void GammaDialog::OnInitDialog(wxInitDialogEvent& event)
 {
     // Initialize controls after they're created
-    // MFC: m_gamma = AfxGetApp()->GetProfileInt("Config", "Gamma", 10);
     wxConfig config("W3DView");
     m_gamma = config.Read("/Config/Gamma", 10L);
     
@@ -119,9 +114,7 @@ bool GammaDialog::TransferDataToWindow()
 
 bool GammaDialog::TransferDataFromWindow()
 {
-    // MFC: GammaDialog.cpp:65-75 (OnOK)
     // Extract data from controls and apply to business logic
-    // MFC: m_gamma = m_gammaslider.GetPos();
     m_gamma = m_idc_gamma_slider->GetValue();
     
     // Validate range (1.0-3.0, stored as 10-30)
@@ -129,13 +122,11 @@ bool GammaDialog::TransferDataFromWindow()
     if (m_gamma > 30) m_gamma = 30;
     
     // Save to config
-    // MFC: AfxGetApp()->WriteProfileInt("Config", "Gamma", m_gamma);
     wxConfig config("W3DView");
     config.Write("/Config/Gamma", m_gamma);
     config.Flush();
     
     // Apply gamma setting
-    // MFC: DX8Wrapper::Set_Gamma(m_gamma/10.0f, 0.0f, 1.0f);
     // wxWidgets: Use WW3D wrapper (avoids dx8wrapper.h StringClass conflicts)
     float gamma = m_gamma / 10.0f;
     WW3D::Set_Gamma(gamma, 0.0f, 1.0f);

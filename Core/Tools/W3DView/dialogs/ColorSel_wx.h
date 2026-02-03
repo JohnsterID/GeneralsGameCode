@@ -29,6 +29,7 @@
 #include <wx/stattext.h>
 #include <wx/textctrl.h>
 #include <wx/xrc/xmlres.h>
+#include "vector3.h"
 
 // Base class that loads from XRC
 class ColorSelBase : public wxDialog
@@ -98,28 +99,46 @@ protected:
 class ColorSel : public ColorSelBase
 {
 public:
-    ColorSel(wxWindow *parent);
+    // MFC: ColorSelectionDialogClass(const Vector3 &def_color, CWnd *pParent = nullptr);
+    ColorSel(wxWindow *parent, const Vector3 &def_color = Vector3(1.0f, 1.0f, 1.0f));
+
+    // MFC: const Vector3& Get_Color(void) const { return m_Color; }
+    const Vector3& Get_Color() const { return m_Color; }
+    
+    // MFC: void Set_Color(const Vector3 &color) { m_Color = color; }
+    void Set_Color(const Vector3 &color) { m_Color = color; m_PaintColor = color; }
 
 protected:
-    // Override for data transfer if needed
-    // bool TransferDataToWindow() override;
-    // bool TransferDataFromWindow() override;
+    bool TransferDataToWindow() override;
+    bool TransferDataFromWindow() override;
 
 private:
     void OnOK(wxCommandEvent &event);
     void OnCancel(wxCommandEvent &event);
 
     wxDECLARE_EVENT_TABLE();
+
 private:
     // Phase 2.5: Dialog infrastructure
     void OnInitDialog(wxInitDialogEvent& event);
-    bool TransferDataToWindow() override;
-    bool TransferDataFromWindow() override;
 
     // Event handlers (Phase 2)
-void OnHscroll(wxCommandEvent &event);  // Horizontal scroll (slider)
+    void OnHscroll(wxCommandEvent &event);  // Horizontal scroll (slider)
     void OnGrayscaleCheck(wxCommandEvent &event);  // Button/Checkbox click
     void OnChangeBlueEdit(wxCommandEvent &event);  // Text control change
     void OnChangeGreenEdit(wxCommandEvent &event);  // Text control change
     void OnChangeRedEdit(wxCommandEvent &event);  // Text control change
+    
+    // MFC: Paint_Color_Window() - update color preview panel
+    void Paint_Color_Window();
+    
+    // MFC: Update_Sliders(int slider_id) - sync sliders in grayscale mode
+    void Update_Sliders(int slider_id);
+
+private:
+    // MFC: Vector3 m_Color - the color passed in/returned
+    Vector3 m_Color;
+    
+    // MFC: Vector3 m_PaintColor - internal color for painting preview
+    Vector3 m_PaintColor;
 };

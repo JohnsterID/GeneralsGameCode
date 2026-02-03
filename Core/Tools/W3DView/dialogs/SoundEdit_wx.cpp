@@ -19,6 +19,7 @@
 // Auto-generated from XRC by xrc2cpp.py
 
 #include "SoundEdit_wx.h"
+#include "PlaySoundEffect_wx.h"
 #include <wx/xrc/xmlres.h>
 #include <wx/filedlg.h>
 #include <wx/filename.h>
@@ -137,13 +138,28 @@ void SoundEdit::On3DRadio(wxCommandEvent &event)
 
 void SoundEdit::OnPlay(wxCommandEvent &event)
 {
-    // TODO: Implement OnPlay
-    // Control ID: IDC_PLAY
+    // MFC: SoundEditDialogClass::OnPlay
+    // Get the current filename and show the play sound dialog
+
+    wxString filename;
+    if (m_idc_filename_edit)
+    {
+        filename = m_idc_filename_edit->GetValue();
+    }
+
+    // Show the play sound dialog (MFC: PlaySoundDialogClass)
+    PlaySoundEffect dialog(this, filename);
+    dialog.ShowModal();
 }
 
 void SoundEdit::OnHscroll(wxCommandEvent &event)
 {
-    // TODO: Implement OnHscroll
+    // MFC: ON_WM_HSCROLL - No custom handler in MFC SoundEditDialog
+    // MFC uses DDX to bind slider values to member variables automatically
+    // wxWidgets: Slider value changes are captured via EVT_SLIDER
+    // If we need to update UI based on slider (e.g. show percentage), add here
+    // For now, let default processing handle it
+    event.Skip();
 }
 
 // ============================================================================

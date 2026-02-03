@@ -27,11 +27,10 @@ EVT_BUTTON(XRCID("IDC_PLAY_SOUND_EFFECT"), PlaySoundEffect::OnPlaySoundEffect)  
     EVT_INIT_DIALOG(PlaySoundEffect::OnInitDialog)
 wxEND_EVENT_TABLE()
 
-PlaySoundEffect::PlaySoundEffect(wxWindow *parent)
+PlaySoundEffect::PlaySoundEffect(wxWindow *parent, const wxString &filename)
     : PlaySoundEffectBase(parent)
+    , Filename(filename)  // MFC: stores filename for display and sound playback
 {
-    // Initialize dialog
-    // TransferDataToWindow();
     Centre();
 }
 

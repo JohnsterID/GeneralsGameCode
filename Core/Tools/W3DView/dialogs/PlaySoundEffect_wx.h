@@ -69,10 +69,11 @@ protected:
 class PlaySoundEffect : public PlaySoundEffectBase
 {
 public:
-    PlaySoundEffect(wxWindow *parent);
+    // Constructor matches MFC PlaySoundDialogClass(const CString& filename, CWnd* parent)
+    PlaySoundEffect(wxWindow *parent, const wxString &filename = wxEmptyString);
     
     // Dialog data (MFC compatibility)
-    wxString Filename;  // Sound effect filename
+    wxString Filename;  // Sound effect filename (passed via constructor)
     
     // BLOCKER TODO: Cannot add SoundObj member due to WWAudio header compilation errors
     // MFC: PlaySoundDialog.h line 64

@@ -162,14 +162,38 @@ void TextureSettings::OnBrowseButton(wxCommandEvent &event)
 
 void TextureSettings::OnRestore(wxCommandEvent &event)
 {
-    // TODO: Implement OnRestore
-    // Control ID: IDC_RESTORE
+    // MFC: TextureSettingsDialogClass::OnRestore
+    // Restores original texture settings when user clicks Restore button
+    // TODO(Phase 3 - Texture Integration): Implement OnRestore
+    // Requires:
+    // - m_pOriginalTexture (IndirectTextureClass pointer)
+    // - m_pTexture (IndirectTextureClass pointer)
+    // - Load_Texture_Settings() helper to reload UI from texture data
+    // MFC:
+    //   if (m_pOriginalTexture) {
+    //       TextureClass* pnew_texture = m_pOriginalTexture->Get_Texture();
+    //       m_pTexture->Set_Texture(pnew_texture);
+    //       REF_PTR_RELEASE(pnew_texture);
+    //       Load_Texture_Settings();
+    //       EnableWindow(GetDlgItem(IDC_APPLY), FALSE);
+    //   }
 }
 
 void TextureSettings::OnApply(wxCommandEvent &event)
 {
-    // TODO: Implement OnApply
-    // Control ID: IDC_APPLY
+    // MFC: TextureSettingsDialogClass::OnApply
+    // Applies current dialog settings to the texture
+    // TODO(Phase 3 - Texture Integration): Implement OnApply
+    // Requires:
+    // - m_pTexture (IndirectTextureClass pointer)
+    // - TimeAnimTextureInstanceClass, ManualAnimTextureInstanceClass, ResizeableTextureInstanceClass
+    // - WW3DAssetManager for loading texture files
+    // MFC creates new texture based on animation type combo and applies to m_pTexture
+    // Complex logic involving:
+    //   - Animation type selection (Loop, Once, PingPong, Manual)
+    //   - Resizeable flag handling
+    //   - Frame count and frame rate settings
+    //   - m_bSettingsModified flag for tracking changes
 }
 
 

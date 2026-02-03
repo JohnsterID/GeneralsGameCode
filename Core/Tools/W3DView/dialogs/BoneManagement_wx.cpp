@@ -57,14 +57,34 @@ void BoneManagement::OnCancel(wxCommandEvent &event)
 
 void BoneManagement::OnSelchangedBoneTree(wxTreeEvent &event)
 {
-    // TODO: Implement OnSelchangedBoneTree
-    // Control ID: IDC_BONE_TREE
+    // MFC: BoneMgrDialogClass::OnSelchangedBoneTree
+    // Called when tree selection changes - updates controls based on selection
+    // TODO(Phase 3 - Tree Control Integration): Implement OnSelchangedBoneTree
+    // Requires:
+    // - Update_Controls() helper function
+    // - m_BoneName member variable
+    // - m_ObjectCombo populated with render object list
+    // MFC:
+    //   NM_TREEVIEW* pNMTreeView = (NM_TREEVIEW*)pNMHDR;
+    //   Update_Controls(pNMTreeView->itemNew.hItem);
+    event.Skip();
 }
 
 void BoneManagement::OnSelchangeObjectCombo(wxCommandEvent &event)
 {
-    // TODO: Implement OnSelchangeObjectCombo
-    // Control ID: IDC_OBJECT_COMBO
+    // MFC: BoneMgrDialogClass::OnSelchangeObjectCombo
+    // Called when combo selection changes - updates Attach button text
+    // TODO(Phase 3 - Tree Control Integration): Implement OnSelchangeObjectCombo
+    // Requires:
+    // - Is_Render_Obj_Already_Attached() helper
+    // - m_bAttach member variable
+    // MFC:
+    //   CString name; m_ObjectCombo.GetLBText(m_ObjectCombo.GetCurSel(), name);
+    //   if (Is_Render_Obj_Already_Attached(name))
+    //       SetDlgItemText(IDC_ATTACH_BUTTON, "&Remove"); m_bAttach = false;
+    //   else
+    //       SetDlgItemText(IDC_ATTACH_BUTTON, "&Attach"); m_bAttach = true;
+    event.Skip();
 }
 
 void BoneManagement::OnDestroy(wxWindowDestroyEvent &event)
@@ -97,8 +117,25 @@ void BoneManagement::OnDestroy(wxWindowDestroyEvent &event)
 
 void BoneManagement::OnAttachButton(wxCommandEvent &event)
 {
-    // TODO: Implement OnAttachButton
-    // Control ID: IDC_ATTACH_BUTTON
+    // MFC: BoneMgrDialogClass::OnAttachButton
+    // Attaches or detaches selected render object from selected bone
+    // TODO(Phase 3 - Tree Control Integration): Implement OnAttachButton
+    // Requires:
+    // - m_bAttach member variable (set by OnSelchangeObjectCombo)
+    // - m_pBaseModel (RenderObjClass pointer)
+    // - Tree control manipulation (add/remove child items)
+    // - Render object attachment APIs (Attach_To_Bone, Detach_From_Bone)
+    // MFC:
+    //   if (m_bAttach) {
+    //       Get selected bone and render object
+    //       Attach render object to bone
+    //       Add item to tree under bone
+    //   } else {
+    //       Get selected attached object
+    //       Detach from bone
+    //       Remove item from tree
+    //   }
+    //   OnSelchangeObjectCombo();  // Update button text
 }
 
 

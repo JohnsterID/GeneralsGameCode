@@ -86,7 +86,19 @@ private:
     bool TransferDataFromWindow() override;
 
     // Event handlers (Phase 2)
-void OnDblclkMeshTextureListCtrl(wxListEvent &event);  // Notification message (needs analysis)
-    void OnKeydownMeshTextureListCtrl(wxListEvent &event);  // Notification message (needs analysis)
-    void OnDestroy(wxWindowDestroyEvent &event);  // Window destruction
+    void OnDblclkMeshTextureListCtrl(wxListEvent &event);
+    void OnKeydownMeshTextureListCtrl(wxListEvent &event);
+    void OnDestroy(wxWindowDestroyEvent &event);
+
+    // Toolbar command handlers (MFC ON_COMMAND equivalents)
+    void OnBack(wxCommandEvent &event);
+    void OnDetails(wxCommandEvent &event);
+    void OnLarge(wxCommandEvent &event);
+    void OnList(wxCommandEvent &event);
+    void OnSmall(wxCommandEvent &event);
+    void OnPropagate(wxCommandEvent &event);
+
+private:
+    // Member variables (matching MFC TextureMgrDialogClass)
+    bool m_bContainsMeshes;  // True when showing meshes, false when showing textures
 };

@@ -95,9 +95,24 @@ void ParticleSize::OnSizeSpinChange(wxSpinEvent& event)
 {
     // Handle spinner updates (matches MFC OnNotify with UDN_DELTAPOS)
     // MFC: Update_Spinner_Buddy(pheader->hwndFrom, pupdown->iDelta)
+    // MFC behavior: increment by delta/100.0 (0.01 per step)
     
-    int newValue = m_idc_size_spin->GetValue();
-    m_idc_size_edit->SetValue(wxString::Format("%d", newValue));
+    // Get current value from edit box
+    wxString value = m_idc_size_edit->GetValue();
+    double currentValue = 0.0;
+    value.ToDouble(&currentValue);
+    
+    // Determine delta direction from spin event
+    // wxSpinButton position change indicates direction
+    int delta = event.GetPosition();
+    currentValue += delta * 0.01f;  // MFC: delta/100.0
+    
+    // Clamp to valid range
+    if (currentValue < 0.0) currentValue = 0.0;
+    if (currentValue > 10000.0) currentValue = 10000.0;
+    
+    // Update edit box with float format
+    m_idc_size_edit->SetValue(wxString::Format("%.2f", currentValue));
     
     event.Skip();
 }

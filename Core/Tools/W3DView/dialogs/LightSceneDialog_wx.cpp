@@ -23,6 +23,10 @@
 #include "light.h"
 #include "rendobj.h"
 #include <wx/xrc/xmlres.h>
+#include <wx/dcclient.h>
+
+// Forward declaration for gradient painting utility
+void Paint_Gradient_wx(wxWindow* window, unsigned char baseRed, unsigned char baseGreen, unsigned char baseBlue);
 
 wxBEGIN_EVENT_TABLE(LightSceneDialog, LightSceneDialogBase)
     EVT_INIT_DIALOG(LightSceneDialog::OnInitDialog)
@@ -38,6 +42,7 @@ wxBEGIN_EVENT_TABLE(LightSceneDialog, LightSceneDialogBase)
     EVT_SPIN(XRCID("IDC_DISTANCE_SPIN"), LightSceneDialog::OnDistanceSpin)
     EVT_SPIN(XRCID("IDC_START_ATTENUATION_SPIN"), LightSceneDialog::OnStartAttenSpin)
     EVT_SPIN(XRCID("IDC_END_ATTENUATION_SPIN"), LightSceneDialog::OnEndAttenSpin)
+    EVT_PAINT(LightSceneDialog::OnPaint)
 wxEND_EVENT_TABLE()
 
 LightSceneDialog::LightSceneDialog(wxWindow *parent)
@@ -379,4 +384,22 @@ void LightSceneDialog::Update_Attenuation_Controls()
     m_idc_start_attenuation_spin->Enable(enable);
     m_idc_end_attenuation_edit->Enable(enable);
     m_idc_end_attenuation_spin->Enable(enable);
+}
+
+// ============================================================================
+// OnPaint - Paint color gradients for the RGB panels
+// ============================================================================
+// MFC Reference: SceneLightDialog.cpp:347-349 (WindowProc handling WM_PAINT)
+// Behavior: Paint gradients from black to red/green/blue on the gradient panels
+
+void LightSceneDialog::OnPaint(wxPaintEvent &event)
+{
+    // Paint the gradients for each color panel
+    // MFC: Paint_Gradient(GetDlgItem(m_hWnd, IDC_RED_GRADIENT), 1, 0, 0);
+    Paint_Gradient_wx(m_idc_red_gradient, 255, 0, 0);
+    Paint_Gradient_wx(m_idc_green_gradient, 0, 255, 0);
+    Paint_Gradient_wx(m_idc_blue_gradient, 0, 0, 255);
+
+    // Let the event propagate to other handlers
+    event.Skip();
 }

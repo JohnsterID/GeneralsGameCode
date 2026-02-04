@@ -150,6 +150,7 @@ private:
     void OnStartAttenSpin(wxSpinEvent &event);
     void OnEndAttenSpin(wxSpinEvent &event);
     void OnInitDialog(wxInitDialogEvent &event);
+    void OnPaint(wxPaintEvent &event);  // Paint gradients
     
     // Helper methods (MFC: SceneLightDialog.cpp)
     void Update_Light(const class Vector3 &color);

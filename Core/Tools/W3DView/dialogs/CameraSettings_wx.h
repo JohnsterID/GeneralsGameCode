@@ -131,7 +131,26 @@ private:
     bool TransferDataFromWindow() override;
 
     // Event handlers (Phase 2)
-void OnFovCheck(wxCommandEvent &event);  // Button/Checkbox click
-    void OnClipPlaneCheck(wxCommandEvent &event);  // Button/Checkbox click
-    void OnReset(wxCommandEvent &event);  // Button/Checkbox click
+    void OnFovCheck(wxCommandEvent &event);
+    void OnClipPlaneCheck(wxCommandEvent &event);
+    void OnReset(wxCommandEvent &event);
+    
+    // Spin button handlers (MFC OnNotify UDN_DELTAPOS)
+    void OnNearClipSpin(wxSpinEvent &event);
+    void OnFarClipSpin(wxSpinEvent &event);
+    void OnLensSpin(wxSpinEvent &event);
+    void OnHfovSpin(wxSpinEvent &event);
+    void OnVfovSpin(wxSpinEvent &event);
+    
+    // Edit box change handlers (MFC OnCommand EN_UPDATE)
+    void OnLensEditChange(wxCommandEvent &event);
+    void OnHfovEditChange(wxCommandEvent &event);
+    
+    // Helper methods (MFC CameraSettingsDialog.cpp:317-365)
+    void Update_Camera_Lens();
+    void Update_FOV();
+    void UpdateSpinnerBuddy(wxTextCtrl *edit, wxSpinButton *spin, int delta, float increment);
+    
+    // Member variables
+    bool m_updatingControls = false;  // Prevent recursive updates
 };

@@ -35,10 +35,19 @@
 #include "wwmath.h"
 
 wxBEGIN_EVENT_TABLE(CameraSettings, CameraSettingsBase)
-EVT_CHECKBOX(XRCID("IDC_FOV_CHECK"), CameraSettings::OnFovCheck)  // Button/Checkbox click
-    EVT_CHECKBOX(XRCID("IDC_CLIP_PLANE_CHECK"), CameraSettings::OnClipPlaneCheck)  // Button/Checkbox click
-    EVT_BUTTON(XRCID("IDC_RESET"), CameraSettings::OnReset)  // Button/Checkbox click
+    EVT_CHECKBOX(XRCID("IDC_FOV_CHECK"), CameraSettings::OnFovCheck)
+    EVT_CHECKBOX(XRCID("IDC_CLIP_PLANE_CHECK"), CameraSettings::OnClipPlaneCheck)
+    EVT_BUTTON(XRCID("IDC_RESET"), CameraSettings::OnReset)
     EVT_INIT_DIALOG(CameraSettings::OnInitDialog)
+    // Spin button handlers (MFC OnNotify UDN_DELTAPOS)
+    EVT_SPIN(XRCID("IDC_NEAR_CLIP_SPIN"), CameraSettings::OnNearClipSpin)
+    EVT_SPIN(XRCID("IDC_FAR_CLIP_SPIN"), CameraSettings::OnFarClipSpin)
+    EVT_SPIN(XRCID("IDC_LENS_SPIN"), CameraSettings::OnLensSpin)
+    EVT_SPIN(XRCID("IDC_HFOV_SPIN"), CameraSettings::OnHfovSpin)
+    EVT_SPIN(XRCID("IDC_VFOV_SPIN"), CameraSettings::OnVfovSpin)
+    // Edit box change handlers (MFC OnCommand EN_UPDATE)
+    EVT_TEXT(XRCID("IDC_LENS_EDIT"), CameraSettings::OnLensEditChange)
+    EVT_TEXT(XRCID("IDC_HFOV_EDIT"), CameraSettings::OnHfovEditChange)
 wxEND_EVENT_TABLE()
 
 CameraSettings::CameraSettings(wxWindow *parent)
@@ -297,4 +306,113 @@ bool CameraSettings::TransferDataFromWindow()
     
     
     return true;  // Success
+}
+
+// ============================================================================
+// Spin Button Handlers (MFC OnNotify UDN_DELTAPOS)
+// ============================================================================
+// MFC Reference: CameraSettingsDialog.cpp:280-307 (OnNotify)
+// Behavior: Increment/decrement edit box values by 0.01 per spin click
+
+void CameraSettings::OnNearClipSpin(wxSpinEvent &event)
+{
+    UpdateSpinnerBuddy(m_idc_near_clip_edit, m_idc_near_clip_spin, event.GetPosition(), 0.01f);
+}
+
+void CameraSettings::OnFarClipSpin(wxSpinEvent &event)
+{
+    UpdateSpinnerBuddy(m_idc_far_clip_edit, m_idc_far_clip_spin, event.GetPosition(), 0.01f);
+}
+
+void CameraSettings::OnLensSpin(wxSpinEvent &event)
+{
+    UpdateSpinnerBuddy(m_idc_lens_edit, m_idc_lens_spin, event.GetPosition(), 0.01f);
+    Update_FOV();  // Lens and FOV are interdependent
+}
+
+void CameraSettings::OnHfovSpin(wxSpinEvent &event)
+{
+    UpdateSpinnerBuddy(m_idc_hfov_edit, m_idc_hfov_spin, event.GetPosition(), 0.01f);
+    Update_Camera_Lens();  // FOV and Lens are interdependent
+}
+
+void CameraSettings::OnVfovSpin(wxSpinEvent &event)
+{
+    UpdateSpinnerBuddy(m_idc_vfov_edit, m_idc_vfov_spin, event.GetPosition(), 0.01f);
+}
+
+// ============================================================================
+// Edit Box Change Handlers (MFC OnCommand EN_UPDATE)
+// ============================================================================
+// MFC Reference: CameraSettingsDialog.cpp:373-402 (OnCommand)
+// Behavior: When lens edit changes, update FOV; when HFOV changes, update lens
+
+void CameraSettings::OnLensEditChange(wxCommandEvent &event)
+{
+    if (!m_updatingControls) {
+        m_updatingControls = true;
+        Update_FOV();
+        m_updatingControls = false;
+    }
+}
+
+void CameraSettings::OnHfovEditChange(wxCommandEvent &event)
+{
+    if (!m_updatingControls) {
+        m_updatingControls = true;
+        Update_Camera_Lens();
+        m_updatingControls = false;
+    }
+}
+
+// ============================================================================
+// Helper Methods (MFC CameraSettingsDialog.cpp:317-365)
+// ============================================================================
+
+void CameraSettings::Update_Camera_Lens()
+{
+    // Get the current horizontal FOV setting
+    float hfov = GetDlgItemFloat(m_idc_hfov_edit);
+
+    // Convert the horizontal FOV to a camera lens setting
+    if (hfov > 0) {
+        const float constant = (18.0f / 1000.0f);
+        float lens = (constant / (::tan(DEG_TO_RAD(hfov) / 2))) * 1000.0f;
+        SetDlgItemFloat(m_idc_lens_edit, lens);
+    }
+}
+
+void CameraSettings::Update_FOV()
+{
+    // Get the current camera lens setting
+    float lens = (GetDlgItemFloat(m_idc_lens_edit) / 1000.0f);
+
+    // Convert the camera lens to a FOV
+    if (lens > 0) {
+        const float constant = (18.0f / 1000.0f);
+        float hfov = (::atan(constant / lens) * 2.0f);
+        float vfov = (3 * hfov / 4);  // 4:3 aspect ratio
+
+        // Pass the new FOV settings onto the dialog
+        SetDlgItemFloat(m_idc_hfov_edit, RAD_TO_DEG(hfov));
+        SetDlgItemFloat(m_idc_vfov_edit, RAD_TO_DEG(vfov));
+    }
+}
+
+void CameraSettings::UpdateSpinnerBuddy(wxTextCtrl *edit, wxSpinButton *spin, int delta, float increment)
+{
+    // Get current value from edit box
+    float value = GetDlgItemFloat(edit);
+    
+    // Increment by delta (MFC uses delta/100.0 but wxWidgets delta is simpler)
+    // wxSpinButton delta is typically +1 or -1 per click
+    value += delta * increment;
+    
+    // Clamp to minimum of 0
+    if (value < 0.0f) {
+        value = 0.0f;
+    }
+    
+    // Update the edit box
+    SetDlgItemFloat(edit, value);
 }

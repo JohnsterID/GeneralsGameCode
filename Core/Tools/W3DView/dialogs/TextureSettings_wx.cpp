@@ -138,12 +138,10 @@ void TextureSettings::OnBrowseButton(wxCommandEvent &event)
     {
         wxString filepath = fileDialog.GetPath();  // Full path (matches MFC GetFileName())
         
-        // TODO(MFC-Match): Add search path for texture loading
+        // TODO(Phase 4 - Texture Loading): Add search path for texture loading
         //   MFC calls: WW3D::Add_Search_Path(Strip_Filename_From_Path(filepath))
-        //   This adds the directory containing the texture to WW3D's search paths
-        //   Need to verify if WW3D::Add_Search_Path() is available in wxWidgets build
-        //   and if Strip_Filename_From_Path is in Utils_wx.cpp
-        //   Priority: MEDIUM - texture loading may fail without correct search path
+        //   WW3D::Add_Search_Path() appears to be MFC-only and not in current WW3D2 headers
+        //   Need Phase 4 integration to implement texture search path management
         
         // Set filename in control
         if (m_idc_filename_edit)

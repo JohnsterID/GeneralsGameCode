@@ -144,40 +144,23 @@ void VolumeRandomizer::OnInitDialog(wxInitDialogEvent& event)
     // Initialize controls after they're created
     //
     //	Start with some default values
+    //   MFC defaults: initial_type = IDC_BOX_RADIO
     //
     Vector3 initial_box(1, 1, 1);
     float initial_sphere_radius = 1.0F;
     bool initial_sphere_hollow = false;
     float initial_cylinder_radius = 1.0F;
     float initial_cylinder_height = 1.0F;
-    // TODO: Convert: UINT initial_type = IDC_BOX_RADIO;
+    m_initial_type = SHAPE_BOX;  // Default to box (matches MFC IDC_BOX_RADIO)
     //
-    //	Initialize from the provided randomizer
+    //	Initialize from the provided randomizer (if any)
     //
-    // What type of randomizer is this?
-    // TODO: Convert: switch (m_Randomizer->Class_ID ())
-    // TODO: Convert: case Vector3Randomizer::CLASSID_SOLIDBOX:
-    // TODO: Convert: initial_type = IDC_BOX_RADIO;
-    // TODO: Convert: initial_box = ((Vector3SolidBoxRandomizer *)m_Randomizer)->Get_Extents ();
-    // TODO: Convert: break;
-    // TODO: Convert: case Vector3Randomizer::CLASSID_SOLIDSPHERE:
-    // TODO: Convert: initial_type = IDC_SPHERE_RADIO;
-    // TODO: Convert: initial_sphere_radius = ((Vector3SolidSphereRandomizer *)m_Randomizer)->Get_Radius();
-    // TODO: Convert: initial_sphere_hollow = false;
-    // TODO: Convert: break;
-    // TODO: Convert: case Vector3Randomizer::CLASSID_HOLLOWSPHERE:
-    // TODO: Convert: initial_type = IDC_SPHERE_RADIO;
-    // TODO: Convert: initial_sphere_radius = ((Vector3HollowSphereRandomizer *)m_Randomizer)->Get_Radius ();
-    // TODO: Convert: initial_sphere_hollow = true;
-    // TODO: Convert: break;
-    // TODO: Convert: case Vector3Randomizer::CLASSID_SOLIDCYLINDER:
-    // TODO: Convert: initial_type = IDC_CYLINDER_RADIO;
-    // TODO: Convert: initial_cylinder_radius = ((Vector3SolidCylinderRandomizer *)m_Randomizer)->Get_Radius ();
-    // TODO: Convert: initial_cylinder_height = ((Vector3SolidCylinderRandomizer *)m_Randomizer)->Get_Height ();
-    // TODO: Convert: break;
-    // TODO: Convert: default:
-    // TODO: Convert: ASSERT (0);
-    // TODO: Convert: break;
+    // TODO(Phase 4 - Vector3Randomizer): Initialize from m_Randomizer
+    //   When Vector3Randomizer is available, check Class_ID() to determine type:
+    //   - CLASSID_SOLIDBOX: m_initial_type = SHAPE_BOX, get extents
+    //   - CLASSID_SOLIDSPHERE: m_initial_type = SHAPE_SPHERE, initial_sphere_hollow = false
+    //   - CLASSID_HOLLOWSPHERE: m_initial_type = SHAPE_SPHERE, initial_sphere_hollow = true
+    //   - CLASSID_SOLIDCYLINDER: m_initial_type = SHAPE_CYLINDER
     //
     //	Initialize the box controls
     //
@@ -217,15 +200,19 @@ void VolumeRandomizer::OnInitDialog(wxInitDialogEvent& event)
     }
     //
     //	Check the appropriate radio
+    //   MFC: SendDlgItemMessage(initial_type, BM_SETCHECK, (WPARAM)TRUE);
     //
-    // TODO: Phase 2.5: Set the appropriate radio button based on m_initial_type
-    // if (m_initial_type == BOX_TYPE && m_idc_box_radio) {
-    //     m_idc_box_radio->SetValue(true);
-    // } else if (m_initial_type == SPHERE_TYPE && m_idc_sphere_radio) {
-    //     m_idc_sphere_radio->SetValue(true);
-    // } else if (m_initial_type == CYLINDER_TYPE && m_idc_cylinder_radio) {
-    //     m_idc_cylinder_radio->SetValue(true);
-    // }
+    switch (m_initial_type) {
+        case SHAPE_BOX:
+            if (m_idc_box_radio) m_idc_box_radio->SetValue(true);
+            break;
+        case SHAPE_SPHERE:
+            if (m_idc_sphere_radio) m_idc_sphere_radio->SetValue(true);
+            break;
+        case SHAPE_CYLINDER:
+            if (m_idc_cylinder_radio) m_idc_cylinder_radio->SetValue(true);
+            break;
+    }
     
     // MFC: Update_Enable_State();
     Update_Enable_State();
@@ -242,73 +229,86 @@ bool VolumeRandomizer::TransferDataToWindow()
 
 bool VolumeRandomizer::TransferDataFromWindow()
 {
-    // Extract data from controls and apply to business logic
-
-    // TODO: Convert: if (SendDlgItemMessage (IDC_BOX_RADIO, BM_GETCHECK) == 1) {
-    // TODO: Convert: //
-    // TODO: Convert: //	Create a box randomizer
-    // TODO: Convert: //
-    // TODO: Convert: Vector3 extents (0, 0, 0);
+    // MFC Reference: VolumeRandomDialog.cpp (OnOK)
+    // Creates appropriate Vector3Randomizer based on selected radio button
+    
     double value;
-    if (m_idc_box_x_edit && m_idc_box_x_edit->GetValue().ToDouble(&value)) {
-        // Use value (cast to float if needed)
-    } else {
-        wxMessageBox("Please enter a valid numeric value", "Invalid Input", 
-                     wxOK | wxICON_ERROR, this);
-        return false;
+    
+    // Check which radio button is selected
+    bool is_box = m_idc_box_radio && m_idc_box_radio->GetValue();
+    bool is_sphere = m_idc_sphere_radio && m_idc_sphere_radio->GetValue();
+    bool is_cylinder = m_idc_cylinder_radio && m_idc_cylinder_radio->GetValue();
+    
+    if (is_box) {
+        // Create a box randomizer
+        Vector3 extents(0, 0, 0);
+        if (m_idc_box_x_edit && m_idc_box_x_edit->GetValue().ToDouble(&value)) {
+            extents.X = static_cast<float>(value);
+        } else {
+            wxMessageBox("Please enter a valid numeric value for Box X", "Invalid Input", 
+                         wxOK | wxICON_ERROR, this);
+            return false;
+        }
+        if (m_idc_box_y_edit && m_idc_box_y_edit->GetValue().ToDouble(&value)) {
+            extents.Y = static_cast<float>(value);
+        } else {
+            wxMessageBox("Please enter a valid numeric value for Box Y", "Invalid Input", 
+                         wxOK | wxICON_ERROR, this);
+            return false;
+        }
+        if (m_idc_box_z_edit && m_idc_box_z_edit->GetValue().ToDouble(&value)) {
+            extents.Z = static_cast<float>(value);
+        } else {
+            wxMessageBox("Please enter a valid numeric value for Box Z", "Invalid Input", 
+                         wxOK | wxICON_ERROR, this);
+            return false;
+        }
+        // TODO(Phase 4 - Vector3Randomizer): Create Vector3SolidBoxRandomizer
+        //   m_Randomizer = new Vector3SolidBoxRandomizer(extents);
+        
+    } else if (is_sphere) {
+        // Create a sphere randomizer (hollow or solid)
+        float radius = 0.0f;
+        if (m_idc_sphere_radius_edit && m_idc_sphere_radius_edit->GetValue().ToDouble(&value)) {
+            radius = static_cast<float>(value);
+        } else {
+            wxMessageBox("Please enter a valid numeric value for Sphere Radius", "Invalid Input", 
+                         wxOK | wxICON_ERROR, this);
+            return false;
+        }
+        bool is_hollow = m_idc_sphere_hollow_check && m_idc_sphere_hollow_check->GetValue();
+        // TODO(Phase 4 - Vector3Randomizer): Create sphere randomizer
+        //   if (is_hollow) {
+        //       m_Randomizer = new Vector3HollowSphereRandomizer(radius);
+        //   } else {
+        //       m_Randomizer = new Vector3SolidSphereRandomizer(radius);
+        //   }
+        (void)radius;
+        (void)is_hollow;
+        
+    } else if (is_cylinder) {
+        // Create a cylinder randomizer
+        float radius = 0.0f;
+        float height = 0.0f;
+        if (m_idc_cylinder_radius_edit && m_idc_cylinder_radius_edit->GetValue().ToDouble(&value)) {
+            radius = static_cast<float>(value);
+        } else {
+            wxMessageBox("Please enter a valid numeric value for Cylinder Radius", "Invalid Input", 
+                         wxOK | wxICON_ERROR, this);
+            return false;
+        }
+        if (m_idc_cylinder_height_edit && m_idc_cylinder_height_edit->GetValue().ToDouble(&value)) {
+            height = static_cast<float>(value);
+        } else {
+            wxMessageBox("Please enter a valid numeric value for Cylinder Height", "Invalid Input", 
+                         wxOK | wxICON_ERROR, this);
+            return false;
+        }
+        // TODO(Phase 4 - Vector3Randomizer): Create Vector3SolidCylinderRandomizer
+        //   m_Randomizer = new Vector3SolidCylinderRandomizer(height, radius);
+        (void)radius;
+        (void)height;
     }
-    if (m_idc_box_y_edit && m_idc_box_y_edit->GetValue().ToDouble(&value)) {
-        // Use value (cast to float if needed)
-    } else {
-        wxMessageBox("Please enter a valid numeric value", "Invalid Input", 
-                     wxOK | wxICON_ERROR, this);
-        return false;
-    }
-    if (m_idc_box_z_edit && m_idc_box_z_edit->GetValue().ToDouble(&value)) {
-        // Use value (cast to float if needed)
-    } else {
-        wxMessageBox("Please enter a valid numeric value", "Invalid Input", 
-                     wxOK | wxICON_ERROR, this);
-        return false;
-    }
-    // TODO: Convert: m_Randomizer = new Vector3SolidBoxRandomizer (extents);
-    // TODO: Convert: } else if (SendDlgItemMessage (IDC_SPHERE_RADIO, BM_GETCHECK) == 1) {
-    // TODO: Convert: //
-    // TODO: Convert: //	What type of sphere is this, hollow or solid?
-    // TODO: Convert: //
-    if (m_idc_sphere_radius_edit && m_idc_sphere_radius_edit->GetValue().ToDouble(&value)) {
-        // Use value (cast to float if needed)
-    } else {
-        wxMessageBox("Please enter a valid numeric value", "Invalid Input", 
-                     wxOK | wxICON_ERROR, this);
-        return false;
-    }
-    // TODO: Convert: if (SendDlgItemMessage (IDC_SPHERE_HOLLOW_CHECK, BM_GETCHECK) == 1) {
-    // TODO: Convert: m_Randomizer = new Vector3HollowSphereRandomizer (radius);
-    // TODO: Convert: } else {
-    // TODO: Convert: m_Randomizer = new Vector3SolidSphereRandomizer (radius);
-    // TODO: Convert: }
-    // TODO: Convert: } else if (SendDlgItemMessage (IDC_CYLINDER_RADIO, BM_GETCHECK) == 1) {
-    // TODO: Convert: //
-    // TODO: Convert: //	Create a cylinder randomizer
-    // TODO: Convert: //
-    if (m_idc_cylinder_radius_edit && m_idc_cylinder_radius_edit->GetValue().ToDouble(&value)) {
-        // Use value (cast to float if needed)
-    } else {
-        wxMessageBox("Please enter a valid numeric value", "Invalid Input", 
-                     wxOK | wxICON_ERROR, this);
-        return false;
-    }
-    if (m_idc_cylinder_height_edit && m_idc_cylinder_height_edit->GetValue().ToDouble(&value)) {
-        // Use value (cast to float if needed)
-    } else {
-        wxMessageBox("Please enter a valid numeric value", "Invalid Input", 
-                     wxOK | wxICON_ERROR, this);
-        return false;
-    }
-    // TODO: Convert: m_Randomizer = new Vector3SolidCylinderRandomizer (height, radius);
-    // TODO: Convert: }
-    // TODO: Convert: return ;
-
+    
     return true;
 }

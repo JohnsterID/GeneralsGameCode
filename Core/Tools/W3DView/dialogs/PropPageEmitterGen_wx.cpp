@@ -178,10 +178,10 @@ void PropPageEmitterGen::OnParticleLifetimeCheck(wxCommandEvent &event)
         m_idc_particle_lifetime_edit->SetValue("0");
     }
     
-    // TODO(MFC-Match): Call SetModified() equivalent for property page
-    //   MFC property pages use SetModified() to mark the page as modified
-    //   Need to implement property page modification tracking in wxWidgets
-    //   Priority: LOW - functionality works, but Apply button state may not update correctly
+    // NOTE(MFC-Match): SetModified() not needed - wxWidgets uses standalone dialogs
+    // MFC property pages use SetModified() to enable Apply button in CPropertySheet.
+    // Our wxWidgets implementation uses standalone wxDialog, not wxPropertySheetDialog,
+    // so Apply button state management is not applicable.
 }
 
 

@@ -143,11 +143,18 @@ void OnBoxRadio(wxCommandEvent &event);  // Button/Checkbox click
     // Helper functions
     void Update_Enable_State();  // Enable/disable controls based on selected shape type
 
+    // Shape type enum (matches MFC IDC_*_RADIO control selection)
+    enum ShapeType {
+        SHAPE_BOX = 0,
+        SHAPE_SPHERE = 1,
+        SHAPE_CYLINDER = 2
+    };
+
     // Phase 2.5: Member variables
     Vector3 initial_box;
     float initial_sphere_radius;
     bool initial_sphere_hollow;
     float initial_cylinder_radius;
     float initial_cylinder_height;
-    int m_initial_type;
+    ShapeType m_initial_type;
 };

@@ -105,8 +105,7 @@ void PropPageSphereColor::OnOpacityVectorCheck(wxCommandEvent &event)
     //   Need to implement render object integration for sphere particles
     //   Priority: HIGH - required for correct particle rendering behavior
     
-    // TODO(MFC-Match): Call SetModified() equivalent for property page
-    //   Priority: LOW - functionality works, but Apply button state may not update
+    // NOTE(MFC-Match): SetModified() not needed - wxWidgets uses standalone dialogs
 }
 
 void PropPageSphereColor::OnInvertVectorCheck(wxCommandEvent &event)
@@ -132,8 +131,7 @@ void PropPageSphereColor::OnInvertVectorCheck(wxCommandEvent &event)
     //   Need to implement render object integration for sphere particles
     //   Priority: HIGH - required for correct particle rendering behavior
     
-    // TODO(MFC-Match): Call SetModified() equivalent for property page
-    //   Priority: LOW - functionality works, but Apply button state may not update
+    // NOTE(MFC-Match): SetModified() not needed - wxWidgets uses standalone dialogs
 }
 
 

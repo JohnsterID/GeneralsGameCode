@@ -121,10 +121,17 @@ private:
     bool TransferDataFromWindow() override;
 
     // Event handlers (Phase 2)
-void OnBrowseButton(wxCommandEvent &event);  // Button/Checkbox click
+    void OnBrowseButton(wxCommandEvent &event);  // Button/Checkbox click
     void OnChangeFilenameEdit(wxCommandEvent &event);  // Text control change
     void OnChangeNameEdit(wxCommandEvent &event);  // Text control change
     void OnChangeLifetimeEdit(wxCommandEvent &event);  // Text control change
     void OnSelchangeShaderCombo(wxCommandEvent &event);  // Combobox selection change
     void OnChangeTextureTileEdit(wxCommandEvent &event);  // Text control change
+
+    // Spin button handlers (MFC: OnNotify with Update_Spinner_Buddy)
+    void OnLifetimeSpin(wxSpinEvent &event);
+    void OnTextureTileSpin(wxSpinEvent &event);
+
+    // Helper: Update edit box from spin delta (MFC: Update_Spinner_Buddy)
+    void UpdateSpinnerBuddy(wxTextCtrl* edit, int delta, float minVal, float maxVal);
 };

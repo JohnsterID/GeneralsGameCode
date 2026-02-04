@@ -24,11 +24,12 @@
 #include <wx/filedlg.h>
 
 wxBEGIN_EVENT_TABLE(PropPageSphereGen, PropPageSphereGenBase)
-EVT_BUTTON(XRCID("IDC_BROWSE_BUTTON"), PropPageSphereGen::OnBrowseButton)  // Button/Checkbox click
-    EVT_TEXT(XRCID("IDC_FILENAME_EDIT"), PropPageSphereGen::OnChangeFilenameEdit)  // Text control change
-    EVT_TEXT(XRCID("IDC_NAME_EDIT"), PropPageSphereGen::OnChangeNameEdit)  // Text control change
-    EVT_TEXT(XRCID("IDC_LIFETIME_EDIT"), PropPageSphereGen::OnChangeLifetimeEdit)  // Text control change
-    EVT_COMBOBOX(XRCID("IDC_SHADER_COMBO"), PropPageSphereGen::OnSelchangeShaderCombo)  // Combobox selection change
+    EVT_BUTTON(XRCID("IDC_BROWSE_BUTTON"), PropPageSphereGen::OnBrowseButton)
+    EVT_TEXT(XRCID("IDC_FILENAME_EDIT"), PropPageSphereGen::OnChangeFilenameEdit)
+    EVT_TEXT(XRCID("IDC_NAME_EDIT"), PropPageSphereGen::OnChangeNameEdit)
+    EVT_TEXT(XRCID("IDC_LIFETIME_EDIT"), PropPageSphereGen::OnChangeLifetimeEdit)
+    EVT_COMBOBOX(XRCID("IDC_SHADER_COMBO"), PropPageSphereGen::OnSelchangeShaderCombo)
+    EVT_SPIN(XRCID("IDC_LIFETIME_SPIN"), PropPageSphereGen::OnLifetimeSpin)
     EVT_INIT_DIALOG(PropPageSphereGen::OnInitDialog)
 wxEND_EVENT_TABLE()
 
@@ -225,3 +226,31 @@ bool PropPageSphereGen::TransferDataFromWindow()
 
     return true;
 }
+
+
+// ============================================================================
+// Spin Button Handlers (MFC: OnNotify with Update_Spinner_Buddy)
+// ============================================================================
+
+void PropPageSphereGen::UpdateSpinnerBuddy(wxTextCtrl* edit, int delta, float minVal, float maxVal)
+{
+    // MFC Reference: Utils.cpp Update_Spinner_Buddy
+    if (!edit) return;
+    
+    double currentValue = 0.0;
+    edit->GetValue().ToDouble(&currentValue);
+    
+    currentValue += delta * 0.01f;  // Match MFC: delta / 100.0
+    
+    if (currentValue < minVal) currentValue = minVal;
+    if (currentValue > maxVal) currentValue = maxVal;
+    
+    edit->SetValue(wxString::Format("%.2f", currentValue));
+}
+
+void PropPageSphereGen::OnLifetimeSpin(wxSpinEvent &event)
+{
+    UpdateSpinnerBuddy(m_idc_lifetime_edit, event.GetPosition(), 0.0f, 1000.0f);
+    // TODO(Phase 3 - Sphere): m_RenderObj->Set_Lifetime(value)
+}
+

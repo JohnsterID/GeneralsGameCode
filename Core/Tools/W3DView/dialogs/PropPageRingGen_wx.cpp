@@ -24,12 +24,14 @@
 #include <wx/filedlg.h>
 
 wxBEGIN_EVENT_TABLE(PropPageRingGen, PropPageRingGenBase)
-EVT_BUTTON(XRCID("IDC_BROWSE_BUTTON"), PropPageRingGen::OnBrowseButton)  // Button/Checkbox click
-    EVT_TEXT(XRCID("IDC_FILENAME_EDIT"), PropPageRingGen::OnChangeFilenameEdit)  // Text control change
-    EVT_TEXT(XRCID("IDC_NAME_EDIT"), PropPageRingGen::OnChangeNameEdit)  // Text control change
-    EVT_TEXT(XRCID("IDC_LIFETIME_EDIT"), PropPageRingGen::OnChangeLifetimeEdit)  // Text control change
-    EVT_COMBOBOX(XRCID("IDC_SHADER_COMBO"), PropPageRingGen::OnSelchangeShaderCombo)  // Combobox selection change
-    EVT_TEXT(XRCID("IDC_TEXTURE_TILE_EDIT"), PropPageRingGen::OnChangeTextureTileEdit)  // Text control change
+    EVT_BUTTON(XRCID("IDC_BROWSE_BUTTON"), PropPageRingGen::OnBrowseButton)
+    EVT_TEXT(XRCID("IDC_FILENAME_EDIT"), PropPageRingGen::OnChangeFilenameEdit)
+    EVT_TEXT(XRCID("IDC_NAME_EDIT"), PropPageRingGen::OnChangeNameEdit)
+    EVT_TEXT(XRCID("IDC_LIFETIME_EDIT"), PropPageRingGen::OnChangeLifetimeEdit)
+    EVT_COMBOBOX(XRCID("IDC_SHADER_COMBO"), PropPageRingGen::OnSelchangeShaderCombo)
+    EVT_TEXT(XRCID("IDC_TEXTURE_TILE_EDIT"), PropPageRingGen::OnChangeTextureTileEdit)
+    EVT_SPIN(XRCID("IDC_LIFETIME_SPIN"), PropPageRingGen::OnLifetimeSpin)
+    EVT_SPIN(XRCID("IDC_TEXTURE_TILE_SPIN"), PropPageRingGen::OnTextureTileSpin)
     EVT_INIT_DIALOG(PropPageRingGen::OnInitDialog)
 wxEND_EVENT_TABLE()
 
@@ -249,3 +251,37 @@ bool PropPageRingGen::TransferDataFromWindow()
 
     return true;
 }
+
+
+// ============================================================================
+// Spin Button Handlers (MFC: OnNotify with Update_Spinner_Buddy)
+// ============================================================================
+
+void PropPageRingGen::UpdateSpinnerBuddy(wxTextCtrl* edit, int delta, float minVal, float maxVal)
+{
+    // MFC Reference: Utils.cpp Update_Spinner_Buddy
+    if (!edit) return;
+    
+    double currentValue = 0.0;
+    edit->GetValue().ToDouble(&currentValue);
+    
+    currentValue += delta * 0.01f;  // Match MFC: delta / 100.0
+    
+    if (currentValue < minVal) currentValue = minVal;
+    if (currentValue > maxVal) currentValue = maxVal;
+    
+    edit->SetValue(wxString::Format("%.2f", currentValue));
+}
+
+void PropPageRingGen::OnLifetimeSpin(wxSpinEvent &event)
+{
+    UpdateSpinnerBuddy(m_idc_lifetime_edit, event.GetPosition(), 0.0f, 1000.0f);
+    // TODO(Phase 3 - Ring): m_RenderObj->Set_Lifetime(value)
+}
+
+void PropPageRingGen::OnTextureTileSpin(wxSpinEvent &event)
+{
+    UpdateSpinnerBuddy(m_idc_texture_tile_edit, event.GetPosition(), 0.0f, 100.0f);
+    // TODO(Phase 3 - Ring): m_RenderObj->Set_Texture_Tiles(value)
+}
+

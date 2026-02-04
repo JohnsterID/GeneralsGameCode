@@ -105,9 +105,23 @@ bool ParticleBlurTimeKey::TransferDataFromWindow()
 void ParticleBlurTimeKey::OnBlurTimeSpinChange(wxSpinEvent& event)
 {
     // Handle spinner updates (matches MFC OnNotify with UDN_DELTAPOS)
+    // MFC behavior: increment by delta/100.0 (0.01 per step)
     
-    int newValue = m_idc_blur_time_spin->GetValue();
-    m_idc_blur_time_edit->SetValue(wxString::Format("%d", newValue));
+    // Get current value from edit box
+    wxString value = m_idc_blur_time_edit->GetValue();
+    double currentValue = 0.0;
+    value.ToDouble(&currentValue);
+    
+    // Determine delta direction from spin event
+    int delta = event.GetPosition();
+    currentValue += delta * 0.01f;  // MFC: delta/100.0
+    
+    // Clamp to valid range
+    if (currentValue < -1024.0) currentValue = -1024.0;
+    if (currentValue > 1024.0) currentValue = 1024.0;
+    
+    // Update edit box with float format
+    m_idc_blur_time_edit->SetValue(wxString::Format("%.2f", currentValue));
     
     event.Skip();
 }

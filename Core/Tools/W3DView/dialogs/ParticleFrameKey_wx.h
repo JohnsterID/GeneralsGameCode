@@ -65,7 +65,10 @@ protected:
 class ParticleFrameKey : public ParticleFrameKeyBase
 {
 public:
-    ParticleFrameKey(wxWindow *parent);
+    ParticleFrameKey(float frame, wxWindow *parent);
+    
+    // Accessor for the frame value (MFC m_Frame)
+    float GetFrame() const { return m_Frame; }
 
 protected:
     // Override for data transfer if needed
@@ -80,6 +83,12 @@ private:
 
     void OnOK(wxCommandEvent &event);
     void OnCancel(wxCommandEvent &event);
+    
+    // Spin button handler (MFC OnNotify UDN_DELTAPOS)
+    void OnFrameSpinChange(wxSpinEvent& event);
+    
+    // Member data (MFC m_Frame)
+    float m_Frame;
 
     wxDECLARE_EVENT_TABLE();
 };

@@ -17,6 +17,7 @@
 */
 
 // Auto-generated from XRC by xrc2cpp.py
+// MFC Reference: ParticleFrameKeyDialog.cpp
 
 #include "ParticleFrameKey_wx.h"
 #include <wx/xrc/xmlres.h>
@@ -24,10 +25,12 @@
 
 wxBEGIN_EVENT_TABLE(ParticleFrameKey, ParticleFrameKeyBase)
     EVT_INIT_DIALOG(ParticleFrameKey::OnInitDialog)
+    EVT_SPIN(XRCID("IDC_FRAME_SPIN"), ParticleFrameKey::OnFrameSpinChange)
 wxEND_EVENT_TABLE()
 
-ParticleFrameKey::ParticleFrameKey(wxWindow *parent)
-    : ParticleFrameKeyBase(parent)
+ParticleFrameKey::ParticleFrameKey(float frame, wxWindow *parent)
+    : ParticleFrameKeyBase(parent),
+      m_Frame(frame)
 {
     // Initialize dialog
     // TransferDataToWindow();
@@ -55,11 +58,16 @@ void ParticleFrameKey::OnCancel(wxCommandEvent &event)
 
 void ParticleFrameKey::OnInitDialog(wxInitDialogEvent& event)
 {
-    // Initialize controls after they're created
+    // MFC Reference: ParticleFrameKeyDialog.cpp:44-52 (OnInitDialog)
+    // Initialize spinner control with range and initial value
     if (m_idc_frame_spin) {
         m_idc_frame_spin->SetRange(-1024, 1024);
-        // Initial value would be set from m_Frame member (add to header if needed)
-        // m_idc_frame_spin->SetValue(static_cast<int>(m_Frame));
+        m_idc_frame_spin->SetValue(static_cast<int>(m_Frame));
+    }
+    
+    // Set initial text value in edit box
+    if (m_idc_frame_edit) {
+        m_idc_frame_edit->SetValue(wxString::Format("%.2f", m_Frame));
     }
 
     event.Skip();
@@ -73,12 +81,39 @@ bool ParticleFrameKey::TransferDataToWindow()
 
 bool ParticleFrameKey::TransferDataFromWindow()
 {
-    // Extract frame value from controls
-    // Note: Add "float m_Frame;" to header if dialog needs to store this value
-    // if (m_idc_frame_edit) {
-    //     wxString text = m_idc_frame_edit->GetValue();
-    //     text.ToDouble(&m_Frame);
-    // }
-    // Calling code can retrieve value directly: GetValue().ToDouble()
+    // MFC Reference: ParticleFrameKeyDialog.cpp:54-58 (OnOK)
+    // Extract frame value from edit control
+    if (m_idc_frame_edit) {
+        wxString text = m_idc_frame_edit->GetValue();
+        double temp;
+        if (text.ToDouble(&temp)) {
+            m_Frame = static_cast<float>(temp);
+        }
+    }
     return true;
+}
+
+void ParticleFrameKey::OnFrameSpinChange(wxSpinEvent& event)
+{
+    // Handle spinner updates (MFC OnNotify with UDN_DELTAPOS)
+    // MFC: Update_Spinner_Buddy(pheader->hwndFrom, pupdown->iDelta)
+    // MFC behavior: increment by delta/100.0 (0.01 per step)
+    
+    // Get current value from edit box
+    wxString value = m_idc_frame_edit->GetValue();
+    double currentValue = 0.0;
+    value.ToDouble(&currentValue);
+    
+    // Determine delta direction from spin event
+    int delta = event.GetPosition();
+    currentValue += delta * 0.01f;  // MFC: delta/100.0
+    
+    // Clamp to valid range
+    if (currentValue < -1024.0) currentValue = -1024.0;
+    if (currentValue > 1024.0) currentValue = 1024.0;
+    
+    // Update edit box with float format
+    m_idc_frame_edit->SetValue(wxString::Format("%.2f", currentValue));
+    
+    event.Skip();
 }

@@ -96,5 +96,12 @@ private:
     void OnOK(wxCommandEvent &event);
     void OnCancel(wxCommandEvent &event);
 
+    // Spin button handlers (MFC: OnNotify with Update_Spinner_Buddy)
+    void OnRotationRandomSpin(wxSpinEvent &event);
+    void OnInitialOrientationRandomSpin(wxSpinEvent &event);
+
+    // Helper: Update edit box from spin delta (MFC: Update_Spinner_Buddy)
+    void UpdateSpinnerBuddy(wxTextCtrl* edit, int delta, float minVal, float maxVal);
+
     wxDECLARE_EVENT_TABLE();
 };

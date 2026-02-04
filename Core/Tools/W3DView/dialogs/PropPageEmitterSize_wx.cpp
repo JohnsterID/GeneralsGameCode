@@ -23,6 +23,7 @@
 #include <wx/spinbutt.h>
 
 wxBEGIN_EVENT_TABLE(PropPageEmitterSize, PropPageEmitterSizeBase)
+    EVT_SPIN(XRCID("IDC_SIZE_RANDOM_SPIN"), PropPageEmitterSize::OnSizeRandomSpin)
     EVT_INIT_DIALOG(PropPageEmitterSize::OnInitDialog)
 wxEND_EVENT_TABLE()
 
@@ -96,4 +97,31 @@ bool PropPageEmitterSize::TransferDataFromWindow()
     // MFC reads: m_CurrentSizes.Rand = GetDlgItemFloat(IDC_SIZE_RANDOM_EDIT)
     // MFC reads keyframe data from m_SizeBar (ColorBarClass)
     return true;
+}
+
+
+// ============================================================================
+// Spin Button Handlers (MFC: OnNotify with Update_Spinner_Buddy)
+// ============================================================================
+
+void PropPageEmitterSize::UpdateSpinnerBuddy(wxTextCtrl* edit, int delta, float minVal, float maxVal)
+{
+    // MFC Reference: Utils.cpp Update_Spinner_Buddy
+    if (!edit) return;
+    
+    double currentValue = 0.0;
+    edit->GetValue().ToDouble(&currentValue);
+    
+    currentValue += delta * 0.01f;  // Match MFC: delta / 100.0
+    
+    if (currentValue < minVal) currentValue = minVal;
+    if (currentValue > maxVal) currentValue = maxVal;
+    
+    edit->SetValue(wxString::Format("%.2f", currentValue));
+}
+
+void PropPageEmitterSize::OnSizeRandomSpin(wxSpinEvent &event)
+{
+    UpdateSpinnerBuddy(m_idc_size_random_edit, event.GetPosition(), 0.0f, 10000.0f);
+    // TODO(Phase 3 - Emitter): m_pEmitterList->Set_Size_Random(m_CurrentSizes.Rand)
 }

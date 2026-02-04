@@ -23,6 +23,8 @@
 #include <wx/spinbutt.h>
 
 wxBEGIN_EVENT_TABLE(PropPageEmitterRotation, PropPageEmitterRotationBase)
+    EVT_SPIN(XRCID("IDC_ROTATION_RANDOM_SPIN"), PropPageEmitterRotation::OnRotationRandomSpin)
+    EVT_SPIN(XRCID("IDC_INITIAL_ORIENTATION_RANDOM_SPIN"), PropPageEmitterRotation::OnInitialOrientationRandomSpin)
     EVT_INIT_DIALOG(PropPageEmitterRotation::OnInitDialog)
 wxEND_EVENT_TABLE()
 
@@ -97,4 +99,37 @@ bool PropPageEmitterRotation::TransferDataFromWindow()
     // BLOCKER: Requires Phase 3 member variables (m_Rotations, m_InitialOrientationRandom)
     // and ColorBarClass control for keyframe data extraction
     return true;
+}
+
+
+// ============================================================================
+// Spin Button Handlers (MFC: OnNotify with Update_Spinner_Buddy)
+// ============================================================================
+
+void PropPageEmitterRotation::UpdateSpinnerBuddy(wxTextCtrl* edit, int delta, float minVal, float maxVal)
+{
+    // MFC Reference: Utils.cpp Update_Spinner_Buddy
+    if (!edit) return;
+    
+    double currentValue = 0.0;
+    edit->GetValue().ToDouble(&currentValue);
+    
+    currentValue += delta * 0.01f;  // Match MFC: delta / 100.0
+    
+    if (currentValue < minVal) currentValue = minVal;
+    if (currentValue > maxVal) currentValue = maxVal;
+    
+    edit->SetValue(wxString::Format("%.2f", currentValue));
+}
+
+void PropPageEmitterRotation::OnRotationRandomSpin(wxSpinEvent &event)
+{
+    UpdateSpinnerBuddy(m_idc_rotation_random_edit, event.GetPosition(), 0.0f, 10000.0f);
+    // TODO(Phase 3 - Emitter): m_pEmitterList->Set_Rotational_Velocity_Random(m_Rotations)
+}
+
+void PropPageEmitterRotation::OnInitialOrientationRandomSpin(wxSpinEvent &event)
+{
+    UpdateSpinnerBuddy(m_idc_initial_orientation_random_edit, event.GetPosition(), 0.0f, 10000.0f);
+    // TODO(Phase 3 - Emitter): m_pEmitterList->Set_Initial_Orientation_Random(value)
 }

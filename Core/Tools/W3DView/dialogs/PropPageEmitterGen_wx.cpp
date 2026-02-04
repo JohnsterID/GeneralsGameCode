@@ -24,12 +24,13 @@
 #include <wx/filedlg.h>
 
 wxBEGIN_EVENT_TABLE(PropPageEmitterGen, PropPageEmitterGenBase)
-EVT_BUTTON(XRCID("IDC_BROWSE_BUTTON"), PropPageEmitterGen::OnBrowseButton)  // Button/Checkbox click
-    EVT_TEXT(XRCID("IDC_FILENAME_EDIT"), PropPageEmitterGen::OnChangeFilenameEdit)  // Text control change
-    EVT_TEXT(XRCID("IDC_NAME_EDIT"), PropPageEmitterGen::OnChangeNameEdit)  // Text control change
-    EVT_TEXT(XRCID("IDC_PARTICLE_LIFETIME_EDIT"), PropPageEmitterGen::OnChangeParticleLifetimeEdit)  // Text control change
-    EVT_COMBOBOX(XRCID("IDC_SHADER_COMBO"), PropPageEmitterGen::OnSelchangeShaderCombo)  // Combobox selection change
-    EVT_CHECKBOX(XRCID("IDC_PARTICLE_LIFETIME_CHECK"), PropPageEmitterGen::OnParticleLifetimeCheck)  // Button/Checkbox click
+    EVT_BUTTON(XRCID("IDC_BROWSE_BUTTON"), PropPageEmitterGen::OnBrowseButton)
+    EVT_TEXT(XRCID("IDC_FILENAME_EDIT"), PropPageEmitterGen::OnChangeFilenameEdit)
+    EVT_TEXT(XRCID("IDC_NAME_EDIT"), PropPageEmitterGen::OnChangeNameEdit)
+    EVT_TEXT(XRCID("IDC_PARTICLE_LIFETIME_EDIT"), PropPageEmitterGen::OnChangeParticleLifetimeEdit)
+    EVT_COMBOBOX(XRCID("IDC_SHADER_COMBO"), PropPageEmitterGen::OnSelchangeShaderCombo)
+    EVT_CHECKBOX(XRCID("IDC_PARTICLE_LIFETIME_CHECK"), PropPageEmitterGen::OnParticleLifetimeCheck)
+    EVT_SPIN(XRCID("IDC_PARTICLE_LIFETIME_SPIN"), PropPageEmitterGen::OnParticleLifetimeSpin)
     EVT_INIT_DIALOG(PropPageEmitterGen::OnInitDialog)
 wxEND_EVENT_TABLE()
 
@@ -276,4 +277,31 @@ bool PropPageEmitterGen::TransferDataFromWindow()
     // MFC: m_pEmitterList->Set_Texture_Filename(m_TextureFilename);
     // MFC: m_pEmitterList->Set_Lifetime(m_Lifetime);
     return true;
+}
+
+
+// ============================================================================
+// Spin Button Handlers (MFC: OnNotify with Update_Spinner_Buddy)
+// ============================================================================
+
+void PropPageEmitterGen::UpdateSpinnerBuddy(wxTextCtrl* edit, int delta, float minVal, float maxVal)
+{
+    // MFC Reference: Utils.cpp Update_Spinner_Buddy
+    if (!edit) return;
+    
+    double currentValue = 0.0;
+    edit->GetValue().ToDouble(&currentValue);
+    
+    currentValue += delta * 0.01f;  // Match MFC: delta / 100.0
+    
+    if (currentValue < minVal) currentValue = minVal;
+    if (currentValue > maxVal) currentValue = maxVal;
+    
+    edit->SetValue(wxString::Format("%.2f", currentValue));
+}
+
+void PropPageEmitterGen::OnParticleLifetimeSpin(wxSpinEvent &event)
+{
+    UpdateSpinnerBuddy(m_idc_particle_lifetime_edit, event.GetPosition(), 0.0f, 1000.0f);
+    // TODO(Phase 3 - Emitter): m_pEmitterList->Set_Lifetime(value)
 }

@@ -20,13 +20,17 @@
 
 #include "ColorSel_wx.h"
 #include <wx/xrc/xmlres.h>
+#include <wx/dcclient.h>
+
+// Forward declaration for gradient painting utility
+void Paint_Gradient_wx(wxWindow* window, unsigned char baseRed, unsigned char baseGreen, unsigned char baseBlue);
 
 // MFC Reference: ColorSelectionDialog.cpp
 wxBEGIN_EVENT_TABLE(ColorSel, ColorSelBase)
     EVT_SLIDER(XRCID("IDC_SLIDER_RED"), ColorSel::OnHscroll)
     EVT_SLIDER(XRCID("IDC_SLIDER_GREEN"), ColorSel::OnHscroll)
     EVT_SLIDER(XRCID("IDC_SLIDER_BLUE"), ColorSel::OnHscroll)
-    // Note: MFC ON_WM_PAINT for gradients deferred to Phase 4
+    EVT_PAINT(ColorSel::OnPaint)
     EVT_CHECKBOX(XRCID("IDC_GRAYSCALE_CHECK"), ColorSel::OnGrayscaleCheck)
     EVT_TEXT(XRCID("IDC_BLUE_EDIT"), ColorSel::OnChangeBlueEdit)
     EVT_TEXT(XRCID("IDC_GREEN_EDIT"), ColorSel::OnChangeGreenEdit)
@@ -235,4 +239,22 @@ void ColorSel::Update_Sliders(int slider_id)
     m_PaintColor.Z = static_cast<float>(blue_val) / 255.0f;
     
     Paint_Color_Window();
+}
+
+// ============================================================================
+// OnPaint - Paint color gradients for the RGB panels
+// ============================================================================
+// MFC Reference: ColorSelectionDialog.cpp:176-178 (WindowProc handling WM_PAINT)
+// Behavior: Paint gradients from black to red/green/blue on the gradient panels
+
+void ColorSel::OnPaint(wxPaintEvent &event)
+{
+    // Paint the gradients for each color panel
+    // MFC: Paint_Gradient(GetDlgItem(m_hWnd, IDC_RED_GRADIENT), 1, 0, 0);
+    Paint_Gradient_wx(m_idc_red_gradient, 255, 0, 0);
+    Paint_Gradient_wx(m_idc_green_gradient, 0, 255, 0);
+    Paint_Gradient_wx(m_idc_blue_gradient, 0, 0, 255);
+
+    // Let the event propagate to other handlers
+    event.Skip();
 }

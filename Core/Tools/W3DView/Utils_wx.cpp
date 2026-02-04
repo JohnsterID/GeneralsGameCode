@@ -29,6 +29,60 @@
 #include "Utils.h"
 #include "Vector.h"
 #include <wx/filename.h>
+#include <wx/dcmemory.h>
+#include <wx/dcclient.h>
+#include <wx/panel.h>
+
+////////////////////////////////////////////////////////////////////////////
+//
+//  Paint_Gradient_wx
+//
+//  wxWidgets implementation of MFC Paint_Gradient
+//  Paints a color gradient from black to the specified base color
+//  MFC Reference: Utils.cpp:122-166 (Paint_Gradient)
+//
+////////////////////////////////////////////////////////////////////////////
+void Paint_Gradient_wx(wxWindow* window, unsigned char baseRed, unsigned char baseGreen, unsigned char baseBlue)
+{
+	if (!window) {
+		return;
+	}
+
+	// Get the window size
+	wxSize size = window->GetClientSize();
+	int width = size.GetWidth();
+	int height = size.GetHeight();
+
+	if (width <= 0 || height <= 0) {
+		return;
+	}
+
+	// Create a device context for the window
+	wxClientDC dc(window);
+
+	// Calculate width per shade (256 shades from black to full color)
+	float widthPerShade = static_cast<float>(width) / 256.0f;
+
+	// Loop through each shade and paint its sliver
+	float posX = 0.0f;
+	for (int shade = 0; shade < 256; shade++) {
+		// Calculate the color for this shade
+		unsigned char r = static_cast<unsigned char>(shade * baseRed / 255);
+		unsigned char g = static_cast<unsigned char>(shade * baseGreen / 255);
+		unsigned char b = static_cast<unsigned char>(shade * baseBlue / 255);
+
+		// Calculate sliver width (at least 1 pixel)
+		int sliverWidth = (widthPerShade >= 1.0f) ? static_cast<int>(widthPerShade) + 1 : 1;
+
+		// Paint this sliver
+		dc.SetPen(wxPen(wxColour(r, g, b)));
+		dc.SetBrush(wxBrush(wxColour(r, g, b)));
+		dc.DrawRectangle(static_cast<int>(posX), 0, sliverWidth, height);
+
+		// Increment the current position
+		posX += widthPerShade;
+	}
+}
 
 ////////////////////////////////////////////////////////////////////////////
 //

@@ -128,6 +128,7 @@ private:
     void OnChangeBlueEdit(wxCommandEvent &event);  // Text control change
     void OnChangeGreenEdit(wxCommandEvent &event);  // Text control change
     void OnChangeRedEdit(wxCommandEvent &event);  // Text control change
+    void OnPaint(wxPaintEvent &event);  // Paint gradients
     
     // MFC: Paint_Color_Window() - update color preview panel
     void Paint_Color_Window();

@@ -91,6 +91,7 @@ private:
     void OnOK(wxCommandEvent &event);
     void OnCancel(wxCommandEvent &event);
     void OnInitDialog(wxInitDialogEvent &event);
+    void OnPaint(wxPaintEvent &event);
 
     wxDECLARE_EVENT_TABLE();
 private:

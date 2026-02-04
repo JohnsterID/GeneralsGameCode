@@ -23,6 +23,10 @@
 #include "../w3dviewdoc_wx.h"
 #include <wx/xrc/xmlres.h>
 #include <wx/docview.h>
+#include <wx/dcclient.h>
+
+// Forward declaration for gradient painting utility
+void Paint_Gradient_wx(wxWindow* window, unsigned char baseRed, unsigned char baseGreen, unsigned char baseBlue);
 
 wxBEGIN_EVENT_TABLE(BackgroundColor, BackgroundColorBase)
     EVT_INIT_DIALOG(BackgroundColor::OnInitDialog)
@@ -32,6 +36,7 @@ wxBEGIN_EVENT_TABLE(BackgroundColor, BackgroundColorBase)
     EVT_CHECKBOX(XRCID("IDC_GRAYSCALE_CHECK"), BackgroundColor::OnGrayscaleCheck)
     EVT_BUTTON(wxID_OK, BackgroundColor::OnOK)
     EVT_BUTTON(wxID_CANCEL, BackgroundColor::OnCancel)
+    EVT_PAINT(BackgroundColor::OnPaint)
 wxEND_EVENT_TABLE()
 
 BackgroundColor::BackgroundColor(wxWindow *parent)
@@ -206,6 +211,24 @@ void BackgroundColor::OnGrayscaleCheck(wxCommandEvent &event)
     }
 }
 
+
+// ============================================================================
+// OnPaint - Paint color gradients for the RGB panels
+// ============================================================================
+// MFC Reference: BackgroundColorDialog.cpp:232-250 (WindowProc handling WM_PAINT)
+// Behavior: Paint gradients from black to red/green/blue on the gradient panels
+
+void BackgroundColor::OnPaint(wxPaintEvent &event)
+{
+    // Paint the gradients for each color panel
+    // MFC: Paint_Gradient(GetDlgItem(m_hWnd, IDC_RED_GRADIENT), 1, 0, 0);
+    Paint_Gradient_wx(m_idc_red_gradient, 255, 0, 0);
+    Paint_Gradient_wx(m_idc_green_gradient, 0, 255, 0);
+    Paint_Gradient_wx(m_idc_blue_gradient, 0, 0, 255);
+
+    // Let the event propagate to other handlers
+    event.Skip();
+}
 
 // ============================================================================
 // Phase 2.5: Dialog Infrastructure (Auto-generated)

@@ -22,7 +22,11 @@
 #include <wx/xrc/xmlres.h>
 
 wxBEGIN_EVENT_TABLE(PropPageRingScale, PropPageRingScaleBase)
-EVT_WINDOW_DESTROY(PropPageRingScale::OnDestroy)  // Window destruction
+    EVT_WINDOW_DESTROY(PropPageRingScale::OnDestroy)
+    EVT_SPIN(XRCID("IDC_INNER_SIZE_X_SPIN"), PropPageRingScale::OnInnerSizeXSpin)
+    EVT_SPIN(XRCID("IDC_INNER_SIZE_Y_SPIN"), PropPageRingScale::OnInnerSizeYSpin)
+    EVT_SPIN(XRCID("IDC_OUTER_SIZE_X_SPIN"), PropPageRingScale::OnOuterSizeXSpin)
+    EVT_SPIN(XRCID("IDC_OUTER_SIZE_Y_SPIN"), PropPageRingScale::OnOuterSizeYSpin)
     EVT_INIT_DIALOG(PropPageRingScale::OnInitDialog)
 wxEND_EVENT_TABLE()
 
@@ -224,11 +228,68 @@ bool PropPageRingScale::TransferDataToWindow()
 
 bool PropPageRingScale::TransferDataFromWindow()
 {
-    // TODO(Phase 3 - ColorBarClass): Extract scale keyframes
-    // MFC (RingSizePropPage): Reads from 4 ColorBarClass instances:
+    // Read size values from edit controls
+    double value;
+    if (m_idc_inner_size_x_edit && m_idc_inner_size_x_edit->GetValue().ToDouble(&value)) {
+        m_InnerSize.X = static_cast<float>(value);
+    }
+    if (m_idc_inner_size_y_edit && m_idc_inner_size_y_edit->GetValue().ToDouble(&value)) {
+        m_InnerSize.Y = static_cast<float>(value);
+    }
+    if (m_idc_outer_size_x_edit && m_idc_outer_size_x_edit->GetValue().ToDouble(&value)) {
+        m_OuterSize.X = static_cast<float>(value);
+    }
+    if (m_idc_outer_size_y_edit && m_idc_outer_size_y_edit->GetValue().ToDouble(&value)) {
+        m_OuterSize.Y = static_cast<float>(value);
+    }
+    // TODO(Phase 4 - ColorBarClass): Extract scale keyframes from ColorBarClass instances
     //   m_InnerScaleXBar, m_InnerScaleYBar, m_OuterScaleXBar, m_OuterScaleYBar
-    // Also reads size from edit controls:
-    //   m_InnerSize.X/Y = GetDlgItemFloat(IDC_INNER_SIZE_X/Y_EDIT)
-    //   m_OuterSize.X/Y = GetDlgItemFloat(IDC_OUTER_SIZE_X/Y_EDIT)
     return true;
+}
+
+
+// ============================================================================
+// Spin Button Handlers (MFC: OnNotify with Update_Spinner_Buddy)
+// ============================================================================
+
+void PropPageRingScale::UpdateSpinnerBuddy(wxTextCtrl* edit, int delta, float minVal, float maxVal)
+{
+    // MFC Reference: Utils.cpp Update_Spinner_Buddy
+    // Increments/decrements edit box value by delta/100.0 (0.01 per step)
+    if (!edit) return;
+    
+    double currentValue = 0.0;
+    edit->GetValue().ToDouble(&currentValue);
+    
+    currentValue += delta * 0.01f;  // Match MFC: delta / 100.0
+    
+    // Clamp to range
+    if (currentValue < minVal) currentValue = minVal;
+    if (currentValue > maxVal) currentValue = maxVal;
+    
+    edit->SetValue(wxString::Format("%.2f", currentValue));
+}
+
+void PropPageRingScale::OnInnerSizeXSpin(wxSpinEvent &event)
+{
+    UpdateSpinnerBuddy(m_idc_inner_size_x_edit, event.GetPosition(), 0.0f, 10000.0f);
+    // TODO(Phase 3 - Ring): m_RenderObj->Set_Inner_Extent(m_InnerSize)
+}
+
+void PropPageRingScale::OnInnerSizeYSpin(wxSpinEvent &event)
+{
+    UpdateSpinnerBuddy(m_idc_inner_size_y_edit, event.GetPosition(), 0.0f, 10000.0f);
+    // TODO(Phase 3 - Ring): m_RenderObj->Set_Inner_Extent(m_InnerSize)
+}
+
+void PropPageRingScale::OnOuterSizeXSpin(wxSpinEvent &event)
+{
+    UpdateSpinnerBuddy(m_idc_outer_size_x_edit, event.GetPosition(), 0.0f, 10000.0f);
+    // TODO(Phase 3 - Ring): m_RenderObj->Set_Outer_Extent(m_OuterSize)
+}
+
+void PropPageRingScale::OnOuterSizeYSpin(wxSpinEvent &event)
+{
+    UpdateSpinnerBuddy(m_idc_outer_size_y_edit, event.GetPosition(), 0.0f, 10000.0f);
+    // TODO(Phase 3 - Ring): m_RenderObj->Set_Outer_Extent(m_OuterSize)
 }

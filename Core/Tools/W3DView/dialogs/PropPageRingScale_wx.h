@@ -102,5 +102,14 @@ private:
     bool TransferDataFromWindow() override;
 
     // Event handlers (Phase 2)
-void OnDestroy(wxWindowDestroyEvent &event);  // Window destruction
+    void OnDestroy(wxWindowDestroyEvent &event);  // Window destruction
+
+    // Spin button handlers (MFC: OnNotify with Update_Spinner_Buddy)
+    void OnInnerSizeXSpin(wxSpinEvent &event);
+    void OnInnerSizeYSpin(wxSpinEvent &event);
+    void OnOuterSizeXSpin(wxSpinEvent &event);
+    void OnOuterSizeYSpin(wxSpinEvent &event);
+
+    // Helper: Update edit box from spin delta (MFC: Update_Spinner_Buddy)
+    void UpdateSpinnerBuddy(wxTextCtrl* edit, int delta, float minVal, float maxVal);
 };

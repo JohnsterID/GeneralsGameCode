@@ -143,6 +143,17 @@ void OnBoxRadio(wxCommandEvent &event);  // Button/Checkbox click
     // Helper functions
     void Update_Enable_State();  // Enable/disable controls based on selected shape type
 
+    // Spin button handlers (MFC: OnNotify with Update_Spinner_Buddy)
+    void OnBoxXSpin(wxSpinEvent &event);
+    void OnBoxYSpin(wxSpinEvent &event);
+    void OnBoxZSpin(wxSpinEvent &event);
+    void OnSphereRadiusSpin(wxSpinEvent &event);
+    void OnCylinderRadiusSpin(wxSpinEvent &event);
+    void OnCylinderHeightSpin(wxSpinEvent &event);
+
+    // Helper: Update edit box from spin delta (MFC: Update_Spinner_Buddy)
+    void UpdateSpinnerBuddy(wxTextCtrl* edit, int delta, float minVal, float maxVal);
+
     // Shape type enum (matches MFC IDC_*_RADIO control selection)
     enum ShapeType {
         SHAPE_BOX = 0,

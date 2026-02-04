@@ -24,9 +24,15 @@
 #include <wx/msgdlg.h>
 
 wxBEGIN_EVENT_TABLE(VolumeRandomizer, VolumeRandomizerBase)
-EVT_CHECKBOX(XRCID("IDC_BOX_RADIO"), VolumeRandomizer::OnBoxRadio)  // Button/Checkbox click
-    EVT_CHECKBOX(XRCID("IDC_CYLINDER_RADIO"), VolumeRandomizer::OnCylinderRadio)  // Button/Checkbox click
-    EVT_CHECKBOX(XRCID("IDC_SPHERE_RADIO"), VolumeRandomizer::OnSphereRadio)  // Button/Checkbox click
+    EVT_CHECKBOX(XRCID("IDC_BOX_RADIO"), VolumeRandomizer::OnBoxRadio)
+    EVT_CHECKBOX(XRCID("IDC_CYLINDER_RADIO"), VolumeRandomizer::OnCylinderRadio)
+    EVT_CHECKBOX(XRCID("IDC_SPHERE_RADIO"), VolumeRandomizer::OnSphereRadio)
+    EVT_SPIN(XRCID("IDC_BOX_X_SPIN"), VolumeRandomizer::OnBoxXSpin)
+    EVT_SPIN(XRCID("IDC_BOX_Y_SPIN"), VolumeRandomizer::OnBoxYSpin)
+    EVT_SPIN(XRCID("IDC_BOX_Z_SPIN"), VolumeRandomizer::OnBoxZSpin)
+    EVT_SPIN(XRCID("IDC_SPHERE_RADIUS_SPIN"), VolumeRandomizer::OnSphereRadiusSpin)
+    EVT_SPIN(XRCID("IDC_CYLINDER_RADIUS_SPIN"), VolumeRandomizer::OnCylinderRadiusSpin)
+    EVT_SPIN(XRCID("IDC_CYLINDER_HEIGHT_SPIN"), VolumeRandomizer::OnCylinderHeightSpin)
     EVT_INIT_DIALOG(VolumeRandomizer::OnInitDialog)
 wxEND_EVENT_TABLE()
 
@@ -311,4 +317,57 @@ bool VolumeRandomizer::TransferDataFromWindow()
     }
     
     return true;
+}
+
+
+// ============================================================================
+// Spin Button Handlers (MFC: OnNotify with Update_Spinner_Buddy)
+// ============================================================================
+
+void VolumeRandomizer::UpdateSpinnerBuddy(wxTextCtrl* edit, int delta, float minVal, float maxVal)
+{
+    // MFC Reference: Utils.cpp Update_Spinner_Buddy
+    // Increments/decrements edit box value by delta/100.0 (0.01 per step)
+    if (!edit) return;
+    
+    double currentValue = 0.0;
+    edit->GetValue().ToDouble(&currentValue);
+    
+    currentValue += delta * 0.01f;  // Match MFC: delta / 100.0
+    
+    // Clamp to range
+    if (currentValue < minVal) currentValue = minVal;
+    if (currentValue > maxVal) currentValue = maxVal;
+    
+    edit->SetValue(wxString::Format("%.2f", currentValue));
+}
+
+void VolumeRandomizer::OnBoxXSpin(wxSpinEvent &event)
+{
+    UpdateSpinnerBuddy(m_idc_box_x_edit, event.GetPosition(), 0.0f, 10000.0f);
+}
+
+void VolumeRandomizer::OnBoxYSpin(wxSpinEvent &event)
+{
+    UpdateSpinnerBuddy(m_idc_box_y_edit, event.GetPosition(), 0.0f, 10000.0f);
+}
+
+void VolumeRandomizer::OnBoxZSpin(wxSpinEvent &event)
+{
+    UpdateSpinnerBuddy(m_idc_box_z_edit, event.GetPosition(), 0.0f, 10000.0f);
+}
+
+void VolumeRandomizer::OnSphereRadiusSpin(wxSpinEvent &event)
+{
+    UpdateSpinnerBuddy(m_idc_sphere_radius_edit, event.GetPosition(), 0.0f, 10000.0f);
+}
+
+void VolumeRandomizer::OnCylinderRadiusSpin(wxSpinEvent &event)
+{
+    UpdateSpinnerBuddy(m_idc_cylinder_radius_edit, event.GetPosition(), 0.0f, 10000.0f);
+}
+
+void VolumeRandomizer::OnCylinderHeightSpin(wxSpinEvent &event)
+{
+    UpdateSpinnerBuddy(m_idc_cylinder_height_edit, event.GetPosition(), 0.0f, 10000.0f);
 }

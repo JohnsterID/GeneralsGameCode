@@ -149,5 +149,18 @@ private:
     bool TransferDataFromWindow() override;
 
     // Event handlers (Phase 2)
-void OnSpecifyVelocityRandom(wxCommandEvent &event);  // Button/Checkbox click
+    void OnSpecifyVelocityRandom(wxCommandEvent &event);  // Button/Checkbox click
+
+    // Spin button handlers (MFC: OnNotify with Update_Spinner_Buddy)
+    void OnVelocityXSpin(wxSpinEvent &event);
+    void OnVelocityYSpin(wxSpinEvent &event);
+    void OnVelocityZSpin(wxSpinEvent &event);
+    void OnAccelerationXSpin(wxSpinEvent &event);
+    void OnAccelerationYSpin(wxSpinEvent &event);
+    void OnAccelerationZSpin(wxSpinEvent &event);
+    void OnOutFactorSpin(wxSpinEvent &event);
+    void OnInheritanceFactorSpin(wxSpinEvent &event);
+
+    // Helper: Update edit box from spin delta (MFC: Update_Spinner_Buddy)
+    void UpdateSpinnerBuddy(wxTextCtrl* edit, int delta, float minVal, float maxVal);
 };

@@ -23,7 +23,15 @@
 #include <wx/spinbutt.h>
 
 wxBEGIN_EVENT_TABLE(PropPageEmitterPhysics, PropPageEmitterPhysicsBase)
-EVT_BUTTON(XRCID("IDC_SPECIFY_VELOCITY_RANDOM"), PropPageEmitterPhysics::OnSpecifyVelocityRandom)  // Button/Checkbox click
+    EVT_BUTTON(XRCID("IDC_SPECIFY_VELOCITY_RANDOM"), PropPageEmitterPhysics::OnSpecifyVelocityRandom)
+    EVT_SPIN(XRCID("IDC_VELOCITY_X_SPIN"), PropPageEmitterPhysics::OnVelocityXSpin)
+    EVT_SPIN(XRCID("IDC_VELOCITY_Y_SPIN"), PropPageEmitterPhysics::OnVelocityYSpin)
+    EVT_SPIN(XRCID("IDC_VELOCITY_Z_SPIN"), PropPageEmitterPhysics::OnVelocityZSpin)
+    EVT_SPIN(XRCID("IDC_ACCELERATION_X_SPIN"), PropPageEmitterPhysics::OnAccelerationXSpin)
+    EVT_SPIN(XRCID("IDC_ACCELERATION_Y_SPIN"), PropPageEmitterPhysics::OnAccelerationYSpin)
+    EVT_SPIN(XRCID("IDC_ACCELERATION_Z_SPIN"), PropPageEmitterPhysics::OnAccelerationZSpin)
+    EVT_SPIN(XRCID("IDC_OUT_FACTOR_SPIN"), PropPageEmitterPhysics::OnOutFactorSpin)
+    EVT_SPIN(XRCID("IDC_INHERITANCE_FACTOR_SPIN"), PropPageEmitterPhysics::OnInheritanceFactorSpin)
     EVT_INIT_DIALOG(PropPageEmitterPhysics::OnInitDialog)
 wxEND_EVENT_TABLE()
 
@@ -123,9 +131,102 @@ bool PropPageEmitterPhysics::TransferDataToWindow()
 
 bool PropPageEmitterPhysics::TransferDataFromWindow()
 {
-    // Extract data from controls and apply to business logic
-
-    // Data extraction handled by controls
-
+    // Extract data from controls
+    double value;
+    if (m_idc_out_factor_edit && m_idc_out_factor_edit->GetValue().ToDouble(&value)) {
+        m_OutFactor = static_cast<float>(value);
+    }
+    if (m_idc_inheritance_factor_edit && m_idc_inheritance_factor_edit->GetValue().ToDouble(&value)) {
+        m_InheritanceFactor = static_cast<float>(value);
+    }
+    if (m_idc_velocity_x_edit && m_idc_velocity_x_edit->GetValue().ToDouble(&value)) {
+        m_Velocity.X = static_cast<float>(value);
+    }
+    if (m_idc_velocity_y_edit && m_idc_velocity_y_edit->GetValue().ToDouble(&value)) {
+        m_Velocity.Y = static_cast<float>(value);
+    }
+    if (m_idc_velocity_z_edit && m_idc_velocity_z_edit->GetValue().ToDouble(&value)) {
+        m_Velocity.Z = static_cast<float>(value);
+    }
+    if (m_idc_acceleration_x_edit && m_idc_acceleration_x_edit->GetValue().ToDouble(&value)) {
+        m_Acceleration.X = static_cast<float>(value);
+    }
+    if (m_idc_acceleration_y_edit && m_idc_acceleration_y_edit->GetValue().ToDouble(&value)) {
+        m_Acceleration.Y = static_cast<float>(value);
+    }
+    if (m_idc_acceleration_z_edit && m_idc_acceleration_z_edit->GetValue().ToDouble(&value)) {
+        m_Acceleration.Z = static_cast<float>(value);
+    }
     return true;
+}
+
+
+// ============================================================================
+// Spin Button Handlers (MFC: OnNotify with Update_Spinner_Buddy)
+// ============================================================================
+
+void PropPageEmitterPhysics::UpdateSpinnerBuddy(wxTextCtrl* edit, int delta, float minVal, float maxVal)
+{
+    // MFC Reference: Utils.cpp Update_Spinner_Buddy
+    // Increments/decrements edit box value by delta/100.0 (0.01 per step)
+    if (!edit) return;
+    
+    double currentValue = 0.0;
+    edit->GetValue().ToDouble(&currentValue);
+    
+    currentValue += delta * 0.01f;  // Match MFC: delta / 100.0
+    
+    // Clamp to range
+    if (currentValue < minVal) currentValue = minVal;
+    if (currentValue > maxVal) currentValue = maxVal;
+    
+    edit->SetValue(wxString::Format("%.2f", currentValue));
+}
+
+void PropPageEmitterPhysics::OnVelocityXSpin(wxSpinEvent &event)
+{
+    UpdateSpinnerBuddy(m_idc_velocity_x_edit, event.GetPosition(), -10000.0f, 10000.0f);
+    // TODO(Phase 3 - Emitter): m_pEmitterList->Set_Velocity(velocity)
+}
+
+void PropPageEmitterPhysics::OnVelocityYSpin(wxSpinEvent &event)
+{
+    UpdateSpinnerBuddy(m_idc_velocity_y_edit, event.GetPosition(), -10000.0f, 10000.0f);
+    // TODO(Phase 3 - Emitter): m_pEmitterList->Set_Velocity(velocity)
+}
+
+void PropPageEmitterPhysics::OnVelocityZSpin(wxSpinEvent &event)
+{
+    UpdateSpinnerBuddy(m_idc_velocity_z_edit, event.GetPosition(), -10000.0f, 10000.0f);
+    // TODO(Phase 3 - Emitter): m_pEmitterList->Set_Velocity(velocity)
+}
+
+void PropPageEmitterPhysics::OnAccelerationXSpin(wxSpinEvent &event)
+{
+    UpdateSpinnerBuddy(m_idc_acceleration_x_edit, event.GetPosition(), -10000.0f, 10000.0f);
+    // TODO(Phase 3 - Emitter): m_pEmitterList->Set_Acceleration(acceleration)
+}
+
+void PropPageEmitterPhysics::OnAccelerationYSpin(wxSpinEvent &event)
+{
+    UpdateSpinnerBuddy(m_idc_acceleration_y_edit, event.GetPosition(), -10000.0f, 10000.0f);
+    // TODO(Phase 3 - Emitter): m_pEmitterList->Set_Acceleration(acceleration)
+}
+
+void PropPageEmitterPhysics::OnAccelerationZSpin(wxSpinEvent &event)
+{
+    UpdateSpinnerBuddy(m_idc_acceleration_z_edit, event.GetPosition(), -10000.0f, 10000.0f);
+    // TODO(Phase 3 - Emitter): m_pEmitterList->Set_Acceleration(acceleration)
+}
+
+void PropPageEmitterPhysics::OnOutFactorSpin(wxSpinEvent &event)
+{
+    UpdateSpinnerBuddy(m_idc_out_factor_edit, event.GetPosition(), -10000.0f, 10000.0f);
+    // TODO(Phase 3 - Emitter): m_pEmitterList->Set_Outward_Vel(value)
+}
+
+void PropPageEmitterPhysics::OnInheritanceFactorSpin(wxSpinEvent &event)
+{
+    UpdateSpinnerBuddy(m_idc_inheritance_factor_edit, event.GetPosition(), -10000.0f, 10000.0f);
+    // TODO(Phase 3 - Emitter): m_pEmitterList->Set_Vel_Inherit(value)
 }

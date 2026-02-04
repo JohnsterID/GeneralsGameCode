@@ -23,6 +23,12 @@
 #include <wx/spinbutt.h>
 
 wxBEGIN_EVENT_TABLE(PropPageEmitterLineprops, PropPageEmitterLinepropsBase)
+    EVT_SPIN(XRCID("IDC_SUBDIVISION_LEVEL_SPIN"), PropPageEmitterLineprops::OnSubdivisionLevelSpin)
+    EVT_SPIN(XRCID("IDC_NOISE_AMPLITUDE_SPIN"), PropPageEmitterLineprops::OnNoiseAmplitudeSpin)
+    EVT_SPIN(XRCID("IDC_MERGE_ABORT_FACTOR_SPIN"), PropPageEmitterLineprops::OnMergeAbortFactorSpin)
+    EVT_SPIN(XRCID("IDC_UVTILING_SPIN"), PropPageEmitterLineprops::OnUVTilingSpin)
+    EVT_SPIN(XRCID("IDC_UPERSEC_SPIN"), PropPageEmitterLineprops::OnUPerSecSpin)
+    EVT_SPIN(XRCID("IDC_VPERSEC_SPIN"), PropPageEmitterLineprops::OnVPerSecSpin)
     EVT_INIT_DIALOG(PropPageEmitterLineprops::OnInitDialog)
 wxEND_EVENT_TABLE()
 
@@ -159,4 +165,75 @@ bool PropPageEmitterLineprops::TransferDataFromWindow()
     }
 
     return true;
+}
+
+
+// ============================================================================
+// Spin Button Handlers (MFC: OnNotify with Update_Spinner_Buddy)
+// ============================================================================
+
+void PropPageEmitterLineprops::UpdateSpinnerBuddy(wxTextCtrl* edit, int delta, float minVal, float maxVal)
+{
+    // MFC Reference: Utils.cpp Update_Spinner_Buddy
+    // Increments/decrements edit box value by delta/100.0 (0.01 per step)
+    if (!edit) return;
+    
+    double currentValue = 0.0;
+    edit->GetValue().ToDouble(&currentValue);
+    
+    currentValue += delta * 0.01f;  // Match MFC: delta / 100.0
+    
+    // Clamp to range
+    if (currentValue < minVal) currentValue = minVal;
+    if (currentValue > maxVal) currentValue = maxVal;
+    
+    edit->SetValue(wxString::Format("%.2f", currentValue));
+}
+
+void PropPageEmitterLineprops::UpdateSpinnerBuddyInt(wxTextCtrl* edit, int delta, int minVal, int maxVal)
+{
+    // Integer version for subdivision level (whole numbers)
+    if (!edit) return;
+    
+    long currentValue = 0;
+    edit->GetValue().ToLong(&currentValue);
+    
+    currentValue += delta;
+    
+    // Clamp to range
+    if (currentValue < minVal) currentValue = minVal;
+    if (currentValue > maxVal) currentValue = maxVal;
+    
+    edit->SetValue(wxString::Format("%ld", currentValue));
+}
+
+void PropPageEmitterLineprops::OnSubdivisionLevelSpin(wxSpinEvent &event)
+{
+    // Subdivision level is an integer 0-8
+    UpdateSpinnerBuddyInt(m_idc_subdivision_level_edit, event.GetPosition(), 0, 8);
+}
+
+void PropPageEmitterLineprops::OnNoiseAmplitudeSpin(wxSpinEvent &event)
+{
+    UpdateSpinnerBuddy(m_idc_noise_amplitude_edit, event.GetPosition(), -10000.0f, 10000.0f);
+}
+
+void PropPageEmitterLineprops::OnMergeAbortFactorSpin(wxSpinEvent &event)
+{
+    UpdateSpinnerBuddy(m_idc_merge_abort_factor_edit, event.GetPosition(), -10000.0f, 10000.0f);
+}
+
+void PropPageEmitterLineprops::OnUVTilingSpin(wxSpinEvent &event)
+{
+    UpdateSpinnerBuddy(m_idc_uvtiling_edit, event.GetPosition(), 0.0f, 8.0f);
+}
+
+void PropPageEmitterLineprops::OnUPerSecSpin(wxSpinEvent &event)
+{
+    UpdateSpinnerBuddy(m_idc_upersec_edit, event.GetPosition(), 0.0f, 32.0f);
+}
+
+void PropPageEmitterLineprops::OnVPerSecSpin(wxSpinEvent &event)
+{
+    UpdateSpinnerBuddy(m_idc_vpersec_edit, event.GetPosition(), 0.0f, 32.0f);
 }

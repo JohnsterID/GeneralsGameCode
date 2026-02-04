@@ -22,7 +22,10 @@
 #include <wx/xrc/xmlres.h>
 
 wxBEGIN_EVENT_TABLE(PropPageSphereScale, PropPageSphereScaleBase)
-EVT_WINDOW_DESTROY(PropPageSphereScale::OnDestroy)  // Window destruction
+    EVT_WINDOW_DESTROY(PropPageSphereScale::OnDestroy)
+    EVT_SPIN(XRCID("IDC_SIZE_X_SPIN"), PropPageSphereScale::OnSizeXSpin)
+    EVT_SPIN(XRCID("IDC_SIZE_Y_SPIN"), PropPageSphereScale::OnSizeYSpin)
+    EVT_SPIN(XRCID("IDC_SIZE_Z_SPIN"), PropPageSphereScale::OnSizeZSpin)
     EVT_INIT_DIALOG(PropPageSphereScale::OnInitDialog)
 wxEND_EVENT_TABLE()
 
@@ -184,10 +187,59 @@ bool PropPageSphereScale::TransferDataToWindow()
 
 bool PropPageSphereScale::TransferDataFromWindow()
 {
-    // TODO(Phase 3 - ColorBarClass): Extract scale keyframes
-    // MFC (SphereSizePropPage): Reads from 3 ColorBarClass instances:
+    // Read size values from edit controls
+    double value;
+    if (m_idc_size_x_edit && m_idc_size_x_edit->GetValue().ToDouble(&value)) {
+        m_Size.X = static_cast<float>(value);
+    }
+    if (m_idc_size_y_edit && m_idc_size_y_edit->GetValue().ToDouble(&value)) {
+        m_Size.Y = static_cast<float>(value);
+    }
+    if (m_idc_size_z_edit && m_idc_size_z_edit->GetValue().ToDouble(&value)) {
+        m_Size.Z = static_cast<float>(value);
+    }
+    // TODO(Phase 4 - ColorBarClass): Extract scale keyframes from ColorBarClass instances
     //   m_ScaleXBar, m_ScaleYBar, m_ScaleZBar
-    // Also reads size from edit controls:
-    //   m_Size.X/Y/Z = GetDlgItemFloat(IDC_SIZE_X/Y/Z_EDIT)
     return true;
+}
+
+
+// ============================================================================
+// Spin Button Handlers (MFC: OnNotify with Update_Spinner_Buddy)
+// ============================================================================
+
+void PropPageSphereScale::UpdateSpinnerBuddy(wxTextCtrl* edit, int delta, float minVal, float maxVal)
+{
+    // MFC Reference: Utils.cpp Update_Spinner_Buddy
+    // Increments/decrements edit box value by delta/100.0 (0.01 per step)
+    if (!edit) return;
+    
+    double currentValue = 0.0;
+    edit->GetValue().ToDouble(&currentValue);
+    
+    currentValue += delta * 0.01f;  // Match MFC: delta / 100.0
+    
+    // Clamp to range
+    if (currentValue < minVal) currentValue = minVal;
+    if (currentValue > maxVal) currentValue = maxVal;
+    
+    edit->SetValue(wxString::Format("%.2f", currentValue));
+}
+
+void PropPageSphereScale::OnSizeXSpin(wxSpinEvent &event)
+{
+    UpdateSpinnerBuddy(m_idc_size_x_edit, event.GetPosition(), 0.0f, 10000.0f);
+    // TODO(Phase 3 - Sphere): m_RenderObj->Set_Extent(m_Size)
+}
+
+void PropPageSphereScale::OnSizeYSpin(wxSpinEvent &event)
+{
+    UpdateSpinnerBuddy(m_idc_size_y_edit, event.GetPosition(), 0.0f, 10000.0f);
+    // TODO(Phase 3 - Sphere): m_RenderObj->Set_Extent(m_Size)
+}
+
+void PropPageSphereScale::OnSizeZSpin(wxSpinEvent &event)
+{
+    UpdateSpinnerBuddy(m_idc_size_z_edit, event.GetPosition(), 0.0f, 10000.0f);
+    // TODO(Phase 3 - Sphere): m_RenderObj->Set_Extent(m_Size)
 }

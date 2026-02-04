@@ -143,5 +143,17 @@ private:
     void OnOK(wxCommandEvent &event);
     void OnCancel(wxCommandEvent &event);
 
+    // Spin button handlers (MFC: OnNotify with Update_Spinner_Buddy)
+    void OnSubdivisionLevelSpin(wxSpinEvent &event);
+    void OnNoiseAmplitudeSpin(wxSpinEvent &event);
+    void OnMergeAbortFactorSpin(wxSpinEvent &event);
+    void OnUVTilingSpin(wxSpinEvent &event);
+    void OnUPerSecSpin(wxSpinEvent &event);
+    void OnVPerSecSpin(wxSpinEvent &event);
+
+    // Helper: Update edit box from spin delta (MFC: Update_Spinner_Buddy)
+    void UpdateSpinnerBuddy(wxTextCtrl* edit, int delta, float minVal, float maxVal);
+    void UpdateSpinnerBuddyInt(wxTextCtrl* edit, int delta, int minVal, int maxVal);
+
     wxDECLARE_EVENT_TABLE();
 };

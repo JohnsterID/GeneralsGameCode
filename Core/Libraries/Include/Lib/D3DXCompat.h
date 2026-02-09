@@ -70,6 +70,387 @@
 #include <float.h>
 
 //-----------------------------------------------------------------------------
+// D3DXCompat Debug & Profiling Support
+//-----------------------------------------------------------------------------
+
+// Debug modes:
+// D3DXCOMPAT_DEBUG   - Enable runtime validation (correctness checking)
+// D3DXCOMPAT_PROFILE - Enable performance profiling (timing comparisons)
+#define D3DXCOMPAT_DEBUG
+// #define D3DXCOMPAT_PROFILE
+
+#if defined(D3DXCOMPAT_DEBUG) || defined(D3DXCOMPAT_PROFILE)
+#include <stdio.h>
+#include <stdarg.h>
+#include <math.h>
+
+#ifdef _WIN32
+#include <windows.h>
+#else
+#include <time.h>
+#endif
+
+//-----------------------------------------------------------------------------
+// Logging Infrastructure
+//-----------------------------------------------------------------------------
+
+static FILE* g_d3dxcompat_log = nullptr;
+static bool g_d3dxcompat_log_tried = false;
+
+inline void D3DXCompat_OpenLog()
+{
+    if (!g_d3dxcompat_log && !g_d3dxcompat_log_tried)
+    {
+        g_d3dxcompat_log_tried = true;
+        // Try multiple paths for Wine compatibility
+        const char* paths[] = {
+            "C:\\d3dxcompat_debug.log",
+            "d3dxcompat_debug.log",
+            "Z:\\tmp\\d3dxcompat_debug.log",
+            nullptr
+        };
+        for (int i = 0; paths[i] && !g_d3dxcompat_log; i++)
+            g_d3dxcompat_log = fopen(paths[i], "w");
+        if (g_d3dxcompat_log)
+        {
+            fprintf(g_d3dxcompat_log, "=== D3DXCompat Debug Log ===\n\n");
+            fflush(g_d3dxcompat_log);
+        }
+    }
+}
+
+inline void D3DXCompat_Log(const char* fmt, ...)
+{
+    D3DXCompat_OpenLog();
+    
+    char buf[1024];
+    va_list args;
+    va_start(args, fmt);
+    vsnprintf(buf, sizeof(buf), fmt, args);
+    va_end(args);
+    
+    // Always output to stderr (Wine redirects to terminal)
+    fputs("[D3DXCompat] ", stderr);
+    fputs(buf, stderr);
+    fflush(stderr);
+    
+    // Output to debugger (Wine captures this)
+#ifdef _WIN32
+    OutputDebugStringA(buf);
+#endif
+    
+    // Also output to file if available
+    if (g_d3dxcompat_log)
+    {
+        fputs(buf, g_d3dxcompat_log);
+        fflush(g_d3dxcompat_log);
+    }
+}
+
+inline void D3DXCompat_LogMatrix(const char* name, const float* m)
+{
+    D3DXCompat_Log("%s:\n", name);
+    D3DXCompat_Log("  [%10.4f %10.4f %10.4f %10.4f]\n", m[0], m[1], m[2], m[3]);
+    D3DXCompat_Log("  [%10.4f %10.4f %10.4f %10.4f]\n", m[4], m[5], m[6], m[7]);
+    D3DXCompat_Log("  [%10.4f %10.4f %10.4f %10.4f]\n", m[8], m[9], m[10], m[11]);
+    D3DXCompat_Log("  [%10.4f %10.4f %10.4f %10.4f]\n", m[12], m[13], m[14], m[15]);
+}
+
+//-----------------------------------------------------------------------------
+// High-Resolution Timer for Profiling
+//-----------------------------------------------------------------------------
+
+#ifdef D3DXCOMPAT_PROFILE
+
+struct D3DXCompat_Timer
+{
+#ifdef _WIN32
+    LARGE_INTEGER start;
+    static LARGE_INTEGER freq;
+    static bool freq_init;
+#else
+    struct timespec start;
+#endif
+
+    inline void Start()
+    {
+#ifdef _WIN32
+        if (!freq_init) { QueryPerformanceFrequency(&freq); freq_init = true; }
+        QueryPerformanceCounter(&start);
+#else
+        clock_gettime(CLOCK_MONOTONIC, &start);
+#endif
+    }
+
+    inline double ElapsedNs()
+    {
+#ifdef _WIN32
+        LARGE_INTEGER end;
+        QueryPerformanceCounter(&end);
+        return (double)(end.QuadPart - start.QuadPart) * 1e9 / freq.QuadPart;
+#else
+        struct timespec end;
+        clock_gettime(CLOCK_MONOTONIC, &end);
+        return (end.tv_sec - start.tv_sec) * 1e9 + (end.tv_nsec - start.tv_nsec);
+#endif
+    }
+};
+
+#ifdef _WIN32
+LARGE_INTEGER D3DXCompat_Timer::freq = {};
+bool D3DXCompat_Timer::freq_init = false;
+#endif
+
+struct D3DXCompat_PerfStats
+{
+    int calls;
+    double total_ns_wwmath;
+    double total_ns_native;
+    double max_ns_wwmath;
+    double max_ns_native;
+
+    void Reset() { calls = 0; total_ns_wwmath = total_ns_native = max_ns_wwmath = max_ns_native = 0; }
+    void AddWWMath(double ns) { total_ns_wwmath += ns; if (ns > max_ns_wwmath) max_ns_wwmath = ns; }
+    void AddNative(double ns) { total_ns_native += ns; if (ns > max_ns_native) max_ns_native = ns; calls++; }
+    double AvgWWMath() const { return calls > 0 ? total_ns_wwmath / calls : 0; }
+    double AvgNative() const { return calls > 0 ? total_ns_native / calls : 0; }
+};
+
+static D3DXCompat_PerfStats g_perf_multiply = {};
+static D3DXCompat_PerfStats g_perf_transpose = {};
+static D3DXCompat_PerfStats g_perf_inverse = {};
+static D3DXCompat_PerfStats g_perf_transform = {};
+
+#endif // D3DXCOMPAT_PROFILE
+
+//-----------------------------------------------------------------------------
+// Reference Implementations (Wine-style) for Validation
+//-----------------------------------------------------------------------------
+
+inline bool D3DXCompat_MatricesEqual(const float* a, const float* b, float epsilon = 0.0001f)
+{
+    for (int i = 0; i < 16; i++)
+        if (fabsf(a[i] - b[i]) > epsilon)
+            return false;
+    return true;
+}
+
+inline void D3DXCompat_NativeMultiply(float* out, const float* m1, const float* m2)
+{
+    float temp[16];
+    for (int i = 0; i < 4; i++)
+        for (int j = 0; j < 4; j++)
+            temp[i*4+j] = m1[i*4+0]*m2[0*4+j] + m1[i*4+1]*m2[1*4+j] + m1[i*4+2]*m2[2*4+j] + m1[i*4+3]*m2[3*4+j];
+    for (int i = 0; i < 16; i++) out[i] = temp[i];
+}
+
+inline void D3DXCompat_NativeTranspose(float* out, const float* m)
+{
+    float temp[16];
+    for (int i = 0; i < 4; i++)
+        for (int j = 0; j < 4; j++)
+            temp[i*4+j] = m[j*4+i];
+    for (int i = 0; i < 16; i++) out[i] = temp[i];
+}
+
+inline bool D3DXCompat_NativeInverse(float* out, float* pDet, const float* m)
+{
+    float det, t[6], v[16];
+    t[0] = m[10]*m[15] - m[11]*m[14]; t[1] = m[9]*m[15] - m[11]*m[13]; t[2] = m[9]*m[14] - m[10]*m[13];
+    t[3] = m[8]*m[15] - m[11]*m[12];  t[4] = m[8]*m[14] - m[10]*m[12]; t[5] = m[8]*m[13] - m[9]*m[12];
+    v[0] = m[5]*t[0] - m[6]*t[1] + m[7]*t[2]; v[4] = -m[4]*t[0] + m[6]*t[3] - m[7]*t[4];
+    v[8] = m[4]*t[1] - m[5]*t[3] + m[7]*t[5]; v[12]= -m[4]*t[2] + m[5]*t[4] - m[6]*t[5];
+    det = m[0]*v[0] + m[1]*v[4] + m[2]*v[8] + m[3]*v[12];
+    if (pDet) *pDet = det;
+    if (fabsf(det) < 1e-10f) return false;
+    t[0] = m[2]*m[7] - m[3]*m[6]; t[1] = m[1]*m[7] - m[3]*m[5]; t[2] = m[1]*m[6] - m[2]*m[5];
+    t[3] = m[0]*m[7] - m[3]*m[4]; t[4] = m[0]*m[6] - m[2]*m[4]; t[5] = m[0]*m[5] - m[1]*m[4];
+    v[1] = -m[1]*(m[10]*m[15]-m[11]*m[14]) + m[2]*(m[9]*m[15]-m[11]*m[13]) - m[3]*(m[9]*m[14]-m[10]*m[13]);
+    v[5] =  m[0]*(m[10]*m[15]-m[11]*m[14]) - m[2]*(m[8]*m[15]-m[11]*m[12]) + m[3]*(m[8]*m[14]-m[10]*m[12]);
+    v[9] = -m[0]*(m[9]*m[15]-m[11]*m[13]) + m[1]*(m[8]*m[15]-m[11]*m[12]) - m[3]*(m[8]*m[13]-m[9]*m[12]);
+    v[13]=  m[0]*(m[9]*m[14]-m[10]*m[13]) - m[1]*(m[8]*m[14]-m[10]*m[12]) + m[2]*(m[8]*m[13]-m[9]*m[12]);
+    v[2] =  m[13]*t[0] - m[14]*t[1] + m[15]*t[2]; v[6] = -m[12]*t[0] + m[14]*t[3] - m[15]*t[4];
+    v[10]=  m[12]*t[1] - m[13]*t[3] + m[15]*t[5]; v[14]= -m[12]*t[2] + m[13]*t[4] - m[14]*t[5];
+    v[3] = -m[9]*t[0] + m[10]*t[1] - m[11]*t[2]; v[7] = m[8]*t[0] - m[10]*t[3] + m[11]*t[4];
+    v[11]= -m[8]*t[1] + m[9]*t[3] - m[11]*t[5]; v[15]= m[8]*t[2] - m[9]*t[4] + m[10]*t[5];
+    det = 1.0f / det;
+    for (int i = 0; i < 16; i++) out[i] = v[i] * det;
+    return true;
+}
+
+inline void D3DXCompat_NativeVec3Transform(float* out, const float* v, const float* m)
+{
+    out[0] = v[0]*m[0] + v[1]*m[4] + v[2]*m[8]  + m[12];
+    out[1] = v[0]*m[1] + v[1]*m[5] + v[2]*m[9]  + m[13];
+    out[2] = v[0]*m[2] + v[1]*m[6] + v[2]*m[10] + m[14];
+    out[3] = v[0]*m[3] + v[1]*m[7] + v[2]*m[11] + m[15];
+}
+
+//-----------------------------------------------------------------------------
+// Debug Statistics
+//-----------------------------------------------------------------------------
+
+static int g_d3dxcompat_multiply_calls = 0;
+static int g_d3dxcompat_multiply_mismatches = 0;
+static int g_d3dxcompat_transpose_calls = 0;
+static int g_d3dxcompat_transpose_mismatches = 0;
+static int g_d3dxcompat_inverse_calls = 0;
+static int g_d3dxcompat_inverse_mismatches = 0;
+static int g_d3dxcompat_vec3transform_calls = 0;
+static int g_d3dxcompat_vec3transform_mismatches = 0;
+static int g_d3dxcompat_identity_calls = 0;
+static int g_d3dxcompat_scaling_calls = 0;
+static int g_d3dxcompat_translation_calls = 0;
+static int g_d3dxcompat_rotationz_calls = 0;
+static int g_d3dxcompat_vec4dot_calls = 0;
+
+//-----------------------------------------------------------------------------
+// Debug Macros
+//-----------------------------------------------------------------------------
+
+#ifdef D3DXCOMPAT_DEBUG
+
+#define D3DXCOMPAT_DEBUG_MULTIPLY(pOut, pM1, pM2) \
+    do { \
+        g_d3dxcompat_multiply_calls++; \
+        float expected[16]; \
+        D3DXCompat_NativeMultiply(expected, (const float*)pM1, (const float*)pM2); \
+        if (!D3DXCompat_MatricesEqual((const float*)pOut, expected)) { \
+            g_d3dxcompat_multiply_mismatches++; \
+            D3DXCompat_Log("\n!!! MISMATCH MatrixMultiply #%d !!!\n", g_d3dxcompat_multiply_calls); \
+            D3DXCompat_LogMatrix("M1", (const float*)pM1); \
+            D3DXCompat_LogMatrix("M2", (const float*)pM2); \
+            D3DXCompat_LogMatrix("Result", (const float*)pOut); \
+            D3DXCompat_LogMatrix("Expected", expected); \
+        } else if (g_d3dxcompat_multiply_calls <= 10 || g_d3dxcompat_multiply_calls % 1000 == 0) { \
+            D3DXCompat_Log("MatrixMultiply #%d: OK\n", g_d3dxcompat_multiply_calls); \
+        } \
+    } while(0)
+
+#define D3DXCOMPAT_DEBUG_TRANSPOSE(pOut, pM) \
+    do { \
+        g_d3dxcompat_transpose_calls++; \
+        float expected[16]; \
+        D3DXCompat_NativeTranspose(expected, (const float*)pM); \
+        if (!D3DXCompat_MatricesEqual((const float*)pOut, expected)) { \
+            g_d3dxcompat_transpose_mismatches++; \
+            D3DXCompat_Log("\n!!! MISMATCH MatrixTranspose #%d !!!\n", g_d3dxcompat_transpose_calls); \
+            D3DXCompat_LogMatrix("Input", (const float*)pM); \
+            D3DXCompat_LogMatrix("Result", (const float*)pOut); \
+            D3DXCompat_LogMatrix("Expected", expected); \
+        } else if (g_d3dxcompat_transpose_calls <= 10 || g_d3dxcompat_transpose_calls % 1000 == 0) { \
+            D3DXCompat_Log("MatrixTranspose #%d: OK\n", g_d3dxcompat_transpose_calls); \
+        } \
+    } while(0)
+
+#define D3DXCOMPAT_DEBUG_INVERSE(pOut, pDet, pM) \
+    do { \
+        g_d3dxcompat_inverse_calls++; \
+        float expected[16], expected_det; \
+        bool ok = D3DXCompat_NativeInverse(expected, &expected_det, (const float*)pM); \
+        if (pOut && ok && !D3DXCompat_MatricesEqual((const float*)pOut, expected)) { \
+            g_d3dxcompat_inverse_mismatches++; \
+            D3DXCompat_Log("\n!!! MISMATCH MatrixInverse #%d !!!\n", g_d3dxcompat_inverse_calls); \
+            D3DXCompat_LogMatrix("Input", (const float*)pM); \
+            D3DXCompat_LogMatrix("Result", (const float*)pOut); \
+            D3DXCompat_LogMatrix("Expected", expected); \
+        } else if (g_d3dxcompat_inverse_calls <= 10 || g_d3dxcompat_inverse_calls % 1000 == 0) { \
+            D3DXCompat_Log("MatrixInverse #%d: OK\n", g_d3dxcompat_inverse_calls); \
+        } \
+    } while(0)
+
+#define D3DXCOMPAT_DEBUG_VEC3TRANSFORM(pOut, pV, pM) \
+    do { \
+        g_d3dxcompat_vec3transform_calls++; \
+        float expected[4], vin[3] = {((const float*)pV)[0], ((const float*)pV)[1], ((const float*)pV)[2]}; \
+        D3DXCompat_NativeVec3Transform(expected, vin, (const float*)pM); \
+        const float* out = (const float*)pOut; \
+        bool match = fabsf(out[0]-expected[0])<0.0001f && fabsf(out[1]-expected[1])<0.0001f && \
+                     fabsf(out[2]-expected[2])<0.0001f && fabsf(out[3]-expected[3])<0.0001f; \
+        if (!match) { \
+            g_d3dxcompat_vec3transform_mismatches++; \
+            D3DXCompat_Log("\n!!! MISMATCH Vec3Transform #%d !!!\n", g_d3dxcompat_vec3transform_calls); \
+            D3DXCompat_Log("V: [%.4f, %.4f, %.4f]\n", vin[0], vin[1], vin[2]); \
+            D3DXCompat_LogMatrix("M", (const float*)pM); \
+            D3DXCompat_Log("Result:   [%.4f, %.4f, %.4f, %.4f]\n", out[0], out[1], out[2], out[3]); \
+            D3DXCompat_Log("Expected: [%.4f, %.4f, %.4f, %.4f]\n", expected[0], expected[1], expected[2], expected[3]); \
+        } else if (g_d3dxcompat_vec3transform_calls <= 10 || g_d3dxcompat_vec3transform_calls % 1000 == 0) { \
+            D3DXCompat_Log("Vec3Transform #%d: OK\n", g_d3dxcompat_vec3transform_calls); \
+        } \
+    } while(0)
+
+#define D3DXCOMPAT_DEBUG_CALL(name) \
+    do { \
+        g_d3dxcompat_##name##_calls++; \
+        if (g_d3dxcompat_##name##_calls <= 10 || g_d3dxcompat_##name##_calls % 1000 == 0) \
+            D3DXCompat_Log(#name " #%d\n", g_d3dxcompat_##name##_calls); \
+    } while(0)
+
+#else
+#define D3DXCOMPAT_DEBUG_MULTIPLY(pOut, pM1, pM2)
+#define D3DXCOMPAT_DEBUG_TRANSPOSE(pOut, pM)
+#define D3DXCOMPAT_DEBUG_INVERSE(pOut, pDet, pM)
+#define D3DXCOMPAT_DEBUG_VEC3TRANSFORM(pOut, pV, pM)
+#define D3DXCOMPAT_DEBUG_CALL(name)
+#endif
+
+//-----------------------------------------------------------------------------
+// Profile Macros
+//-----------------------------------------------------------------------------
+
+#ifdef D3DXCOMPAT_PROFILE
+#define D3DXCOMPAT_PROFILE_MULTIPLY(pOut, pM1, pM2) \
+    do { D3DXCompat_Timer t; float tmp[16]; t.Start(); \
+         D3DXCompat_NativeMultiply(tmp, (const float*)pM1, (const float*)pM2); \
+         g_perf_multiply.AddNative(t.ElapsedNs()); } while(0)
+#else
+#define D3DXCOMPAT_PROFILE_MULTIPLY(pOut, pM1, pM2)
+#endif
+
+//-----------------------------------------------------------------------------
+// Summary Output
+//-----------------------------------------------------------------------------
+
+#define D3DXCOMPAT_DEBUG_SUMMARY() \
+    do { \
+        D3DXCompat_Log("\n========== D3DXCompat Summary ==========\n"); \
+        D3DXCompat_Log("%-20s %8s %8s\n", "Function", "Calls", "Errors"); \
+        D3DXCompat_Log("%-20s %8d %8d\n", "MatrixMultiply", g_d3dxcompat_multiply_calls, g_d3dxcompat_multiply_mismatches); \
+        D3DXCompat_Log("%-20s %8d %8d\n", "MatrixTranspose", g_d3dxcompat_transpose_calls, g_d3dxcompat_transpose_mismatches); \
+        D3DXCompat_Log("%-20s %8d %8d\n", "MatrixInverse", g_d3dxcompat_inverse_calls, g_d3dxcompat_inverse_mismatches); \
+        D3DXCompat_Log("%-20s %8d %8d\n", "Vec3Transform", g_d3dxcompat_vec3transform_calls, g_d3dxcompat_vec3transform_mismatches); \
+        D3DXCompat_Log("%-20s %8d\n", "MatrixIdentity", g_d3dxcompat_identity_calls); \
+        D3DXCompat_Log("%-20s %8d\n", "MatrixScaling", g_d3dxcompat_scaling_calls); \
+        D3DXCompat_Log("%-20s %8d\n", "MatrixTranslation", g_d3dxcompat_translation_calls); \
+        D3DXCompat_Log("%-20s %8d\n", "MatrixRotationZ", g_d3dxcompat_rotationz_calls); \
+        D3DXCompat_Log("%-20s %8d\n", "Vec4Dot", g_d3dxcompat_vec4dot_calls); \
+    } while(0)
+
+#ifdef D3DXCOMPAT_PROFILE
+#define D3DXCOMPAT_PROFILE_SUMMARY() \
+    do { \
+        D3DXCompat_Log("\n========== Performance ==========\n"); \
+        if (g_perf_multiply.calls > 0) \
+            D3DXCompat_Log("MatrixMultiply: %d calls, WWMath avg=%.1fns, Native avg=%.1fns\n", \
+                g_perf_multiply.calls, g_perf_multiply.AvgWWMath(), g_perf_multiply.AvgNative()); \
+    } while(0)
+#else
+#define D3DXCOMPAT_PROFILE_SUMMARY()
+#endif
+
+#else
+// All no-ops when neither debug nor profile
+#define D3DXCOMPAT_DEBUG_MULTIPLY(pOut, pM1, pM2)
+#define D3DXCOMPAT_DEBUG_TRANSPOSE(pOut, pM)
+#define D3DXCOMPAT_DEBUG_INVERSE(pOut, pDet, pM)
+#define D3DXCOMPAT_DEBUG_VEC3TRANSFORM(pOut, pV, pM)
+#define D3DXCOMPAT_DEBUG_CALL(name)
+#define D3DXCOMPAT_DEBUG_SUMMARY()
+#define D3DXCOMPAT_PROFILE_MULTIPLY(pOut, pM1, pM2)
+#define D3DXCOMPAT_PROFILE_SUMMARY()
+#endif
+
+//-----------------------------------------------------------------------------
 // D3DX Constants
 //-----------------------------------------------------------------------------
 
@@ -114,6 +495,25 @@
     #include "vector4.h"
     #include "matrix3d.h"
     #include "matrix4.h"
+#endif
+
+#ifdef D3DXCOMPAT_DEBUG
+// Static initialization to count translation units loading D3DXCompat
+namespace {
+    static int& get_tu_count() { static int count = 0; return count; }
+    struct D3DXCompat_Init {
+        D3DXCompat_Init() {
+            int& c = get_tu_count();
+            c++;
+            // Only log the first few to avoid spam
+            if (c <= 3 || c == 100 || c == 500) {
+                fprintf(stderr, "[D3DXCompat] TU #%d loaded (debug enabled)\n", c);
+                fflush(stderr);
+            }
+        }
+    };
+    static D3DXCompat_Init g_d3dxcompat_init;
+}
 #endif
 
 // Forward declare D3DX types (we'll define compatibility layer)
@@ -164,7 +564,17 @@ struct D3DXVECTOR4
 
 struct D3DXMATRIX : public D3DMATRIX
 {
-    D3DXMATRIX() {}
+    D3DXMATRIX()
+    {
+#ifdef D3DXCOMPAT_DEBUG
+        static bool first_matrix = true;
+        if (first_matrix)
+        {
+            first_matrix = false;
+            D3DXCompat_Log("D3DXMATRIX: First instance created\n");
+        }
+#endif
+    }
     
     // Constructor from 16 float values (row-major order)
     D3DXMATRIX(float m00, float m01, float m02, float m03,
@@ -219,14 +629,17 @@ struct D3DXMATRIX : public D3DMATRIX
 // Vector4 Operations
 //-----------------------------------------------------------------------------
 
-/**
- * D3DXVec4Dot - Compute dot product of two 4D vectors
- * Maps to: Vector4::Dot_Product()
- */
+// D3DXVec4Dot - Compute dot product of two 4D vectors
 inline float D3DXVec4Dot(const D3DXVECTOR4* pV1, const D3DXVECTOR4* pV2)
 {
-    if (!pV1 || !pV2) return 0.0f;
+    if (!pV1 || !pV2)
+        return 0.0f;
     
+#ifdef D3DXCOMPAT_DEBUG
+    static bool first = true;
+    if (first) { first = false; fputs("[D3DXCompat] D3DXVec4Dot FIRST CALL\n", stderr); fflush(stderr); }
+#endif
+    D3DXCOMPAT_DEBUG_CALL(vec4dot);
     Vector4 v1(pV1->x, pV1->y, pV1->z, pV1->w);
     Vector4 v2(pV2->x, pV2->y, pV2->z, pV2->w);
     
@@ -262,30 +675,26 @@ inline D3DXVECTOR4* D3DXVec4Transform(
 // Vector3 Operations
 //-----------------------------------------------------------------------------
 
-/**
- * D3DXVec3Transform - Transform 3D vector by 4x4 matrix (homogeneous)
- * Maps to: Matrix4x4::Transform_Vector()
- * Note: Treats input as (x, y, z, 1) for position transformation
- */
+// D3DXVec3Transform - Transform 3D vector by 4x4 matrix (homogeneous)
+// D3D convention: row vector * matrix, i.e. [x,y,z,1] * M
+// Native implementation for correct D3D behavior
 inline D3DXVECTOR4* D3DXVec3Transform(
     D3DXVECTOR4* pOut,
     const D3DXVECTOR3* pV,
     const D3DXMATRIX* pM)
 {
-    if (!pOut || !pV || !pM) return pOut;
-    
-    Matrix4x4 mat = *(const Matrix4x4*)pM;
-    Vector3 vec(pV->x, pV->y, pV->z);
-    Vector4 result;
-    
-    // Transform as homogeneous point (w=1)
-    Matrix4x4::Transform_Vector(mat, vec, &result);
-    
-    pOut->x = result.X;
-    pOut->y = result.Y;
-    pOut->z = result.Z;
-    pOut->w = result.W;
-    
+    if (!pOut || !pV || !pM)
+        return pOut;
+
+    // D3D uses row vectors: result = [x,y,z,1] * M
+    // result.x = x*_11 + y*_21 + z*_31 + 1*_41
+    float x = pV->x, y = pV->y, z = pV->z;
+    pOut->x = x * pM->_11 + y * pM->_21 + z * pM->_31 + pM->_41;
+    pOut->y = x * pM->_12 + y * pM->_22 + z * pM->_32 + pM->_42;
+    pOut->z = x * pM->_13 + y * pM->_23 + z * pM->_33 + pM->_43;
+    pOut->w = x * pM->_14 + y * pM->_24 + z * pM->_34 + pM->_44;
+
+    D3DXCOMPAT_DEBUG_VEC3TRANSFORM(pOut, pV, pM);
     return pOut;
 }
 
@@ -293,47 +702,104 @@ inline D3DXVECTOR4* D3DXVec3Transform(
 // Matrix Operations
 //-----------------------------------------------------------------------------
 
-/**
- * D3DXMatrixTranspose - Transpose a 4x4 matrix
- * Maps to: Matrix4x4::Transpose()
- */
+// D3DXMatrixTranspose - Transpose a 4x4 matrix
+// Native D3D implementation for correct behavior
 inline D3DXMATRIX* D3DXMatrixTranspose(
     D3DXMATRIX* pOut,
     const D3DXMATRIX* pM)
 {
-    if (!pOut || !pM) return pOut;
-    
-    Matrix4x4 mat = *(const Matrix4x4*)pM;
-    Matrix4x4 result = mat.Transpose();
-    
-    *(Matrix4x4*)pOut = result;
-    
+    if (!pOut || !pM)
+        return pOut;
+
+    // Save input for debug validation (pOut may alias pM)
+#ifdef D3DXCOMPAT_DEBUG
+    D3DXMATRIX inputCopy = *pM;
+#endif
+
+    // Native transpose: out[i][j] = in[j][i]
+    // Use temp to handle in-place transpose (pOut == pM)
+    D3DXMATRIX temp;
+    temp._11 = pM->_11; temp._12 = pM->_21; temp._13 = pM->_31; temp._14 = pM->_41;
+    temp._21 = pM->_12; temp._22 = pM->_22; temp._23 = pM->_32; temp._24 = pM->_42;
+    temp._31 = pM->_13; temp._32 = pM->_23; temp._33 = pM->_33; temp._34 = pM->_43;
+    temp._41 = pM->_14; temp._42 = pM->_24; temp._43 = pM->_34; temp._44 = pM->_44;
+    *pOut = temp;
+
+#ifdef D3DXCOMPAT_DEBUG
+    D3DXCOMPAT_DEBUG_TRANSPOSE(pOut, &inputCopy);
+#endif
     return pOut;
 }
 
-/**
- * D3DXMatrixInverse - Compute inverse of a 4x4 matrix
- * Maps to: Matrix4x4::Inverse()
- * 
- * Calculates the matrix inverse using adjugate/determinant method.
- * Returns nullptr if the matrix is singular (determinant near zero).
- * Determinant is written to pDeterminant if provided.
- */
+// D3DXMatrixInverse - Compute inverse of a 4x4 matrix
+// Native D3D implementation using adjugate/determinant method
+// Returns nullptr if the matrix is singular (determinant near zero)
 inline D3DXMATRIX* D3DXMatrixInverse(
     D3DXMATRIX* pOut,
     float* pDeterminant,
     const D3DXMATRIX* pM)
 {
-    if (!pOut || !pM) return pOut;
-    
-    Matrix4x4* result = Matrix4x4::Inverse(
-        (Matrix4x4*)pOut,
-        pDeterminant,
-        (const Matrix4x4*)pM
-    );
-    
-    // Return nullptr if matrix is singular (determinant near zero)
-    return result ? pOut : nullptr;
+    if (!pOut || !pM)
+        return pOut;
+
+    const float* m = (const float*)pM;
+    float v[16], t[6], det;
+
+    // Calculate pairs for first 8 cofactors
+    t[0] = m[10] * m[15] - m[11] * m[14];
+    t[1] = m[9] * m[15] - m[11] * m[13];
+    t[2] = m[9] * m[14] - m[10] * m[13];
+    t[3] = m[8] * m[15] - m[11] * m[12];
+    t[4] = m[8] * m[14] - m[10] * m[12];
+    t[5] = m[8] * m[13] - m[9] * m[12];
+
+    // Calculate first 4 cofactors
+    v[0] = m[5] * t[0] - m[6] * t[1] + m[7] * t[2];
+    v[4] = -(m[4] * t[0] - m[6] * t[3] + m[7] * t[4]);
+    v[8] = m[4] * t[1] - m[5] * t[3] + m[7] * t[5];
+    v[12] = -(m[4] * t[2] - m[5] * t[4] + m[6] * t[5]);
+
+    // Calculate determinant
+    det = m[0] * v[0] + m[1] * v[4] + m[2] * v[8] + m[3] * v[12];
+
+    if (pDeterminant)
+        *pDeterminant = det;
+
+    // Check for singular matrix
+    if (fabsf(det) < 1e-10f)
+        return nullptr;
+
+    // Calculate pairs for second 8 cofactors
+    t[0] = m[2] * m[7] - m[3] * m[6];
+    t[1] = m[1] * m[7] - m[3] * m[5];
+    t[2] = m[1] * m[6] - m[2] * m[5];
+    t[3] = m[0] * m[7] - m[3] * m[4];
+    t[4] = m[0] * m[6] - m[2] * m[4];
+    t[5] = m[0] * m[5] - m[1] * m[4];
+
+    v[1] = -(m[1] * (m[10] * m[15] - m[11] * m[14]) - m[2] * (m[9] * m[15] - m[11] * m[13]) + m[3] * (m[9] * m[14] - m[10] * m[13]));
+    v[5] = m[0] * (m[10] * m[15] - m[11] * m[14]) - m[2] * (m[8] * m[15] - m[11] * m[12]) + m[3] * (m[8] * m[14] - m[10] * m[12]);
+    v[9] = -(m[0] * (m[9] * m[15] - m[11] * m[13]) - m[1] * (m[8] * m[15] - m[11] * m[12]) + m[3] * (m[8] * m[13] - m[9] * m[12]));
+    v[13] = m[0] * (m[9] * m[14] - m[10] * m[13]) - m[1] * (m[8] * m[14] - m[10] * m[12]) + m[2] * (m[8] * m[13] - m[9] * m[12]);
+
+    v[2] = m[13] * t[0] - m[14] * t[1] + m[15] * t[2];
+    v[6] = -(m[12] * t[0] - m[14] * t[3] + m[15] * t[4]);
+    v[10] = m[12] * t[1] - m[13] * t[3] + m[15] * t[5];
+    v[14] = -(m[12] * t[2] - m[13] * t[4] + m[14] * t[5]);
+
+    v[3] = -(m[9] * t[0] - m[10] * t[1] + m[11] * t[2]);
+    v[7] = m[8] * t[0] - m[10] * t[3] + m[11] * t[4];
+    v[11] = -(m[8] * t[1] - m[9] * t[3] + m[11] * t[5]);
+    v[15] = m[8] * t[2] - m[9] * t[4] + m[10] * t[5];
+
+    // Divide by determinant
+    det = 1.0f / det;
+    float* out = (float*)pOut;
+    for (int i = 0; i < 16; i++)
+        out[i] = v[i] * det;
+
+    D3DXCOMPAT_DEBUG_INVERSE(pOut, pDeterminant, pM);
+    return pOut;
 }
 
 //-----------------------------------------------------------------------------
@@ -485,101 +951,99 @@ inline UINT D3DXGetFVFVertexSize(DWORD FVF)
 // Matrix Operations (Additional)
 //-----------------------------------------------------------------------------
 
-/**
- * D3DXMatrixMultiply - Multiply two matrices
- * Maps to: Matrix4x4::operator*
- */
+// D3DXMatrixMultiply - Multiply two matrices
+// Native D3D implementation for best performance
 inline D3DXMATRIX* D3DXMatrixMultiply(
     D3DXMATRIX* pOut,
     const D3DXMATRIX* pM1,
     const D3DXMATRIX* pM2)
 {
-    if (!pOut || !pM1 || !pM2) return pOut;
-    
-    Matrix4x4 m1 = *(const Matrix4x4*)pM1;
-    Matrix4x4 m2 = *(const Matrix4x4*)pM2;
-    Matrix4x4 result = m1 * m2;
-    
-    *(Matrix4x4*)pOut = result;
+    if (!pOut || !pM1 || !pM2)
+        return pOut;
+
+    // Native implementation - handles aliasing via temp
+    D3DXMATRIX temp;
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 4; j++) {
+            temp.m[i][j] = pM1->m[i][0] * pM2->m[0][j] +
+                           pM1->m[i][1] * pM2->m[1][j] +
+                           pM1->m[i][2] * pM2->m[2][j] +
+                           pM1->m[i][3] * pM2->m[3][j];
+        }
+    }
+    *pOut = temp;
+
+    D3DXCOMPAT_DEBUG_MULTIPLY(pOut, pM1, pM2);
     return pOut;
 }
 
-/**
- * D3DXMatrixRotationZ - Create rotation matrix around Z axis
- * Maps to: Manual matrix construction (simple rotation)
- */
+// D3DXMatrixRotationZ - Create rotation matrix around Z axis
+// Native D3D implementation
 inline D3DXMATRIX* D3DXMatrixRotationZ(D3DXMATRIX* pOut, float angle)
 {
-    if (!pOut) return pOut;
-    
+    if (!pOut)
+        return pOut;
+
+    D3DXCOMPAT_DEBUG_CALL(rotationz);
     float c = cosf(angle);
     float s = sinf(angle);
-    
-    Matrix4x4 result(true); // Identity
-    result[0][0] = c;
-    result[0][1] = s;
-    result[1][0] = -s;
-    result[1][1] = c;
-    
-    *(Matrix4x4*)pOut = result;
+
+    pOut->_11 = c;  pOut->_12 = s;  pOut->_13 = 0; pOut->_14 = 0;
+    pOut->_21 = -s; pOut->_22 = c;  pOut->_23 = 0; pOut->_24 = 0;
+    pOut->_31 = 0;  pOut->_32 = 0;  pOut->_33 = 1; pOut->_34 = 0;
+    pOut->_41 = 0;  pOut->_42 = 0;  pOut->_43 = 0; pOut->_44 = 1;
+
     return pOut;
 }
 
-/**
- * D3DXMatrixScaling - Create scaling matrix
- * Maps to: Manual matrix construction (simple scaling)
- */
+// D3DXMatrixScaling - Create scaling matrix
+// Native D3D implementation
 inline D3DXMATRIX* D3DXMatrixScaling(D3DXMATRIX* pOut, float sx, float sy, float sz)
 {
-    if (!pOut) return pOut;
-    
-    Matrix4x4 result(true); // Identity
-    result[0][0] = sx;
-    result[1][1] = sy;
-    result[2][2] = sz;
-    
-    *(Matrix4x4*)pOut = result;
+    if (!pOut)
+        return pOut;
+
+    D3DXCOMPAT_DEBUG_CALL(scaling);
+
+    pOut->_11 = sx; pOut->_12 = 0;  pOut->_13 = 0;  pOut->_14 = 0;
+    pOut->_21 = 0;  pOut->_22 = sy; pOut->_23 = 0;  pOut->_24 = 0;
+    pOut->_31 = 0;  pOut->_32 = 0;  pOut->_33 = sz; pOut->_34 = 0;
+    pOut->_41 = 0;  pOut->_42 = 0;  pOut->_43 = 0;  pOut->_44 = 1;
+
     return pOut;
 }
 
-/**
- * D3DXMatrixTranslation - Create translation matrix
- * Maps to: Manual matrix construction (simple translation)
- * 
- * Creates a translation matrix in row-major format:
- * | 1  0  0  0 |
- * | 0  1  0  0 |
- * | 0  0  1  0 |
- * | Tx Ty Tz 1 |
- */
+// D3DXMatrixTranslation - Create translation matrix
+// Native D3D implementation (translation in _41, _42, _43)
 inline D3DXMATRIX* D3DXMatrixTranslation(D3DXMATRIX* pOut, float x, float y, float z)
 {
-    if (!pOut) return pOut;
-    
-    Matrix4x4 result(true); // Identity
-    result[3][0] = x;  // Translation X in row 3, column 0 (_41)
-    result[3][1] = y;  // Translation Y in row 3, column 1 (_42)
-    result[3][2] = z;  // Translation Z in row 3, column 2 (_43)
-    
-    *(Matrix4x4*)pOut = result;
+    if (!pOut)
+        return pOut;
+
+    D3DXCOMPAT_DEBUG_CALL(translation);
+
+    pOut->_11 = 1; pOut->_12 = 0; pOut->_13 = 0; pOut->_14 = 0;
+    pOut->_21 = 0; pOut->_22 = 1; pOut->_23 = 0; pOut->_24 = 0;
+    pOut->_31 = 0; pOut->_32 = 0; pOut->_33 = 1; pOut->_34 = 0;
+    pOut->_41 = x; pOut->_42 = y; pOut->_43 = z; pOut->_44 = 1;
+
     return pOut;
 }
 
-/**
- * D3DXMatrixIdentity - Initialize matrix to identity
- * Maps to: Matrix4x4::Make_Identity()
- * 
- * Used in water rendering (W3DWater.cpp) for clipping matrix initialization.
- * Implementation using WWMath (8+ uses across codebase).
- */
+// D3DXMatrixIdentity - Initialize matrix to identity
+// Native D3D implementation
 inline D3DXMATRIX* D3DXMatrixIdentity(D3DXMATRIX* pOut)
 {
-    if (!pOut) return pOut;
-    
-    Matrix4x4 identity;
-    identity.Make_Identity();
-    
-    *(Matrix4x4*)pOut = identity;
+    if (!pOut)
+        return pOut;
+
+    D3DXCOMPAT_DEBUG_CALL(identity);
+
+    pOut->_11 = 1; pOut->_12 = 0; pOut->_13 = 0; pOut->_14 = 0;
+    pOut->_21 = 0; pOut->_22 = 1; pOut->_23 = 0; pOut->_24 = 0;
+    pOut->_31 = 0; pOut->_32 = 0; pOut->_33 = 1; pOut->_34 = 0;
+    pOut->_41 = 0; pOut->_42 = 0; pOut->_43 = 0; pOut->_44 = 1;
+
     return pOut;
 }
 

@@ -20,12 +20,8 @@ target_link_libraries(g_generals PRIVATE
     milesstub
     vfw32
     winmm
+    d3dx8
 )
-
-# Only link d3dx8 if NO_D3DX is not enabled
-if(NOT (MINGW AND MINGW_NO_D3DX))
-    target_link_libraries(g_generals PRIVATE d3dx8)
-endif()
 
 # TODO Originally referred to build host and user, replace with git info perhaps?
 file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/GeneratedVersion.h

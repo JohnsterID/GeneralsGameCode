@@ -90,12 +90,16 @@ if(MINGW)
         set(MINGW_D3DX_WRAPPER_INCLUDE "-include;${CMAKE_SOURCE_DIR}/Core/Libraries/Include/Lib/D3DXWrapper.h")
         
         message(STATUS "MinGW: D3DX8 dependency eliminated (NO_D3DX enabled)")
-        message(STATUS "  Using WWMath library for math functions")
+        message(STATUS "  Using native D3D implementations for math functions")
         message(STATUS "  Using Direct3D 8 API for texture operations")
         message(STATUS "  D3DXWrapper.h available for selective inclusion")
         
-        # Don't link d3dx8 or d3dx8d
-        # (The compatibility header provides replacements)
+        # Create empty d3dx8 INTERFACE library (like stlport pattern)
+        # This allows unconditional linking to d3dx8 in CMakeLists.txt files
+        if(NOT TARGET d3dx8)
+            add_library(d3dx8 INTERFACE)
+            message(STATUS "Created empty d3dx8 INTERFACE library (NO_D3DX)")
+        endif()
     else()
         # Legacy behavior: use D3DX8 with DLL dependency
         message(STATUS "MinGW: Using D3DX8.dll (NO_D3DX disabled)")

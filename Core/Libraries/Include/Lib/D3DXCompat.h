@@ -264,8 +264,8 @@ inline D3DXVECTOR4* D3DXVec4Transform(
 
 /**
  * D3DXVec3Transform - Transform 3D vector by 4x4 matrix (homogeneous)
- * Maps to: Matrix4x4::Transform_Vector()
- * Note: Treats input as (x, y, z, 1) for position transformation
+ * D3D convention: row vector * matrix, i.e. [x,y,z,1] * M
+ * Native implementation for correct D3D behavior and performance.
  */
 inline D3DXVECTOR4* D3DXVec3Transform(
     D3DXVECTOR4* pOut,
@@ -273,19 +273,14 @@ inline D3DXVECTOR4* D3DXVec3Transform(
     const D3DXMATRIX* pM)
 {
     if (!pOut || !pV || !pM) return pOut;
-    
-    Matrix4x4 mat = *(const Matrix4x4*)pM;
-    Vector3 vec(pV->x, pV->y, pV->z);
-    Vector4 result;
-    
-    // Transform as homogeneous point (w=1)
-    Matrix4x4::Transform_Vector(mat, vec, &result);
-    
-    pOut->x = result.X;
-    pOut->y = result.Y;
-    pOut->z = result.Z;
-    pOut->w = result.W;
-    
+
+    // D3D uses row vectors: result = [x,y,z,1] * M
+    float x = pV->x, y = pV->y, z = pV->z;
+    pOut->x = x * pM->_11 + y * pM->_21 + z * pM->_31 + pM->_41;
+    pOut->y = x * pM->_12 + y * pM->_22 + z * pM->_32 + pM->_42;
+    pOut->z = x * pM->_13 + y * pM->_23 + z * pM->_33 + pM->_43;
+    pOut->w = x * pM->_14 + y * pM->_24 + z * pM->_34 + pM->_44;
+
     return pOut;
 }
 
@@ -295,27 +290,29 @@ inline D3DXVECTOR4* D3DXVec3Transform(
 
 /**
  * D3DXMatrixTranspose - Transpose a 4x4 matrix
- * Maps to: Matrix4x4::Transpose()
+ * Native D3D implementation for correct behavior and performance.
  */
 inline D3DXMATRIX* D3DXMatrixTranspose(
     D3DXMATRIX* pOut,
     const D3DXMATRIX* pM)
 {
     if (!pOut || !pM) return pOut;
-    
-    Matrix4x4 mat = *(const Matrix4x4*)pM;
-    Matrix4x4 result = mat.Transpose();
-    
-    *(Matrix4x4*)pOut = result;
-    
+
+    // Native transpose: out[i][j] = in[j][i]
+    // Use temp to handle in-place transpose (pOut == pM)
+    D3DXMATRIX temp;
+    temp._11 = pM->_11; temp._12 = pM->_21; temp._13 = pM->_31; temp._14 = pM->_41;
+    temp._21 = pM->_12; temp._22 = pM->_22; temp._23 = pM->_32; temp._24 = pM->_42;
+    temp._31 = pM->_13; temp._32 = pM->_23; temp._33 = pM->_33; temp._34 = pM->_43;
+    temp._41 = pM->_14; temp._42 = pM->_24; temp._43 = pM->_34; temp._44 = pM->_44;
+    *pOut = temp;
+
     return pOut;
 }
 
 /**
  * D3DXMatrixInverse - Compute inverse of a 4x4 matrix
- * Maps to: Matrix4x4::Inverse()
- * 
- * Calculates the matrix inverse using adjugate/determinant method.
+ * Native D3D implementation using adjugate/determinant method.
  * Returns nullptr if the matrix is singular (determinant near zero).
  * Determinant is written to pDeterminant if provided.
  */
@@ -325,15 +322,64 @@ inline D3DXMATRIX* D3DXMatrixInverse(
     const D3DXMATRIX* pM)
 {
     if (!pOut || !pM) return pOut;
-    
-    Matrix4x4* result = Matrix4x4::Inverse(
-        (Matrix4x4*)pOut,
-        pDeterminant,
-        (const Matrix4x4*)pM
-    );
-    
-    // Return nullptr if matrix is singular (determinant near zero)
-    return result ? pOut : nullptr;
+
+    const float* m = (const float*)pM;
+    float v[16], t[6], det;
+
+    // Calculate pairs for first 8 cofactors
+    t[0] = m[10] * m[15] - m[11] * m[14];
+    t[1] = m[9] * m[15] - m[11] * m[13];
+    t[2] = m[9] * m[14] - m[10] * m[13];
+    t[3] = m[8] * m[15] - m[11] * m[12];
+    t[4] = m[8] * m[14] - m[10] * m[12];
+    t[5] = m[8] * m[13] - m[9] * m[12];
+
+    // Calculate first 4 cofactors
+    v[0] = m[5] * t[0] - m[6] * t[1] + m[7] * t[2];
+    v[4] = -(m[4] * t[0] - m[6] * t[3] + m[7] * t[4]);
+    v[8] = m[4] * t[1] - m[5] * t[3] + m[7] * t[5];
+    v[12] = -(m[4] * t[2] - m[5] * t[4] + m[6] * t[5]);
+
+    // Calculate determinant
+    det = m[0] * v[0] + m[1] * v[4] + m[2] * v[8] + m[3] * v[12];
+
+    if (pDeterminant)
+        *pDeterminant = det;
+
+    // Check for singular matrix
+    if (fabsf(det) < 1e-10f)
+        return nullptr;
+
+    // Calculate pairs for second 8 cofactors
+    t[0] = m[2] * m[7] - m[3] * m[6];
+    t[1] = m[1] * m[7] - m[3] * m[5];
+    t[2] = m[1] * m[6] - m[2] * m[5];
+    t[3] = m[0] * m[7] - m[3] * m[4];
+    t[4] = m[0] * m[6] - m[2] * m[4];
+    t[5] = m[0] * m[5] - m[1] * m[4];
+
+    v[1] = -(m[1] * (m[10] * m[15] - m[11] * m[14]) - m[2] * (m[9] * m[15] - m[11] * m[13]) + m[3] * (m[9] * m[14] - m[10] * m[13]));
+    v[5] = m[0] * (m[10] * m[15] - m[11] * m[14]) - m[2] * (m[8] * m[15] - m[11] * m[12]) + m[3] * (m[8] * m[14] - m[10] * m[12]);
+    v[9] = -(m[0] * (m[9] * m[15] - m[11] * m[13]) - m[1] * (m[8] * m[15] - m[11] * m[12]) + m[3] * (m[8] * m[13] - m[9] * m[12]));
+    v[13] = m[0] * (m[9] * m[14] - m[10] * m[13]) - m[1] * (m[8] * m[14] - m[10] * m[12]) + m[2] * (m[8] * m[13] - m[9] * m[12]);
+
+    v[2] = m[13] * t[0] - m[14] * t[1] + m[15] * t[2];
+    v[6] = -(m[12] * t[0] - m[14] * t[3] + m[15] * t[4]);
+    v[10] = m[12] * t[1] - m[13] * t[3] + m[15] * t[5];
+    v[14] = -(m[12] * t[2] - m[13] * t[4] + m[14] * t[5]);
+
+    v[3] = -(m[9] * t[0] - m[10] * t[1] + m[11] * t[2]);
+    v[7] = m[8] * t[0] - m[10] * t[3] + m[11] * t[4];
+    v[11] = -(m[8] * t[1] - m[9] * t[3] + m[11] * t[5]);
+    v[15] = m[8] * t[2] - m[9] * t[4] + m[10] * t[5];
+
+    // Divide by determinant
+    det = 1.0f / det;
+    float* out = (float*)pOut;
+    for (int i = 0; i < 16; i++)
+        out[i] = v[i] * det;
+
+    return pOut;
 }
 
 //-----------------------------------------------------------------------------
@@ -487,7 +533,7 @@ inline UINT D3DXGetFVFVertexSize(DWORD FVF)
 
 /**
  * D3DXMatrixMultiply - Multiply two matrices
- * Maps to: Matrix4x4::operator*
+ * Native D3D implementation for best performance.
  */
 inline D3DXMATRIX* D3DXMatrixMultiply(
     D3DXMATRIX* pOut,
@@ -495,91 +541,86 @@ inline D3DXMATRIX* D3DXMatrixMultiply(
     const D3DXMATRIX* pM2)
 {
     if (!pOut || !pM1 || !pM2) return pOut;
-    
-    Matrix4x4 m1 = *(const Matrix4x4*)pM1;
-    Matrix4x4 m2 = *(const Matrix4x4*)pM2;
-    Matrix4x4 result = m1 * m2;
-    
-    *(Matrix4x4*)pOut = result;
+
+    // Native implementation - handles aliasing via temp
+    D3DXMATRIX temp;
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 4; j++) {
+            temp.m[i][j] = pM1->m[i][0] * pM2->m[0][j] +
+                           pM1->m[i][1] * pM2->m[1][j] +
+                           pM1->m[i][2] * pM2->m[2][j] +
+                           pM1->m[i][3] * pM2->m[3][j];
+        }
+    }
+    *pOut = temp;
+
     return pOut;
 }
 
 /**
  * D3DXMatrixRotationZ - Create rotation matrix around Z axis
- * Maps to: Manual matrix construction (simple rotation)
+ * Native D3D implementation.
  */
 inline D3DXMATRIX* D3DXMatrixRotationZ(D3DXMATRIX* pOut, float angle)
 {
     if (!pOut) return pOut;
-    
+
     float c = cosf(angle);
     float s = sinf(angle);
-    
-    Matrix4x4 result(true); // Identity
-    result[0][0] = c;
-    result[0][1] = s;
-    result[1][0] = -s;
-    result[1][1] = c;
-    
-    *(Matrix4x4*)pOut = result;
+
+    pOut->_11 = c;  pOut->_12 = s;  pOut->_13 = 0; pOut->_14 = 0;
+    pOut->_21 = -s; pOut->_22 = c;  pOut->_23 = 0; pOut->_24 = 0;
+    pOut->_31 = 0;  pOut->_32 = 0;  pOut->_33 = 1; pOut->_34 = 0;
+    pOut->_41 = 0;  pOut->_42 = 0;  pOut->_43 = 0; pOut->_44 = 1;
+
     return pOut;
 }
 
 /**
  * D3DXMatrixScaling - Create scaling matrix
- * Maps to: Manual matrix construction (simple scaling)
+ * Native D3D implementation.
  */
 inline D3DXMATRIX* D3DXMatrixScaling(D3DXMATRIX* pOut, float sx, float sy, float sz)
 {
     if (!pOut) return pOut;
-    
-    Matrix4x4 result(true); // Identity
-    result[0][0] = sx;
-    result[1][1] = sy;
-    result[2][2] = sz;
-    
-    *(Matrix4x4*)pOut = result;
+
+    pOut->_11 = sx; pOut->_12 = 0;  pOut->_13 = 0;  pOut->_14 = 0;
+    pOut->_21 = 0;  pOut->_22 = sy; pOut->_23 = 0;  pOut->_24 = 0;
+    pOut->_31 = 0;  pOut->_32 = 0;  pOut->_33 = sz; pOut->_34 = 0;
+    pOut->_41 = 0;  pOut->_42 = 0;  pOut->_43 = 0;  pOut->_44 = 1;
+
     return pOut;
 }
 
 /**
  * D3DXMatrixTranslation - Create translation matrix
- * Maps to: Manual matrix construction (simple translation)
- * 
- * Creates a translation matrix in row-major format:
- * | 1  0  0  0 |
- * | 0  1  0  0 |
- * | 0  0  1  0 |
- * | Tx Ty Tz 1 |
+ * Native D3D implementation (translation in _41, _42, _43).
  */
 inline D3DXMATRIX* D3DXMatrixTranslation(D3DXMATRIX* pOut, float x, float y, float z)
 {
     if (!pOut) return pOut;
-    
-    Matrix4x4 result(true); // Identity
-    result[3][0] = x;  // Translation X in row 3, column 0 (_41)
-    result[3][1] = y;  // Translation Y in row 3, column 1 (_42)
-    result[3][2] = z;  // Translation Z in row 3, column 2 (_43)
-    
-    *(Matrix4x4*)pOut = result;
+
+    pOut->_11 = 1; pOut->_12 = 0; pOut->_13 = 0; pOut->_14 = 0;
+    pOut->_21 = 0; pOut->_22 = 1; pOut->_23 = 0; pOut->_24 = 0;
+    pOut->_31 = 0; pOut->_32 = 0; pOut->_33 = 1; pOut->_34 = 0;
+    pOut->_41 = x; pOut->_42 = y; pOut->_43 = z; pOut->_44 = 1;
+
     return pOut;
 }
 
 /**
  * D3DXMatrixIdentity - Initialize matrix to identity
- * Maps to: Matrix4x4::Make_Identity()
- * 
- * Used in water rendering (W3DWater.cpp) for clipping matrix initialization.
- * Implementation using WWMath (8+ uses across codebase).
+ * Native D3D implementation.
  */
 inline D3DXMATRIX* D3DXMatrixIdentity(D3DXMATRIX* pOut)
 {
     if (!pOut) return pOut;
-    
-    Matrix4x4 identity;
-    identity.Make_Identity();
-    
-    *(Matrix4x4*)pOut = identity;
+
+    pOut->_11 = 1; pOut->_12 = 0; pOut->_13 = 0; pOut->_14 = 0;
+    pOut->_21 = 0; pOut->_22 = 1; pOut->_23 = 0; pOut->_24 = 0;
+    pOut->_31 = 0; pOut->_32 = 0; pOut->_33 = 1; pOut->_34 = 0;
+    pOut->_41 = 0; pOut->_42 = 0; pOut->_43 = 0; pOut->_44 = 1;
+
     return pOut;
 }
 

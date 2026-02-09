@@ -181,51 +181,56 @@ struct D3DXMATRIX : public D3DMATRIX
     
     D3DXMATRIX(const Matrix4x4& m)
     {
-        // Matrix4x4 stores row-major, D3DMATRIX is also row-major
-        const float* src = (const float*)&m;
-        float* dst = (float*)this;
-        for (int i = 0; i < 16; i++) {
-            dst[i] = src[i];
-        }
+        // Matrix4x4 and D3DMATRIX have transposed layouts - use proper conversion
+        // See To_D3DMATRIX in matrix4.cpp for reference
+        _11 = m[0][0]; _12 = m[1][0]; _13 = m[2][0]; _14 = m[3][0];
+        _21 = m[0][1]; _22 = m[1][1]; _23 = m[2][1]; _24 = m[3][1];
+        _31 = m[0][2]; _32 = m[1][2]; _33 = m[2][2]; _34 = m[3][2];
+        _41 = m[0][3]; _42 = m[1][3]; _43 = m[2][3]; _44 = m[3][3];
     }
-    
+
     operator Matrix4x4() const
     {
+        // D3DMATRIX and Matrix4x4 have transposed layouts - use proper conversion
+        // See To_Matrix4x4 in matrix4.cpp for reference
         Matrix4x4 result;
-        const float* src = (const float*)this;
-        float* dst = (float*)&result;
-        for (int i = 0; i < 16; i++) {
-            dst[i] = src[i];
-        }
+        result[0][0] = _11; result[0][1] = _21; result[0][2] = _31; result[0][3] = _41;
+        result[1][0] = _12; result[1][1] = _22; result[1][2] = _32; result[1][3] = _42;
+        result[2][0] = _13; result[2][1] = _23; result[2][2] = _33; result[2][3] = _43;
+        result[3][0] = _14; result[3][1] = _24; result[3][2] = _34; result[3][3] = _44;
         return result;
     }
-    
-    // operator*= for matrix multiplication
+
+    // operator*= for matrix multiplication (native implementation)
     D3DXMATRIX& operator*=(const D3DXMATRIX& other)
     {
-        Matrix4x4 lhs = *(const Matrix4x4*)this;
-        Matrix4x4 rhs = *(const Matrix4x4*)&other;
-        Matrix4x4 result = lhs * rhs;
-        *(Matrix4x4*)this = result;
+        D3DXMATRIX temp;
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                temp.m[i][j] = m[i][0] * other.m[0][j] +
+                               m[i][1] * other.m[1][j] +
+                               m[i][2] * other.m[2][j] +
+                               m[i][3] * other.m[3][j];
+            }
+        }
+        *this = temp;
         return *this;
     }
 };
 
 //=============================================================================
-// D3DX8 Math Functions - Compatibility Layer using WWMath
+// D3DX8 Math Functions - Native Compatibility Layer
 //=============================================================================
 
 //-----------------------------------------------------------------------------
 // Vector4 Operations
 //-----------------------------------------------------------------------------
 
-/**
- * D3DXVec4Dot - Compute dot product of two 4D vectors
- * Maps to: Vector4::Dot_Product()
- */
+// D3DXVec4Dot - Compute dot product of two 4D vectors
 inline float D3DXVec4Dot(const D3DXVECTOR4* pV1, const D3DXVECTOR4* pV2)
 {
-    if (!pV1 || !pV2) return 0.0f;
+    if (!pV1 || !pV2)
+        return 0.0f;
     
     Vector4 v1(pV1->x, pV1->y, pV1->z, pV1->w);
     Vector4 v2(pV2->x, pV2->y, pV2->z, pV2->w);
@@ -233,16 +238,14 @@ inline float D3DXVec4Dot(const D3DXVECTOR4* pV1, const D3DXVECTOR4* pV2)
     return Vector4::Dot_Product(v1, v2);
 }
 
-/**
- * D3DXVec4Transform - Transform 4D vector by 4x4 matrix
- * Maps to: Matrix4x4::Transform_Vector()
- */
+// D3DXVec4Transform - Transform 4D vector by 4x4 matrix
 inline D3DXVECTOR4* D3DXVec4Transform(
     D3DXVECTOR4* pOut,
     const D3DXVECTOR4* pV,
     const D3DXMATRIX* pM)
 {
-    if (!pOut || !pV || !pM) return pOut;
+    if (!pOut || !pV || !pM)
+        return pOut;
     
     Matrix4x4 mat = *(const Matrix4x4*)pM;
     Vector4 vec(pV->x, pV->y, pV->z, pV->w);
@@ -262,17 +265,15 @@ inline D3DXVECTOR4* D3DXVec4Transform(
 // Vector3 Operations
 //-----------------------------------------------------------------------------
 
-/**
- * D3DXVec3Transform - Transform 3D vector by 4x4 matrix (homogeneous)
- * D3D convention: row vector * matrix, i.e. [x,y,z,1] * M
- * Native implementation for correct D3D behavior and performance.
- */
+// D3DXVec3Transform - Transform 3D vector by 4x4 matrix (homogeneous)
+// D3D convention: row vector * matrix, i.e. [x,y,z,1] * M
 inline D3DXVECTOR4* D3DXVec3Transform(
     D3DXVECTOR4* pOut,
     const D3DXVECTOR3* pV,
     const D3DXMATRIX* pM)
 {
-    if (!pOut || !pV || !pM) return pOut;
+    if (!pOut || !pV || !pM)
+        return pOut;
 
     // D3D uses row vectors: result = [x,y,z,1] * M
     float x = pV->x, y = pV->y, z = pV->z;
@@ -288,15 +289,13 @@ inline D3DXVECTOR4* D3DXVec3Transform(
 // Matrix Operations
 //-----------------------------------------------------------------------------
 
-/**
- * D3DXMatrixTranspose - Transpose a 4x4 matrix
- * Native D3D implementation for correct behavior and performance.
- */
+// D3DXMatrixTranspose - Transpose a 4x4 matrix
 inline D3DXMATRIX* D3DXMatrixTranspose(
     D3DXMATRIX* pOut,
     const D3DXMATRIX* pM)
 {
-    if (!pOut || !pM) return pOut;
+    if (!pOut || !pM)
+        return pOut;
 
     // Native transpose: out[i][j] = in[j][i]
     // Use temp to handle in-place transpose (pOut == pM)
@@ -310,18 +309,15 @@ inline D3DXMATRIX* D3DXMatrixTranspose(
     return pOut;
 }
 
-/**
- * D3DXMatrixInverse - Compute inverse of a 4x4 matrix
- * Native D3D implementation using adjugate/determinant method.
- * Returns nullptr if the matrix is singular (determinant near zero).
- * Determinant is written to pDeterminant if provided.
- */
+// D3DXMatrixInverse - Compute inverse of a 4x4 matrix
+// Returns nullptr if the matrix is singular (determinant near zero).
 inline D3DXMATRIX* D3DXMatrixInverse(
     D3DXMATRIX* pOut,
     float* pDeterminant,
     const D3DXMATRIX* pM)
 {
-    if (!pOut || !pM) return pOut;
+    if (!pOut || !pM)
+        return pOut;
 
     const float* m = (const float*)pM;
     float v[16], t[6], det;
@@ -386,11 +382,7 @@ inline D3DXMATRIX* D3DXMatrixInverse(
 // Utility Functions
 //-----------------------------------------------------------------------------
 
-/**
- * D3DXGetErrorStringA - Get error string for D3D error code
- * Original API: HRESULT D3DXGetErrorStringA(HRESULT hr, char* pBuffer, UINT BufferLen)
- * Compatibility implementation that writes error string to buffer
- */
+// D3DXGetErrorStringA - Get error string for D3D error code
 inline HRESULT D3DXGetErrorStringA(HRESULT hr, char* pBuffer, UINT BufferLen)
 {
     if (!pBuffer || BufferLen == 0)
@@ -481,9 +473,7 @@ inline HRESULT D3DXGetErrorStringA(HRESULT hr, char* pBuffer, UINT BufferLen)
     return D3D_OK;
 }
 
-/**
- * D3DXGetFVFVertexSize - Calculate vertex size from FVF flags
- */
+// D3DXGetFVFVertexSize - Calculate vertex size from FVF flags
 inline UINT D3DXGetFVFVertexSize(DWORD FVF)
 {
     UINT size = 0;
@@ -531,16 +521,14 @@ inline UINT D3DXGetFVFVertexSize(DWORD FVF)
 // Matrix Operations (Additional)
 //-----------------------------------------------------------------------------
 
-/**
- * D3DXMatrixMultiply - Multiply two matrices
- * Native D3D implementation for best performance.
- */
+// D3DXMatrixMultiply - Multiply two matrices
 inline D3DXMATRIX* D3DXMatrixMultiply(
     D3DXMATRIX* pOut,
     const D3DXMATRIX* pM1,
     const D3DXMATRIX* pM2)
 {
-    if (!pOut || !pM1 || !pM2) return pOut;
+    if (!pOut || !pM1 || !pM2)
+        return pOut;
 
     // Native implementation - handles aliasing via temp
     D3DXMATRIX temp;
@@ -557,13 +545,11 @@ inline D3DXMATRIX* D3DXMatrixMultiply(
     return pOut;
 }
 
-/**
- * D3DXMatrixRotationZ - Create rotation matrix around Z axis
- * Native D3D implementation.
- */
+// D3DXMatrixRotationZ - Create rotation matrix around Z axis
 inline D3DXMATRIX* D3DXMatrixRotationZ(D3DXMATRIX* pOut, float angle)
 {
-    if (!pOut) return pOut;
+    if (!pOut)
+        return pOut;
 
     float c = cosf(angle);
     float s = sinf(angle);
@@ -576,13 +562,11 @@ inline D3DXMATRIX* D3DXMatrixRotationZ(D3DXMATRIX* pOut, float angle)
     return pOut;
 }
 
-/**
- * D3DXMatrixScaling - Create scaling matrix
- * Native D3D implementation.
- */
+// D3DXMatrixScaling - Create scaling matrix
 inline D3DXMATRIX* D3DXMatrixScaling(D3DXMATRIX* pOut, float sx, float sy, float sz)
 {
-    if (!pOut) return pOut;
+    if (!pOut)
+        return pOut;
 
     pOut->_11 = sx; pOut->_12 = 0;  pOut->_13 = 0;  pOut->_14 = 0;
     pOut->_21 = 0;  pOut->_22 = sy; pOut->_23 = 0;  pOut->_24 = 0;
@@ -592,13 +576,11 @@ inline D3DXMATRIX* D3DXMatrixScaling(D3DXMATRIX* pOut, float sx, float sy, float
     return pOut;
 }
 
-/**
- * D3DXMatrixTranslation - Create translation matrix
- * Native D3D implementation (translation in _41, _42, _43).
- */
+// D3DXMatrixTranslation - Create translation matrix
 inline D3DXMATRIX* D3DXMatrixTranslation(D3DXMATRIX* pOut, float x, float y, float z)
 {
-    if (!pOut) return pOut;
+    if (!pOut)
+        return pOut;
 
     pOut->_11 = 1; pOut->_12 = 0; pOut->_13 = 0; pOut->_14 = 0;
     pOut->_21 = 0; pOut->_22 = 1; pOut->_23 = 0; pOut->_24 = 0;
@@ -608,13 +590,11 @@ inline D3DXMATRIX* D3DXMatrixTranslation(D3DXMATRIX* pOut, float x, float y, flo
     return pOut;
 }
 
-/**
- * D3DXMatrixIdentity - Initialize matrix to identity
- * Native D3D implementation.
- */
+// D3DXMatrixIdentity - Initialize matrix to identity
 inline D3DXMATRIX* D3DXMatrixIdentity(D3DXMATRIX* pOut)
 {
-    if (!pOut) return pOut;
+    if (!pOut)
+        return pOut;
 
     pOut->_11 = 1; pOut->_12 = 0; pOut->_13 = 0; pOut->_14 = 0;
     pOut->_21 = 0; pOut->_22 = 1; pOut->_23 = 0; pOut->_24 = 0;
@@ -699,7 +679,8 @@ public:
     // IUnknown methods
     virtual HRESULT __stdcall QueryInterface(const IID& riid, void** ppvObject)
     {
-        if (!ppvObject) return E_POINTER;
+        if (!ppvObject)
+            return E_POINTER;
         *ppvObject = nullptr;
         return E_NOINTERFACE;
     }
@@ -729,17 +710,9 @@ public:
     }
 };
 
-/**
- * D3DXAssembleShader - Assemble shader from source
- * 
- * Returns precompiled bytecode for known water shaders.
- * This implementation recognizes the three water shaders used by the game
- * and returns precompiled bytecode instead of performing runtime assembly.
- * 
- * The bytecode is generated by a simplified PS 1.1 assembler and may need
- * validation. If issues occur, the game will gracefully fall back to
- * non-shader water rendering.
- */
+// D3DXAssembleShader - Returns precompiled bytecode for known water shaders.
+// Recognizes the three water shaders used by the game and returns precompiled
+// bytecode instead of performing runtime assembly.
 inline HRESULT D3DXAssembleShader(
     const char* pSrcData,
     UINT SrcDataLen,
@@ -799,11 +772,7 @@ inline HRESULT D3DXAssembleShader(
 
 #ifdef __cplusplus
 
-/**
- * D3DXCreateTexture - Create a texture
- * Direct wrapper for IDirect3DDevice8::CreateTexture
- * No D3DX dependency - this is pure D3D8!
- */
+// D3DXCreateTexture - Direct wrapper for IDirect3DDevice8::CreateTexture
 inline HRESULT D3DXCreateTexture(
     LPDIRECT3DDEVICE8 pDevice,
     UINT Width,
@@ -814,16 +783,14 @@ inline HRESULT D3DXCreateTexture(
     D3DPOOL Pool,
     LPDIRECT3DTEXTURE8* ppTexture)
 {
-    if (!pDevice || !ppTexture) return D3DERR_INVALIDCALL;
+    if (!pDevice || !ppTexture)
+        return D3DERR_INVALIDCALL;
     
     // Direct D3D8 call - no D3DX involved!
     return pDevice->CreateTexture(Width, Height, MipLevels, Usage, Format, Pool, ppTexture);
 }
 
-/**
- * D3DXCreateCubeTexture - Create a cube texture
- * Direct wrapper for IDirect3DDevice8::CreateCubeTexture
- */
+// D3DXCreateCubeTexture - Direct wrapper for IDirect3DDevice8::CreateCubeTexture
 inline HRESULT D3DXCreateCubeTexture(
     LPDIRECT3DDEVICE8 pDevice,
     UINT Size,
@@ -833,16 +800,14 @@ inline HRESULT D3DXCreateCubeTexture(
     D3DPOOL Pool,
     LPDIRECT3DCUBETEXTURE8* ppCubeTexture)
 {
-    if (!pDevice || !ppCubeTexture) return D3DERR_INVALIDCALL;
+    if (!pDevice || !ppCubeTexture)
+        return D3DERR_INVALIDCALL;
     
     // Direct D3D8 call
     return pDevice->CreateCubeTexture(Size, MipLevels, Usage, Format, Pool, ppCubeTexture);
 }
 
-/**
- * D3DXCreateVolumeTexture - Create a volume texture
- * Direct wrapper for IDirect3DDevice8::CreateVolumeTexture
- */
+// D3DXCreateVolumeTexture - Direct wrapper for IDirect3DDevice8::CreateVolumeTexture
 inline HRESULT D3DXCreateVolumeTexture(
     LPDIRECT3DDEVICE8 pDevice,
     UINT Width,
@@ -854,25 +819,15 @@ inline HRESULT D3DXCreateVolumeTexture(
     D3DPOOL Pool,
     LPDIRECT3DVOLUMETEXTURE8* ppVolumeTexture)
 {
-    if (!pDevice || !ppVolumeTexture) return D3DERR_INVALIDCALL;
+    if (!pDevice || !ppVolumeTexture)
+        return D3DERR_INVALIDCALL;
     
     // Direct D3D8 call
     return pDevice->CreateVolumeTexture(Width, Height, Depth, MipLevels, Usage, Format, Pool, ppVolumeTexture);
 }
 
-/**
- * D3DXCreateTextureFromFileExA - Load texture from file
- * 
- * MINIMAL STUB: This function has zero callers in the codebase.
- * It's only referenced inside DX8Wrapper::_Create_DX8_Texture(filename, mips)
- * which itself is never called.
- * 
- * WW3D2 TextureLoader is the primary texture loading system and parses DDS
- * files manually without using D3DX. This code path appears to be unused/legacy.
- * 
- * Returning error causes graceful fallback to MissingTexture in dx8wrapper.cpp.
- * If this code path is ever needed, implement DDS/TGA loading here.
- */
+// D3DXCreateTextureFromFileExA - Stub (zero callers in codebase)
+// Returns D3DERR_NOTAVAILABLE causing fallback to MissingTexture.
 inline HRESULT D3DXCreateTextureFromFileExA(
     LPDIRECT3DDEVICE8 pDevice,
     LPCSTR pSrcFile,
@@ -895,18 +850,7 @@ inline HRESULT D3DXCreateTextureFromFileExA(
     return D3DERR_NOTAVAILABLE;
 }
 
-/**
- * D3DXLoadSurfaceFromSurface - Copy surface data
- * 
- * Implementation using D3D8's native IDirect3DDevice8::CopyRects.
- * 
- * Note: The codebase has DX8Wrapper::_Copy_DX8_Rects which wraps this API,
- * but we cannot use it here due to circular header dependencies (D3DXCompat.h is included
- * before DX8Wrapper class is defined). Instead, we call D3D8's CopyRects directly.
- * 
- * This provides hardware-accelerated surface copying, same as the 14 uses of
- * _Copy_DX8_Rects in the codebase.
- */
+// D3DXLoadSurfaceFromSurface - Copy surface data using D3D8's native CopyRects
 inline HRESULT D3DXLoadSurfaceFromSurface(
     LPDIRECT3DSURFACE8 pDestSurface,
     const PALETTEENTRY* pDestPalette,
@@ -947,12 +891,7 @@ inline HRESULT D3DXLoadSurfaceFromSurface(
     return hr;
 }
 
-/**
- * D3DXFilterTexture - Generate mipmaps
- * 
- * Stub: Returns success without filtering (no-op).
- * Could be implemented with mipmap generation if needed.
- */
+// D3DXFilterTexture - Stub (no-op, textures use pre-existing mipmaps)
 inline HRESULT D3DXFilterTexture(
     LPDIRECT3DBASETEXTURE8 pTexture,
     const PALETTEENTRY* pPalette,
@@ -971,25 +910,7 @@ inline HRESULT D3DXFilterTexture(
 struct ID3DXFont;
 typedef struct ID3DXFont *LPD3DXFONT;
 
-/**
- * D3DXCreateFont - Create D3DX font object
- * 
- * STUB: This function is only used in WorldBuilder tools (4 calls in wbview3d.cpp).
- * WorldBuilder is NOT built in MinGW configuration (RTS_BUILD_GENERALS_TOOLS disabled).
- * 
- * Build scope: Tools only, not game executables (generalsv.exe, generalszh.exe)
- * Usage locations:
- *   - Generals/Code/Tools/WorldBuilder/src/wbview3d.cpp:543, 2205
- *   - GeneralsMD/Code/Tools/WorldBuilder/src/wbview3d.cpp:560, 2286
- * 
- * If WorldBuilder support is needed in future:
- * 1. Enable RTS_BUILD_GENERALS_TOOLS in CMake preset
- * 2. Implement using GDI CreateFont + text rendering system
- * 3. Or use existing game font system if available
- * 
- * Stub function acceptable when unused or out of build scope.
- * This is consistent with D3DXCreateTextureFromFileExA approach (commit b9b1ea03).
- */
+// D3DXCreateFont - Stub (WorldBuilder only, not in MinGW build scope)
 inline HRESULT D3DXCreateFont(
     LPDIRECT3DDEVICE8 pDevice,
     HFONT hFont,

@@ -107,12 +107,11 @@
 // Only include WWMath if we're in a context that has it
 // (External libraries like gamespy don't need these)
 #if defined(__cplusplus) && !defined(NO_WWMATH_AVAILABLE)
-    // Include utility macros first (CppMacros defines CPP_11 etc.)
-    // This is needed because vector3.h includes STLUtils.h which uses CPP_11
-    #ifndef CPPMACROS_H
-        #include "Utility/CppMacros.h"
-    #endif
-    
+    // CppMacros.h must be included before WWMath headers because
+    // vector3.h -> STLUtils.h uses CPP_11 macro.
+    // D3DXWrapper.h is force-included via -include flag which runs
+    // before precompiled headers, so we cannot rely on PCH here.
+    #include "Utility/CppMacros.h"
     #include "vector3.h"
     #include "vector4.h"
     #include "matrix3d.h"

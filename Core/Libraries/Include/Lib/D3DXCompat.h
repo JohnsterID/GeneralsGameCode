@@ -104,21 +104,16 @@
 
 //-----------------------------------------------------------------------------
 
-// Only include WWMath if we're in a context that has it
-// (External libraries like gamespy don't need these)
-#if defined(__cplusplus) && !defined(NO_WWMATH_AVAILABLE)
-    // CppMacros.h must be included before WWMath headers because
-    // vector3.h -> STLUtils.h uses CPP_11 macro.
-    // D3DXWrapper.h is force-included via -include flag which runs
-    // before precompiled headers, so we cannot rely on PCH here.
+// WWMath headers for D3DX math function implementations.
+// CppMacros.h must be included first because vector3.h -> STLUtils.h uses CPP_11.
+// D3DXWrapper.h is force-included via -include flag which runs before
+// precompiled headers, so we cannot rely on PCH here.
+#ifdef __cplusplus
     #include "Utility/CppMacros.h"
     #include "vector3.h"
     #include "vector4.h"
     #include "matrix3d.h"
     #include "matrix4.h"
-    #define WWMATH_AVAILABLE 1
-#else
-    #define WWMATH_AVAILABLE 0
 #endif
 
 // Forward declare D3DX types (we'll define compatibility layer)
@@ -131,7 +126,7 @@ typedef struct D3DXMATRIX D3DXMATRIX;
 // Note: D3DXVECTOR4 is a simple {x,y,z,w} structure
 // Note: D3DXMATRIX is identical to D3DMATRIX (Direct3D 8 type)
 
-#if WWMATH_AVAILABLE
+#ifdef __cplusplus
 
 struct D3DXVECTOR3
 {
@@ -216,31 +211,9 @@ struct D3DXMATRIX : public D3DMATRIX
     }
 };
 
-#else
-
-// Simple C-compatible definitions when WWMath not available
-struct D3DXVECTOR3
-{
-    float x, y, z;
-};
-
-struct D3DXVECTOR4
-{
-    float x, y, z, w;
-};
-
-struct D3DXMATRIX
-{
-    float m[4][4];
-};
-
-#endif // WWMATH_AVAILABLE
-
 //=============================================================================
 // D3DX8 Math Functions - Compatibility Layer using WWMath
 //=============================================================================
-
-#if WWMATH_AVAILABLE
 
 //-----------------------------------------------------------------------------
 // Vector4 Operations
@@ -508,13 +481,9 @@ inline UINT D3DXGetFVFVertexSize(DWORD FVF)
     return size;
 }
 
-#endif // WWMATH_AVAILABLE
-
 //-----------------------------------------------------------------------------
-// Matrix Operations (Additional) - Available even without WWMath
+// Matrix Operations (Additional)
 //-----------------------------------------------------------------------------
-
-#if WWMATH_AVAILABLE
 
 /**
  * D3DXMatrixMultiply - Multiply two matrices
@@ -614,13 +583,9 @@ inline D3DXMATRIX* D3DXMatrixIdentity(D3DXMATRIX* pOut)
     return pOut;
 }
 
-#endif // WWMATH_AVAILABLE
-
 //-----------------------------------------------------------------------------
 // Shader Functions (Precompiled Shaders)
 //-----------------------------------------------------------------------------
-
-#ifdef __cplusplus
 
 // Forward declaration
 struct ID3DXBuffer;

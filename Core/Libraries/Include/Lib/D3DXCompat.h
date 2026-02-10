@@ -239,6 +239,7 @@ inline float D3DXVec4Dot(const D3DXVECTOR4* pV1, const D3DXVECTOR4* pV2)
 }
 
 // D3DXVec4Transform - Transform 4D vector by 4x4 matrix
+// D3D convention: row vector * matrix, i.e. [x,y,z,w] * M
 inline D3DXVECTOR4* D3DXVec4Transform(
     D3DXVECTOR4* pOut,
     const D3DXVECTOR4* pV,
@@ -246,18 +247,14 @@ inline D3DXVECTOR4* D3DXVec4Transform(
 {
     if (!pOut || !pV || !pM)
         return pOut;
-    
-    Matrix4x4 mat = *(const Matrix4x4*)pM;
-    Vector4 vec(pV->x, pV->y, pV->z, pV->w);
-    Vector4 result;
-    
-    Matrix4x4::Transform_Vector(mat, vec, &result);
-    
-    pOut->x = result.X;
-    pOut->y = result.Y;
-    pOut->z = result.Z;
-    pOut->w = result.W;
-    
+
+    // D3D uses row vectors: result = [x,y,z,w] * M
+    float x = pV->x, y = pV->y, z = pV->z, w = pV->w;
+    pOut->x = x * pM->_11 + y * pM->_21 + z * pM->_31 + w * pM->_41;
+    pOut->y = x * pM->_12 + y * pM->_22 + z * pM->_32 + w * pM->_42;
+    pOut->z = x * pM->_13 + y * pM->_23 + z * pM->_33 + w * pM->_43;
+    pOut->w = x * pM->_14 + y * pM->_24 + z * pM->_34 + w * pM->_44;
+
     return pOut;
 }
 

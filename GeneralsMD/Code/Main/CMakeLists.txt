@@ -13,6 +13,7 @@ target_link_libraries(z_generals PRIVATE
     core_debug
     core_profile
     d3d8
+    d3dx8
     dinput8
     dxguid
     imm32
@@ -22,7 +23,6 @@ target_link_libraries(z_generals PRIVATE
     z_gameengine
     z_gameenginedevice
     zi_always
-    d3dx8
 )
 
 # TODO Originally referred to build host and user, replace with git info perhaps?

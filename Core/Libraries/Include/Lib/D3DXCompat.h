@@ -481,14 +481,19 @@ inline UINT D3DXGetFVFVertexSize(DWORD FVF)
 {
     UINT size = 0;
     
-    // Position formats
-    if (FVF & D3DFVF_XYZ) size += 12;       // 3 floats
-    if (FVF & D3DFVF_XYZRHW) size += 16;    // 4 floats
-    if (FVF & D3DFVF_XYZB1) size += 16;     // 3 floats + 1 blend weight
-    if (FVF & D3DFVF_XYZB2) size += 20;     // 3 floats + 2 blend weights
-    if (FVF & D3DFVF_XYZB3) size += 24;     // 3 floats + 3 blend weights
-    if (FVF & D3DFVF_XYZB4) size += 28;     // 3 floats + 4 blend weights
-    if (FVF & D3DFVF_XYZB5) size += 32;     // 3 floats + 5 blend weights
+    // Position formats - use mask and switch since XYZB* bits overlap XYZ/XYZRHW
+    // (Wine d3dx9_36/mesh.c uses the same approach)
+    switch (FVF & D3DFVF_POSITION_MASK)
+    {
+        case D3DFVF_XYZ:    size += 12; break;  // 3 floats
+        case D3DFVF_XYZRHW: size += 16; break;  // 4 floats (x, y, z, rhw)
+        case D3DFVF_XYZB1:  size += 16; break;  // 3 floats + 1 blend weight
+        case D3DFVF_XYZB2:  size += 20; break;  // 3 floats + 2 blend weights
+        case D3DFVF_XYZB3:  size += 24; break;  // 3 floats + 3 blend weights
+        case D3DFVF_XYZB4:  size += 28; break;  // 3 floats + 4 blend weights
+        case D3DFVF_XYZB5:  size += 32; break;  // 3 floats + 5 blend weights
+        default: break;
+    }
     
     // Normal
     if (FVF & D3DFVF_NORMAL) size += 12;    // 3 floats

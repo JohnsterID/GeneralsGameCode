@@ -203,6 +203,10 @@ struct D3DXMATRIX : public D3DMATRIX
         return result;
     }
 
+    // Casting operators
+    operator float*() { return reinterpret_cast<float*>(&_11); }
+    operator const float*() const { return reinterpret_cast<const float*>(&_11); }
+
     // operator*= for matrix multiplication (native implementation)
     D3DXMATRIX& operator*=(const D3DXMATRIX& other)
     {
@@ -318,7 +322,7 @@ inline D3DXMATRIX* D3DXMatrixInverse(
     if (!pOut || !pM)
         return pOut;
 
-    const float* m = (const float*)pM;
+    const float* m = static_cast<const float*>(*pM);
     float v[16], t[6], det;
 
     // Calculate pairs for first 8 cofactors
@@ -370,7 +374,7 @@ inline D3DXMATRIX* D3DXMatrixInverse(
 
     // Divide by determinant
     det = 1.0f / det;
-    float* out = (float*)pOut;
+    float* out = static_cast<float*>(*pOut);
     for (int i = 0; i < 16; i++)
         out[i] = v[i] * det;
 

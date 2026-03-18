@@ -369,11 +369,10 @@ void DebugInit(int flags)
 		theMainThreadID = GetCurrentThreadId();
 
 #if defined(DEBUG_STACKTRACE) || defined(IG_DEBUG_STACKTRACE)
-		// TheSuperHackers @bugfix JohnsterID 12/01/2026 Initialize g_LastErrorDump at startup
-		// This ensures isEmpty() works reliably across all build configs. Without explicit
-		// initialization, different STL implementations (VC6/STLPort vs Win32) may leave
-		// garbage/uninitialized data in the global AsciiString, causing extractCrashLocation
-		// to extract invalid data when ReleaseCrash is called without exception context.
+		// TheSuperHackers @bugfix JohnsterID 12/01/2026 Initialize g_LastErrorDump at startup.
+		// A crash can occur before static initialization completes. Without explicit
+		// initialization here, different STL implementations (VC6/STLPort vs Win32) may
+		// leave garbage/uninitialized data in the global AsciiString.
 		g_LastErrorDump.clear();
 #endif
 
@@ -755,50 +754,52 @@ static void TriggerMiniDump()
 }
 
 
-// TheSuperHackers @bugfix JohnsterID 06/01/2025 Helper function to extract crash location from stack trace
+// TheSuperHackers @bugfix JohnsterID 06/01/2025 Helper function to extract crash location from stack trace.
+// Extracts the first few lines of the stack dump for display in the crash dialog.
 static void extractCrashLocation(char* outBuffer, size_t bufferSize)
 {
-	// TheSuperHackers @bugfix JohnsterID 12/01/2026 g_LastErrorDump is explicitly initialized
-	// in DebugInit(), so isEmpty() now works reliably across all build configs.
-	if (bufferSize == 0 || g_LastErrorDump.isEmpty()) {
+	if (bufferSize == 0) {
 		return;
 	}
 
+	// Always initialize output buffer first to prevent garbage on early return.
 	outBuffer[0] = '\0';
 
-	const char* stackStr = g_LastErrorDump.str();
+	if (g_LastErrorDump.isEmpty()) {
+		return;
+	}
 
-	// Defensive check for null or empty string
+	const char* stackStr = g_LastErrorDump.str();
 	if (!stackStr || !*stackStr) {
 		return;
 	}
 
-	// Skip leading whitespace/newlines
-	while (*stackStr && isspace(static_cast<unsigned char>(*stackStr))) {
-		stackStr++;
+	// Extract first 5 lines from stack trace for context.
+	const int maxLines = 5;
+	int lineCount = 0;
+	size_t written = 0;
+	const size_t maxWrite = bufferSize - 1;
+
+	while (*stackStr && lineCount < maxLines && written < maxWrite) {
+		// Copy characters until newline or buffer full
+		while (*stackStr && *stackStr != '\n' && *stackStr != '\r' && written < maxWrite) {
+			outBuffer[written++] = *stackStr++;
+		}
+
+		// Skip newline characters
+		while (*stackStr && (*stackStr == '\n' || *stackStr == '\r')) {
+			stackStr++;
+		}
+
+		lineCount++;
+
+		// Add newline between lines if more content follows
+		if (*stackStr && lineCount < maxLines && written < maxWrite) {
+			outBuffer[written++] = '\n';
+		}
 	}
 
-	// Skip if no content or first line starts with "<Unknown>"
-	// Only check the first line (crash location) rather than entire stack trace,
-	// so we can still show useful info even if deeper frames lack symbols.
-	if (!*stackStr || strncmp(stackStr, "<Unknown>", 9) == 0) {
-		return;
-	}
-
-	// Find end of first line
-	const char* lineEnd = stackStr;
-	// Limit to 400 chars to fit in 512 byte buffer with safety margin
-	const size_t maxLineLength = bufferSize < 401 ? bufferSize - 1 : 400;
-
-	while (*lineEnd && *lineEnd != '\n' && *lineEnd != '\r' && (size_t)(lineEnd - stackStr) < maxLineLength) {
-		lineEnd++;
-	}
-
-	size_t len = lineEnd - stackStr;
-	if (len > 0) {
-		strncpy(outBuffer, stackStr, len);
-		outBuffer[len] = '\0';
-	}
+	outBuffer[written] = '\0';
 }
 
 
